@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     const response = await client.chat.completions.create({
       messages: [
         { role: "system", content: "You are a helpful assistant." },
-        { role: "user", content: req.body.message || "Hola" }
+        { role: "user", content: req.body.message || "¡Hola!, soy Apolo." }
       ]
     });
 
@@ -37,4 +37,5 @@ export default async function handler(req, res) {
       error: error.message || "Error desconocido en el servidor."
     });
   }
+
 }
