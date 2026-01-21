@@ -1,8 +1,0 @@
-{
-  "reglas": [
-    {
-      "nombre": "interpretacion_pro_arrendatario",
-      "descripcion": "En caso de duda, se favorece la interpretación que proteja al arrendatario."
-    }
-  ]
-}
