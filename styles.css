@@ -1,0 +1,112 @@
+/* Estilo general */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, sans-serif;
+  background: #f5f5f5;
+  color: #222;
+}
+
+/* Encabezado */
+header {
+  background: #1a1a1a;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.subtitulo {
+  margin-top: -5px;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Configuración */
+#config {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  flex-wrap: wrap;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
+select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Chat */
+#chat {
+  max-width: 800px;
+  margin: 20px auto;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+}
+
+#mensajes {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.mensaje {
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  max-width: 80%;
+  line-height: 1.4;
+}
+
+.mensaje.usuario {
+  background: #d1e7ff;
+  align-self: flex-end;
+}
+
+.mensaje.sistema {
+  background: #e8e8e8;
+  align-self: flex-start;
+}
+
+/* Entrada */
+#entrada {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#inputUsuario {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+#enviar {
+  padding: 12px 20px;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#enviar:hover {
+  background: #333;
+}
