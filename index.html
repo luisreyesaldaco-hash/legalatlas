@@ -1,2 +1,61 @@
-<h1>Legal Atlas está vivo</h1>
-<p>Si ves esto, la conexión con Vercel funciona.</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apolo Legal Atlas – Chatbot Jurídico Computable</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header>
+    <h1>Apolo Legal Atlas</h1>
+    <p class="subtitulo">Chatbot jurídico computable · MVP v0.2</p>
+  </header>
+
+  <section id="config">
+    <div class="campo">
+      <label for="pais">País</label>
+      <select id="pais">
+        <option value="">Seleccione un país</option>
+        <option value="mexico">México</option>
+        <option value="uruguay">Uruguay</option>
+        <option value="argentina">Argentina</option>
+        <option value="colombia">Colombia</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="estado">Estado (si aplica)</label>
+      <select id="estado">
+        <option value="">—</option>
+        <option value="guanajuato">Guanajuato</option>
+        <option value="queretaro">Querétaro</option>
+        <option value="zacatecas">Zacatecas</option>
+      </select>
+    </div>
+
+    <div class="campo">
+      <label for="tema">Tema jurídico</label>
+      <select id="tema">
+        <option value="">—</option>
+        <option value="arrendamiento">Arrendamiento</option>
+        <option value="contratos">Contratos</option>
+        <option value="familia">Familia</option>
+        <option value="civil">Civil</option>
+      </select>
+    </div>
+  </section>
+
+  <section id="chat">
+    <div id="mensajes"></div>
+
+    <div id="entrada">
+      <input id="inputUsuario" type="text" placeholder="Escribe tu pregunta jurídica..." />
+      <button id="enviar">Enviar</button>
+    </div>
+  </section>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
