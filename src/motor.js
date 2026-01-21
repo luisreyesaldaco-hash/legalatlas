@@ -86,7 +86,7 @@ function puntuarRegla(reglaObj, palabrasClave, ontosBuscadas) {
 export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsuario) {
   const contexto = estado ? `${tema} en ${estado}, ${pais}` : `${tema} en ${pais}`;
   
-  // Construcción de ruta limpia para evitar errores de slash doble
+  // Construcción de ruta bien limpia para evitar errores de slash doble
   let rutaJurisdiccion = "";
   if (estado && estado.trim() !== "") {
     rutaJurisdiccion = `jurisdicciones/${pais}/${estado}/${tema}.json`;
