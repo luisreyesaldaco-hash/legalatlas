@@ -1,15 +1,16 @@
-// app.js - Versión compatible con APOLO
+// app.js - Versión Blindada para APOLO
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Captura de elementos con los IDs del nuevo HTML
     const btnEnviar = document.getElementById("enviar");
     const inputPregunta = document.getElementById("pregunta");
     const contenedorMensajes = document.getElementById("mensajes");
     const selectPais = document.getElementById("pais");
     const selectEstado = document.getElementById("estado");
-    const inputTema = document.getElementById("tema"); // El campo oculto que pusimos
+    const inputTema = document.getElementById("tema"); // El campo oculto 'arrendamiento'
 
-    // Verificar que todos los elementos existen antes de seguir
+    // Verificación de seguridad
     if (!btnEnviar || !inputPregunta) {
-        console.error("No se encontraron los elementos del DOM. Revisa los IDs en index.html");
+        console.error("Error: No se encontraron los elementos en el HTML. Revisa los IDs.");
         return;
     }
 
@@ -17,13 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const pregunta = inputPregunta.value.trim();
         if (!pregunta) return;
 
-        // 1. Agregar mensaje del usuario a la interfaz
+        // Agregar mensaje del usuario
         agregarMensaje(pregunta, "usuario");
         inputPregunta.value = "";
 
-        // 2. Mostrar estado de "Procesando..."
-        const placeholderId = "msg-" + Date.now();
-        agregarMensaje("Consultando base de datos legal...", "asistente", placeholderId);
+        // Placeholder de carga (Efecto APOLO procesando)
+        const idCarga = "loading-" + Date.now();
+        agregarMensaje("APOLO está analizando la base de datos legal...", "asistente", idCarga);
 
         try {
             const res = await fetch("/api/asesoria", {
@@ -32,24 +33,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     pais: selectPais.value,
                     estado: selectEstado.value,
-                    tema: inputTema.value, // Enviará "arrendamiento"
+                    tema: inputTema.value, // Siempre enviará "arrendamiento"
                     pregunta: pregunta
                 })
             });
 
             const data = await res.json();
             
-            // Eliminar el placeholder de carga
-            document.getElementById(placeholderId).remove();
+            // Quitar mensaje de carga
+            const loadingElement = document.getElementById(idCarga);
+            if (loadingElement) loadingElement.remove();
 
             if (data.error) {
-                agregarMensaje("Error: " + data.error, "asistente");
+                agregarMensaje("ERROR DE SISTEMA: " + data.error, "asistente");
             } else {
                 agregarMensaje(data.respuesta, "asistente");
             }
         } catch (err) {
             console.error(err);
-            document.getElementById(placeholderId).innerText = "Error de conexión con APOLO.";
+            const loadingElement = document.getElementById(idCarga);
+            if (loadingElement) loadingElement.innerText = "Error crítico de conexión con la unidad central.";
         }
     }
 
@@ -60,13 +63,16 @@ document.addEventListener('DOMContentLoaded', () => {
         div.innerText = texto;
         contenedorMensajes.appendChild(div);
         
-        // Auto-scroll al final
+        // Scroll automático al final
         contenedorMensajes.scrollTop = contenedorMensajes.scrollHeight;
     }
 
-    // Eventos
+    // Eventos de escucha
     btnEnviar.addEventListener("click", enviarConsulta);
     inputPregunta.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") enviarConsulta();
+        if (e.key === "Enter") {
+            e.preventDefault(); // Evita saltos de línea innecesarios
+            enviarConsulta();
+        }
     });
 });
