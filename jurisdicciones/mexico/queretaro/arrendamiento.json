@@ -1,11 +1,5 @@
-
+[
   {
-  "fuente_oficial": "Código Civil para el Estado de Querétaro",
-  "jurisdiccion": "Querétaro",
-  "pais": "México",
-  "reglas": [
-    {
-    
     "articulo": 2284,
     "ontologia_target": ["bien", "contraprestacion", "tiempo"],
     "categoria_juridica": "definicion",
