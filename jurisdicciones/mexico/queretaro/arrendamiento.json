@@ -193,7 +193,7 @@
     "regla": "Los arrendamientos de bienes públicos se rigen por derecho administrativo y, supletoriamente, por este Título.",
     "plantilla_clausula": "",
     "validacion_logica": ""
-  }
+  },
   {
     "articulo": 2297,
     "ontologia_target": ["bien", "usuario", "obligaciones_basicas"],
@@ -463,7 +463,7 @@
     "regla": "Las mejoras útiles o autorizadas deben pagarse al arrendatario aunque el contrato diga que quedan en beneficio del inmueble.",
     "plantilla_clausula": "Las mejoras útiles o autorizadas serán pagadas al arrendatario aunque el contrato disponga que quedan en beneficio del inmueble.",
     "validacion_logica": ""
-  }
+  },
   {
     "articulo": 2315,
     "ontologia_target": ["usuario", "contraprestacion", "bien", "obligaciones_basicas"],
@@ -823,7 +823,7 @@
     "regla": "Si el arrendamiento dura más de cinco años y el arrendatario hizo mejoras importantes, tiene preferencia para renovar y derecho del tanto en caso de venta.",
     "plantilla_clausula": "El arrendatario tendrá preferencia para renovar el contrato y derecho del tanto si el inmueble se vende, siempre que haya hecho mejoras importantes y esté al corriente en la renta.",
     "validacion_logica": ""
-  }
+  },
   {
     "articulo": 2339,
     "ontologia_target": ["bien"],
@@ -1018,7 +1018,7 @@
     "regla": "Al terminar el arrendamiento rústico, el arrendatario saliente puede usar tierras y edificios por el tiempo indispensable para recoger los frutos pendientes.",
     "plantilla_clausula": "El arrendatario podrá usar tierras y edificios por el tiempo indispensable para recoger los frutos pendientes al terminar el contrato.",
     "validacion_logica": ""
-  }
+  },
   {
     "articulo": 2352,
     "ontologia_target": ["bien"],
@@ -1303,7 +1303,7 @@
     "regla": "Si se arrienda una finca con aperos, el arrendamiento de estos dura lo mismo que el de la finca.",
     "plantilla_clausula": "",
     "validacion_logica": ""
-  }
+  },
   {
     "articulo": 2371,
     "ontologia_target": ["vinculo", "tiempo"],
