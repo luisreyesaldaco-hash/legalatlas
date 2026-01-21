@@ -22,7 +22,7 @@ function normalizarTexto(texto) {
     .trim();
 }
 
-// Mapa de sinónimos para ayudar al motor a entender la intención
+// Mapa de sinónimos para poder ayudar al motor a entender la intención
 const sinonimosLegales = {
   "paga": ["pago", "renta", "precio", "contraprestacion", "cumplimiento"],
   "renta": ["pago", "precio", "contraprestacion", "alquiler"],
