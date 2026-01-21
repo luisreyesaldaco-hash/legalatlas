@@ -1,22 +1,20 @@
-// motor.js – versión compatible con Vercel
+// motor.js – Versión final optimizada para Vercel
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 
-async function cargarJSON(ruta) {
+/**
+ * Carga archivos JSON desde el sistema de archivos de Vercel
+ */
+async function cargarJSON(rutaRelativa) {
   try {
-    // Intentar leer desde el sistema de archivos (para el servidor/API)
-    try {
-      const caminoAbsoluto = join(process.cwd(), ruta);
-      const contenido = await readFile(caminoAbsoluto, 'utf-8');
-      return JSON.parse(contenido);
-    } catch (fsError) {
-      // Si falla fs (como en el navegador), intentar fetch
-      const resp = await fetch('/' + ruta);
-      if (!resp.ok) return null;
-      return await resp.json();
-    }
-  } catch (e) {
-    console.error(`Error al cargar ${ruta}:`, e);
+    // process.cwd() apunta a la raíz del proyecto en Vercel
+    const caminoAbsoluto = join(process.cwd(), rutaRelativa);
+    console.log("Intentando cargar archivo en:", caminoAbsoluto);
+    
+    const contenido = await readFile(caminoAbsoluto, 'utf-8');
+    return JSON.parse(contenido);
+  } catch (error) {
+    console.error(`Error crítico cargando ${rutaRelativa}:`, error.message);
     return null;
   }
 }
@@ -69,15 +67,15 @@ function puntuarRegla(reglaObj, palabrasClave, ontosBuscadas) {
   const textoReglaNorm = normalizarTexto(reglaObj.regla || "");
   const plantillaNorm = normalizarTexto(reglaObj.plantilla_clausula || "");
 
-  for (const palabra of palabrasClave) {
+  palabrasClave.forEach(palabra => {
     if (textoReglaNorm.includes(palabra)) score += 2;
     if (plantillaNorm.includes(palabra)) score += 1;
-  }
+  });
 
   const targets = reglaObj.ontologia_target || [];
-  for (const o of targets) {
+  targets.forEach(o => {
     if (ontosBuscadas.includes(o)) score += 3;
-  }
+  });
 
   const idx = prioridadCategorias.indexOf(reglaObj.categoria_juridica);
   if (idx !== -1) score += (prioridadCategorias.length - idx);
@@ -87,21 +85,33 @@ function puntuarRegla(reglaObj, palabrasClave, ontosBuscadas) {
 
 export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsuario) {
   const contexto = estado ? `${tema} en ${estado}, ${pais}` : `${tema} en ${pais}`;
-  let rutaJurisdiccion = estado 
-    ? `jurisdicciones/${pais}/${estado}/${tema}.json` 
-    : `jurisdicciones/${pais}/${tema}.json`;
+  
+  // Construcción de ruta limpia para evitar errores de slash doble
+  let rutaJurisdiccion = "";
+  if (estado && estado.trim() !== "") {
+    rutaJurisdiccion = `jurisdicciones/${pais}/${estado}/${tema}.json`;
+  } else {
+    rutaJurisdiccion = `jurisdicciones/${pais}/${tema}.json`;
+  }
 
   const reglas = await cargarJSON(rutaJurisdiccion);
 
-  if (!reglas || !Array.isArray(reglas) || reglas.length === 0) {
-    return { contexto, pregunta: preguntaUsuario, reglas_relevantes: [], palabras_clave: [], ontologia_detectada: [], mensaje_sistema: "No encontré normas cargadas." };
+  if (!reglas || !Array.isArray(reglas)) {
+    return { 
+      contexto, 
+      pregunta: preguntaUsuario, 
+      reglas_relevantes: [], 
+      mensaje_sistema: `Error: No se pudo encontrar el archivo legal en ${rutaJurisdiccion}` 
+    };
   }
 
   const palabrasClave = extraerPalabrasClave(preguntaUsuario);
   const ontosBuscadas = [];
   palabrasClave.forEach(p => {
     if (mapaOntologia[p]) {
-      mapaOntologia[p].forEach(o => { if (!ontosBuscadas.includes(o)) ontosBuscadas.push(o); });
+      mapaOntologia[p].forEach(o => { 
+        if (!ontosBuscadas.includes(o)) ontosBuscadas.push(o); 
+      });
     }
   });
 
@@ -123,5 +133,4 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsua
       plantilla_clausula: r.plantilla_clausula || ""
     }))
   };
-
 }
