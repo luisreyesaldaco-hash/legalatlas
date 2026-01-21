@@ -1,20 +1,13 @@
-// motor.js – Versión final optimizada para Vercel
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 
-/**
- * Carga archivos JSON desde el sistema de archivos de Vercel
- */
 async function cargarJSON(rutaRelativa) {
   try {
-    // process.cwd() apunta a la raíz del proyecto en Vercel
     const caminoAbsoluto = join(process.cwd(), rutaRelativa);
-    console.log("Intentando cargar archivo en:", caminoAbsoluto);
-    
     const contenido = await readFile(caminoAbsoluto, 'utf-8');
     return JSON.parse(contenido);
   } catch (error) {
-    console.error(`Error crítico cargando ${rutaRelativa}:`, error.message);
+    console.error(`Error cargando ${rutaRelativa}:`, error.message);
     return null;
   }
 }
@@ -29,108 +22,70 @@ function normalizarTexto(texto) {
     .trim();
 }
 
-function extraerPalabrasClave(pregunta) {
-  const stopwords = ["que","qué","dice","la","el","los","las","de","del","sobre","un","una","en","y","o","para","por","segun","según","como","cuál","cual","cuáles","cuales","es","son","al","lo","se","mi","su","tu","si"];
-  const tokens = normalizarTexto(pregunta).split(" ");
-  return tokens.filter(t => t && !stopwords.includes(t));
-}
-
-const mapaOntologia = {
-  "arrendamiento": ["vinculo","bien","tiempo","contraprestacion"],
-  "renta": ["contraprestacion"],
-  "precio": ["contraprestacion"],
-  "duracion": ["tiempo"],
-  "plazo": ["tiempo"],
-  "uso": ["bien","usuario"],
-  "contrato": ["vinculo", "tiempo"],
-  "goce": ["bien","usuario"],
-  "obligaciones": ["obligaciones_basicas","obligaciones_usuario","obligaciones_arrendador"],
-  "derechos": ["derechos_usuario"],
-  "riesgos": ["riesgos"],
-  "incendio": ["riesgos"],
-  "mejoras": ["bien"],
-  "reparaciones": ["bien"],
-  "terminacion": ["vinculo"],
-  "rescisión": ["vinculo","contraprestacion"],
-  "rescision": ["vinculo","contraprestacion"],
-  "pago": ["contraprestacion"],
-  "pagar": ["contraprestacion"],
-  "inquilino": ["usuario"],
-  "arrendatario": ["usuario"],
-  "arrendador": ["titular"]
+// Mapa de sinónimos para ayudar al motor a entender la intención
+const sinonimosLegales = {
+  "paga": ["pago", "renta", "precio", "contraprestacion", "cumplimiento"],
+  "renta": ["pago", "precio", "contraprestacion", "alquiler"],
+  "no paga": ["incumplimiento", "falta", "pago", "mora"],
+  "plazo": ["tiempo", "duracion", "termino", "vigencia"],
+  "dueño": ["arrendador", "propietario"],
+  "inquilino": ["arrendatario", "usuario"]
 };
 
-const prioridadCategorias = ["definicion","limites_legales","prohibiciones","obligaciones_arrendador","obligaciones_usuario","derechos_usuario","riesgos","reglas_supletorias"];
-
-function puntuarRegla(reglaObj, palabrasClave, ontosBuscadas) {
+function puntuarRegla(reglaObj, palabrasClave) {
   let score = 0;
   const textoReglaNorm = normalizarTexto(reglaObj.regla || "");
-  const plantillaNorm = normalizarTexto(reglaObj.plantilla_clausula || "");
+  const categoriaNorm = normalizarTexto(reglaObj.categoria_juridica || "");
 
   palabrasClave.forEach(palabra => {
-    if (textoReglaNorm.includes(palabra)) score += 2;
-    if (plantillaNorm.includes(palabra)) score += 1;
-  });
+    // Si la palabra está en el texto del artículo (Ej: "pago", "arrendatario")
+    if (textoReglaNorm.includes(palabra)) score += 10;
+    
+    // Si la palabra coincide con la categoría (Ej: "obligaciones")
+    if (categoriaNorm.includes(palabra)) score += 5;
 
-  const targets = reglaObj.ontologia_target || [];
-  targets.forEach(o => {
-    if (ontosBuscadas.includes(o)) score += 3;
+    // Buscar sinónimos
+    if (sinonimosLegales[palabra]) {
+      sinonimosLegales[palabra].forEach(sinonimo => {
+        if (textoReglaNorm.includes(sinonimo)) score += 3;
+      });
+    }
   });
-
-  const idx = prioridadCategorias.indexOf(reglaObj.categoria_juridica);
-  if (idx !== -1) score += (prioridadCategorias.length - idx);
 
   return score;
 }
 
 export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsuario) {
   const contexto = estado ? `${tema} en ${estado}, ${pais}` : `${tema} en ${pais}`;
-  
-  // Construcción de ruta bien limpia para evitar errores de slash doble
-  let rutaJurisdiccion = "";
-  if (estado && estado.trim() !== "") {
-    rutaJurisdiccion = `jurisdicciones/${pais}/${estado}/${tema}.json`;
-  } else {
-    rutaJurisdiccion = `jurisdicciones/${pais}/${tema}.json`;
-  }
+  const rutaJurisdiccion = estado 
+    ? `jurisdicciones/${pais}/${estado}/${tema}.json` 
+    : `jurisdicciones/${pais}/${tema}.json`;
 
   const reglas = await cargarJSON(rutaJurisdiccion);
 
   if (!reglas || !Array.isArray(reglas)) {
-    return { 
-      contexto, 
-      pregunta: preguntaUsuario, 
-      reglas_relevantes: [], 
-      mensaje_sistema: `Error: No se pudo encontrar el archivo legal en ${rutaJurisdiccion}` 
-    };
+    return { contexto, reglas_relevantes: [], mensaje_sistema: "Archivo no encontrado." };
   }
 
-  const palabrasClave = extraerPalabrasClave(preguntaUsuario);
-  const ontosBuscadas = [];
-  palabrasClave.forEach(p => {
-    if (mapaOntologia[p]) {
-      mapaOntologia[p].forEach(o => { 
-        if (!ontosBuscadas.includes(o)) ontosBuscadas.push(o); 
-      });
-    }
-  });
+  // Extraer palabras de la pregunta quitando conectores
+  const stopwords = ["que", "la", "el", "de", "un", "es", "mi", "si"];
+  const palabrasClave = normalizarTexto(preguntaUsuario)
+    .split(" ")
+    .filter(p => p.length > 2 && !stopwords.includes(p));
 
+  // Calificar cada artículo del JSON
   const relevantes = reglas
-    .map(r => ({ ...r, _score: puntuarRegla(r, palabrasClave, ontosBuscadas) }))
+    .map(r => ({ ...r, _score: puntuarRegla(r, palabrasClave) }))
     .filter(r => r._score > 0)
     .sort((a, b) => b._score - a._score)
-    .slice(0, 10);
+    .slice(0, 5); // Enviamos los 5 mejores artículos a la IA
 
   return {
     contexto,
     pregunta: preguntaUsuario,
-    palabras_clave: palabrasClave,
-    ontologia_detectada: ontosBuscadas,
     reglas_relevantes: relevantes.map(r => ({
       articulo: r.articulo,
-      categoria_juridica: r.categoria_juridica,
-      regla: r.regla,
-      plantilla_clausula: r.plantilla_clausula || ""
+      regla: r.regla
     }))
   };
 }
