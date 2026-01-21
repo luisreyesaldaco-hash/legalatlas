@@ -44,6 +44,7 @@ const mapaOntologia = {
   "duracion": ["tiempo"],
   "plazo": ["tiempo"],
   "uso": ["bien","usuario"],
+  "contrato": ["vinculo", "tiempo"],
   "goce": ["bien","usuario"],
   "obligaciones": ["obligaciones_basicas","obligaciones_usuario","obligaciones_arrendador"],
   "derechos": ["derechos_usuario"],
@@ -122,4 +123,5 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsua
       plantilla_clausula: r.plantilla_clausula || ""
     }))
   };
+
 }
