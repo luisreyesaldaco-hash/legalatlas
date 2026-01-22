@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (dataLocal.fuente) displayFuente.innerText = dataLocal.fuente;
 
-            // 4. Llamada a la API de Inteligencia
+            // 4. Llamada a la API de Inteligencia (dentro de enviarConsulta)
             const res = await fetch("/api/asesoria", {
                method: "POST",
                headers: { "Content-Type": "application/json" },
