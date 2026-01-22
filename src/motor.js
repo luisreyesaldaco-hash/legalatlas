@@ -1,8 +1,8 @@
-// motor.js - Versión para Navegador (usa fetch)
+// motor.js - Versión Final Optimizada para APOLO
 
 async function cargarJSON(rutaRelativa) {
   try {
-    // En el navegador, las rutas deben ser relativas a la raíz del servidor
+    // El / al inicio asegura que busque desde la raíz del dominio
     const respuesta = await fetch(`/${rutaRelativa}`);
     if (!respuesta.ok) throw new Error(`No se encontró el archivo: ${rutaRelativa}`);
     return await respuesta.json();
@@ -23,11 +23,20 @@ function normalizarTexto(texto) {
 }
 
 export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsuario) {
-  const p = pais.toLowerCase().trim();
-  const e = estado ? estado.toLowerCase().trim() : "";
-  const t = tema.toLowerCase().trim();
+  // Blindaje contra valores nulos o indefinidos
+  const p = (pais || "").toLowerCase().trim();
+  const e = (estado || "").toLowerCase().trim();
+  const t = (tema || "").toLowerCase().trim();
 
-  // Construcción de ruta para el servidor de internet
+  // Validación de seguridad para el tema
+  if (!t) {
+    return { 
+      error: "No se especificó un tema jurídico.", 
+      reglas_relevantes: [] 
+    };
+  }
+
+  // Construcción de ruta (buscando en la carpeta jurisdicciones del root)
   const rutaJurisdiccion = e 
     ? `jurisdicciones/${p}/${e}/${t}.json` 
     : `jurisdicciones/${p}/${t}.json`;
@@ -36,29 +45,36 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsua
 
   if (!rawData) {
     return { 
-        error: `No se pudo cargar la base de datos legal en: ${rutaJurisdiccion}` 
+      error: `No se pudo cargar la base de datos legal en: ${rutaJurisdiccion}`,
+      reglas_relevantes: []
     };
   }
 
-  // Soporte para ambos formatos (nuevo objeto o el array viejo)
+  // Soporte para ambos formatos (objeto con .reglas o array directo)
   const fuente = rawData.fuente_oficial || "Legislación Aplicable";
   const reglas = Array.isArray(rawData) ? rawData : (rawData.reglas || []);
 
-  const palabrasClave = normalizarTexto(preguntaUsuario).split(" ");
+  // Extraer palabras clave de la pregunta (solo palabras significativas)
+  const palabrasClave = normalizarTexto(preguntaUsuario)
+    .split(" ")
+    .filter(palabra => palabra.length > 2);
 
   const relevantes = reglas
     .map(r => {
       let score = 0;
-      const textoBusqueda = normalizarTexto(r.regla + " " + (r.articulo) + " " + (r.ontologia_target?.join(" ") || ""));
+      // Buscamos en el texto de la regla, el número de artículo y los targets
+      const textoBusqueda = normalizarTexto(
+        `${r.regla} ${r.articulo} ${r.ontologia_target?.join(" ") || ""}`
+      );
       
       palabrasClave.forEach(palabra => {
-        if (palabra.length > 2 && textoBusqueda.includes(palabra)) score += 1;
+        if (textoBusqueda.includes(palabra)) score += 1;
       });
       return { ...r, _score: score };
     })
-    .filter(r => r._score > 0)
-    .sort((a, b) => b._score - a._score)
-    .slice(0, 8);
+    .filter(r => r._score > 0) // Solo lo que coincida
+    .sort((a, b) => b._score - a._score) // De mayor a menor relevancia
+    .slice(0, 8); // Tomamos los 8 mejores para enviar al LLM
 
   return {
     fuente,
