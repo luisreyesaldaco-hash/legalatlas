@@ -35,7 +35,7 @@
             padding: 2.5rem 2rem;
             display: flex;
             flex-direction: column;
-            gap: 2.5rem;
+            gap: 2rem;
         }
 
         .brand {
@@ -52,7 +52,7 @@
         .config-group {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.2rem;
         }
 
         label {
@@ -69,7 +69,7 @@
             border: 1px solid var(--border-soft);
             color: var(--text-main);
             padding: 0.8rem;
-            border-radius: 0; /* Estética minimalista cuadrada */
+            border-radius: 0;
             font-size: 0.9rem;
             outline: none;
             font-family: 'Space Grotesk', sans-serif;
@@ -80,13 +80,23 @@
 
         .modulo-badge {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             font-weight: 600;
             background: var(--text-main);
             color: var(--white);
             padding: 8px;
             text-align: center;
             letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        #fuente-oficial-display {
+            font-size: 0.7rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+            margin-top: -10px;
+            text-align: center;
+            min-height: 1rem;
         }
 
         /* Área Principal de Chat */
@@ -107,7 +117,6 @@
             scroll-behavior: smooth;
         }
 
-        /* Globos de Chat de Estilo Griego */
         .mensaje {
             max-width: 75%;
             padding: 1.5rem;
@@ -136,7 +145,7 @@
             padding-left: 2rem;
         }
 
-        /* Input Area Minimalista */
+        /* Input Area */
         .input-container {
             padding: 3rem;
             background: var(--white);
@@ -174,9 +183,7 @@
             transition: opacity 0.3s;
         }
 
-        button#enviar:hover {
-            opacity: 0.6;
-        }
+        button#enviar:hover { opacity: 0.6; }
 
         .footer-tag {
             margin-top: auto;
@@ -196,22 +203,29 @@
         <div class="config-group">
             <label for="pais">Jurisdicción</label>
             <select id="pais">
-                <option value="">Seleccione un país</option>
                 <option value="mexico">MÉXICO</option>
             </select>
 
             <label for="estado">Estado / Región</label>
             <select id="estado">
-                <option value="">—</option>
+                <option value="">Seleccione Estado</option>
                 <option value="guanajuato">GUANAJUATO</option>
                 <option value="queretaro">QUERÉTARO</option>
             </select>
 
+            <label for="tema">Materia Jurídica</label>
+            <select id="tema">
+                <option value="arrendamiento">Arrendamiento</option>
+                <option value="matrimonio">Matrimonio</option>
+                <option value="divorcio">Divorcio</option>
+                <option value="alimentos">Pensión Alimenticia</option>
+            </select>
+
             <label>Estatus del Motor</label>
-            <div class="modulo-badge">
+            <div id="status-badge" class="modulo-badge">
                 ARRENDAMIENTO // ESTRUCTURADO
             </div>
-            <input type="hidden" id="tema" value="arrendamiento">
+            <div id="fuente-oficial-display"></div>
         </div>
 
         <div class="footer-tag">
@@ -223,7 +237,7 @@
         <div id="mensajes">
             <div class="mensaje asistente">
                 Sistemas operativos. Soy APOLO. <br>
-                Tu asesor jurídico virtual. ¿Cuál es su consulta sobre Arrendamiento?
+                Tu asesor jurídico virtual. Selecciona una jurisdicción y materia para comenzar.
             </div>
         </div>
 
@@ -236,5 +250,15 @@
     </main>
 
     <script src="src/app.js" type="module"></script>
+    
+    <script>
+        // Pequeño script visual para que el badge cambie con el selector
+        const temaSelect = document.getElementById('tema');
+        const statusBadge = document.getElementById('status-badge');
+        
+        temaSelect.addEventListener('change', () => {
+            statusBadge.innerText = `${temaSelect.value} // ESTRUCTURADO`;
+        });
+    </script>
 </body>
 </html>

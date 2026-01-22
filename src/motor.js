@@ -4,13 +4,13 @@ import { join } from 'path';
 async function cargarJSON(rutaRelativa) {
   try {
     const caminoAbsoluto = join(process.cwd(), rutaRelativa);
-    // DEBUG: Vamos a ver qué archivos hay en la carpeta para saber si existe
-    const carpetaPadre = join(process.cwd(), 'jurisdicciones');
+    
+    // DEBUG: Útil para entornos como Vercel
+    const carpetaBase = join(process.cwd(), 'jurisdicciones');
     try {
-        const contenidoCarpeta = await readdir(carpetaPadre);
-        console.log("Archivos encontrados en jurisdicciones:", contenidoCarpeta);
+        await readdir(carpetaBase);
     } catch (e) {
-        console.error("La carpeta 'jurisdicciones' no existe en la raíz");
+        console.error("La carpeta 'jurisdicciones' no se detecta en la raíz.");
     }
 
     const contenido = await readFile(caminoAbsoluto, 'utf-8');
@@ -32,38 +32,50 @@ function normalizarTexto(texto) {
 }
 
 export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsuario) {
-  // 1. Forzamos minúsculas para evitar errores de Windows vs Linux (Vercel)
+  // 1. Normalización de parámetros
   const p = pais.toLowerCase().trim();
   const e = estado ? estado.toLowerCase().trim() : "";
   const t = tema.toLowerCase().trim();
 
   const contexto = e ? `${t} en ${e}, ${p}` : `${t} en ${p}`;
   
-  // 2. Construcción de ruta ultra-precisa
+  // 2. Construcción de ruta (Soporta Nacional y Estatal)
+  // Si hay estado: jurisdicciones/mexico/guanajuato/matrimonio.json
+  // Si no hay estado: jurisdicciones/colombia/matrimonio.json
   const rutaJurisdiccion = e 
     ? `jurisdicciones/${p}/${e}/${t}.json` 
     : `jurisdicciones/${p}/${t}.json`;
 
-  const reglas = await cargarJSON(rutaJurisdiccion);
+  const rawData = await cargarJSON(rutaJurisdiccion);
 
-  // 3. Si no hay reglas, mandamos un mensaje de error técnico a la IA para que te avise
-  if (!reglas || !Array.isArray(reglas)) {
+  // 3. Validación de la nueva estructura (Encabezado + Reglas)
+  if (!rawData) {
     return { 
         contexto, 
         reglas_relevantes: [], 
-        error_tecnico: `No se encontro el archivo en: ${rutaJurisdiccion}. Revisa que la carpeta se llame 'jurisdicciones' en minusculas.` 
+        error_tecnico: `Archivo no encontrado en: ${rutaJurisdiccion}` 
     };
+  }
+
+  // Soporte para ambos formatos (el nuevo objeto o el array viejo para compatibilidad)
+  const fuente = rawData.fuente_oficial || "Legislación Aplicable";
+  const reglas = Array.isArray(rawData) ? rawData : (rawData.reglas || []);
+
+  if (reglas.length === 0) {
+    return { contexto, reglas_relevantes: [], fuente };
   }
 
   const palabrasClave = normalizarTexto(preguntaUsuario).split(" ");
 
-  // 4. Búsqueda simple pero infalible por palabra
+  // 4. Búsqueda por relevancia (Scoring)
   const relevantes = reglas
     .map(r => {
       let score = 0;
-      const textoRegla = normalizarTexto(r.regla);
+      // Buscamos en la regla y en la ontología para mayor precisión
+      const textoBusqueda = normalizarTexto(r.regla + " " + (r.ontologia_target?.join(" ") || ""));
+      
       palabrasClave.forEach(palabra => {
-        if (palabra.length > 2 && textoRegla.includes(palabra)) score += 1;
+        if (palabra.length > 2 && textoBusqueda.includes(palabra)) score += 1;
       });
       return { ...r, _score: score };
     })
@@ -71,7 +83,9 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsua
     .sort((a, b) => b._score - a._score)
     .slice(0, 8);
 
+  // 5. Retorno para app.js
   return {
+    fuente,
     contexto,
     pregunta: preguntaUsuario,
     reglas_relevantes: relevantes.map(r => ({
