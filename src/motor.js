@@ -2,12 +2,13 @@
 
 async function cargarJSON(rutaRelativa) {
   try {
-    // El / al inicio asegura que busque desde la raíz del dominio
-    const respuesta = await fetch(`/${rutaRelativa}`);
-    if (!respuesta.ok) throw new Error(`No se encontró el archivo: ${rutaRelativa}`);
+    // IMPORTANTE: Asegúrate de que tenga el '/' inicial
+    // para que busque desde legalatlas.io/jurisdicciones...
+    const respuesta = await fetch(`/${rutaRelativa}`); 
+    if (!respuesta.ok) throw new Error(`Error: ${respuesta.status}`);
     return await respuesta.json();
   } catch (error) {
-    console.error(`Error cargando el archivo legal:`, error.message);
+    console.error("El motor no pudo leer el archivo:", error);
     return null;
   }
 }
