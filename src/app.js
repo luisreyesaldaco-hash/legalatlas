@@ -1,8 +1,6 @@
 // app.js - Versión Blindada y Modular para APOLO
 import { ejecutarMotorEstructurado } from './motor.js';
 
-import { ejecutarMotorEstructurado } from './motor.js';
-
 document.addEventListener('DOMContentLoaded', () => {
     const btnEnviar = document.getElementById("enviar");
     const inputPregunta = document.getElementById("pregunta");
