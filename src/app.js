@@ -41,29 +41,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (dataLocal.fuente) displayFuente.innerText = dataLocal.fuente;
 
-            // 4. Llamada a la API de Inteligencia (dentro de enviarConsulta)
+            // 4. Llamada a la API de Inteligencia
             const res = await fetch("/api/asesoria", {
-               method: "POST",
-               headers: { "Content-Type": "application/json" },
-               body: JSON.stringify({
-                pais: pais,           // Añadido para que la IA sepa el país
-                estado: estado,
-                tema: tema,
-                pregunta: pregunta,
-                contextoLegal: dataLocal.reglas_relevantes || [], // Los 10 artículos
-                fuente: dataLocal.fuente || "Legislación Local"
-          })
- });
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    pais: pais,
+                    estado: estado,
+                    tema: tema,
+                    pregunta: pregunta,
+                    contextoLegal: dataLocal.reglas_relevantes || [], // Envía los artículos encontrados
+                    fuente: dataLocal.fuente || "Legislación Local"
+                })
+            });
 
+            // Control de errores de la respuesta HTTP
             if (!res.ok) throw new Error("Error en la respuesta de la API");
 
             const dataIA = await res.json();
             
-            // Quitar mensaje de carga
+            // Quitar indicador de carga
             const loadingElement = document.getElementById(idCarga);
             if (loadingElement) loadingElement.remove();
 
-            // 5. Mostrar respuesta final
+            // 5. Mostrar respuesta final en el chat
             if (dataIA.error) {
                 agregarMensaje("Error: " + dataIA.error, "asistente");
             } else {
@@ -71,10 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         } catch (err) {
-            console.error("ERROR CRÍTICO:", err);
+            console.error("ERROR CRÍTICO EN APP:", err);
             const loadingElement = document.getElementById(idCarga);
             if (loadingElement) {
-                loadingElement.innerHTML = "<strong>Error:</strong> No se pudo procesar la consulta.";
+                loadingElement.innerHTML = "<strong>Error:</strong> No se pudo procesar la consulta legal.";
             }
         }
     } // <-- Aquí terminaba el bloque try-catch que faltaba
