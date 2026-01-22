@@ -251,15 +251,15 @@
         </div>
     </main>
 
-    <script src="src/app.js" type="module"></script>
+    <script src="./app.js" type="module"></script>
     
     <script>
-        // Pequeño script visual para que el badge cambie con el selector en la pagina
+        // Este script interno está perfecto, mantenlo así.
         const temaSelect = document.getElementById('tema');
         const statusBadge = document.getElementById('status-badge');
         
         temaSelect.addEventListener('change', () => {
-            statusBadge.innerText = `${temaSelect.value} // ESTRUCTURADO`;
+            statusBadge.innerText = `${temaSelect.value.toUpperCase()} // ESTRUCTURADO`;
         });
     </script>
 </body>
