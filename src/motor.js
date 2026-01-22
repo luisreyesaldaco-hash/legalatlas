@@ -1,22 +1,13 @@
-import { readFile, readdir } from 'fs/promises';
-import { join } from 'path';
+// motor.js - Versión para Navegador (usa fetch)
 
 async function cargarJSON(rutaRelativa) {
   try {
-    const caminoAbsoluto = join(process.cwd(), rutaRelativa);
-    
-    // DEBUG: Útil para entornos como Vercel
-    const carpetaBase = join(process.cwd(), 'jurisdicciones');
-    try {
-        await readdir(carpetaBase);
-    } catch (e) {
-        console.error("La carpeta 'jurisdicciones' no se detecta en la raíz.");
-    }
-
-    const contenido = await readFile(caminoAbsoluto, 'utf-8');
-    return JSON.parse(contenido);
+    // En el navegador, las rutas deben ser relativas a la raíz del servidor
+    const respuesta = await fetch(`/${rutaRelativa}`);
+    if (!respuesta.ok) throw new Error(`No se encontró el archivo: ${rutaRelativa}`);
+    return await respuesta.json();
   } catch (error) {
-    console.error(`Error cargando ${rutaRelativa}:`, error.message);
+    console.error(`Error cargando el archivo legal:`, error.message);
     return null;
   }
 }
@@ -32,47 +23,33 @@ function normalizarTexto(texto) {
 }
 
 export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsuario) {
-  // 1. Normalización de parámetros
   const p = pais.toLowerCase().trim();
   const e = estado ? estado.toLowerCase().trim() : "";
   const t = tema.toLowerCase().trim();
 
-  const contexto = e ? `${t} en ${e}, ${p}` : `${t} en ${p}`;
-  
-  // 2. Construcción de ruta (Soporta Nacional y Estatal)
-  // Si hay estado: jurisdicciones/mexico/guanajuato/matrimonio.json
-  // Si no hay estado: jurisdicciones/colombia/matrimonio.json
+  // Construcción de ruta para el servidor web
   const rutaJurisdiccion = e 
     ? `jurisdicciones/${p}/${e}/${t}.json` 
     : `jurisdicciones/${p}/${t}.json`;
 
   const rawData = await cargarJSON(rutaJurisdiccion);
 
-  // 3. Validación de la nueva estructura (Encabezado + Reglas)
   if (!rawData) {
     return { 
-        contexto, 
-        reglas_relevantes: [], 
-        error_tecnico: `Archivo no encontrado en: ${rutaJurisdiccion}` 
+        error: `No se pudo cargar la base de datos legal en: ${rutaJurisdiccion}` 
     };
   }
 
-  // Soporte para ambos formatos (el nuevo objeto o el array viejo para compatibilidad)
+  // Soporte para ambos formatos (nuevo objeto o array viejo)
   const fuente = rawData.fuente_oficial || "Legislación Aplicable";
   const reglas = Array.isArray(rawData) ? rawData : (rawData.reglas || []);
 
-  if (reglas.length === 0) {
-    return { contexto, reglas_relevantes: [], fuente };
-  }
-
   const palabrasClave = normalizarTexto(preguntaUsuario).split(" ");
 
-  // 4. Búsqueda por relevancia (Scoring)
   const relevantes = reglas
     .map(r => {
       let score = 0;
-      // Buscamos en la regla y en la ontología para mayor precisión
-      const textoBusqueda = normalizarTexto(r.regla + " " + (r.ontologia_target?.join(" ") || ""));
+      const textoBusqueda = normalizarTexto(r.regla + " " + (r.articulo) + " " + (r.ontologia_target?.join(" ") || ""));
       
       palabrasClave.forEach(palabra => {
         if (palabra.length > 2 && textoBusqueda.includes(palabra)) score += 1;
@@ -83,14 +60,8 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsua
     .sort((a, b) => b._score - a._score)
     .slice(0, 8);
 
-  // 5. Retorno para app.js
   return {
     fuente,
-    contexto,
-    pregunta: preguntaUsuario,
-    reglas_relevantes: relevantes.map(r => ({
-      articulo: r.articulo,
-      regla: r.regla
-    }))
+    reglas_relevantes: relevantes
   };
 }
