@@ -27,7 +27,7 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsua
   const e = estado ? estado.toLowerCase().trim() : "";
   const t = tema.toLowerCase().trim();
 
-  // Construcción de ruta para el servidor web
+  // Construcción de ruta para el servidor de internet
   const rutaJurisdiccion = e 
     ? `jurisdicciones/${p}/${e}/${t}.json` 
     : `jurisdicciones/${p}/${t}.json`;
