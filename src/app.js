@@ -9,30 +9,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const displayFuente = document.getElementById("fuente-oficial-display");
 
     async function enviarConsulta() {
-        const pregunta = (inputPregunta.value || "").trim();
-        const estado = selectEstado.value;
-        const tema = selectTema.value;
+    // 1. Capturamos los tres niveles de la carpeta
+    const pais = document.getElementById("pais").value;   // "mexico" o "uruguay"
+    const estado = document.getElementById("estado").value; // "guanajuato" o "montevideo"
+    const tema = document.getElementById("tema").value;     // "arrendamiento"
+    const pregunta = inputPregunta.value.trim();
 
-        if (!pregunta || !estado || !tema) {
-            alert("Completa: Estado, Tema y Pregunta.");
-            return;
-        }
+    // 2. Validación: Si falta algo, detenemos
+    if (!pregunta || !pais || !estado || !tema) {
+        alert("Por favor selecciona País, Estado y Tema.");
+        return;
+    }
 
-        console.log("--- INICIANDO CONSULTA ---");
-        console.log("Pregunta:", pregunta);
-        console.log("Ruta que se buscará:", `mexico / ${estado} / ${tema}`);
+    // 3. El Motor ahora recibe el país real seleccionado
+    const dataLocal = await ejecutarMotorEstructurado(pais, estado, tema, pregunta);
 
-        agregarMensaje(pregunta, "usuario");
-        inputPregunta.value = "";
-
-        const idCarga = "loading-" + Date.now();
-        agregarMensaje("APOLO analizando leyes locales...", "asistente", idCarga);
-
-        try {
-            // EJECUCIÓN DEL MOTOR
-            const dataLocal = await ejecutarMotorEstructurado("mexico", estado, tema, pregunta);
-            
-            console.log("Respuesta del Motor:", dataLocal);
+    // LOG DE DIAGNÓSTICO (Para que veas la ruta en la consola)
+    console.log(`Buscando en: jurisdicciones/${pais}/${estado}/${tema}.json`);
+    console.log("Artículos encontrados:", dataLocal.reglas_relevantes);
 
             if (dataLocal.fuente) displayFuente.innerText = dataLocal.fuente;
 
