@@ -29,7 +29,7 @@ export default async function handler(req, res) {
     ${reglasTexto}
     
     INSTRUCCIONES:
-    1. Si hay artículos disponibles, utilízalos para dar una respuesta fundamentada. 
+    1. Si hay artículos disponibles, utilízalos y menciona el numero del articulo para dar una respuesta fundamentada y juridica. 
     2. No te limites a buscar palabras exactas; interpreta si el artículo aplica a la situación (ej: "rescisión por falta de pago" aplica a dudas sobre "no pagar la renta").
     3. Cita SIEMPRE el número de artículo.
     4. Si los artículos no son suficientes, usa tu conocimiento general para orientar al usuario, pero aclara qué parte es interpretación general y qué parte es ley local.`;
