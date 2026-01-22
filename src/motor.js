@@ -40,7 +40,7 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsua
     };
   }
 
-  // Soporte para ambos formatos (nuevo objeto o array viejo)
+  // Soporte para ambos formatos (nuevo objeto o el array viejo)
   const fuente = rawData.fuente_oficial || "Legislación Aplicable";
   const reglas = Array.isArray(rawData) ? rawData : (rawData.reglas || []);
 
