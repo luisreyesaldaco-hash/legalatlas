@@ -43,15 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 4. Llamada a la API de Inteligencia
             const res = await fetch("/api/asesoria", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    pregunta: pregunta,
-                    contextoLegal: dataLocal.reglas_relevantes || [],
-                    fuente: dataLocal.fuente || "Legislación Local",
-                    estado: estado
-                })
-            });
+               method: "POST",
+               headers: { "Content-Type": "application/json" },
+               body: JSON.stringify({
+                pais: pais,           // Añadido para que la IA sepa el país
+                estado: estado,
+                tema: tema,
+                pregunta: pregunta,
+                contextoLegal: dataLocal.reglas_relevantes || [], // Los 10 artículos
+                fuente: dataLocal.fuente || "Legislación Local"
+          })
+ });
 
             if (!res.ok) throw new Error("Error en la respuesta de la API");
 
