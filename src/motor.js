@@ -1,82 +1,96 @@
-// motor.js - Versión Final Optimizada para APOLO
+// motor.js - Versión Definitiva 2.0 para APOLO
 
+/**
+ * Carga el archivo JSON desde el servidor usando la ruta construida.
+ */
 async function cargarJSON(rutaRelativa) {
   try {
-    // IMPORTANTE: Asegúrate de que tenga el '/' inicial
-    // para que busque desde legalatlas.io/jurisdicciones...
-    const respuesta = await fetch(`/${rutaRelativa}`); 
-    if (!respuesta.ok) throw new Error(`Error: ${respuesta.status}`);
+    // El / inicial asegura que busque desde la raíz del dominio (legalatlas.io/)
+    const respuesta = await fetch(`/${rutaRelativa}`);
+    if (!respuesta.ok) throw new Error(`No se encontró el archivo: ${rutaRelativa}`);
     return await respuesta.json();
   } catch (error) {
-    console.error("El motor no pudo leer el archivo:", error);
+    console.error(`[Error Motor] No se pudo cargar el archivo legal:`, error.message);
     return null;
   }
 }
 
+/**
+ * Limpia el texto de acentos, caracteres especiales y lo pasa a minúsculas
+ * para que la búsqueda sea efectiva.
+ */
 function normalizarTexto(texto) {
   return (texto || "")
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9ñáéíóúü\s]/gi, " ")
-    .replace(/\s+/g, " ")
+    .replace(/[\u0300-\u036f]/g, "") // Elimina acentos
+    .replace(/[^a-z0-9ñ\s]/gi, " ")  // Mantiene solo letras y números
+    .replace(/\s+/g, " ")             // Quita espacios dobles
     .trim();
 }
 
+/**
+ * Función principal que busca artículos relevantes en el JSON local.
+ */
 export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsuario) {
-  // Blindaje contra valores nulos o indefinidos
+  // 1. Blindaje de variables de entrada
   const p = (pais || "").toLowerCase().trim();
   const e = (estado || "").toLowerCase().trim();
   const t = (tema || "").toLowerCase().trim();
 
-  // Validación de seguridad para el tema
   if (!t) {
-    return { 
-      error: "No se especificó un tema jurídico.", 
-      reglas_relevantes: [] 
-    };
+    return { error: "No se especificó un tema jurídico.", reglas_relevantes: [] };
   }
 
-  // Construcción de ruta (buscando en la carpeta jurisdicciones del root)
+  // 2. Construcción de la ruta hacia el JSON
+  // Ejemplo: jurisdicciones/mexico/guanajuato/arrendamiento.json
   const rutaJurisdiccion = e 
     ? `jurisdicciones/${p}/${e}/${t}.json` 
     : `jurisdicciones/${p}/${t}.json`;
 
+  // 3. Intento de carga de datos
   const rawData = await cargarJSON(rutaJurisdiccion);
-
   if (!rawData) {
     return { 
-      error: `No se pudo cargar la base de datos legal en: ${rutaJurisdiccion}`,
-      reglas_relevantes: []
+      error: `La base de datos legal no está disponible en la ruta: ${rutaJurisdiccion}`,
+      reglas_relevantes: [] 
     };
   }
 
-  // Soporte para ambos formatos (objeto con .reglas o array directo)
+  // 4. Identificación de la fuente y las reglas
   const fuente = rawData.fuente_oficial || "Legislación Aplicable";
   const reglas = Array.isArray(rawData) ? rawData : (rawData.reglas || []);
 
-  // Extraer palabras clave de la pregunta (solo palabras significativas)
+  // 5. Procesamiento de la búsqueda (Algoritmo de Scoring)
   const palabrasClave = normalizarTexto(preguntaUsuario)
     .split(" ")
-    .filter(palabra => palabra.length > 2);
+    .filter(palabra => palabra.length > 2); // Ignoramos palabras cortas (de, la, el)
 
   const relevantes = reglas
     .map(r => {
       let score = 0;
-      // Buscamos en el texto de la regla, el número de artículo y los targets
-      const textoBusqueda = normalizarTexto(
-        `${r.regla} ${r.articulo} ${r.ontologia_target?.join(" ") || ""}`
+      // Creamos un bloque de texto con el artículo, la regla y los targets para buscar
+      const contenidoParaBuscar = normalizarTexto(
+        `${r.articulo} ${r.regla} ${r.ontologia_target?.join(" ") || ""}`
       );
       
       palabrasClave.forEach(palabra => {
-        if (textoBusqueda.includes(palabra)) score += 1;
+        // Coincidencia exacta (10 puntos)
+        if (contenidoParaBuscar.includes(palabra)) {
+          score += 10;
+        } 
+        // Coincidencia por raíz de palabra (ej: 'pago' en 'pagos') (5 puntos)
+        else if (palabra.length > 4 && contenidoParaBuscar.includes(palabra.substring(0, 4))) {
+          score += 5;
+        }
       });
       return { ...r, _score: score };
     })
-    .filter(r => r._score > 0) // Solo lo que coincida
-    .sort((a, b) => b._score - a._score) // De mayor a menor relevancia
-    .slice(0, 8); // Tomamos los 8 mejores para enviar al LLM
+    .filter(r => r._score > 0)          // Solo conservamos lo que tiene coincidencia
+    .sort((a, b) => b._score - a._score) // Ordenamos de más relevante a menos
+    .slice(0, 10);                       // Enviamos el Top 10 a la IA
 
+  // 6. Retorno de resultados para app.js
   return {
     fuente,
     reglas_relevantes: relevantes
