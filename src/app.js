@@ -1,4 +1,3 @@
-// app.js - Versión Final Blindada para APOLO
 import { ejecutarMotorEstructurado } from './motor.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,69 +13,53 @@ document.addEventListener('DOMContentLoaded', () => {
         const estado = selectEstado.value;
         const tema = selectTema.value;
 
-        // VALIDACIÓN: Evita enviar si falta información crítica
-        if (!pregunta) return;
-        if (!estado || !tema) {
-            agregarMensaje("Por favor, selecciona un **Estado** y un **Tema** antes de consultar.", "asistente");
+        if (!pregunta || !estado || !tema) {
+            alert("Completa: Estado, Tema y Pregunta.");
             return;
         }
 
-        // UI: Mostrar pregunta del usuario
+        console.log("--- INICIANDO CONSULTA ---");
+        console.log("Pregunta:", pregunta);
+        console.log("Ruta que se buscará:", `mexico / ${estado} / ${tema}`);
+
         agregarMensaje(pregunta, "usuario");
         inputPregunta.value = "";
 
-        // UI: Efecto de carga
         const idCarga = "loading-" + Date.now();
-        agregarMensaje("APOLO analizando leyes locales y procesando respuesta...", "asistente", idCarga);
+        agregarMensaje("APOLO analizando leyes locales...", "asistente", idCarga);
 
         try {
-            // PASO 1: Búsqueda Local (Sin costo de API)
-            // Esto buscará en: /jurisdicciones/mexico/[estado]/[tema].json
+            // EJECUCIÓN DEL MOTOR
             const dataLocal = await ejecutarMotorEstructurado("mexico", estado, tema, pregunta);
             
-            if (dataLocal.fuente) {
-                displayFuente.innerText = dataLocal.fuente;
-            } else {
-                displayFuente.innerText = "Consultando base general";
-            }
+            console.log("Respuesta del Motor:", dataLocal);
 
-            // PASO 2: Llamada a la API de Inteligencia en Vercel
+            if (dataLocal.fuente) displayFuente.innerText = dataLocal.fuente;
+
+            // LLAMADA A LA API
             const res = await fetch("/api/asesoria", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     pregunta: pregunta,
-                    contextoLegal: dataLocal.reglas_relevantes || [], // Enviamos los artículos encontrados
+                    contextoLegal: dataLocal.reglas_relevantes || [],
                     fuente: dataLocal.fuente || "Legislación Local",
                     estado: estado
                 })
             });
 
-            // Manejo de error si la API no responde bien
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || "Error en el servidor de IA");
-            }
-
             const dataIA = await res.json();
-            
-            const loadingElement = document.getElementById(idCarga);
-            if (loadingElement) loadingElement.remove();
+            document.getElementById(idCarga)?.remove();
 
-            // PASO 3: Renderizar la respuesta inteligente
             if (dataIA.error) {
-                agregarMensaje("Error en el sistema central: " + dataIA.error, "asistente");
+                agregarMensaje("Error: " + dataIA.error, "asistente");
             } else {
-                // Usamos innerHTML para procesar negritas o listas que envíe GPT
                 agregarMensaje(dataIA.respuesta, "asistente");
             }
 
         } catch (err) {
-            console.error("Error en flujo APOLO:", err);
-            const loadingElement = document.getElementById(idCarga);
-            if (loadingElement) {
-                loadingElement.innerHTML = "<strong>Error de conexión:</strong> La unidad lógica no responde. Revisa tu conexión u OpenAI Key.";
-            }
+            console.error("ERROR CRÍTICO:", err);
+            document.getElementById(idCarga).innerText = "Error de comunicación con la unidad lógica.";
         }
     }
 
@@ -84,18 +67,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement("div");
         div.classList.add("mensaje", remitente);
         if (id) div.id = id;
-        
-        // Convertimos posibles saltos de línea de la IA en etiquetas <br>
-        const textoProcesado = texto.replace(/\n/g, '<br>');
-        div.innerHTML = textoProcesado;
-        
+        div.innerHTML = texto.replace(/\n/g, '<br>');
         contenedorMensajes.appendChild(div);
         contenedorMensajes.scrollTop = contenedorMensajes.scrollHeight;
     }
 
-    // Listeners
     btnEnviar.addEventListener("click", enviarConsulta);
-    inputPregunta.addEventListener("keypress", (e) => { 
-        if (e.key === "Enter") enviarConsulta(); 
-    });
+    inputPregunta.addEventListener("keypress", (e) => { if (e.key === "Enter") enviarConsulta(); });
 });
