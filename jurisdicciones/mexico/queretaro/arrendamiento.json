@@ -1,4 +1,5 @@
-  {
+ [
+   {
     "articulo": 2284,
     "ontologia_target": ["bien", "contraprestacion", "tiempo"],
     "categoria_juridica": "definicion",
@@ -1648,4 +1649,4 @@
     "plantilla_clausula": "El arrendatario permitirá el barbecho y uso de instalaciones para el ciclo agrícola, conservando el derecho a recoger frutos pendientes.",
     "validacion_logica": ""
   }
-  
+  ]
