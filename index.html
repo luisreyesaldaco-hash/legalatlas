@@ -6,76 +6,88 @@
     <title>Legal Atlas | Motor APOLO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fcfcf9; }
+        body { font-family: 'Inter', sans-serif; background-color: #f4f4f0; } 
         .font-classic { font-family: 'Cinzel', serif; }
         .gold-accent { color: #b8973d; }
-        .gold-border { border-color: #d4af37; }
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
-        .btn-inactive { background-color: #e2e8f0 !important; color: #94a3b8 !important; cursor: not-allowed; }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade { animation: fadeIn 0.5s ease-out forwards; }
+        /* Glassmorphism Apple */
+        .glass-panel { 
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(25px); 
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+        }
+        
+        .sidebar-dark {
+            background: #1a1a1a;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Estilo para los Dropdowns corregido */
+        select.custom-select {
+            color: #ffffff !important; /* Letra blanca */
+            background-color: rgba(255, 255, 255, 0.08) !important; /* Gris sutil translúcido */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        select.custom-select option {
+            background-color: #1a1a1a; /* Fondo sólido para que se lea al abrir */
+            color: #ffffff;
+        }
+
+        .btn-inactive { background-color: #e5e5e0 !important; color: #a1a19a !important; cursor: not-allowed; }
+        
+        #mensajes::-webkit-scrollbar { width: 4px; }
+        #mensajes::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.05); border-radius: 10px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col overflow-x-hidden">
 
-    <nav class="fixed w-full h-24 flex justify-between items-center px-12 z-50 bg-white/50 backdrop-blur-md border-b border-slate-100">
-        <div class="flex items-center space-x-4">
-            <i class="fas fa-landmark text-2xl text-slate-800"></i>
+    <nav class="fixed w-full h-28 flex justify-between items-center px-16 z-50 bg-white/40 backdrop-blur-md border-b border-stone-200">
+        <div class="flex items-center space-x-6">
+            <i class="fas fa-landmark text-3xl text-stone-800"></i>
             <div class="flex flex-col">
-                <span class="font-classic text-xl font-bold tracking-[0.3em] text-slate-900">LEGAL<span class="text-blue-700">ATLAS</span></span>
-                <span class="text-[8px] uppercase tracking-[0.4em] text-blue-600 font-bold">Infrastructure Unit</span>
+                <span class="font-classic text-2xl font-bold tracking-[0.3em] text-stone-900">LEGAL<span class="text-stone-500">ATLAS</span></span>
+                <span class="text-[9px] uppercase tracking-[0.5em] text-stone-400 font-bold">Infrastructure Unit</span>
             </div>
         </div>
-        <div class="hidden md:flex items-center space-x-8">
-            <button class="bg-blue-50 text-blue-700 border border-blue-100 px-6 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all duration-500 shadow-sm">
-                <i class="fas fa-file-signature mr-2"></i> Diseñar Contrato
-            </button>
-            <button class="bg-slate-900 text-white px-7 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] flex items-center shadow-xl hover:bg-blue-800 transition-all duration-500 group">
+        <div>
+            <button class="bg-stone-900 text-white px-9 py-4 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] flex items-center shadow-2xl hover:bg-stone-800 transition-all duration-500 group">
                 <i class="fas fa-user-tie mr-3 gold-accent group-hover:rotate-12 transition-transform"></i> Directorio de Abogados
             </button>
         </div>
     </nav>
 
-    <main class="flex-1 flex items-center justify-center pt-24 px-6 relative">
-        <div class="absolute inset-0 z-0">
-            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-100/40 rounded-full blur-[120px]"></div>
-            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-100/30 rounded-full blur-[120px]"></div>
-        </div>
-
-        <div class="max-w-6xl w-full z-10">
-            <div class="glass rounded-[40px] shadow-[0_32px_64px_-12px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col md:flex-row border-white/50">
+    <main class="flex-1 flex items-center justify-center pt-40 pb-20 px-10 relative">
+        <div class="max-w-7xl w-full z-10">
+            <div class="glass-panel rounded-[50px] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col md:flex-row min-h-[850px]">
                 
-                <div class="w-full md:w-[380px] p-12 bg-slate-900 text-white flex flex-col justify-between relative overflow-hidden">
-                    <div class="relative z-10">
-                        <div class="mb-10">
-                            <h2 class="font-classic text-3xl gold-accent mb-2">Motor APOLO</h2>
-                            <p class="text-[10px] uppercase tracking-[0.3em] text-slate-400 font-light">Cómputo Normativo IA</p>
+                <div class="w-full md:w-[400px] p-16 sidebar-dark text-white flex flex-col justify-between">
+                    <div>
+                        <div class="mb-16">
+                            <h2 class="font-classic text-3xl gold-accent mb-3">Motor APOLO</h2>
+                            <p class="text-[10px] uppercase tracking-[0.3em] text-stone-500 font-light">Cómputo Normativo IA</p>
                         </div>
 
-                        <div class="space-y-8">
-                            <div class="space-y-3">
-                                <label class="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-bold ml-1">País</label>
-                                <select id="pais" class="w-full bg-slate-800/50 border border-slate-700 p-4 rounded-2xl text-xs font-bold outline-none focus:border-blue-500 transition-all cursor-pointer">
-                                    <option value="">SELECCIONAR PAÍS...</option>
+                        <div class="space-y-12"> <div class="space-y-4">
+                                <label class="text-[10px] uppercase tracking-[0.2em] text-stone-500 font-bold ml-1">País</label>
+                                <select id="pais" class="custom-select w-full p-5 rounded-2xl text-xs font-medium outline-none focus:border-stone-500 transition-all cursor-pointer">
+                                    <option value="">SELECCIONAR...</option>
                                     <option value="mexico">MÉXICO</option>
                                     <option value="uruguay">URUGUAY</option>
                                 </select>
                             </div>
-
-                            <div class="space-y-3">
-                                <label class="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-bold ml-1">Estado</label>
-                                <select id="estado" class="w-full bg-slate-800/50 border border-slate-700 p-4 rounded-2xl text-xs font-bold outline-none focus:border-blue-500 transition-all cursor-pointer">
+                            <div class="space-y-4">
+                                <label class="text-[10px] uppercase tracking-[0.2em] text-stone-500 font-bold ml-1">Estado</label>
+                                <select id="estado" class="custom-select w-full p-5 rounded-2xl text-xs font-medium outline-none focus:border-stone-500 transition-all cursor-pointer">
                                     <option value="">-</option>
                                 </select>
                             </div>
-
-                            <div class="space-y-3">
-                                <label class="text-[9px] uppercase tracking-[0.2em] text-slate-500 font-bold ml-1">Materia Jurídica</label>
-                                <select id="tema" class="w-full bg-slate-800/50 border border-slate-700 p-4 rounded-2xl text-xs font-bold outline-none focus:border-blue-500 transition-all cursor-pointer">
-                                    <option value="">SELECCIONAR MATERIA...</option>
+                            <div class="space-y-4">
+                                <label class="text-[10px] uppercase tracking-[0.2em] text-stone-500 font-bold ml-1">Materia</label>
+                                <select id="tema" class="custom-select w-full p-5 rounded-2xl text-xs font-medium outline-none focus:border-stone-500 transition-all cursor-pointer">
+                                    <option value="">SELECCIONAR TEMA...</option>
                                     <option value="arrendamiento">ARRENDAMIENTO</option>
                                     <option value="laboral">LABORAL</option>
                                     <option value="mercantil">MERCANTIL</option>
@@ -84,47 +96,42 @@
                         </div>
                     </div>
 
-                    <div class="mt-8">
-                        <div id="status-badge" class="hidden"></div>
-                        <div id="fuente-oficial-display" class="hidden"></div>
-                    </div>
+                    <div class="hidden"><div id="status-badge"></div><div id="fuente-oficial-display"></div></div>
+                    <p class="text-[9px] text-stone-600 tracking-[0.2em] uppercase">Apolo Engine v4.2 // Secure</p>
                 </div>
 
-                <div class="flex-1 p-12 flex flex-col bg-white/40">
-                    <div class="mb-12">
-                        <div class="w-16 h-1 bg-blue-600 rounded-full mb-6"></div>
-                        <h1 class="text-4xl font-classic text-slate-900 mb-4 tracking-tight leading-tight">Infraestructura Legal<br>de Nueva Generación</h1>
-                        <p id="flashText" class="text-slate-400 italic font-light text-xl h-8 transition-all duration-1000">"¿Cómo rescindir un contrato de renta?"</p>
+                <div class="flex-1 p-16 flex flex-col justify-between bg-white/20">
+                    <div>
+                        <div class="mb-14">
+                            <h1 class="text-5xl font-classic text-stone-900 mb-5 tracking-tight">Análisis Normativo</h1>
+                            <p id="flashText" class="text-stone-400 italic font-light text-xl h-10 transition-all duration-1000">"¿Cómo rescindir un contrato de renta?"</p>
+                        </div>
+
+                        <div id="mensajes" class="space-y-8 overflow-y-auto max-h-[450px] pr-6 mb-12">
+                            <div class="bg-white/90 p-8 rounded-[35px] border border-stone-100 shadow-sm max-w-3xl">
+                                <p class="text-base text-stone-600 leading-relaxed">
+                                    Bienvenido al núcleo de procesamiento Apolo. Por favor, especifique los parámetros de jurisdicción en el panel lateral para iniciar el análisis.
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="relative group mb-12">
-                        <div id="tooltip" class="absolute -top-12 right-0 bg-slate-800 text-white text-[10px] px-4 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none italic">
-                            Complete la configuración para activar APOLO
-                        </div>
-                        <div class="bg-white rounded-[24px] shadow-[0_20px_40px_-12px_rgba(0,0,0,0.1)] border border-slate-100 p-3 flex items-center focus-within:ring-4 focus-within:ring-blue-50 transition-all duration-500">
-                            <input type="text" id="pregunta" 
-                                class="flex-1 bg-transparent border-none focus:ring-0 px-6 text-slate-700 placeholder-slate-300 font-light"
-                                placeholder="Describa su consulta jurídica...">
-                            <button id="enviar" disabled class="btn-inactive w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 shadow-lg">
+                    <div class="space-y-12">
+                        <div class="bg-white rounded-[30px] shadow-lg border border-stone-200 p-3 flex items-center transition-all focus-within:ring-8 focus-within:ring-stone-100/50">
+                            <input type="text" id="pregunta" class="flex-1 bg-transparent border-none focus:ring-0 px-8 text-stone-800 placeholder-stone-300 text-base" placeholder="Describa su consulta jurídica detalladamente...">
+                            <button id="enviar" disabled class="btn-inactive w-16 h-16 rounded-[22px] flex items-center justify-center transition-all shadow-xl active:scale-95">
                                 <i class="fas fa-paper-plane text-sm"></i>
                             </button>
                         </div>
-                    </div>
 
-                    <div id="mensajes" class="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-y-auto max-h-[300px] pr-2">
-                        <div class="bg-white/60 p-6 rounded-[28px] border border-white hover:border-blue-200 transition-all group cursor-pointer shadow-sm">
-                            <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
-                                <i class="fas fa-bolt text-blue-600 group-hover:text-white text-xs"></i>
+                        <div class="flex flex-col md:flex-row items-center justify-between p-10 bg-stone-100/50 rounded-[40px] border border-stone-200/50">
+                            <div class="mb-6 md:mb-0">
+                                <p class="text-stone-900 text-sm font-bold uppercase tracking-widest mb-1">¿Requiere una consulta especializada?</p>
+                                <p class="text-stone-500 text-xs">Acceda a nuestra red de abogados certificados para llevar su caso.</p>
                             </div>
-                            <h3 class="font-classic text-xs font-bold uppercase tracking-widest text-slate-800 mb-2">Respuestas Instantáneas</h3>
-                            <p class="text-[11px] text-slate-500 leading-relaxed font-light">Análisis en tiempo real de códigos y leyes federales.</p>
-                        </div>
-                        <div class="bg-white/60 p-6 rounded-[28px] border border-white hover:border-blue-200 transition-all group cursor-pointer shadow-sm">
-                            <div class="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-500 transition-colors">
-                                <i class="fas fa-shield-alt text-amber-600 group-hover:text-white text-xs"></i>
-                            </div>
-                            <h3 class="font-classic text-xs font-bold uppercase tracking-widest text-slate-800 mb-2">Seguridad Jurídica</h3>
-                            <p class="text-[11px] text-slate-500 leading-relaxed font-light">Basado estrictamente en fuentes oficiales vigentes.</p>
+                            <button class="bg-white text-stone-800 border border-stone-200 px-8 py-3.5 rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-stone-900 hover:text-white transition-all shadow-md">
+                                <i class="fas fa-search-location mr-2"></i> Abrir Directorio
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -135,7 +142,6 @@
     <script type="module" src="/src/app.js"></script>
 
     <script>
-        // Mantenemos la lógica de UI de la v.4.0 pero con los nuevos IDs
         const elPais = document.getElementById('pais');
         const elEstado = document.getElementById('estado');
         const elTema = document.getElementById('tema');
@@ -143,12 +149,7 @@
         const elEnviar = document.getElementById('enviar');
         const flashText = document.getElementById('flashText');
 
-        const ejemplos = [
-            "¿Cómo terminar un contrato de renta?",
-            "¿Qué es un despido injustificado?",
-            "¿Validez de una asamblea mercantil?",
-            "¿Plazos para una demanda laboral?"
-        ];
+        const ejemplos = ["¿Cómo rescindir un contrato de renta?", "¿Liquidación por despido?", "¿Validez de un pagaré?"];
         let i = 0;
         setInterval(() => {
             if(flashText) {
@@ -159,25 +160,33 @@
                     i++;
                 }, 500);
             }
-        }, 4000);
+        }, 5000);
 
         function validar() {
             const ok = elPregunta.value.trim().length > 3 && elEstado.value !== "" && elTema.value !== "";
             elEnviar.disabled = !ok;
             if(ok) {
                 elEnviar.classList.remove('btn-inactive');
-                elEnviar.classList.add('bg-blue-700', 'text-white', 'hover:bg-slate-900', 'scale-105');
+                elEnviar.classList.add('bg-stone-900', 'text-white', 'scale-105');
             } else {
                 elEnviar.classList.add('btn-inactive');
-                elEnviar.classList.remove('bg-blue-700', 'text-white', 'scale-105');
+                elEnviar.classList.remove('bg-stone-900', 'text-white', 'scale-105');
             }
         }
 
         elPais.addEventListener('change', () => {
             if(elPais.value === 'mexico') {
-                elEstado.innerHTML = '<option value="">SELECCIONAR...</option><option value="guanajuato">GUANAJUATO</option><option value="queretaro">QUERÉTARO</option>';
+                elEstado.innerHTML = `
+                    <option value="">SELECCIONAR...</option>
+                    <option value="guanajuato">GUANAJUATO</option>
+                    <option value="queretaro">QUERÉTARO</option>
+                    <option value="jalisco">JALISCO</option>
+                    <option value="cdmx">CDMX</option>
+                `;
+            } else if (elPais.value === 'uruguay') {
+                elEstado.innerHTML = '<option value="">SELECCIONAR...</option><option value="montevideo">MONTEVIDEO</option><option value="nacional">NACIONAL</option>';
             } else {
-                elEstado.innerHTML = elPais.value ? `<option value="nacional">NACIONAL</option>` : '<option value="">-</option>';
+                elEstado.innerHTML = '<option value="">-</option>';
             }
             validar();
         });
