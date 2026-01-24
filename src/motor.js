@@ -1,3 +1,33 @@
+// ------------------------------------------------------
+// 1. Cargar JSON desde la ruta dinámica
+// ------------------------------------------------------
+async function cargarJSON(rutaRelativa) {
+  try {
+    const respuesta = await fetch(`/${rutaRelativa}`);
+    if (!respuesta.ok) throw new Error(`No se encontró el archivo: ${rutaRelativa}`);
+    return await respuesta.json();
+  } catch (error) {
+    console.error(`[Error Motor] No se pudo cargar el archivo legal:`, error.message);
+    return null;
+  }
+}
+
+// ------------------------------------------------------
+// 2. Normalizar texto (igual que antes)
+// ------------------------------------------------------
+function normalizarTexto(texto) {
+  return (texto || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9ñ\s]/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// ------------------------------------------------------
+// 3. Motor 3.0 — Mejorado y compatible con asesoría.js
+// ------------------------------------------------------
 export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsuario) {
   const p = (pais || "").toLowerCase().trim();
   const e = (estado || "").toLowerCase().trim();
@@ -8,14 +38,14 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, preguntaUsua
   }
 
   const rutaJurisdiccion = e 
-    ? `jurisdicciones/${p}/${e}/${t}.json` 
+    ? `jurisdicciones/${p}/${e}/${t}.json`
     : `jurisdicciones/${p}/${t}.json`;
 
   const rawData = await cargarJSON(rutaJurisdiccion);
   if (!rawData) {
-    return { 
+    return {
       error: `La base de datos legal no está disponible en la ruta: ${rutaJurisdiccion}`,
-      reglas_relevantes: [] 
+      reglas_relevantes: []
     };
   }
 
