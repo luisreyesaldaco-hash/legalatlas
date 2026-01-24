@@ -1,7 +1,7 @@
 // ------------------------------------------------------
 // 1. Cargar JSON desde la ruta dinámica
 // ------------------------------------------------------
-async function cargarJSON(rutaRelativa) {
+export async function cargarJSON(rutaRelativa) {
   try {
     const respuesta = await fetch(`/${rutaRelativa}`);
     if (!respuesta.ok) throw new Error(`No se encontró el archivo: ${rutaRelativa}`);
@@ -13,9 +13,9 @@ async function cargarJSON(rutaRelativa) {
 }
 
 // ------------------------------------------------------
-// 2. Normalizar texto (igual que antes)
+// 2. Normalizar texto
 // ------------------------------------------------------
-function normalizarTexto(texto) {
+export function normalizarTexto(texto) {
   return (texto || "")
     .toLowerCase()
     .normalize("NFD")
