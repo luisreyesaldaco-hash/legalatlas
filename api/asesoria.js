@@ -2,10 +2,9 @@ import { AzureOpenAI } from "openai";
 
 export default async function handler(req, res) {
   try {
-    // 1. Recibimos TODO lo que mandó el app.js
     const { pais, estado, tema, pregunta, contextoLegal, fuente } = req.body;
 
-    // 2. Preparamos el cliente de Azure
+    // 1. Preparamos cliente Azure
     const client = new AzureOpenAI({
       endpoint: process.env.AZURE_OPENAI_ENDPOINT,
       apiKey: process.env.AZURE_OPENAI_API_KEY,
@@ -13,39 +12,95 @@ export default async function handler(req, res) {
       apiVersion: "2024-08-01-preview"
     });
 
-    // 3. Convertimos los artículos del motor en un texto legible para la IA
-    const leyesTexto = contextoLegal && contextoLegal.length > 0
-      ? contextoLegal.map(r => `ARTÍCULO ${r.articulo}: ${r.regla}`).join("\n\n")
+    // 2. Convertimos artículos del motor en texto para el LLM
+    const leyesTexto = contextoLegal?.length
+      ? contextoLegal
+          .map(r => `ARTÍCULO ${r.articulo}: ${r.regla}`)
+          .join("\n\n")
       : "No se encontraron artículos específicos en la base de datos.";
 
-    // 4. El Prompt "Autoritario"
-    const systemMessage = `Eres APOLO, un asistente legal experto.
-    Jurisdicción actual: ${estado.toUpperCase()}, ${pais.toUpperCase()}.
-    Fuente: ${fuente}.
+    // 3. Prompt optimizado
+    const systemMessage = `
+Eres APOLO, un asistente legal experto y preciso.
 
-    CONTEXTO LEGAL (Usa esto para responder):
-    ${leyesTexto}
+Jurisdicción: ${estado.toUpperCase()}, ${pais.toUpperCase()}
+Fuente normativa: ${fuente}
 
-    INSTRUCCIONES CRÍTICAS:
-    1. Si el CONTEXTO LEGAL contiene información, DEBES citar los números de artículo (ej. "Según el Artículo 1947...").
-    2. Si el usuario pregunta por algo que está en los artículos (como rescisión o pago), usa esa base legal obligatoriamente.
-    3. Responde de forma clara, profesional y directa.`;
+CONTEXTO LEGAL (pasajes recuperados):
+${leyesTexto}
 
-    // 5. Ejecución en Azure
+INSTRUCCIONES CRÍTICAS:
+1. Si el CONTEXTO LEGAL contiene artículos, DEBES citarlos con número exacto.
+2. Si el usuario pide un escrito, genera un borrador formal completo (encabezado, hechos, fundamentos, petitorio y firma simulada).
+3. Devuelve SIEMPRE un JSON con esta estructura:
+
+{
+  "draftHtml": "...",
+  "resumen": "...",
+  "articulos": ["1947", "210", ...],
+  "confianza": "Alta | Media | Baja",
+  "fuentes": ["Código Civil Art. 1947", ...]
+}
+
+4. NO inventes artículos. Si no puedes verificar uno, elimínalo y marca confianza "Baja".
+5. Si la confianza es Media o Baja, sugiere conectar con un abogado colaborador.
+6. Responde siempre de forma profesional, directa y sin ambigüedades.
+`;
+
+    // 4. Llamada al modelo
     const completion = await client.chat.completions.create({
       messages: [
         { role: "system", content: systemMessage },
         { role: "user", content: pregunta }
       ],
-      max_tokens: 1000,
-      temperature: 0.3 // Precisión legal
+      max_tokens: 1500,
+      temperature: 0.2
     });
 
-    const respuestaIA = completion.choices[0].message.content;
+    let raw = completion.choices[0].message.content;
 
-    res.status(200).json({ 
-      respuesta: respuestaIA,
-      datos_motor: { fuente, articulos_usados: contextoLegal?.length } 
+    // 5. Intentamos parsear JSON
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch (e) {
+      return res.status(200).json({
+        error: "El modelo no devolvió JSON válido.",
+        raw
+      });
+    }
+
+    // 6. Verificación automática de artículos
+    const articulosValidos = [];
+    const fuentesValidas = [];
+
+    if (parsed.articulos && Array.isArray(parsed.articulos)) {
+      parsed.articulos.forEach(num => {
+        const coincide = contextoLegal.find(a => a.articulo == num);
+        if (coincide) {
+          articulosValidos.push(num);
+          fuentesValidas.push(`${fuente} Art. ${num}`);
+        }
+      });
+    }
+
+    // 7. Cálculo de confianza
+    let confianza = "Alta";
+    if (articulosValidos.length === 0) confianza = "Baja";
+    if (articulosValidos.length > 0 && articulosValidos.length < parsed.articulos?.length)
+      confianza = "Media";
+
+    parsed.confianza = confianza;
+    parsed.articulos = articulosValidos;
+    parsed.fuentes = fuentesValidas;
+
+    // 8. Respuesta final
+    res.status(200).json({
+      respuesta: parsed,
+      datos_motor: {
+        fuente,
+        articulos_usados: contextoLegal?.length
+      }
     });
 
   } catch (error) {
