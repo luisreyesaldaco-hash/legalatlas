@@ -38,8 +38,45 @@
        .directory-text p:last-child { font-size: 12px; color: var(--text-muted); }
        .directory-btn { background: var(--stone-dark); color: var(--white); text-decoration: none; padding: 12px 25px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; transition: all 0.3s ease; }
        .directory-btn:hover { background: var(--accent-gold); }
-       @media (max-width: 768px) { body { flex-direction: column; overflow-y: auto; } aside { width: 100%; height: auto; padding: 30px; } main { padding: 20px; height: 100vh; } .directory-offer { flex-direction: column; text-align: center; } }
-   </style>
+       
+       @media (max-width: 768px) {
+
+    /* El layout se apila en columna */
+    body {
+        flex-direction: column;
+        overflow-y: auto;
+        height: auto; /* evita que el contenido quede fuera de pantalla */
+    }
+
+    /* Sidebar más compacto y con scroll si es muy alto */
+    aside {
+        width: 100%;
+        padding: 30px;
+        max-height: 45vh;      /* evita que el sidebar empuje el chat hacia abajo */
+        overflow-y: auto;      /* permite scroll interno */
+    }
+
+    /* Chat visible inmediatamente */
+    main {
+        padding: 20px !important;
+        height: auto;          /* evita que el chat quede fuera de vista */
+        min-height: 55vh;      /* asegura presencia del chat en pantalla */
+    }
+
+    /* El área de mensajes debe aparecer arriba */
+    #mensajes {
+        min-height: 40vh;      /* garantiza que el chat se vea sin hacer scroll */
+    }
+
+    /* Banner de directorio en columna */
+    .directory-offer {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+   
+       
+       </style>
 </head>
 <body>
 <aside>
