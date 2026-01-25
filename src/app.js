@@ -9,6 +9,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectPais = document.getElementById("pais");
     const displayFuente = document.getElementById("fuente-oficial-display");
 
+    // NUEVO: Selector de modo incrustado
+    let modoActual = "consulta";
+    const modoBtns = document.querySelectorAll(".modo-btn");
+
+    modoBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            modoBtns.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            modoActual = btn.dataset.modo; // "consulta" o "redactar"
+        });
+    });
+
+    // NUEVO: Detector oculto de conflicto → activa Articulador
+    function detectarConflicto(p) {
+        const claves = [
+            "qué hago si", "que hago si",
+            "me demandaron",
+            "me quieren desalojar",
+            "me quieren correr",
+            "tengo un problema",
+            "cómo procedo", "como procedo",
+            "qué pasa si", "que pasa si",
+            "mi arrendador",
+            "mi empleador",
+            "me están cobrando", "me estan cobrando",
+            "quiero reclamar",
+            "incumplió", "incumplio"
+        ];
+        const texto = p.toLowerCase();
+        return claves.some(c => texto.includes(c));
+    }
+
     async function enviarConsulta() {
         const pregunta = inputPregunta.value.trim();
         const pais = selectPais ? selectPais.value : "mexico";
@@ -35,6 +67,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (dataLocal.fuente) displayFuente.innerText = dataLocal.fuente;
 
+            // NUEVO: Determinar rol final
+            let rol = modoActual; // consulta o redactar
+
+            // Si el usuario describe un conflicto → activar articulador automáticamente
+            if (detectarConflicto(pregunta)) {
+                rol = "articulador";
+            }
+
             const res = await fetch("/api/asesoria", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -43,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     estado,
                     tema,
                     pregunta,
+                    modo: rol,
                     contextoLegal: dataLocal.reglas_relevantes || [],
                     fuente: dataLocal.fuente || "Legislación Local"
                 })
@@ -60,19 +101,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // NUEVO: Render estructurado
             const r = dataIA.respuesta;
 
+            // Render premium
             let html = `
                 <div class="apolo-resumen">${r.resumen}</div>
                 <div class="apolo-draft">${r.draftHtml}</div>
-                <div class="apolo-meta">
-                    <strong>Artículos citados:</strong> ${r.articulos.join(", ") || "Ninguno"}<br>
-                    <strong>Confianza:</strong> ${r.confianza}
-                </div>
             `;
 
-            // Si confianza es media o baja → activar triage
+            // Triage si confianza es media o baja
             if (r.confianza !== "Alta") {
                 html += `
                     <div class="apolo-triage">
@@ -83,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             agregarMensaje(html, "asistente");
 
-            // Listener para triage
+            // Listener triage
             setTimeout(() => {
                 const btnTriage = document.getElementById("btn-triage");
                 if (btnTriage) {
