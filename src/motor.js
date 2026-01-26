@@ -1,168 +1,86 @@
-import { ejecutarMotorEstructurado } from './motor.js';
+// ---------------------------------------------------------
+//  MOTOR ESTRUCTURADO LEGAL ATLAS
+//  Carga JSON según país / estado / tema
+//  Filtra reglas relevantes
+//  Devuelve { reglas_relevantes, fuente }
+// ---------------------------------------------------------
 
-document.addEventListener('DOMContentLoaded', () => {
-    const btnEnviar = document.getElementById("enviar");
-    const inputPregunta = document.getElementById("pregunta");
-    const contenedorMensajes = document.getElementById("mensajes");
-    const selectEstado = document.getElementById("estado");
-    const selectTema = document.getElementById("tema");
-    const selectPais = document.getElementById("pais");
-    const displayFuente = document.getElementById("fuente-oficial-display");
+export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
+    try {
+        // 1. Construir ruta del archivo JSON
+        const ruta = `/jurisdicciones/${pais}/${capitalizar(estado)}/${tema}.json`;
 
-    // ---------------------------
-    //  MODO DE OPERACIÓN (UI)
-    // ---------------------------
-    let modoActual = "consulta";
+        // 2. Cargar archivo
+        const res = await fetch(ruta);
+        if (!res.ok) {
+            console.error("No se pudo cargar el archivo:", ruta);
+            return {
+                reglas_relevantes: [],
+                fuente: "Sin fuente disponible"
+            };
+        }
 
-    document.querySelectorAll(".modo-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".modo-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            modoActual = btn.dataset.modo; // "consulta" o "redactar"
+        const data = await res.json();
+
+        // 3. Extraer artículos
+        const articulos = data.articulos || [];
+
+        // 4. Filtrar reglas relevantes según la pregunta
+        const preguntaLower = pregunta.toLowerCase();
+
+        const reglas = articulos.filter(a => {
+            const texto = a.texto.toLowerCase();
+
+            // Coincidencia textual básica
+            const matchTexto =
+                texto.includes(preguntaLower) ||
+                preguntaLower.includes(a.id?.toLowerCase() || "");
+
+            // Coincidencia por flags ontológicas
+            const matchFlags =
+                (a.aplicable_en_consulta && preguntaLower.includes("consulta")) ||
+                (a.aplicable_en_conflictos && contieneConflicto(preguntaLower)) ||
+                (a.aplicable_en_contratos && preguntaLower.includes("contrato"));
+
+            return matchTexto || matchFlags;
         });
-    });
 
-    // ---------------------------
-    //  DETECTOR OCULTO DE CONFLICTO
-    // ---------------------------
-    function detectarConflicto(texto) {
-        const t = texto.toLowerCase();
-        const claves = [
-            "qué hago si", "que hago si",
-            "me demandaron",
-            "me quieren desalojar",
-            "me quieren correr",
-            "tengo un problema",
-            "cómo procedo", "como procedo",
-            "qué pasa si", "que pasa si",
-            "mi arrendador",
-            "mi empleador",
-            "me están cobrando", "me estan cobrando",
-            "quiero reclamar",
-            "incumplió", "incumplio"
-        ];
-        return claves.some(c => t.includes(c));
+        return {
+            reglas_relevantes: reglas,
+            fuente: data.fuente || "Legislación Local"
+        };
+
+    } catch (err) {
+        console.error("ERROR EN MOTOR ESTRUCTURADO:", err);
+        return {
+            reglas_relevantes: [],
+            fuente: "Error al procesar la norma"
+        };
     }
+}
 
-    // ---------------------------
-    //  ENVÍO DE CONSULTA
-    // ---------------------------
-    async function enviarConsulta() {
-        const pregunta = inputPregunta.value.trim();
-        const pais = selectPais ? selectPais.value : "mexico";
-        const estado = selectEstado.value;
-        const tema = selectTema.value;
+// ---------------------------------------------------------
+//  Funciones auxiliares
+// ---------------------------------------------------------
 
-        if (!pregunta) return;
+function capitalizar(str) {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
 
-        if (!estado || !tema || !pais) {
-            alert("Por favor selecciona País, Estado y Tema.");
-            return;
-        }
-
-        agregarMensaje(pregunta, "usuario");
-        inputPregunta.value = "";
-
-        const idCarga = "loading-" + Date.now();
-        agregarMensaje("APOLO analizando leyes locales...", "asistente", idCarga);
-
-        try {
-            // 1. Motor estructurado
-            const dataLocal = await ejecutarMotorEstructurado(pais, estado, tema, pregunta);
-
-            if (dataLocal.fuente) {
-                displayFuente.innerText = dataLocal.fuente;
-                displayFuente.style.display = "block";
-            }
-
-            // 2. Determinar rol final
-            let rol = modoActual;
-
-            if (detectarConflicto(pregunta)) {
-                rol = "articulador";
-            }
-
-            // 3. Llamada a la API
-            const res = await fetch("/api/asesoria", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    pais,
-                    estado,
-                    tema,
-                    pregunta,
-                    modo: rol,
-                    contextoLegal: dataLocal.reglas_relevantes || [],
-                    fuente: dataLocal.fuente || "Legislación Local"
-                })
-            });
-
-            if (!res.ok) throw new Error("Error en la respuesta de la API");
-
-            const dataIA = await res.json();
-
-            const loadingElement = document.getElementById(idCarga);
-            if (loadingElement) loadingElement.remove();
-
-            if (dataIA.error) {
-                agregarMensaje("Error: " + dataIA.error, "asistente");
-                return;
-            }
-
-            // 4. Render premium
-            const r = dataIA.respuesta;
-
-            let html = `
-                <div class="apolo-resumen">${r.resumen || ""}</div>
-                <div class="apolo-draft">${r.draftHtml || ""}</div>
-            `;
-
-            if (r.confianza !== "Alta") {
-                html += `
-                    <div class="apolo-triage">
-                        <button id="btn-triage">Conectar con abogado colaborador</button>
-                    </div>
-                `;
-            }
-
-            agregarMensaje(html, "asistente");
-
-            // 5. Listener triage
-            setTimeout(() => {
-                const btnTriage = document.getElementById("btn-triage");
-                if (btnTriage) {
-                    btnTriage.addEventListener("click", () => {
-                        alert("Aquí conectamos al usuario con un abogado colaborador.");
-                    });
-                }
-            }, 200);
-
-        } catch (err) {
-            console.error("ERROR CRÍTICO EN APP:", err);
-            const loadingElement = document.getElementById(idCarga);
-            if (loadingElement) {
-                loadingElement.innerHTML = "<strong>Error:</strong> No se pudo procesar la consulta legal.";
-            }
-        }
-    }
-
-    // ---------------------------
-    //  AGREGAR MENSAJE AL CHAT
-    // ---------------------------
-    function agregarMensaje(texto, remitente, id = null) {
-        const div = document.createElement("div");
-        div.classList.add("mensaje", remitente);
-        if (id) div.id = id;
-        div.innerHTML = texto;
-        contenedorMensajes.appendChild(div);
-        contenedorMensajes.scrollTop = contenedorMensajes.scrollHeight;
-    }
-
-    // ---------------------------
-    //  EVENTOS
-    // ---------------------------
-    btnEnviar.addEventListener("click", enviarConsulta);
-    inputPregunta.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") enviarConsulta();
-    });
-});
+function contieneConflicto(texto) {
+    const claves = [
+        "problema",
+        "demanda",
+        "desalojo",
+        "incumpl",
+        "me quieren",
+        "me estan",
+        "me están",
+        "qué hago",
+        "que hago",
+        "qué pasa",
+        "que pasa"
+    ];
+    return claves.some(c => texto.includes(c));
+}
