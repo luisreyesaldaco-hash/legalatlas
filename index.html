@@ -74,6 +74,37 @@
         text-align: center;
     }
 }
+
+.modo-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    justify-content: center;
+}
+
+.modo-btn {
+    background: var(--white);
+    border: 1px solid var(--border-stone);
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: var(--text-muted);
+}
+
+.modo-btn.active {
+    background: var(--stone-dark);
+    color: var(--white);
+    border-color: var(--stone-dark);
+}
+
+.modo-btn:hover {
+    transform: translateY(-1px);
+}
    
        
        </style>
@@ -108,13 +139,15 @@
             <option value="jalisco">JALISCO</option>
         </select>
 
-        <label for="tema">Materia Normativa</label>
+        <label for="tema">Tema jurídico</label>
         <select id="tema">
             <option value="">SELECCIONAR TEMA...</option>
             <option value="arrendamiento">ARRENDAMIENTO</option>
             <option value="laboral">LABORAL</option>
             <option value="mercantil">MERCANTIL</option>
         </select>
+
+
 
         <label>Estatus del Sistema</label>
         <div id="status-badge" class="modulo-badge">
@@ -138,6 +171,12 @@
     </div>
 
     <div class="input-container">
+
+<div class="modo-selector">
+    <button class="modo-btn active" data-modo="consulta">Consulta</button>
+    <button class="modo-btn" data-modo="redactar">Redactar</button>
+</div>
+
         <div class="input-wrapper">
             <input type="text" id="pregunta" placeholder="Consulte la norma..." autocomplete="off">
             <button id="enviar">
