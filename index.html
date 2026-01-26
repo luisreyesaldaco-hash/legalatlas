@@ -7,107 +7,272 @@
    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
    <style>
-       :root {--white: #ffffff;--stone-light: #f4f4f0;--stone-dark: #1a1a1a;--text-main: #1c1c1c;--text-muted: #8a8a82;--accent-gold: #b8973d;--border-stone: #e5e5e0;}
+       :root {
+           --white: #ffffff;
+           --stone-light: #f4f4f0;
+           --stone-dark: #1a1a1a;
+           --text-main: #1c1c1c;
+           --text-muted: #8a8a82;
+           --accent-gold: #b8973d;
+           --border-stone: #e5e5e0;
+       }
        * { box-sizing: border-box; margin: 0; padding: 0; }
-       body { background-color: var(--stone-light); color: var(--text-main); font-family: 'Inter', sans-serif; height: 100vh; display: flex; overflow: hidden; }
-       aside { width: 320px; background-color: var(--stone-dark); color: var(--white); padding: 40px 30px; display: flex; flex-direction: column; border-right: 1px solid rgba(255,255,255,0.05); }
+       body {
+           background-color: var(--stone-light);
+           color: var(--text-main);
+           font-family: 'Inter', sans-serif;
+           height: 100vh;
+           display: flex;
+           overflow: hidden;
+       }
+       aside {
+           width: 320px;
+           background-color: var(--stone-dark);
+           color: var(--white);
+           padding: 40px 30px;
+           display: flex;
+           flex-direction: column;
+           border-right: 1px solid rgba(255,255,255,0.05);
+       }
        .logo-section { margin-bottom: 50px; }
-       .logo-section h1 { font-family: 'Cinzel', serif; font-size: 1.1rem; letter-spacing: 0.3em; color: var(--white); font-weight: 700; }
+       .logo-section h1 {
+           font-family: 'Cinzel', serif;
+           font-size: 1.1rem;
+           letter-spacing: 0.3em;
+           color: var(--white);
+           font-weight: 700;
+       }
        .logo-section h1 span { color: var(--text-muted); font-weight: 400; }
-       .logo-section .subtitle { color: var(--accent-gold); font-size: 0.6rem; letter-spacing: 0.4em; text-transform: uppercase; display: block; margin-top: 8px; }
+       .logo-section .subtitle {
+           color: var(--accent-gold);
+           font-size: 0.6rem;
+           letter-spacing: 0.4em;
+           text-transform: uppercase;
+           display: block;
+           margin-top: 8px;
+       }
        .nav-buttons { margin-bottom: 40px; }
-       .nav-btn-contact { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--white); padding: 12px 15px; border-radius: 8px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; text-decoration: none; display: flex; align-items: center; transition: all 0.3s ease; }
+       .nav-btn-contact {
+           background: rgba(255,255,255,0.05);
+           border: 1px solid rgba(255,255,255,0.1);
+           color: var(--white);
+           padding: 12px 15px;
+           border-radius: 8px;
+           font-size: 10px;
+           font-weight: 600;
+           text-transform: uppercase;
+           letter-spacing: 0.2em;
+           text-decoration: none;
+           display: flex;
+           align-items: center;
+           transition: all 0.3s ease;
+       }
        .nav-btn-contact i { margin-right: 10px; color: var(--accent-gold); }
        .nav-btn-contact:hover { background: rgba(255,255,255,0.1); }
        .config-group { flex-grow: 1; }
-       label { display: block; font-size: 9px; text-transform: uppercase; letter-spacing: 0.2em; color: var(--text-muted); margin-bottom: 12px; font-weight: 700; }
-       select { width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: var(--white); padding: 14px 40px 14px 16px; border-radius: 10px; margin-bottom: 18px; font-size: 11px; font-family: 'Inter', sans-serif; outline: none; cursor: pointer; appearance: none; background-image: linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.12) 50%), linear-gradient(135deg, rgba(255,255,255,0.12) 50%, transparent 50%); background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px); background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; z-index: 1; }
-       select option { color: #111111 !important; background-color: #ffffff !important; }
-       .modulo-badge { background: rgba(184, 151, 61, 0.1); color: var(--accent-gold); padding: 15px; border-radius: 10px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; border: 1px solid rgba(184, 151, 61, 0.2); }
-       .footer-tag { margin-top: 28px; font-size: 10px; letter-spacing: 0.18em; color: rgba(255,255,255,0.32); text-align: center; font-weight: 600; }
-       main { flex-grow: 1; display: flex; flex-direction: column; padding: 60px; }
-       #mensajes { flex-grow: 1; overflow-y: auto; max-width: 900px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 40px; }
-       .mensaje { line-height: 1.8; font-size: 15px; max-width: 85%; }
-       .input-container { max-width: 900px; margin: 0 auto; width: 100%; padding-top: 40px; }
-       .input-wrapper { background: var(--white); border: 1px solid var(--border-stone); padding: 8px; border-radius: 20px; display: flex; box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-bottom: 25px; }
-       input { flex-grow: 1; border: none; padding: 15px 25px; font-size: 16px; outline: none; background: transparent; }
-       button#enviar { background-color: var(--stone-dark); color: var(--white); border: none; width: 55px; height: 55px; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
-       button#enviar:hover { background-color: var(--accent-gold); transform: scale(1.05); }
-       .directory-offer { display: flex; justify-content: space-between; align-items: center; padding: 25px 35px; background: var(--white); border: 1px solid var(--border-stone); border-radius: 24px; gap: 20px; }
-       .directory-text p:first-child { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-       .directory-text p:last-child { font-size: 12px; color: var(--text-muted); }
-       .directory-btn { background: var(--stone-dark); color: var(--white); text-decoration: none; padding: 12px 25px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; transition: all 0.3s ease; }
+       label {
+           display: block;
+           font-size: 9px;
+           text-transform: uppercase;
+           letter-spacing: 0.2em;
+           color: var(--text-muted);
+           margin-bottom: 12px;
+           font-weight: 700;
+       }
+       select {
+           width: 100%;
+           background: rgba(255,255,255,0.06);
+           border: 1px solid rgba(255,255,255,0.1);
+           color: var(--white);
+           padding: 14px 40px 14px 16px;
+           border-radius: 10px;
+           margin-bottom: 18px;
+           font-size: 11px;
+           font-family: 'Inter', sans-serif;
+           outline: none;
+           cursor: pointer;
+           appearance: none;
+           background-image:
+               linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.12) 50%),
+               linear-gradient(135deg, rgba(255,255,255,0.12) 50%, transparent 50%);
+           background-position:
+               calc(100% - 18px) calc(1em + 2px),
+               calc(100% - 13px) calc(1em + 2px);
+           background-size: 6px 6px, 6px 6px;
+           background-repeat: no-repeat;
+           z-index: 1;
+       }
+       select option {
+           color: #111111 !important;
+           background-color: #ffffff !important;
+       }
+       .modulo-badge {
+           background: rgba(184, 151, 61, 0.1);
+           color: var(--accent-gold);
+           padding: 15px;
+           border-radius: 10px;
+           font-size: 10px;
+           font-weight: 700;
+           letter-spacing: 0.1em;
+           border: 1px solid rgba(184, 151, 61, 0.2);
+       }
+       .footer-tag {
+           margin-top: 28px;
+           font-size: 10px;
+           letter-spacing: 0.18em;
+           color: rgba(255,255,255,0.32);
+           text-align: center;
+           font-weight: 600;
+       }
+       main {
+           flex-grow: 1;
+           display: flex;
+           flex-direction: column;
+           padding: 60px;
+       }
+       #mensajes {
+           flex-grow: 1;
+           overflow-y: auto;
+           max-width: 900px;
+           margin: 0 auto;
+           width: 100%;
+           display: flex;
+           flex-direction: column;
+           gap: 40px;
+       }
+       .mensaje {
+           line-height: 1.8;
+           font-size: 15px;
+           max-width: 85%;
+       }
+       .input-container {
+           max-width: 900px;
+           margin: 0 auto;
+           width: 100%;
+           padding-top: 40px;
+       }
+       .input-wrapper {
+           background: var(--white);
+           border: 1px solid var(--border-stone);
+           padding: 8px;
+           border-radius: 20px;
+           display: flex;
+           box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+           margin-bottom: 25px;
+       }
+       input {
+           flex-grow: 1;
+           border: none;
+           padding: 15px 25px;
+           font-size: 16px;
+           outline: none;
+           background: transparent;
+       }
+       button#enviar {
+           background-color: var(--stone-dark);
+           color: var(--white);
+           border: none;
+           width: 55px;
+           height: 55px;
+           border-radius: 15px;
+           cursor: pointer;
+           transition: all 0.3s ease;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+       }
+       button#enviar:hover {
+           background-color: var(--accent-gold);
+           transform: scale(1.05);
+       }
+       .directory-offer {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding: 25px 35px;
+           background: var(--white);
+           border: 1px solid var(--border-stone);
+           border-radius: 24px;
+           gap: 20px;
+       }
+       .directory-text p:first-child {
+           font-size: 11px;
+           font-weight: 700;
+           text-transform: uppercase;
+           letter-spacing: 0.1em;
+           margin-bottom: 4px;
+       }
+       .directory-text p:last-child {
+           font-size: 12px;
+           color: var(--text-muted);
+       }
+       .directory-btn {
+           background: var(--stone-dark);
+           color: var(--white);
+           text-decoration: none;
+           padding: 12px 25px;
+           border-radius: 12px;
+           font-size: 10px;
+           font-weight: 700;
+           text-transform: uppercase;
+           letter-spacing: 0.1em;
+           white-space: nowrap;
+           transition: all 0.3s ease;
+       }
        .directory-btn:hover { background: var(--accent-gold); }
-       
+
        @media (max-width: 768px) {
+           body {
+               flex-direction: column;
+               overflow-y: auto;
+               height: auto;
+           }
+           aside {
+               width: 100%;
+               padding: 30px;
+               max-height: 45vh;
+               overflow-y: auto;
+           }
+           main {
+               padding: 20px !important;
+               height: auto;
+               min-height: 55vh;
+           }
+           #mensajes {
+               min-height: 40vh;
+           }
+           .directory-offer {
+               flex-direction: column;
+               text-align: center;
+           }
+       }
 
-    /* El layout se apila en columna */
-    body {
-        flex-direction: column;
-        overflow-y: auto;
-        height: auto; /* evita que el contenido quede fuera de pantalla */
-    }
-
-    /* Sidebar más compacto y con scroll si es muy alto */
-    aside {
-        width: 100%;
-        padding: 30px;
-        max-height: 45vh;      /* evita que el sidebar empuje el chat hacia abajo */
-        overflow-y: auto;      /* permite scroll interno */
-    }
-
-    /* Chat visible inmediatamente */
-    main {
-        padding: 20px !important;
-        height: auto;          /* evita que el chat quede fuera de vista */
-        min-height: 55vh;      /* asegura presencia del chat en pantalla */
-    }
-
-    /* El área de mensajes debe aparecer arriba */
-    #mensajes {
-        min-height: 40vh;      /* garantiza que el chat se vea sin hacer scroll */
-    }
-
-    /* Banner de directorio en columna */
-    .directory-offer {
-        flex-direction: column;
-        text-align: center;
-    }
-}
-
-.modo-selector {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-    justify-content: center;
-}
-
-.modo-btn {
-    background: var(--white);
-    border: 1px solid var(--border-stone);
-    padding: 10px 18px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    color: var(--text-muted);
-}
-
-.modo-btn.active {
-    background: var(--stone-dark);
-    color: var(--white);
-    border-color: var(--stone-dark);
-}
-
-.modo-btn:hover {
-    transform: translateY(-1px);
-}
-   
-       
-       </style>
+       .modo-selector {
+           display: flex;
+           gap: 10px;
+           margin-bottom: 15px;
+           justify-content: center;
+       }
+       .modo-btn {
+           background: var(--white);
+           border: 1px solid var(--border-stone);
+           padding: 10px 18px;
+           border-radius: 12px;
+           font-size: 11px;
+           font-weight: 600;
+           text-transform: uppercase;
+           letter-spacing: 0.08em;
+           cursor: pointer;
+           transition: all 0.25s ease;
+           color: var(--text-muted);
+       }
+       .modo-btn.active {
+           background: var(--stone-dark);
+           color: var(--white);
+           border-color: var(--stone-dark);
+       }
+       .modo-btn:hover { transform: translateY(-1px); }
+   </style>
 </head>
 <body>
 <aside>
@@ -147,8 +312,6 @@
             <option value="mercantil">MERCANTIL</option>
         </select>
 
-
-
         <label>Estatus del Sistema</label>
         <div id="status-badge" class="modulo-badge">
             SISTEMA LISTO // SEGURO
@@ -171,11 +334,10 @@
     </div>
 
     <div class="input-container">
-
-<div class="modo-selector">
-    <button class="modo-btn active" data-modo="consulta">Consulta</button>
-    <button class="modo-btn" data-modo="redactar">Redactar</button>
-</div>
+        <div class="modo-selector">
+            <button class="modo-btn active" data-modo="consulta">Consulta</button>
+            <button class="modo-btn" data-modo="redactar">Redactar</button>
+        </div>
 
         <div class="input-wrapper">
             <input type="text" id="pregunta" placeholder="Consulte la norma..." autocomplete="off">
@@ -197,7 +359,7 @@
 <script type="module" src="/src/app.js"></script>
 
 <script>
-    // Tu lógica de selects y badges se mantiene igual
+    // Badge de estatus según tema
     const temaSelect = document.getElementById('tema');
     const statusBadge = document.getElementById('status-badge');
     if (temaSelect && statusBadge) {
@@ -207,6 +369,7 @@
         });
     }
 
+    // Color de selects (placeholder vs seleccionado)
     (function () {
         const selects = Array.from(document.querySelectorAll('select'));
         function applyClosedColor(sel) {
@@ -215,7 +378,7 @@
         }
         selects.forEach(sel => {
             applyClosedColor(sel);
-            sel.addEventListener('focus', () => { try { sel.style.color = '#111111'; } catch (e) {} });
+            sel.addEventListener('focus', () => { sel.style.color = '#111111'; });
             sel.addEventListener('blur', () => applyClosedColor(sel));
             sel.addEventListener('change', () => applyClosedColor(sel));
         });
