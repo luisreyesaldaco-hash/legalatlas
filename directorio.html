@@ -195,6 +195,11 @@
     </div>
 
     <script>
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const materiaFiltro = urlParams.get('materia'); // Captura ?materia=arrendamiento
+        
+        
         const supabase = supabasejs.createClient('TU_URL', 'TU_KEY');
         let map;
         let todosLosAbogados = [];
@@ -232,16 +237,22 @@
             cont.innerHTML = '';
 
             const visibles = todosLosAbogados.filter(a => {
-                if (!a.coords) return false;
-                const latlng = a.coords.split(',').map(Number);
-                return bounds.contains(latlng);
+              if (!a.coords) return false;
+            const latlng = a.coords.split(',').map(Number);
+            const estaEnMapa = bounds.contains(latlng);
             });
 
             if (visibles.length === 0) {
                 cont.innerHTML = `<p class="col-span-full text-center text-stone-400 py-10 italic">No se encontraron especialistas en esta zona.</p>`;
                 return;
             }
-
+             if (materiaFiltro) {
+            return estaEnMapa && a.materia.toLowerCase().includes(materiaFiltro.toLowerCase());
+        }
+        return estaEnMapa;
+    });
+    // ... resto de tu código igual
+    
             visibles.forEach(a => {
                 cont.innerHTML += `
                     <div class="lawyer-card">
