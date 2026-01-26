@@ -3,98 +3,166 @@ import { ejecutarMotorEstructurado } from './motor.js';
 document.addEventListener('DOMContentLoaded', () => {
     const btnEnviar = document.getElementById("enviar");
     const inputPregunta = document.getElementById("pregunta");
+    const contenedorMensajes = document.getElementById("mensajes");
     const selectEstado = document.getElementById("estado");
     const selectTema = document.getElementById("tema");
     const selectPais = document.getElementById("pais");
+    const displayFuente = document.getElementById("fuente-oficial-display");
 
+    // ---------------------------
+    //  MODO DE OPERACIÓN (UI)
+    // ---------------------------
     let modoActual = "consulta";
 
-// 2. LÓGICA DE INTERRUPTOR (Toggle)
-    const modoBtns = document.querySelectorAll(".modo-btn");
-    
-    modoBtns.forEach(btn => {
-        // Al cargar, nos aseguramos que el botón que dice 'consulta' tenga la clase active
-        if(btn.dataset.modo === "consulta") {
-            btn.classList.add("active");
-        }
-
+    document.querySelectorAll(".modo-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-            modoBtns.forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".modo-btn").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
-            
-            // Actualizamos la variable global
-            modoActual = btn.dataset.modo;
-            console.log("Modo cambiado a:", modoActual);
+            modoActual = btn.dataset.modo; // "consulta" o "redactar"
         });
     });
 
-async function enviarConsulta() {
-        // ... (resto de tu código de validación)
+    // ---------------------------
+    //  DETECTOR OCULTO DE CONFLICTO
+    // ---------------------------
+    function detectarConflicto(texto) {
+        const t = texto.toLowerCase();
+        const claves = [
+            "qué hago si", "que hago si",
+            "me demandaron",
+            "me quieren desalojar",
+            "me quieren correr",
+            "tengo un problema",
+            "cómo procedo", "como procedo",
+            "qué pasa si", "que pasa si",
+            "mi arrendador",
+            "mi empleador",
+            "me están cobrando", "me estan cobrando",
+            "quiero reclamar",
+            "incumplió", "incumplio"
+        ];
+        return claves.some(c => t.includes(c));
+    }
 
-        const resIA = await fetch("/api/asesoria", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                pregunta: pregunta,
-                modo: modoActual, // Aquí siempre valdrá 'consulta' al inicio
-                contexto: contextoLegal,
-                
-        if (!config.pais || !config.estado || !config.tema || !pregunta) {
-            alert("⚠️ Completa todos los campos.");
+    // ---------------------------
+    //  ENVÍO DE CONSULTA
+    // ---------------------------
+    async function enviarConsulta() {
+        const pregunta = inputPregunta.value.trim();
+        const pais = selectPais ? selectPais.value : "mexico";
+        const estado = selectEstado.value;
+        const tema = selectTema.value;
+
+        if (!pregunta) return;
+
+        if (!estado || !tema || !pais) {
+            alert("Por favor selecciona País, Estado y Tema.");
             return;
         }
 
         agregarMensaje(pregunta, "usuario");
+        inputPregunta.value = "";
+
         const idCarga = "loading-" + Date.now();
-        agregarMensaje("Consultando base legal...", "asistente", idCarga);
+        agregarMensaje("APOLO analizando leyes locales...", "asistente", idCarga);
 
         try {
-            // 1. Motor Local
-            const datosLegales = await ejecutarMotorEstructurado(config.pais, config.estado, config.tema, pregunta);
-            const contextoIA = datosLegales.reglas_relevantes || [];
+            // 1. Motor estructurado
+            const dataLocal = await ejecutarMotorEstructurado(pais, estado, tema, pregunta);
 
-            // 2. IA - Fetch corregido
-            const resIA = await fetch("/api/asesoria", {
+            if (dataLocal.fuente) {
+                displayFuente.innerText = dataLocal.fuente;
+                displayFuente.style.display = "block";
+            }
+
+            // 2. Determinar rol final
+            let rol = modoActual; // consulta o redactar
+
+            if (detectarConflicto(pregunta)) {
+                rol = "articulador";
+            }
+
+            // 3. Llamada a la API
+            const res = await fetch("/api/asesoria", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    pregunta: pregunta,
-                    modo: modoActual,
-                    contexto: contextoIA,
-                    tema: config.tema,
-                    estado: config.estado
+                    pais,
+                    estado,
+                    tema,
+                    pregunta,
+                    modo: rol,
+                    contextoLegal: dataLocal.reglas_relevantes || [],
+                    fuente: dataLocal.fuente || "Legislación Local"
                 })
             });
 
-            if (!resIA.ok) throw new Error("La IA no responde");
-            const dataIA = await resIA.json();
-            
-            document.getElementById(idCarga)?.remove();
-            const respuestaTexto = dataIA.respuesta || dataIA.resultado || "Error al obtener respuesta.";
+            if (!res.ok) throw new Error("Error en la respuesta de la API");
 
-            // 3. Mostrar respuesta y Triage
-            let html = `<div>${respuestaTexto}</div>`;
-            if (pregunta.toLowerCase().includes("pago") || pregunta.toLowerCase().includes("renta")) {
-                html += `<div style="margin-top:10px; padding:10px; background:#f0f0f0; border-radius:8px;">
-                            <strong>Conflicto detectado:</strong> 
-                            <a href="directorio.html?materia=${config.tema}">Ver abogados en ${config.estado}</a>
-                         </div>`;
+            const dataIA = await res.json();
+
+            const loadingElement = document.getElementById(idCarga);
+            if (loadingElement) loadingElement.remove();
+
+            if (dataIA.error) {
+                agregarMensaje("Error: " + dataIA.error, "asistente");
+                return;
             }
+
+            // 4. Render premium
+            const r = dataIA.respuesta;
+
+            let html = `
+                <div class="apolo-resumen">${r.resumen}</div>
+                <div class="apolo-draft">${r.draftHtml}</div>
+            `;
+
+            if (r.confianza !== "Alta") {
+                html += `
+                    <div class="apolo-triage">
+                        <button id="btn-triage">Conectar con abogado colaborador</button>
+                    </div>
+                `;
+            }
+
             agregarMensaje(html, "asistente");
 
+            // 5. Listener triage
+            setTimeout(() => {
+                const btnTriage = document.getElementById("btn-triage");
+                if (btnTriage) {
+                    btnTriage.addEventListener("click", () => {
+                        alert("Aquí conectamos al usuario con un abogado colaborador.");
+                    });
+                }
+            }, 200);
+
         } catch (err) {
-            console.error(err);
-            document.getElementById(idCarga).innerText = "Error de conexión.";
+            console.error("ERROR CRÍTICO EN APP:", err);
+            const loadingElement = document.getElementById(idCarga);
+            if (loadingElement) {
+                loadingElement.innerHTML = "<strong>Error:</strong> No se pudo procesar la consulta legal.";
+            }
         }
     }
 
-    btnEnviar.addEventListener("click", enviarConsulta);
-});
+    // ---------------------------
+    //  AGREGAR MENSAJE AL CHAT
+    // ---------------------------
+    function agregarMensaje(texto, remitente, id = null) {
+        const div = document.createElement("div");
+        div.classList.add("mensaje", remitente);
+        if (id) div.id = id;
+        div.innerHTML = texto;
+        contenedorMensajes.appendChild(div);
+        contenedorMensajes.scrollTop = contenedorMensajes.scrollHeight;
+    }
 
-function agregarMensaje(texto, remitente, id = null) {
-    const div = document.createElement("div");
-    div.classList.add("mensaje", remitente);
-    if (id) div.id = id;
-    div.innerHTML = texto;
-    document.getElementById("mensajes").appendChild(div);
-}
+    // ---------------------------
+    //  EVENTOS
+    // ---------------------------
+    btnEnviar.addEventListener("click", enviarConsulta);
+    inputPregunta.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") enviarConsulta();
+    });
+});
