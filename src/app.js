@@ -1,155 +1,75 @@
-import { ejecutarMotorEstructurado } from './motor.js';
+async function enviarConsulta() {
+    const pregunta = inputPregunta.value.trim();
+    if (!pregunta) return;
 
-document.addEventListener('DOMContentLoaded', () => {
-    const btnEnviar = document.getElementById("enviar");
-    const inputPregunta = document.getElementById("pregunta");
-    const contenedorMensajes = document.getElementById("mensajes");
-    const selectEstado = document.getElementById("estado");
-    const selectTema = document.getElementById("tema");
-    const selectPais = document.getElementById("pais");
-    const displayFuente = document.getElementById("fuente-oficial-display");
+    const pais = selectPais.value;
+    const estado = selectEstado.value;
+    const tema = selectTema.value;
 
-    // NUEVO: Selector de modo incrustado
-    let modoActual = "consulta";
-    const modoBtns = document.querySelectorAll(".modo-btn");
+    const config = { pais, estado, tema };
 
-    modoBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-            modoBtns.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            modoActual = btn.dataset.modo; // "consulta" o "redactar"
-        });
-    });
+    // 1. Interfaz: Agregar mensaje de usuario y limpiar input
+    agregarMensaje(pregunta, "usuario");
+    inputPregunta.value = "";
 
-    // NUEVO: Detector oculto de conflicto → activa Articulador
-    function detectarConflicto(p) {
-        const claves = [
-            "qué hago si", "que hago si",
-            "me demandaron",
-            "me quieren desalojar",
-            "me quieren correr",
-            "tengo un problema",
-            "cómo procedo", "como procedo",
-            "qué pasa si", "que pasa si",
-            "mi arrendador",
-            "mi empleador",
-            "me están cobrando", "me estan cobrando",
-            "quiero reclamar",
-            "incumplió", "incumplio"
-        ];
-        const texto = p.toLowerCase();
-        return claves.some(c => texto.includes(c));
-    }
+    // 2. Mostrar burbuja de carga
+    const idCarga = "loading-" + Date.now();
+    agregarMensaje('<i class="fas fa-spinner fa-spin"></i> Consultando jurisprudencia...', "asistente", idCarga);
 
-    async function enviarConsulta() {
-        const pregunta = inputPregunta.value.trim();
-        const pais = selectPais ? selectPais.value : "mexico";
-        const estado = selectEstado.value;
-        const tema = selectTema.value;
+    try {
+        // 3. Ejecución del Motor (Intelectual y Triage)
+        const resultado = await ejecutarMotorEstructurado(pregunta, config);
+        
+        // Quitar burbuja de carga
+        const loadingElement = document.getElementById(idCarga);
+        if (loadingElement) loadingElement.remove();
 
-        if (!pregunta) return;
-        if (!estado || !tema || !pais) {
-            alert("Por favor selecciona País, Estado y Tema.");
-            return;
-        }
-
-        agregarMensaje(pregunta, "usuario");
-        inputPregunta.value = "";
-
-        const idCarga = "loading-" + Date.now();
-        agregarMensaje("APOLO analizando leyes locales...", "asistente", idCarga);
+        let respuestaLimpia = "";
+        let leyCitada = "Legislación aplicable";
 
         try {
-            console.log(`[APOLO] Buscando en: jurisdicciones/${pais}/${estado}/${tema}.json`);
-            const dataLocal = await ejecutarMotorEstructurado(pais, estado, tema, pregunta);
+            // Intentamos parsear por si el LLM devolvió el JSON que pedimos en el prompt
+            const datos = JSON.parse(resultado.respuesta);
+            respuestaLimpia = datos.explicacion || datos.respuesta;
+            leyCitada = datos.ley || "Legislación Mexicana";
+        } catch (e) {
+            // Si el LLM devolvió texto plano, lo usamos directamente
+            respuestaLimpia = resultado.respuesta;
+        }
 
-            console.log("[APOLO] Artículos encontrados:", dataLocal.reglas_relevantes);
+        // 4. Construcción del HTML con estilo intelectual
+        let html = `
+            <div class="fuente-oficial" style="color: #b8973d; font-size: 10px; font-weight: bold; text-transform: uppercase; margin-bottom: 8px;">
+                <i class="fas fa-gavel"></i> ${leyCitada}
+            </div>
+            <div class="explicacion-legal" style="line-height: 1.6;">
+                ${respuestaLimpia}
+            </div>
+        `;
 
-            if (dataLocal.fuente) displayFuente.innerText = dataLocal.fuente;
-
-            // NUEVO: Determinar rol final
-            let rol = modoActual; // consulta o redactar
-
-            // Si el usuario describe un conflicto → activar articulador automáticamente
-            if (detectarConflicto(pregunta)) {
-                rol = "articulador";
-            }
-
-            const res = await fetch("/api/asesoria", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    pais,
-                    estado,
-                    tema,
-                    pregunta,
-                    modo: rol,
-                    contextoLegal: dataLocal.reglas_relevantes || [],
-                    fuente: dataLocal.fuente || "Legislación Local"
-                })
-            });
-
-            if (!res.ok) throw new Error("Error en la respuesta de la API");
-
-            const dataIA = await res.json();
-
-            const loadingElement = document.getElementById(idCarga);
-            if (loadingElement) loadingElement.remove();
-
-            if (dataIA.error) {
-                agregarMensaje("Error: " + dataIA.error, "asistente");
-                return;
-            }
-
-            const r = dataIA.respuesta;
-
-            // Render premium
-            let html = `
-                <div class="apolo-resumen">${r.resumen}</div>
-                <div class="apolo-draft">${r.draftHtml}</div>
+        // 5. Lógica de TRIAGE: Si detecta conflicto, inyectamos el botón al DIRECTORIO
+        // Usamos la función detectarConflicto que ya tienes en tu app.js
+        if (detectarConflicto(pregunta) || respuestaLimpia.toLowerCase().includes("abogado") || respuestaLimpia.toLowerCase().includes("especialista")) {
+            html += `
+                <div class="apolo-triage" style="margin-top: 20px; border-top: 1px solid #e5e5e0; padding-top: 15px;">
+                    <p style="font-size: 10px; color: #b8973d; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+                        <i class="fas fa-exclamation-triangle"></i> Triage Legal Atlas
+                    </p>
+                    <p style="font-size: 13px; margin-bottom: 15px; color: #666;">He determinado que su situación requiere intervención profesional inmediata para asegurar su defensa.</p>
+                    <a href="directorio.html" class="directory-btn" style="display: inline-block; background: #1a1a1a; color: white; padding: 12px 20px; border-radius: 12px; text-decoration: none; font-size: 11px; font-weight: bold; transition: background 0.3s;">
+                        CONECTAR CON ABOGADO EN ${estado.toUpperCase()}
+                    </a>
+                </div>
             `;
+        }
 
-            // Triage si confianza es media o baja
-            if (r.confianza !== "Alta") {
-                html += `
-                    <div class="apolo-triage">
-                        <button id="btn-triage">Conectar con abogado colaborador</button>
-                    </div>
-                `;
-            }
+        agregarMensaje(html, "asistente");
 
-            agregarMensaje(html, "asistente");
-
-            // Listener triage
-            setTimeout(() => {
-                const btnTriage = document.getElementById("btn-triage");
-                if (btnTriage) {
-                    btnTriage.addEventListener("click", () => {
-                        alert("Aquí conectamos al usuario con un abogado colaborador.");
-                    });
-                }
-            }, 200);
-
-        } catch (err) {
-            console.error("ERROR CRÍTICO EN APP:", err);
-            const loadingElement = document.getElementById(idCarga);
-            if (loadingElement) {
-                loadingElement.innerHTML = "<strong>Error:</strong> No se pudo procesar la consulta legal.";
-            }
+    } catch (err) {
+        console.error("ERROR CRÍTICO:", err);
+        const loadingElement = document.getElementById(idCarga);
+        if (loadingElement) {
+            loadingElement.innerHTML = "<strong>Error:</strong> El Motor APOLO no pudo procesar la consulta legal. Intente de nuevo.";
         }
     }
-
-    function agregarMensaje(texto, remitente, id = null) {
-        const div = document.createElement("div");
-        div.classList.add("mensaje", remitente);
-        if (id) div.id = id;
-        div.innerHTML = texto;
-        contenedorMensajes.appendChild(div);
-        contenedorMensajes.scrollTop = contenedorMensajes.scrollHeight;
-    }
-
-    btnEnviar.addEventListener("click", enviarConsulta);
-    inputPregunta.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") enviarConsulta();
-    });
-});
+}
