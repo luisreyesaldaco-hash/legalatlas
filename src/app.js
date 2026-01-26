@@ -1,3 +1,46 @@
+import { ejecutarMotorEstructurado } from './motor.js';
+
+document.addEventListener('DOMContentLoaded', () => {
+    const btnEnviar = document.getElementById("enviar");
+    const inputPregunta = document.getElementById("pregunta");
+    const contenedorMensajes = document.getElementById("mensajes");
+    const selectEstado = document.getElementById("estado");
+    const selectTema = document.getElementById("tema");
+    const selectPais = document.getElementById("pais");
+    const displayFuente = document.getElementById("fuente-oficial-display");
+
+    // NUEVO: Selector de modo incrustado
+    let modoActual = "consulta";
+    const modoBtns = document.querySelectorAll(".modo-btn");
+
+    modoBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            modoBtns.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            modoActual = btn.dataset.modo; // "consulta" o "redactar"
+        });
+    });
+
+    // NUEVO: Detector oculto de conflicto → activa Articulador
+    function detectarConflicto(p) {
+        const claves = [
+            "qué hago si", "que hago si",
+            "me demandaron",
+            "me quieren desalojar",
+            "me quieren correr",
+            "tengo un problema",
+            "cómo procedo", "como procedo",
+            "qué pasa si", "que pasa si",
+            "mi arrendador",
+            "mi empleador",
+            "me están cobrando", "me estan cobrando",
+            "quiero reclamar",
+            "incumplió", "incumplio"
+        ];
+        const texto = p.toLowerCase();
+        return claves.some(c => texto.includes(c));
+    }
+
 async function enviarConsulta() {
     const pregunta = inputPregunta.value.trim();
     if (!pregunta) return;
