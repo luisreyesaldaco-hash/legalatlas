@@ -7,7 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectTema = document.getElementById("tema");
     const selectPais = document.getElementById("pais");
 
-    let modoActual = "consulta";
+    let modoActual = "consulta"; // Por defecto
+
+    // Manejo de los botones de modo (Consulta/Redactar)
     document.querySelectorAll(".modo-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             document.querySelectorAll(".modo-btn").forEach(b => b.classList.remove("active"));
@@ -18,11 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function enviarConsulta() {
         const pregunta = inputPregunta.value.trim();
-        const pais = selectPais.value;
-        const estado = selectEstado.value;
-        const tema = selectTema.value;
+        const config = {
+            pais: selectPais.value,
+            estado: selectEstado.value,
+            tema: selectTema.value
+        };
 
-        if (!pais || !estado || !tema) {
+        // VALIDACIÓN: No hace nada si faltan campos
+        if (!config.pais || !config.estado || !config.tema) {
             alert("⚠️ Selecciona Jurisdicción, Estado y Tema.");
             return;
         }
@@ -31,69 +36,63 @@ document.addEventListener('DOMContentLoaded', () => {
         agregarMensaje(pregunta, "usuario");
         inputPregunta.value = "";
         const idCarga = "loading-" + Date.now();
-        agregarMensaje("APOLO procesando...", "asistente", idCarga);
+        agregarMensaje('<i class="fas fa-spinner fa-spin"></i> APOLO procesando...', "asistente", idCarga);
 
         try {
-            // 1. MOTOR LOCAL (Construye la ruta y busca leyes)
-            const datosLegales = await ejecutarMotorEstructurado(pais, estado, tema, pregunta);
+            // 1. LLAMADA AL MOTOR (Búsqueda de leyes)
+            const datosLegales = await ejecutarMotorEstructurado(config.pais, config.estado, config.tema, pregunta);
             
-            // Verificamos si el motor trajo algo para evitar el 'undefined'
-            const leyesEncontradas = datosLegales && datosLegales.reglas_relevantes ? datosLegales.reglas_relevantes : [];
+            // Si el motor falla, usamos un array vacío para no romper la IA
+            const contextoIA = (datosLegales && datosLegales.reglas_relevantes) ? datosLegales.reglas_relevantes : [];
 
-            // 2. IA (Aquí es donde estaba el error de cierre)
+            // 2. LLAMADA A LA IA (Aquí es donde estaba el error del F12)
             const resIA = await fetch("/api/asesoria", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     pregunta: pregunta,
                     modo: modoActual,
-                    contexto: leyesEncontradas, // Enviamos array vacío si no hay leyes
-                    tema: tema,
-                    estado: estado
+                    contexto: contextoIA, // Mandamos las leyes encontradas
+                    tema: config.tema,
+                    estado: config.estado
                 })
             });
 
-            if (!resIA.ok) throw new Error("Error en servidor de IA");
-            
-            const data = await resIA.json();
-            
-            // IMPORTANTE: Asegúrate que asesoria.js devuelva un campo llamado 'respuesta'
-            const textoIA = data.respuesta || data.resultado || "Sin respuesta de la IA.";
+            if (!resIA.ok) throw new Error("Servidor de IA no responde");
 
-            const loadingElement = document.getElementById(idCarga);
-            if (loadingElement) loadingElement.remove();
+            const dataIA = await resIA.json();
+            document.getElementById(idCarga)?.remove();
 
-            // 3. RENDERIZADO
-            let html = "";
+            // 3. RENDERIZADO DE RESPUESTA
+            const respuestaTexto = dataIA.respuesta || dataIA.resultado || "No se obtuvo respuesta.";
+            
+            let htmlFinal = "";
             if (modoActual === "redactar") {
-                html = `
+                htmlFinal = `
                     <div style="border-left: 3px solid #b8973d; padding: 15px; background: white; border-radius: 8px;">
-                        <span style="font-size: 10px; font-weight: bold; color: #b8973d;">PROYECTO DE REDACCIÓN</span>
-                        <p style="font-family: serif; white-space: pre-wrap; margin-top: 10px;">${textoIA}</p>
+                        <p style="font-family: serif; white-space: pre-wrap; font-size: 14px;">${respuestaTexto}</p>
                     </div>`;
             } else {
-                html = `
-                    <div style="color: #b8973d; font-size: 10px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase;">
-                        Análisis Legal APOLO
-                    </div>
-                    <div>${textoIA}</div>`;
+                htmlFinal = `
+                    <div style="color: #b8973d; font-size: 10px; font-weight: bold; margin-bottom: 5px;">ANÁLISIS LEGAL</div>
+                    <div style="font-size: 14px;">${respuestaTexto}</div>`;
                 
-                // Triage hacia el directorio
+                // Triage automático al Directorio
                 if (pregunta.toLowerCase().includes("pago") || pregunta.toLowerCase().includes("renta")) {
-                    html += `
+                    htmlFinal += `
                         <div style="margin-top:15px; background:#1a1a1a; color:white; padding:15px; border-radius:12px;">
-                            <p style="font-size:11px; color:#b8973d; font-weight:bold; margin-bottom:10px;">CONFLICTO DETECTADO</p>
-                            <p style="font-size:12px; margin-bottom:12px; opacity: 0.9;">Esta situación requiere intervención profesional inmediata.</p>
-                            <a href="directorio.html?materia=${tema}" style="background:#b8973d; color:white; padding:8px 15px; border-radius:6px; text-decoration:none; font-size:11px; font-weight:bold;">CONSULTAR ABOGADOS →</a>
+                            <p style="font-size:11px; color:#b8973d; font-weight:800; margin-bottom:10px;">CONFLICTO DETECTADO</p>
+                            <a href="directorio.html?materia=${config.tema}" style="color:white; font-weight:bold; text-decoration:underline; font-size:12px;">VER ABOGADOS EN ${config.estado.toUpperCase()} →</a>
                         </div>`;
                 }
             }
-            agregarMensaje(html, "asistente");
+
+            agregarMensaje(htmlFinal, "asistente");
 
         } catch (err) {
-            console.error("Error en App:", err);
-            const loadingElement = document.getElementById(idCarga);
-            if (loadingElement) loadingElement.innerText = "Error: No se pudo conectar con el cerebro de la IA.";
+            console.error("Error Crítico:", err);
+            const loader = document.getElementById(idCarga);
+            if (loader) loader.innerHTML = "<strong>Error:</strong> No se pudo conectar con la IA. Revisa la consola (F12).";
         }
     }
 
