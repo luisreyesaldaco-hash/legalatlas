@@ -19,13 +19,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    async function enviarConsulta() {
-        const pregunta = inputPregunta.value.trim();
-        if (!pregunta) return;
+     async function enviarConsulta() {
+    // 1. CAPTURA DE VALORES
+      const pregunta = inputPregunta.value.trim();
+      const pais = selectPais.value;
+      const estado = selectEstado.value;
+      const tema = selectTema.value;
 
-        const pais = selectPais.value;
-        const estado = selectEstado.value;
-        const tema = selectTema.value;
+    // 2. EL GUARDIÁN: Validar que todo esté lleno
+    if (!pais || !estado || !tema) {
+        // Crear un pequeño popup o alerta visual
+        alert("⚠️ Por favor, selecciona País, Estado y Tema antes de consultar al Motor APOLO.");
+        
+        // Efecto visual: Resaltar los campos vacíos en rojo temporalmente
+        [selectPais, selectEstado, selectTema].forEach(el => {
+            if (!el.value) {
+                el.style.border = "1px solid #b8973d";
+                setTimeout(() => el.style.border = "1px solid transparent", 2000);
+            }
+        });
+        return; // Detiene la ejecución
+    }
+
+    if (!pregunta) return;
 
         agregarMensaje(pregunta, "usuario");
         inputPregunta.value = "";
