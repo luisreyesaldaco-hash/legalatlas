@@ -8,7 +8,7 @@
 export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
     try {
         // 1. Construir ruta del archivo JSON
-        const ruta = `/jurisdicciones/${pais}/${capitalizar(estado)}/${tema}.json`;
+        const ruta = `/jurisdicciones/${pais}/${estado.toLowerCase()}/${tema}.json`;
 
         // 2. Cargar archivo
         const res = await fetch(ruta);
