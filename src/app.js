@@ -1,15 +1,15 @@
 import { ejecutarMotorEstructurado } from './motor.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Referencias al DOM (Asegúrate que estos IDs existan en tu index)
     const btnEnviar = document.getElementById("enviar");
     const inputPregunta = document.getElementById("pregunta");
     const contenedorMensajes = document.getElementById("mensajes");
+    
+    // Selectores del Index
     const selectEstado = document.getElementById("estado");
     const selectTema = document.getElementById("tema");
     const selectPais = document.getElementById("pais");
 
-    // 2. Lógica de Modos (Consulta vs Redacción)
     let modoActual = "consulta"; 
     const modoBtns = document.querySelectorAll(".modo-btn");
 
@@ -17,75 +17,67 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener("click", () => {
             modoBtns.forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
-            modoActual = btn.dataset.modo; 
-            console.log("Modo activo en APOLO:", modoActual);
+            modoActual = btn.dataset.modo;
         });
     });
 
-    // 3. Detector de Conflicto (Triage Jurídico)
-    function detectarConflicto(p) {
-        const claves = ["no paga", "renta", "arrendatario", "demanda", "despido", "embargo", "correr", "problema"];
-        return claves.some(clave => p.toLowerCase().includes(clave));
-    }
-
-    // 4. Función de Envío Principal
     async function enviarConsulta() {
         const pregunta = inputPregunta.value.trim();
         if (!pregunta) return;
 
-        // Capturamos valores actuales de los selectores
-        const pais = selectPais.value;
-        const estado = selectEstado.value;
-        const tema = selectTema.value;
+        // CAPTURA CRÍTICA: Aseguramos que los valores no sean nulos
+        const estadoNombre = selectEstado.options[selectEstado.selectedIndex]?.text || "Estado no seleccionado";
+        const temaNombre = selectTema.value || "General";
 
         agregarMensaje(pregunta, "usuario");
         inputPregunta.value = "";
 
         const idCarga = "loading-" + Date.now();
-        agregarMensaje('<i class="fas fa-spinner fa-spin"></i> APOLO procesando en modo ' + modoActual.toUpperCase() + '...', "asistente", idCarga);
+        agregarMensaje('APOLO está procesando...', "asistente", idCarga);
 
         try {
-            // LLAMADA CORREGIDA AL MOTOR: Pasamos los 4 argumentos que espera motor.js
-            const resultado = await ejecutarMotorEstructurado(pais, estado, tema, pregunta);
+            // Llamamos al motor con los valores actuales
+            const resultado = await ejecutarMotorEstructurado(
+                selectPais.value, 
+                selectEstado.value, 
+                selectTema.value, 
+                pregunta
+            );
             
             const loadingElement = document.getElementById(idCarga);
             if (loadingElement) loadingElement.remove();
 
-            // Procesamos la respuesta según el modo elegido
             let htmlFinal = "";
-            
+
             if (modoActual === "redactar") {
-                // Lógica de Redacción: Enfocada en estructura de documento
+                // MODO REDACCIÓN
+                const borradorSimulado = redactarDocumento(temaNombre, resultado.reglas_relevantes, pregunta);
                 htmlFinal = `
                     <div style="border-left: 3px solid #b8973d; padding-left: 15px;">
-                        <span style="font-size: 10px; font-weight: bold; color: #b8973d; letter-spacing: 1px;">MODO REDACCIÓN ACTIVO</span>
-                        <p style="margin-top: 10px; font-size: 14px;">Preparando borrador técnico para <strong>${tema.toUpperCase()}</strong> en ${estado}:</p>
-                        <div style="background: #fdfdfd; padding: 20px; font-family: 'Courier New', monospace; font-size: 12px; margin-top: 15px; border: 1px solid #e5e5e0; line-height: 1.5; color: #333;">
-                            [Simulación de Borrador: Basado en Art. ${resultado.reglas_relevantes[0]?.articulo || 'N/A'}]<br><br>
-                            ${pregunta.toUpperCase()}<br>---<br>
-                            Próximo paso: Conectar con IA para completar el clausulado.
+                        <span style="font-size: 10px; font-weight: bold; color: #b8973d;">PROYECTO DE REDACCIÓN</span>
+                        <p style="margin: 10px 0; font-size: 13px;">Borrador técnico para <strong>${temaNombre}</strong>:</p>
+                        <div style="background: #fff; padding: 20px; border: 1px solid #ddd; font-family: serif; white-space: pre-line; font-size: 13px;">
+                            ${borradorSimulado}
                         </div>
                     </div>
                 `;
             } else {
-                // Lógica de Consulta: Análisis y Triage
-                let reglasHtml = resultado.reglas_relevantes.map(r => 
-                    `<li style="margin-bottom: 10px;"><strong>Art. ${r.articulo}:</strong> ${r.regla}</li>`
-                ).join("");
+                // MODO CONSULTA
+                let reglasHtml = resultado.reglas_relevantes.length > 0 
+                    ? resultado.reglas_relevantes.map(r => `<li><strong>Art. ${r.articulo}:</strong> ${r.regla}</li>`).join("")
+                    : "<li>No se encontraron artículos específicos para esta consulta.</li>";
 
                 htmlFinal = `
-                    <div style="color: #b8973d; font-size: 10px; font-weight: bold; margin-bottom: 8px; letter-spacing: 1px;">ANÁLISIS DE CONSULTA // ${resultado.fuente}</div>
-                    <p style="font-size: 14px; margin-bottom: 15px;">De acuerdo a la normativa vigente, he localizado los siguientes fundamentos:</p>
-                    <ul style="font-size: 13px; list-style: none; padding: 0;">${reglasHtml}</ul>
+                    <div style="color: #b8973d; font-size: 10px; font-weight: bold; margin-bottom: 5px;">ANÁLISIS LEGAL EN ${estadoNombre.toUpperCase()}</div>
+                    <p style="font-size: 14px;">Basado en la normativa de ${temaNombre}:</p>
+                    <ul style="font-size: 13px; margin: 15px 0; list-style-type: square; padding-left: 20px;">${reglasHtml}</ul>
                 `;
 
-                // Botón de Triage dinámico (Solo en modo consulta si hay conflicto)
-                if (detectarConflicto(pregunta)) {
+                if (pregunta.toLowerCase().includes("pago") || pregunta.toLowerCase().includes("renta")) {
                     htmlFinal += `
-                        <div style="background: #1a1a1a; color: white; padding: 20px; border-radius: 12px; margin-top: 20px;">
-                            <p style="font-size: 11px; font-weight: bold; color: #b8973d; margin-bottom: 5px;">TRIAGE LEGAL ATLAS</p>
-                            <p style="font-size: 13px; margin-bottom: 15px; opacity: 0.9;">Su caso sugiere un conflicto de intereses. Se recomienda intervención de un experto.</p>
-                            <a href="directorio.html" style="background: #b8973d; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 11px; font-weight: bold; text-transform: uppercase;">Consultar Especialista</a>
+                        <div style="background: #1a1a1a; color: white; padding: 15px; border-radius: 10px; margin-top: 15px;">
+                            <p style="font-size: 11px; margin-bottom: 10px;">⚠️ Se detecta un posible incumplimiento de contrato.</p>
+                            <a href="directorio.html" style="color: #b8973d; font-weight: bold; font-size: 12px; text-decoration: none;">VER ABOGADOS DISPONIBLES EN ${estadoNombre.toUpperCase()} →</a>
                         </div>
                     `;
                 }
@@ -94,18 +86,27 @@ document.addEventListener('DOMContentLoaded', () => {
             agregarMensaje(htmlFinal, "asistente");
 
         } catch (err) {
-            console.error("Error crítico en la comunicación:", err);
-            const loadingElement = document.getElementById(idCarga);
-            if (loadingElement) loadingElement.innerHTML = "<strong>Error:</strong> No se pudo conectar con el motor legal.";
+            console.error(err);
+            if (document.getElementById(idCarga)) document.getElementById(idCarga).innerHTML = "Error al conectar con el motor.";
         }
     }
 
-    // 5. Event Listeners
+    // SIMULADOR DE IA (Esto luego será reemplazado por la API de Gemini/GPT)
+    function redactarDocumento(tema, reglas, duda) {
+        const art = reglas[0]?.articulo || "---";
+        return `CONTRATO DE ${tema.toUpperCase()}
+        
+        En la ciudad de León, Guanajuato...
+        CONSIDERANDO QUE: El solicitante manifiesta lo siguiente: "${duda}".
+        FUNDAMENTO LEGAL: De acuerdo al Artículo ${art} de la legislación vigente...
+        
+        [EL CLAUSULADO COMPLETO SE GENERARÁ AL CONECTAR LA API]`;
+    }
+
     btnEnviar.addEventListener("click", enviarConsulta);
     inputPregunta.addEventListener("keypress", (e) => { if (e.key === "Enter") enviarConsulta(); });
 });
 
-// Función auxiliar para renderizar burbujas
 function agregarMensaje(texto, remitente, id = null) {
     const contenedor = document.getElementById("mensajes");
     const div = document.createElement("div");
