@@ -1,4 +1,4 @@
-[
+
   {
   "fuente": "Código Civil del Estado de Guanajuato",
   "articulos": [
@@ -899,6 +899,8 @@
   },
   "plantilla_clausula": "",
   "validacion_logica": "Verificar que el predio no esté ocioso salvo que sea forestal o de pastoreo."
-},
-]
-  
+}
+
+    
+  ]
+}
