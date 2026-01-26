@@ -17,27 +17,29 @@ async function enviarConsulta() {
     agregarMensaje('<i class="fas fa-spinner fa-spin"></i> Consultando jurisprudencia...', "asistente", idCarga);
 
     try {
-        // 3. Ejecución del Motor (Intelectual y Triage)
-        const resultado = await ejecutarMotorEstructurado(pregunta, config);
+        // 3. LLAMADA CORRECTA AL MOTOR (Usando tu función existente)
+        // Nota: cambiamos ejecutarMotorEstructurado por ejecutarConsultaMotor
+        const resultado = await ejecutarConsultaMotor(pregunta, config);
         
         // Quitar burbuja de carga
         const loadingElement = document.getElementById(idCarga);
         if (loadingElement) loadingElement.remove();
 
+        // 4. Procesar la respuesta
         let respuestaLimpia = "";
         let leyCitada = "Legislación aplicable";
 
         try {
-            // Intentamos parsear por si el LLM devolvió el JSON que pedimos en el prompt
-            const datos = JSON.parse(resultado.respuesta);
-            respuestaLimpia = datos.explicacion || datos.respuesta;
+            // Intentamos ver si el resultado ya es un objeto o un JSON
+            const datos = (typeof resultado.respuesta === 'string') ? JSON.parse(resultado.respuesta) : resultado.respuesta;
+            respuestaLimpia = datos.explicacion || datos.respuesta || resultado.respuesta;
             leyCitada = datos.ley || "Legislación Mexicana";
         } catch (e) {
-            // Si el LLM devolvió texto plano, lo usamos directamente
-            respuestaLimpia = resultado.respuesta;
+            // Si falla el parseo, el resultado es puro texto
+            respuestaLimpia = resultado.respuesta || resultado;
         }
 
-        // 4. Construcción del HTML con estilo intelectual
+        // 5. Construcción del HTML
         let html = `
             <div class="fuente-oficial" style="color: #b8973d; font-size: 10px; font-weight: bold; text-transform: uppercase; margin-bottom: 8px;">
                 <i class="fas fa-gavel"></i> ${leyCitada}
@@ -47,16 +49,15 @@ async function enviarConsulta() {
             </div>
         `;
 
-        // 5. Lógica de TRIAGE: Si detecta conflicto, inyectamos el botón al DIRECTORIO
-        // Usamos la función detectarConflicto que ya tienes en tu app.js
-        if (detectarConflicto(pregunta) || respuestaLimpia.toLowerCase().includes("abogado") || respuestaLimpia.toLowerCase().includes("especialista")) {
+        // 6. Lógica de TRIAGE
+        if (detectarConflicto(pregunta) || respuestaLimpia.toLowerCase().includes("abogado")) {
             html += `
                 <div class="apolo-triage" style="margin-top: 20px; border-top: 1px solid #e5e5e0; padding-top: 15px;">
                     <p style="font-size: 10px; color: #b8973d; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
                         <i class="fas fa-exclamation-triangle"></i> Triage Legal Atlas
                     </p>
-                    <p style="font-size: 13px; margin-bottom: 15px; color: #666;">He determinado que su situación requiere intervención profesional inmediata para asegurar su defensa.</p>
-                    <a href="directorio.html" class="directory-btn" style="display: inline-block; background: #1a1a1a; color: white; padding: 12px 20px; border-radius: 12px; text-decoration: none; font-size: 11px; font-weight: bold; transition: background 0.3s;">
+                    <p style="font-size: 13px; margin-bottom: 15px; color: #666;">He determinado que su situación requiere intervención profesional inmediata.</p>
+                    <a href="directorio.html" class="directory-btn" style="display: inline-block; background: #1a1a1a; color: white; padding: 12px 25px; border-radius: 12px; text-decoration: none; font-size: 11px; font-weight: bold;">
                         CONECTAR CON ABOGADO EN ${estado.toUpperCase()}
                     </a>
                 </div>
@@ -69,7 +70,7 @@ async function enviarConsulta() {
         console.error("ERROR CRÍTICO:", err);
         const loadingElement = document.getElementById(idCarga);
         if (loadingElement) {
-            loadingElement.innerHTML = "<strong>Error:</strong> El Motor APOLO no pudo procesar la consulta legal. Intente de nuevo.";
+            loadingElement.innerHTML = "<strong>Error:</strong> No se pudo conectar con el motor legal.";
         }
     }
 }
