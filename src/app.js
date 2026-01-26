@@ -9,19 +9,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let modoActual = "consulta";
 
-    // Manejo de botones de modo
-    document.querySelectorAll(".modo-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".modo-btn").forEach(b => b.classList.remove("active"));
+// 2. LÓGICA DE INTERRUPTOR (Toggle)
+    const modoBtns = document.querySelectorAll(".modo-btn");
+    
+    modoBtns.forEach(btn => {
+        // Al cargar, nos aseguramos que el botón que dice 'consulta' tenga la clase active
+        if(btn.dataset.modo === "consulta") {
             btn.classList.add("active");
+        }
+
+        btn.addEventListener("click", () => {
+            modoBtns.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            
+            // Actualizamos la variable global
             modoActual = btn.dataset.modo;
+            console.log("Modo cambiado a:", modoActual);
         });
     });
 
-    async function enviarConsulta() {
-        const pregunta = inputPregunta.value.trim();
-        const config = { pais: selectPais.value, estado: selectEstado.value, tema: selectTema.value };
+async function enviarConsulta() {
+        // ... (resto de tu código de validación)
 
+        const resIA = await fetch("/api/asesoria", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                pregunta: pregunta,
+                modo: modoActual, // Aquí siempre valdrá 'consulta' al inicio
+                contexto: contextoLegal,
+                
         if (!config.pais || !config.estado || !config.tema || !pregunta) {
             alert("⚠️ Completa todos los campos.");
             return;
