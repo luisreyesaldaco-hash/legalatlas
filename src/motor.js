@@ -119,7 +119,7 @@ function calcularScore(articulo, conceptosPregunta, pregunta) {
 // -------------------------------
 export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
     try {
-        const ruta = `/data/${pais.toLowerCase()}/${estado.toLowerCase()}/${tema.toLowerCase()}.json`;
+        const ruta = `/jurisdicciones/${pais.toLowerCase()}/${estado.toLowerCase()}/${tema.toLowerCase()}.json`;
         const res = await fetch(ruta);
 
         if (!res.ok) {
