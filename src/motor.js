@@ -139,7 +139,7 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
         const conceptos = detectarConceptos(pregunta);
         console.log("🧠 Conceptos detectados:", conceptos);
 
-        // 4. Calcular score por artículo
+        // 4. Calcular score por artículo nuevo
         const articulosConScore = articulos.map(a => ({
             ...a,
             score: calcularScore(a, conceptos, pregunta)
