@@ -9,22 +9,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectPais = document.getElementById("pais");
     const displayFuente = document.getElementById("fuente-oficial-display");
 
- 
     // ---------------------------
     //  DETECTOR de redactar
     // ---------------------------
-function detectarRedaccion(texto) {
-    const t = texto.toLowerCase();
-    return (
-        t.includes("redacta") ||
-        t.includes("redactar") ||
-        t.includes("redacción") ||
-        t.includes("redactame") ||
-        t.includes("redáctame") ||
-        t.includes("puedes redactar") ||
-        t.includes("necesito redactar")
-    );
-}
+    function detectarRedaccion(texto) {
+        const t = texto.toLowerCase();
+        return (
+            t.includes("redacta") ||
+            t.includes("redactar") ||
+            t.includes("redacción") ||
+            t.includes("redactame") ||
+            t.includes("redáctame") ||
+            t.includes("puedes redactar") ||
+            t.includes("necesito redactar")
+        );
+    }
+
+    // ---------------------------
+    //  DETECTOR de conflicto
+    // ---------------------------
+    function detectarConflicto(texto) {
+        const t = texto.toLowerCase();
+        const claves = [
+            "qué hago si", "que hago si",
+            "me demandaron",
+            "me quieren desalojar",
+            "me quieren correr",
+            "tengo un problema",
+            "cómo procedo", "como procedo",
+            "qué pasa si", "que pasa si",
+            "mi arrendador",
+            "mi empleador",
+            "me están cobrando", "me estan cobrando",
+            "quiero reclamar",
+            "incumplió", "incumplio"
+        ];
+        return claves.some(c => t.includes(c));
     }
 
     // ---------------------------
@@ -59,19 +79,16 @@ function detectarRedaccion(texto) {
             }
 
             // 2. Determinar rol final
-            let rol = modoActual; // consulta o redactar
+            let rol = "consulta";
 
-let rol = "consulta";
+            if (detectarRedaccion(pregunta)) {
+                rol = "redactar";
+            }
 
-// Si el usuario pide explícitamente redactar → modo redacción
-if (detectarRedaccion(pregunta)) {
-    rol = "redactar";
-}
+            if (detectarConflicto(pregunta)) {
+                rol = "articulador";
+            }
 
-// Si detectamos conflicto → articulador
-if (detectarConflicto(pregunta)) {
-    rol = "articulador";
-}
             // 3. Llamada a la API
             const res = await fetch("/api/asesoria", {
                 method: "POST",
