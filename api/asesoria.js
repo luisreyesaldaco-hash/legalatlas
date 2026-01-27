@@ -12,10 +12,10 @@ export default async function handler(req, res) {
       apiVersion: "2024-08-01-preview"
     });
 
-    // 2. Convertimos artículos del motor en texto para el LLM
+   // 2. Convertimos artículos del motor (nuevo formato)
     const leyesTexto = contextoLegal?.length
       ? contextoLegal
-          .map(r => `ARTÍCULO ${r.articulo}: ${r.regla}`)
+          .map(r => `ARTÍCULO ${r.numero}: ${r.regla}`)
           .join("\n\n")
       : "No se encontraron artículos específicos en la base de datos.";
 
@@ -31,7 +31,7 @@ ${leyesTexto}
 
 INSTRUCCIONES CRÍTICAS:
 1. Si el CONTEXTO LEGAL contiene artículos, DEBES citarlos con número exacto.
-2. Si el usuario pide un escrito, genera un borrador formal completo (encabezado, hechos, fundamentos, petitorio y firma simulada).
+2. Si el usuario pide redactar un escrito, genera un borrador formal completo (encabezado, hechos, fundamentos, petitorio y firma simulada).
 3. Devuelve SIEMPRE un JSON con esta estructura:
 
 {
@@ -70,13 +70,13 @@ INSTRUCCIONES CRÍTICAS:
       });
     }
 
-    // 6. Verificación automática de artículos
+    // 6. Verificación automática de artículos (nuevo formato)
     const articulosValidos = [];
     const fuentesValidas = [];
 
     if (parsed.articulos && Array.isArray(parsed.articulos)) {
       parsed.articulos.forEach(num => {
-        const coincide = contextoLegal.find(a => a.articulo == num);
+        const coincide = contextoLegal.find(a => a.numero == num);
         if (coincide) {
           articulosValidos.push(num);
           fuentesValidas.push(`${fuente} Art. ${num}`);
@@ -87,8 +87,12 @@ INSTRUCCIONES CRÍTICAS:
     // 7. Cálculo de confianza
     let confianza = "Alta";
     if (articulosValidos.length === 0) confianza = "Baja";
-    if (articulosValidos.length > 0 && articulosValidos.length < parsed.articulos?.length)
+    if (
+      articulosValidos.length > 0 &&
+      articulosValidos.length < (parsed.articulos?.length || 0)
+    ) {
       confianza = "Media";
+    }
 
     parsed.confianza = confianza;
     parsed.articulos = articulosValidos;
