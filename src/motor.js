@@ -3,7 +3,21 @@
 //   Ontología + Texto + Pesos
 // ===============================
 
-import ontologiaGlobal from './ontologia.json';
+let ontologiaGlobal = {};
+
+async function cargarOntologia() {
+    // Evitar recargar si ya está cargada
+    if (Object.keys(ontologiaGlobal).length > 0) return;
+
+    try {
+        const res = await fetch('/src/ontologia.json');
+        ontologiaGlobal = await res.json();
+        console.log("🧠 Ontología cargada:", Object.keys(ontologiaGlobal).length, "conceptos");
+    } catch (err) {
+        console.error("❌ Error cargando ontologia.json:", err);
+    }
+}
+
 
 // -------------------------------
 // Utilidades
