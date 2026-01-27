@@ -13,12 +13,13 @@ export default async function handler(req, res) {
       apiVersion: "2024-08-01-preview"
     });
 
-    // 2. Convertimos artículos del motor (Ajustado a tu formato de JSON: .numero y .texto)
-    const leyesTexto = contextoLegal?.length
-      ? contextoLegal
-          .map(r => `ARTÍCULO ${r.numero}: ${r.texto || "Contenido no disponible"}`)
-          .join("\n\n")
-      : "No se encontraron artículos específicos en la base de datos local.";
+    // 2. Convertimos artículos del motor (Asegúrate de usar .texto y .numero)
+const leyesTexto = contextoLegal?.length
+  ? contextoLegal
+      .map(r => `ARTÍCULO ${r.numero}: ${r.texto || "Contenido no disponible"}`)
+      .join("\n\n")
+  : "No se encontraron artículos específicos.";
+
 
     // 3. Prompt optimizado para APOLO
     const systemMessage = `
@@ -43,6 +44,7 @@ INSTRUCCIONES:
   "fuentes": ["Código Civil Art. 1911"]
 }
 4. No menciones artículos que no estén en el CONTEXTO LEGAL arriba.
+5. Si no hay artículos en el CONTEXTO LEGAL, responde con tus conocimientos generales pero marca confianza 'Baja'.
 `;
 
     // 4. Llamada al modelo

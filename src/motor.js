@@ -153,15 +153,45 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
 
         console.log("📌 Reglas relevantes:", relevantes.map(r => ({ id: r.id, score: r.score })));
 
-        // 6. Compactar payload para la API
+// ... (Toda tu lógica de scores arriba está perfecta)
+
+// 6. Motor principal
+export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
+    try {
+        await cargarOntologia();
+
+        const ruta = `/jurisdicciones/${pais.toLowerCase()}/${estado.toLowerCase()}/${tema.toLowerCase()}.json`;
+        const res = await fetch(ruta);
+
+        if (!res.ok) return { reglas_relevantes: [], fuente: null };
+
+        const data = await res.json();
+        
+        // CORRECCIÓN 1: Manejar si el JSON es una lista directa o tiene objeto 'articulos'
+        const articulos = Array.isArray(data) ? data : (data.articulos || []);
+
+        const conceptos = detectarConceptos(pregunta);
+
+        const articulosConScore = articulos.map(a => ({
+            ...a,
+            score: calcularScore(a, conceptos, pregunta)
+        }));
+
+        // CORRECCIÓN 2: Umbral más flexible para evitar respuestas vacías
+        const relevantes = articulosConScore
+            .filter(a => a.score >= 2) 
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 7); // Enviamos un poco más de contexto a la IA
+
+        // CORRECCIÓN 3: Nombres de campos idénticos a los que espera asesoria.js
         const compactos = relevantes.map(a => ({
           numero: a.numero,
-          regla: a.regla || a.texto
+          texto: a.texto || a.regla // <--- 'texto' es la clave
         }));
 
         return {
             reglas_relevantes: compactos,
-            fuente: data.fuente || null
+            fuente: data.fuente || "Código Civil Local"
         };
 
     } catch (err) {

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectPais = document.getElementById("pais");
     const displayFuente = document.getElementById("fuente-oficial-display");
 
-    // DETECTORES (Se mantienen igual, son excelentes)
+    // 1. DETECTORES LOGICOS
     function detectarRedaccion(texto) {
         const t = texto.toLowerCase();
         return (t.includes("redacta") || t.includes("redacción") || t.includes("contrato"));
@@ -17,7 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function detectarConflicto(texto) {
         const t = texto.toLowerCase();
-        const claves = ["qué hago si", "demanda", "desalojo", "problema", "incumplio"];
+        const claves = [
+            "qué hago si", "que hago si", "demanda", "desalojo", 
+            "problema", "incumplio", "reparar", "falla", "cobrando"
+        ];
         return claves.some(c => t.includes(c));
     }
 
@@ -28,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tema = selectTema.value;
 
         if (!pregunta || !estado || !tema) {
-            alert("Selecciona País, Estado y Tema.");
+            alert("⚠️ Selecciona Jurisdicción, Estado y Tema.");
             return;
         }
 
@@ -36,10 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
         inputPregunta.value = "";
 
         const idCarga = "loading-" + Date.now();
-        agregarMensaje("APOLO analizando leyes locales...", "asistente", idCarga);
+        agregarMensaje("APOLO consultando base legal...", "asistente", idCarga);
 
         try {
-            // 1. Motor estructurado (Ojo: que devuelva .numero y .texto)
+            // 1. Llamada al Motor Local
             const dataLocal = await ejecutarMotorEstructurado(pais, estado, tema, pregunta);
 
             if (dataLocal.fuente && displayFuente) {
@@ -47,12 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 displayFuente.style.display = "block";
             }
 
-            // 2. Determinar rol
+            // 2. Determinar el rol/modo
             let rol = "consulta";
             if (detectarRedaccion(pregunta)) rol = "redactar";
             if (detectarConflicto(pregunta)) rol = "articulador";
 
-            // 3. Llamada a la API
+            // 3. Petición a la API de Asesoría
             const res = await fetch("/api/asesoria", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -60,37 +63,48 @@ document.addEventListener('DOMContentLoaded', () => {
                     pais, estado, tema, pregunta,
                     modo: rol,
                     contextoLegal: dataLocal.reglas_relevantes || [],
-                    fuente: dataLocal.fuente || "Código Civil Local"
+                    fuente: dataLocal.fuente || "Legislación Local"
                 })
             });
 
             if (!res.ok) throw new Error("Error en la API");
             const dataIA = await res.json();
 
-            // Quitar loader
+            // Quitar el icono de carga
             const loadingElement = document.getElementById(idCarga);
             if (loadingElement) loadingElement.remove();
 
-            // 4. RENDER PREMIUM (Ajustado al objeto 'respuesta' de asesoria.js)
-            const r = dataIA.respuesta; // El objeto JSON que devuelve la IA
-
-            // Usamos una clase única para el botón de esta respuesta específica
+            // 4. PROCESAMIENTO DE RESPUESTA IA
+            const r = dataIA.respuesta;
             const idBotonTriage = "btn-" + Date.now();
 
+            // Lógica de Triage: Solo mostrar si hay conflicto o confianza baja
+            const necesitaTriage = detectarConflicto(pregunta) || r.confianza === "Baja";
+
             let html = `
-                <div class="apolo-resumen"><strong>Resumen:</strong> ${r.resumen}</div>
-                <div class="apolo-draft" style="margin-top:10px; background:white; padding:15px; border-radius:8px; border-left:4px solid #b8973d; font-family:serif;">
+                <div class="apolo-resumen"><strong>Análisis:</strong> ${r.resumen}</div>
+                <div class="apolo-draft" style="margin-top:10px; background:white; padding:15px; border-radius:8px; border-left:4px solid #b8973d; font-family:serif; line-height:1.5;">
                     ${r.draftHtml}
                 </div>
             `;
 
-            if (r.confianza !== "Alta" || rol === "articulador") {
+            // Si hay artículos fundamentados, mostrarlos estéticamente
+            if (r.articulos && r.articulos.length > 0) {
                 html += `
-                    <div class="apolo-triage" style="margin-top:15px; padding:12px; background:#1a1a1a; border-radius:8px; color:white;">
-                        <p style="font-size:12px; margin-bottom:8px;">⚠️ Confianza ${r.confianza}: Se recomienda validación profesional.</p>
+                    <div style="margin-top:10px; font-size:11px; color:#b8973d; font-weight:bold;">
+                        <i class="fas fa-gavel"></i> Fundamentación: Arts. ${r.articulos.join(", ")}
+                    </div>
+                `;
+            }
+
+            // Botón de abogado (Solo si es necesario)
+            if (necesitaTriage) {
+                html += `
+                    <div class="apolo-triage" style="margin-top:15px; padding:12px; background:#f4f4f0; border-radius:8px; border:1px solid #e5e5e0;">
+                        <p style="font-size:11px; color:#666; margin-bottom:10px;">Para llevar este caso con un profesional especializado:</p>
                         <button class="triage-trigger" id="${idBotonTriage}" 
-                                style="background:#b8973d; color:white; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-weight:bold;">
-                            Conectar con abogado en ${estado}
+                                style="background:#1a1a1a; color:white; border:none; padding:10px 15px; border-radius:4px; cursor:pointer; font-weight:bold; width:100%;">
+                            Ver abogados en ${estado.toUpperCase()}
                         </button>
                     </div>
                 `;
@@ -98,24 +112,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
             agregarMensaje(html, "asistente");
 
-            // 5. Listener de Triage (Corregido para múltiples mensajes)
-            setTimeout(() => {
-                const btn = document.getElementById(idBotonTriage);
-                if (btn) {
-                    btn.addEventListener("click", () => {
-                        window.location.href = `directorio.html?materia=${tema}&estado=${estado}`;
-                    });
-                }
-            }, 100);
+            // 5. Listener dinámico para el botón de triage
+            if (necesitaTriage) {
+                setTimeout(() => {
+                    const btn = document.getElementById(idBotonTriage);
+                    if (btn) {
+                        btn.addEventListener("click", () => {
+                            window.location.href = `directorio.html?materia=${tema}&estado=${estado}`;
+                        });
+                    }
+                }, 100);
+            }
 
         } catch (err) {
-            console.error("ERROR:", err);
+            console.error("ERROR CRÍTICO:", err);
             const loader = document.getElementById(idCarga);
-            if (loader) loader.innerHTML = "Error al procesar consulta legal.";
+            if (loader) loader.innerHTML = "<strong>Error:</strong> No se pudo conectar con el motor legal.";
         }
     }
 
-    // AGREGAR MENSAJE
+    // FUNCIÓN PARA INSERTAR EN EL DOM
     function agregarMensaje(texto, remitente, id = null) {
         const div = document.createElement("div");
         div.classList.add("mensaje", remitente);
@@ -125,6 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
         contenedorMensajes.scrollTop = contenedorMensajes.scrollHeight;
     }
 
+    // LISTENERS DE INTERFAZ
     btnEnviar.addEventListener("click", enviarConsulta);
-    inputPregunta.addEventListener("keypress", (e) => { if (e.key === "Enter") enviarConsulta(); });
+    inputPregunta.addEventListener("keypress", (e) => { 
+        if (e.key === "Enter") enviarConsulta(); 
+    });
 });
