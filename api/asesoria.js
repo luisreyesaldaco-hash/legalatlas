@@ -2,49 +2,47 @@ import { AzureOpenAI } from "openai";
 
 export default async function handler(req, res) {
   try {
-    const { pais, estado, tema, pregunta, contextoLegal, fuente } = req.body;
+    const { pais, estado, tema, pregunta, contextoLegal, fuente, modo } = req.body;
 
-    // 1. Cliente Azure usando variables de entorno
+    // 1. Cliente Azure (Uso de variables de entorno para evitar bloqueos de GitHub)
+    // NOTA: Configura estas variables en tu panel de Vercel/Hosting
     const client = new AzureOpenAI({
-      endpoint: process.env.AZURE_OPENAI_ENDPOINT,
-      apiKey: process.env.AZURE_OPENAI_API_KEY,
-      deployment: process.env.AZURE_OPENAI_DEPLOYMENT,
+      endpoint: process.env.AZURE_OPENAI_ENDPOINT || "https://legalatlas-openai-sweden.openai.azure.com/",
+      apiKey: process.env.AZURE_OPENAI_API_KEY, 
+      deployment: "gpt-4o-mini",
       apiVersion: "2024-08-01-preview"
     });
 
-    // 2. Convertimos artículos del motor (nuevo formato)
+    // 2. Convertimos artículos del motor (Ajustado a tu formato de JSON: .numero y .texto)
     const leyesTexto = contextoLegal?.length
       ? contextoLegal
-          .map(r => `ARTÍCULO ${r.numero}: ${r.regla || "Regla no disponible"}`)
+          .map(r => `ARTÍCULO ${r.numero}: ${r.texto || "Contenido no disponible"}`)
           .join("\n\n")
-      : "No se encontraron artículos específicos en la base de datos.";
+      : "No se encontraron artículos específicos en la base de datos local.";
 
-    // 3. Prompt optimizado
+    // 3. Prompt optimizado para APOLO
     const systemMessage = `
-Eres APOLO, un asistente legal experto y preciso.
+Eres APOLO, un asistente legal experto para la jurisdicción de ${estado.toUpperCase()}, ${pais.toUpperCase()}.
+Tu objetivo es analizar casos y redactar documentos basados estrictamente en la ley proporcionada.
 
-Jurisdicción: ${estado.toUpperCase()}, ${pais.toUpperCase()}
-Fuente normativa: ${fuente}
+MODO ACTUAL: ${modo}
+FUENTE: ${fuente}
 
-CONTEXTO LEGAL (pasajes recuperados):
+CONTEXTO LEGAL RECUPERADO:
 ${leyesTexto}
 
-INSTRUCCIONES CRÍTICAS:
-1. Si el CONTEXTO LEGAL contiene artículos, DEBES citarlos con número exacto.
-2. Si el usuario pide redactar un escrito, genera un borrador formal completo (encabezado, hechos, fundamentos, petitorio y firma simulada).
-3. Devuelve SIEMPRE un JSON con esta estructura:
-
+INSTRUCCIONES:
+1. Si el usuario pregunta (Modo Consulta), explica de forma clara usando los artículos citados.
+2. Si el usuario pide redactar (Modo Redactar), genera un documento legal formal.
+3. Debes responder EXCLUSIVAMENTE en formato JSON con esta estructura:
 {
-  "draftHtml": "...",
-  "resumen": "...",
-  "articulos": ["1947", "210", ...],
+  "draftHtml": "Contenido principal o borrador en HTML",
+  "resumen": "Explicación breve de 2 líneas",
+  "articulos": ["1911", "1899"],
   "confianza": "Alta | Media | Baja",
-  "fuentes": ["Código Civil Art. 1947", ...]
+  "fuentes": ["Código Civil Art. 1911"]
 }
-
-4. NO inventes artículos. Si no puedes verificar uno, elimínalo y marca confianza "Baja".
-5. Si la confianza es Media o Baja, sugiere conectar con un abogado colaborador.
-6. Responde siempre de forma profesional, directa y sin ambigüedades.
+4. No menciones artículos que no estén en el CONTEXTO LEGAL arriba.
 `;
 
     // 4. Llamada al modelo
@@ -54,28 +52,20 @@ INSTRUCCIONES CRÍTICAS:
         { role: "user", content: pregunta }
       ],
       max_tokens: 1500,
-      temperature: 0.2
+      temperature: 0.1, // Baja temperatura para mayor precisión legal
+      response_format: { type: "json_object" } // Fuerza la salida JSON
     });
 
     let raw = completion.choices[0].message.content;
+    let parsed = JSON.parse(raw);
 
-    // 5. Intentamos parsear JSON
-    let parsed;
-    try {
-      parsed = JSON.parse(raw);
-    } catch (e) {
-      return res.status(200).json({
-        error: "El modelo no devolvió JSON válido.",
-        raw
-      });
-    }
-
-    // 6. Verificación automática de artículos (nuevo formato)
+    // 5. Verificación cruzada de seguridad (Artículos reales vs inventados)
     const articulosValidos = [];
     const fuentesValidas = [];
 
     if (parsed.articulos && Array.isArray(parsed.articulos)) {
       parsed.articulos.forEach(num => {
+        // Buscamos en el contexto legal que vino del motor
         const coincide = contextoLegal.find(a => a.numero == num);
         if (coincide) {
           articulosValidos.push(num);
@@ -84,31 +74,29 @@ INSTRUCCIONES CRÍTICAS:
       });
     }
 
-    // 7. Cálculo de confianza
-    let confianza = "Alta";
-    if (articulosValidos.length === 0) confianza = "Baja";
-    if (
-      articulosValidos.length > 0 &&
-      articulosValidos.length < (parsed.articulos?.length || 0)
-    ) {
-      confianza = "Media";
-    }
+    // 6. Ajuste de confianza final
+    let confianzaFinal = "Alta";
+    if (articulosValidos.length === 0) confianzaFinal = "Baja";
+    else if (articulosValidos.length < parsed.articulos.length) confianzaFinal = "Media";
 
-    parsed.confianza = confianza;
+    parsed.confianza = confianzaFinal;
     parsed.articulos = articulosValidos;
     parsed.fuentes = fuentesValidas;
 
-    // 8. Respuesta final
+    // 7. Respuesta al frontend
     res.status(200).json({
       respuesta: parsed,
-      datos_motor: {
-        fuente,
-        articulos_usados: contextoLegal?.length
+      meta: {
+        articulos_procesados: contextoLegal?.length || 0,
+        modo_aplicado: modo
       }
     });
 
   } catch (error) {
     console.error("Error en asesoria.js:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ 
+      error: "Error interno en el motor de IA", 
+      details: error.message 
+    });
   }
 }
