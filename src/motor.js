@@ -147,9 +147,9 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
 
         // 5. Filtrar por score mínimo
         const relevantes = articulosConScore
-            .filter(a => a.score >= 4) // mínimo razonable
+            .filter(a => a.score >= 6) // mínimo razonable
             .sort((a, b) => b.score - a.score)
-            .slice(0, 10); // top 10
+            .slice(0, 5); // top 5
 
         console.log("📌 Reglas relevantes:", relevantes.map(r => ({ id: r.id, score: r.score })));
 
