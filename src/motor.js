@@ -21,16 +21,16 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
         const preguntaLower = pregunta.toLowerCase();
 
         const reglas = articulos.filter(a => {
-            const texto = a.texto.toLowerCase();
+            const texto = (a.texto || a.regla || "").toLowerCase();
 
             const matchTexto =
                 texto.includes(preguntaLower) ||
                 preguntaLower.includes(a.id?.toLowerCase() || "");
 
             const matchFlags =
-                (a.aplicable_en_consulta && preguntaLower.includes("consulta")) ||
-                (a.aplicable_en_contratos && preguntaLower.includes("contrato")) ||
-                (a.aplicable_en_conflictos && contieneConflicto(preguntaLower));
+                (a.banderas?.solo_asesoria && preguntaLower.includes("ayuda")) ||
+                (a.banderas?.incluir_en_contrato && preguntaLower.includes("cláusula")) ||
+                (a.banderas?.irrenunciable && preguntaLower.includes("obligación"));
 
             return matchTexto || matchFlags;
         });
