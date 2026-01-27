@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   try {
     const { pais, estado, tema, pregunta, contextoLegal, fuente } = req.body;
 
-    // 1. Preparamos cliente Azure
+    // 1. Cliente Azure usando variables de entorno
     const client = new AzureOpenAI({
       endpoint: process.env.AZURE_OPENAI_ENDPOINT,
       apiKey: process.env.AZURE_OPENAI_API_KEY,
@@ -12,10 +12,10 @@ export default async function handler(req, res) {
       apiVersion: "2024-08-01-preview"
     });
 
-   // 2. Convertimos artículos del motor (nuevo formato)
+    // 2. Convertimos artículos del motor (nuevo formato)
     const leyesTexto = contextoLegal?.length
       ? contextoLegal
-          .map(r => `ARTÍCULO ${r.numero}: ${r.regla}`)
+          .map(r => `ARTÍCULO ${r.numero}: ${r.regla || "Regla no disponible"}`)
           .join("\n\n")
       : "No se encontraron artículos específicos en la base de datos.";
 
