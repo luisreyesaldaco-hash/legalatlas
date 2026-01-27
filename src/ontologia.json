@@ -1,0 +1,172 @@
+{
+  "usuario": [
+    "arrendatario",
+    "inquilino",
+    "persona",
+    "usuario",
+    "contratante",
+    "habitante",
+    "ocupante",
+    "locatario"
+  ],
+
+  "titular": [
+    "arrendador",
+    "propietario",
+    "dueño",
+    "locador"
+  ],
+
+  "bien": [
+    "inmueble",
+    "casa",
+    "departamento",
+    "predio",
+    "local",
+    "habitación",
+    "edificio",
+    "finca",
+    "terreno",
+    "mueble",
+    "animal",
+    "ganado"
+  ],
+
+  "contraprestacion": [
+    "renta",
+    "pago",
+    "precio",
+    "cuota",
+    "mensualidad",
+    "alquiler"
+  ],
+
+  "tiempo": [
+    "plazo",
+    "duración",
+    "vencimiento",
+    "fecha",
+    "periodo",
+    "mes",
+    "año"
+  ],
+
+  "vinculo": [
+    "contrato",
+    "relación",
+    "obligación",
+    "acuerdo",
+    "pacto",
+    "compromiso"
+  ],
+
+  "riesgos": [
+    "daño",
+    "pérdida",
+    "deterioro",
+    "responsabilidad",
+    "culpa",
+    "caso fortuito",
+    "accidente"
+  ],
+
+  "prohibiciones": [
+    "prohibido",
+    "no permitido",
+    "ilegal",
+    "restricción"
+  ],
+
+  "formalidades": [
+    "escritura",
+    "documento",
+    "registro",
+    "forma",
+    "formalidad"
+  ],
+
+  "limites_legales": [
+    "límite",
+    "restricción",
+    "prohibición",
+    "impedimento"
+  ],
+
+  "derechos_usuario": [
+    "derecho",
+    "beneficio",
+    "facultad",
+    "prerrogativa"
+  ],
+
+  "obligaciones_usuario": [
+    "obligación",
+    "deber",
+    "responsabilidad"
+  ],
+
+  "obligaciones_arrendador": [
+    "obligación",
+    "deber",
+    "responsabilidad"
+  ],
+
+  "derechos_arrendador": [
+    "derecho",
+    "facultad",
+    "prerrogativa"
+  ],
+
+  "reglas_supletorias": [
+    "supletoria",
+    "costumbre",
+    "uso",
+    "regla general"
+  ],
+
+  "vinculo_familiar": [
+    "familia",
+    "relación familiar",
+    "parentesco"
+  ],
+
+  "conyuge": [
+    "esposo",
+    "esposa",
+    "pareja",
+    "marido",
+    "mujer"
+  ],
+
+  "matrimonio": [
+    "casamiento",
+    "unión civil",
+    "boda",
+    "vínculo matrimonial"
+  ],
+
+  "divorcio": [
+    "separación",
+    "disolución",
+    "ruptura",
+    "terminación matrimonial"
+  ],
+
+  "infidelidad": [
+    "adulterio",
+    "engaño",
+    "relación extramarital"
+  ],
+
+  "alimentos": [
+    "pensión",
+    "sustento",
+    "manutención"
+  ],
+
+  "custodia": [
+    "guarda",
+    "cuidado",
+    "tenencia"
+  ]
+}
