@@ -155,10 +155,8 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
 
         // 6. Compactar payload para la API
         const compactos = relevantes.map(a => ({
-            id: a.id,
-            numero: a.numero,
-            texto: a.texto,
-            regla: a.regla || a.texto
+          numero: a.numero,
+          regla: a.regla || a.texto
         }));
 
         return {
