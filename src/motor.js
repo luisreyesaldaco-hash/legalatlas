@@ -1,28 +1,23 @@
 // ===============================
 //   MOTOR PREMIUM LEGAL ATLAS
-//   Ontología + Texto + Pesos
 // ===============================
 
 let ontologiaGlobal = {};
 
+// Función interna para cargar la ontología sin bloquear
 async function cargarOntologia() {
-    // Evitar recargar si ya está cargada
     if (Object.keys(ontologiaGlobal).length > 0) return;
-
     try {
         const res = await fetch('/src/ontologia.json');
+        if (!res.ok) throw new Error("No se pudo cargar ontologia.json");
         ontologiaGlobal = await res.json();
-        console.log("🧠 Ontología cargada:", Object.keys(ontologiaGlobal).length, "conceptos");
     } catch (err) {
-        console.error("❌ Error cargando ontologia.json:", err);
+        console.warn("⚠️ Ontología no disponible, usando búsqueda textual.");
     }
 }
 
-// -------------------------------
-// Utilidades
-// -------------------------------
 function normalizar(texto) {
-    return texto
+    return (texto || "")
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "");
@@ -34,9 +29,6 @@ function tokenizar(texto) {
         .filter(t => t.length > 2);
 }
 
-// -------------------------------
-// 1. Detectar conceptos en la pregunta
-// -------------------------------
 function detectarConceptos(pregunta) {
     const tokens = tokenizar(pregunta);
     const conceptosDetectados = new Set();
@@ -49,153 +41,72 @@ function detectarConceptos(pregunta) {
             }
         }
     }
-
     return Array.from(conceptosDetectados);
 }
 
-// -------------------------------
-// 2. Score por ontología
-// -------------------------------
-function scoreOntologia(ontologiaArticulo, conceptosPregunta) {
-    let score = 0;
-
-    for (const concepto of conceptosPregunta) {
-        if (ontologiaArticulo.includes(concepto)) {
-            score += 5; // peso fuerte
-        }
-    }
-
-    return score;
-}
-
-// -------------------------------
-// 3. Score por coincidencia textual
-// -------------------------------
-function scoreTexto(textoArticulo, pregunta) {
-    const p = normalizar(pregunta);
-    const t = normalizar(textoArticulo);
-
-    let score = 0;
-
-    // coincidencia directa
-    if (t.includes(p)) score += 4;
-
-    // coincidencia por tokens
-    const tokens = tokenizar(pregunta);
-    for (const token of tokens) {
-        if (t.includes(token)) score += 1;
-    }
-
-    return score;
-}
-
-// -------------------------------
-// 4. Score por banderas
-// -------------------------------
-function scoreBanderas(banderas) {
-    let score = 0;
-
-    if (banderas.irrenunciable) score += 3;
-    if (banderas.validacion) score += 2;
-    if (banderas.supletoria) score += 1;
-
-    return score;
-}
-
-// -------------------------------
-// 5. Score total
-// -------------------------------
 function calcularScore(articulo, conceptosPregunta, pregunta) {
-    const s1 = scoreOntologia(articulo.ontologia_target || [], conceptosPregunta);
-    const s2 = scoreTexto(articulo.texto || "", pregunta);
-    const s3 = scoreBanderas(articulo.banderas || {});
+    let score = 0;
+    const textoArt = normalizar(articulo.texto || "");
+    const preguntaNorm = normalizar(pregunta);
 
-    return s1 + s2 + s3;
+    // 1. Score por Ontología (Peso fuerte)
+    const ontArt = articulo.ontologia_target || [];
+    conceptosPregunta.forEach(c => {
+        if (ontArt.includes(c)) score += 8;
+    });
+
+    // 2. Score por Coincidencia Textual
+    if (textoArt.includes(preguntaNorm)) score += 5;
+    const tokens = tokenizar(pregunta);
+    tokens.forEach(t => {
+        if (textoArt.includes(t)) score += 1;
+    });
+
+    // 3. Score por Banderas
+    if (articulo.banderas?.irrenunciable) score += 3;
+    
+    return score;
 }
 
-// -------------------------------
-// 6. Motor principal
-// -------------------------------
 export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
     try {
-        // 1. Cargar ontología global
-        await cargarOntologia();
-
-        // 2. Cargar artículos del tema
-        const ruta = `/jurisdicciones/${pais.toLowerCase()}/${estado.toLowerCase()}/${tema.toLowerCase()}.json`;
-        const res = await fetch(ruta);
-
-        if (!res.ok) {
-            console.error("❌ Error cargando JSON:", ruta);
-            return { reglas_relevantes: [], fuente: null };
-        }
-
-        const data = await res.json();
-        const articulos = data.articulos || [];
-
-        console.log("📘 Artículos cargados:", articulos.length);
-
-        // 3. Detectar conceptos
-        const conceptos = detectarConceptos(pregunta);
-        console.log("🧠 Conceptos detectados:", conceptos);
-
-        // 4. Calcular score por artículo nuevo
-        const articulosConScore = articulos.map(a => ({
-            ...a,
-            score: calcularScore(a, conceptos, pregunta)
-        }));
-
-        // 5. Filtrar por score mínimo
-        const relevantes = articulosConScore
-            .filter(a => a.score >= 6) // mínimo razonable
-            .sort((a, b) => b.score - a.score)
-            .slice(0, 5); // top 5
-
-        console.log("📌 Reglas relevantes:", relevantes.map(r => ({ id: r.id, score: r.score })));
-
-// ... (Toda tu lógica de scores arriba está perfecta)
-
-// 6. Motor principal
-export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
-    try {
+        // Cargar ontología si no está lista
         await cargarOntologia();
 
         const ruta = `/jurisdicciones/${pais.toLowerCase()}/${estado.toLowerCase()}/${tema.toLowerCase()}.json`;
         const res = await fetch(ruta);
 
-        if (!res.ok) return { reglas_relevantes: [], fuente: null };
+        if (!res.ok) return { reglas_relevantes: [], fuente: "Legislación" };
 
         const data = await res.json();
-        
-        // CORRECCIÓN 1: Manejar si el JSON es una lista directa o tiene objeto 'articulos'
-        const articulos = Array.isArray(data) ? data : (data.articulos || []);
+        // Manejar si el JSON es una lista [] o tiene objeto .articulos
+        const articulosRaw = Array.isArray(data) ? data : (data.articulos || []);
 
         const conceptos = detectarConceptos(pregunta);
 
-        const articulosConScore = articulos.map(a => ({
-            ...a,
-            score: calcularScore(a, conceptos, pregunta)
-        }));
-
-        // CORRECCIÓN 2: Umbral más flexible para evitar respuestas vacías
-        const relevantes = articulosConScore
-            .filter(a => a.score >= 2) 
+        const filtrados = articulosRaw
+            .map(a => ({
+                ...a,
+                score: calcularScore(a, conceptos, pregunta)
+            }))
+            .filter(a => a.score > 2) // Umbral mínimo de relevancia
             .sort((a, b) => b.score - a.score)
-            .slice(0, 7); // Enviamos un poco más de contexto a la IA
+            .slice(0, 6);
 
-        // CORRECCIÓN 3: Nombres de campos idénticos a los que espera asesoria.js
-        const compactos = relevantes.map(a => ({
-          numero: a.numero,
-          texto: a.texto || a.regla // <--- 'texto' es la clave
+        // PASO CLAVE: Enviamos numero, texto Y ontología para que la IA cite
+        const compactos = filtrados.map(a => ({
+            numero: a.numero,
+            texto: a.texto,
+            ontologia: a.ontologia_target || [] // <--- Aquí incluimos la ontología
         }));
 
         return {
             reglas_relevantes: compactos,
-            fuente: data.fuente || "Código Civil Local"
+            fuente: data.fuente || "Código Civil"
         };
 
     } catch (err) {
-        console.error("❌ ERROR MOTOR PREMIUM:", err);
+        console.error("❌ ERROR MOTOR:", err);
         return { reglas_relevantes: [], fuente: null };
     }
 }
