@@ -18,7 +18,6 @@ async function cargarOntologia() {
     }
 }
 
-
 // -------------------------------
 // Utilidades
 // -------------------------------
@@ -119,11 +118,15 @@ function calcularScore(articulo, conceptosPregunta, pregunta) {
 // -------------------------------
 export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
     try {
+        // 1. Cargar ontología global
+        await cargarOntologia();
+
+        // 2. Cargar artículos del tema
         const ruta = `/jurisdicciones/${pais.toLowerCase()}/${estado.toLowerCase()}/${tema.toLowerCase()}.json`;
         const res = await fetch(ruta);
 
         if (!res.ok) {
-            console.error("Error cargando JSON:", ruta);
+            console.error("❌ Error cargando JSON:", ruta);
             return { reglas_relevantes: [], fuente: null };
         }
 
@@ -132,27 +135,34 @@ export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
 
         console.log("📘 Artículos cargados:", articulos.length);
 
-        // 1. Detectar conceptos
+        // 3. Detectar conceptos
         const conceptos = detectarConceptos(pregunta);
         console.log("🧠 Conceptos detectados:", conceptos);
 
-        // 2. Calcular score por artículo
+        // 4. Calcular score por artículo
         const articulosConScore = articulos.map(a => ({
             ...a,
             score: calcularScore(a, conceptos, pregunta)
         }));
 
-        // 3. Ordenar por score
-        articulosConScore.sort((a, b) => b.score - a.score);
+        // 5. Filtrar por score mínimo
+        const relevantes = articulosConScore
+            .filter(a => a.score >= 4) // mínimo razonable
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 10); // top 10
 
-        // 4. Filtrar irrelevantes (score 0)
-        const relevantes = articulosConScore.filter(a => a.score > 0);
+        console.log("📌 Reglas relevantes:", relevantes.map(r => ({ id: r.id, score: r.score })));
 
-        console.log("📌 Reglas relevantes encontradas:", relevantes.length);
-        console.log("📌 Ranking:", relevantes.map(r => ({ id: r.id, score: r.score })));
+        // 6. Compactar payload para la API
+        const compactos = relevantes.map(a => ({
+            id: a.id,
+            numero: a.numero,
+            texto: a.texto,
+            regla: a.regla || a.texto
+        }));
 
         return {
-            reglas_relevantes: relevantes.slice(0, 12), // top 12
+            reglas_relevantes: compactos,
             fuente: data.fuente || null
         };
 
