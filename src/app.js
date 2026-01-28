@@ -25,25 +25,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function enviarConsulta() {
-        const pregunta = inputPregunta.value.trim();
-        const pais = selectPais ? selectPais.value : "mexico";
-        const estado = selectEstado.value;
-        const tema = selectTema.value;
+       const pregunta = inputPregunta.value.trim();
+       const pais = selectPais?.value;
+       const estado = selectEstado?.value;
+       const tema = selectTema?.value;
 
-        if (!pregunta || !estado || !tema) {
-            alert("⚠️ Selecciona Jurisdicción, Estado y Tema.");
-            return;
+       // 1. Definimos quiénes necesitan estado (puedes añadir más después)
+       const paisesFederales = ["mexico", "usa", "argentina", "brasil"];
+       const necesitaEstado = paisesFederales.includes(pais?.toLowerCase());
+
+       // 2. Validación Dinámica: 
+       // Solo exigimos 'estado' si 'necesitaEstado' es true.
+       const camposIncompletos = !pregunta || !pais || !tema || (necesitaEstado && !estado);
+       if (camposIncompletos) {
+        alert("⚠️ Por favor, completa todos los campos requeridos.");
+        return;
         }
 
+        // 3. Interfaz
         agregarMensaje(pregunta, "usuario");
         inputPregunta.value = "";
 
         const idCarga = "loading-" + Date.now();
-        agregarMensaje("APOLO consultando base legal...", "asistente", idCarga);
+        agregarMensaje("APOLO está consultando la base legal...", "asistente", idCarga);
+
+        // 4. Preparar datos para el motor
+    // Si no necesita estado, mandamos "nacional" para que la ruta sea /pais/tema.json
+    const estadoBusqueda = necesitaEstado ? estado : "nacional";
+
 
         try {
             // 1. Llamada al Motor Local
-            const dataLocal = await ejecutarMotorEstructurado(pais, estado, tema, pregunta);
+            const dataLocal = await ejecutarMotorEstructurado(pais, estadoBusqueda, tema, pregunta);
 
             if (dataLocal.fuente && displayFuente) {
                 displayFuente.innerText = dataLocal.fuente;
@@ -60,7 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    pais, estado, tema, pregunta,
+                    pais, 
+                    estado: estadoBusqueda, // <-- CAMBIO AQUÍ
+                    tema, 
+                    pregunta,
                     modo: rol,
                     contextoLegal: dataLocal.reglas_relevantes || [],
                     fuente: dataLocal.fuente || "Legislación Local"
@@ -99,16 +115,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Botón de abogado (Solo si es necesario)
             if (necesitaTriage) {
-                html += `
-                    <div class="apolo-triage" style="margin-top:15px; padding:12px; background:#f4f4f0; border-radius:8px; border:1px solid #e5e5e0;">
-                        <p style="font-size:11px; color:#666; margin-bottom:10px;">Para llevar este caso con un profesional especializado:</p>
-                        <button class="triage-trigger" id="${idBotonTriage}" 
-                                style="background:#1a1a1a; color:white; border:none; padding:10px 15px; border-radius:4px; cursor:pointer; font-weight:bold; width:100%;">
-                            Ver abogados en ${estado.toUpperCase()}
-                        </button>
-                    </div>
-                `;
-            }
+            // Definimos un texto amigable: si hay estado, lo ponemos; si no, ponemos el país.
+            const ubicacionTexto = necesitaEstado ? estado.toUpperCase() : pais.toUpperCase();
+
+               html += `
+               <div class="apolo-triage" style="margin-top:15px; padding:12px; background:#f4f4f0; border-radius:8px; border:1px solid #e5e5e0;">
+               <p style="font-size:11px; color:#666; margin-bottom:10px;">Para llevar este caso con un profesional especializado:</p>
+               <button class="triage-trigger" id="${idBotonTriage}" 
+                    style="background:#1a1a1a; color:white; border:none; padding:10px 15px; border-radius:4px; cursor:pointer; font-weight:bold; width:100%;">
+                Ver abogados en ${ubicacionTexto}
+            </button>
+        </div>
+    `;
+}
 
             agregarMensaje(html, "asistente");
 
