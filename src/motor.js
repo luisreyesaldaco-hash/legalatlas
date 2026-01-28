@@ -4,7 +4,7 @@
 
 let ontologiaGlobal = {};
 
-// Función interna para cargar la ontología sin bloquear
+// Cargar ontología
 async function cargarOntologia() {
     if (Object.keys(ontologiaGlobal).length > 0) return;
     try {
@@ -44,65 +44,94 @@ function detectarConceptos(pregunta) {
     return Array.from(conceptosDetectados);
 }
 
+// ===============================
+//   SCORE UNIVERSAL
+// ===============================
+
 function calcularScore(articulo, conceptosPregunta, pregunta) {
     let score = 0;
-    const textoArt = normalizar(articulo.texto || "");
+
+    const textoArt = normalizar(articulo.regla || articulo.texto || "");
     const preguntaNorm = normalizar(pregunta);
 
-    // 1. Score por Ontología (Peso fuerte)
+    // 1. Ontología (peso fuerte)
     const ontArt = articulo.ontologia_target || [];
     conceptosPregunta.forEach(c => {
         if (ontArt.includes(c)) score += 8;
     });
 
-    // 2. Score por Coincidencia Textual
+    // 2. Coincidencia textual
     if (textoArt.includes(preguntaNorm)) score += 5;
+
     const tokens = tokenizar(pregunta);
     tokens.forEach(t => {
         if (textoArt.includes(t)) score += 1;
     });
 
-    // 3. Score por Banderas
+    // 3. Banderas
     if (articulo.banderas?.irrenunciable) score += 3;
-    
+
+    // 4. Conflicto (solo si el artículo regula conflicto)
+    if (articulo.banderas?.conflicto) score += 3;
+
+    // 5. Jerarquía (más alta = número más bajo)
+    if (articulo.jerarquia) {
+        score += (10 - articulo.jerarquia);
+    }
+
     return score;
 }
 
+// ===============================
+//   MOTOR UNIVERSAL
+// ===============================
+
 export async function ejecutarMotorEstructurado(pais, estado, tema, pregunta) {
     try {
-        // Cargar ontología si no está lista
         await cargarOntologia();
 
-        const ruta = `/jurisdicciones/${pais.toLowerCase()}/${estado.toLowerCase()}/${tema.toLowerCase()}.json`;
-        const res = await fetch(ruta);
+        // 1. Países federales vs unitarios
+        const paisesFederales = ["mexico", "usa", "argentina", "brasil"];
+        const esFederal = paisesFederales.includes(pais.toLowerCase());
 
-        if (!res.ok) return { reglas_relevantes: [], fuente: "Legislación" };
+        const ruta = esFederal
+            ? `/jurisdicciones/${pais.toLowerCase()}/${estado.toLowerCase()}/${tema.toLowerCase()}.json`
+            : `/jurisdicciones/${pais.toLowerCase()}/${tema.toLowerCase()}.json`;
+
+        const res = await fetch(ruta);
+        if (!res.ok) {
+            return { reglas_relevantes: [], fuente: "Legislación" };
+        }
 
         const data = await res.json();
-        // Manejar si el JSON es una lista [] o tiene objeto .articulos
-        const articulosRaw = Array.isArray(data) ? data : (data.articulos || []);
 
+        // 2. Extraer artículos
+        const articulosRaw = data.articulos || [];
+
+        // 3. Detectar conceptos
         const conceptos = detectarConceptos(pregunta);
 
+        // 4. Calcular score universal
         const filtrados = articulosRaw
             .map(a => ({
                 ...a,
                 score: calcularScore(a, conceptos, pregunta)
             }))
-            .filter(a => a.score > 2) // Umbral mínimo de relevancia
+            .filter(a => a.score > 2)
             .sort((a, b) => b.score - a.score)
-            .slice(0, 6);
+            .slice(0, 10); // ahora 10 artículos
 
-        // PASO CLAVE: Enviamos numero, texto Y ontología para que la IA cite
+        // 5. Compactar para asesoria.js
         const compactos = filtrados.map(a => ({
             numero: a.numero,
-            texto: a.texto,
-            ontologia: a.ontologia_target || [] // <--- Aquí incluimos la ontología
+            texto: a.regla || a.texto,
+            ontologia: a.ontologia_target || [],
+            nombre_ley: a.nombre_ley || "Ley"
         }));
 
         return {
             reglas_relevantes: compactos,
-            fuente: data.fuente || "Código Civil"
+            fuente: data.fuentes ? data.fuentes.join(", ") : "Legislación"
         };
 
     } catch (err) {
