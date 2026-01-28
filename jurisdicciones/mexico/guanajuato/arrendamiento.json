@@ -1192,6 +1192,57 @@
     "irrenunciable": false,
     "conflicto": true
       }
-    }
+    },
+{
+  "numero": 17,
+  "nombre_ley": "Constitución Política de los Estados Unidos Mexicanos",
+  "regla": "Nadie puede hacerse justicia por sí mismo; toda persona tiene derecho a una justicia pronta, completa, imparcial y gratuita, con tribunales expeditos y mecanismos que privilegien la solución del conflicto sobre formalismos. Se regulan acciones colectivas, mecanismos alternativos, independencia judicial, defensoría pública y se prohíbe la prisión por deudas civiles.",
+  "ontologia_target": [
+    "derechos_fundamentales",
+    "debido_proceso",
+    "acceso_justicia",
+    "tribunales",
+    "defensoria_publica"
+  ],
+  "jerarquia": 1,
+  "banderas": {
+    "irrenunciable": true,
+    "conflicto": true
+  }
+},
+{
+  "numero": 14,
+  "nombre_ley": "Constitución Política de los Estados Unidos Mexicanos",
+  "regla": "Se prohíbe la retroactividad en perjuicio; nadie puede ser privado de libertad, propiedad o derechos sin juicio ante tribunal competente con formalidades esenciales y leyes previas al hecho. En materia penal solo procede pena prevista en ley exactamente aplicable; en materia civil la sentencia debe basarse en la ley o, en su ausencia, en principios generales del derecho.",
+  "ontologia_target": [
+    "derechos_fundamentales",
+    "debido_proceso",
+    "legalidad",
+    "seguridad_juridica",
+    "no_retroactividad"
+  ],
+  "jerarquia": 1,
+  "banderas": {
+    "irrenunciable": true,
+    "conflicto": true
+  }
+},
+{
+  "numero": 16,
+  "nombre_ley": "Constitución Política de los Estados Unidos Mexicanos",
+  "regla": "Nadie puede ser molestado en su persona, familia, domicilio, papeles o posesiones sin mandamiento escrito de autoridad competente que funde y motive la causa legal. En procedimientos orales basta cualquier medio que dé certeza del contenido y del cumplimiento de este requisito.",
+  "ontologia_target": [
+    "debido_proceso",
+    "seguridad_juridica",
+    "autoridad_competente",
+    "fundamentacion_motivacion",
+    "proteccion_domicilio"
+  ],
+  "jerarquia": 1,
+  "banderas": {
+    "irrenunciable": true,
+    "conflicto": true
+  }
+}
   ]
 }
