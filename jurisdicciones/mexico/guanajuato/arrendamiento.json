@@ -1198,7 +1198,7 @@
   "nombre_ley": "Constitución Política de los Estados Unidos Mexicanos",
   "regla": "Nadie puede hacerse justicia por sí mismo; toda persona tiene derecho a una justicia pronta, completa, imparcial y gratuita, con tribunales expeditos y mecanismos que privilegien la solución del conflicto sobre formalismos. Se regulan acciones colectivas, mecanismos alternativos, independencia judicial, defensoría pública y se prohíbe la prisión por deudas civiles.",
   "ontologia_target": [
-    "derechos_fundamentales",
+    "vinculo",
     "debido_proceso",
     "acceso_justicia",
     "tribunales",
@@ -1235,7 +1235,7 @@
     "debido_proceso",
     "seguridad_juridica",
     "autoridad_competente",
-    "fundamentacion_motivacion",
+    "vinculo",
     "proteccion_domicilio"
   ],
   "jerarquia": 1,
