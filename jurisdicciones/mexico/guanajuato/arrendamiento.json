@@ -1,1738 +1,1248 @@
-
-  {
-  "fuente": "Código Civil del Estado de Guanajuato",
+{
+  "materia": "arrendamiento",
+  "fuentes": [
+    "Constitución Política de los Estados Unidos Mexicanos",
+    "Código Civil del Estado de Guanajuato"
+  ],
   "articulos": [
     {
-      "id": "art_1899",
       "numero": 1899,
-      "texto": "Hay arrendamiento cuando una parte concede el uso o goce temporal de una cosa y la otra paga un precio cierto.",
+      "nombre_ley": "Código Civil del Estado de Guanajuato",
+      "regla": "El arrendamiento consiste en el uso o goce temporal de una cosa a cambio del pago de un precio cierto.",
       "ontologia_target": ["vinculo", "bien", "tiempo", "contraprestacion"],
-      "categoria_juridica": "definicion",
+      "jerarquia": 3,
       "banderas": {
-        "incluir_en_contrato": true,
-        "solo_asesoria": false,
-        "validacion": false,
         "irrenunciable": true,
-        "supletoria": false
-      },
-      "plantilla_clausula": "Las partes reconocen que el presente contrato tiene por objeto el uso o goce temporal del bien descrito, a cambio del pago de un precio cierto.",
-      "validacion_logica": ""
+        "conflicto": false
+      }
     },
     {
-      "id": "art_1900",
       "numero": 1900,
-      "texto": "El arrendamiento por tiempo determinado no puede exceder de 15 años para habitación, 20 para comercio y 25 para industria o agricultura.",
+      "nombre_ley": "Código Civil del Estado de Guanajuato",
+      "regla": "La duración del arrendamiento no puede exceder de quince años para habitación, veinte para comercio y veinticinco para industria o agricultura.",
       "ontologia_target": ["tiempo"],
-      "categoria_juridica": "limites_legales",
+      "jerarquia": 3,
       "banderas": {
-        "incluir_en_contrato": true,
-        "solo_asesoria": false,
-        "validacion": true,
         "irrenunciable": true,
-        "supletoria": false
-      },
-      "plantilla_clausula": "La duración del contrato no excederá los máximos legales aplicables según el destino del bien.",
-      "validacion_logica": "Si destino = habitacion y plazo > 15 años → error; si comercio y plazo > 20 → error; si industria/agricultura y plazo > 25 → error."
+        "conflicto": false
+      }
     },
     {
-      "id": "art_1901",
       "numero": 1901,
-      "texto": "La renta puede consistir en dinero o cosa equivalente, siempre que sea cierta y determinada.",
+      "nombre_ley": "Código Civil del Estado de Guanajuato",
+      "regla": "La renta debe ser cierta y determinada, pudiendo consistir en dinero o en cosa equivalente.",
       "ontologia_target": ["contraprestacion"],
-      "categoria_juridica": "limites_legales",
+      "jerarquia": 3,
       "banderas": {
-        "incluir_en_contrato": true,
-        "solo_asesoria": false,
-        "validacion": true,
         "irrenunciable": true,
-        "supletoria": false
-      },
-      "plantilla_clausula": "La renta será cierta y determinada, pudiendo consistir en dinero o en cosa equivalente.",
-      "validacion_logica": "Verificar que el precio no sea indeterminado o variable sin base objetiva."
+        "conflicto": false
+      }
     },
     {
-      "id": "art_1902",
       "numero": 1902,
-      "texto": "Solo pueden arrendarse bienes que pueden usarse sin consumirse, excepto los prohibidos por ley y los derechos estrictamente personales.",
+      "nombre_ley": "Código Civil del Estado de Guanajuato",
+      "regla": "Solo pueden arrendarse bienes que pueden usarse sin consumirse, salvo los prohibidos por la ley o los derechos estrictamente personales.",
       "ontologia_target": ["bien"],
-      "categoria_juridica": "limites_legales",
+      "jerarquia": 3,
       "banderas": {
-        "incluir_en_contrato": false,
-        "solo_asesoria": true,
-        "validacion": true,
         "irrenunciable": true,
-        "supletoria": false
-      },
-      "plantilla_clausula": "",
-      "validacion_logica": "Verificar que el bien no sea consumible, prohibido o derecho personalísimo."
+        "conflicto": false
+      }
     },
     {
-      "id": "art_1903",
       "numero": 1903,
-      "texto": "Pueden dar y recibir en arrendamiento quienes pueden contratar.",
+      "nombre_ley": "Código Civil del Estado de Guanajuato",
+      "regla": "Pueden dar y recibir en arrendamiento quienes tengan capacidad legal para contratar.",
       "ontologia_target": ["titular", "usuario"],
-      "categoria_juridica": "limites_legales",
+      "jerarquia": 3,
       "banderas": {
-        "incluir_en_contrato": false,
-        "solo_asesoria": true,
-        "validacion": true,
         "irrenunciable": true,
-        "supletoria": false
-      },
-      "plantilla_clausula": "",
-      "validacion_logica": "Verificar capacidad legal de ambas partes."
+        "conflicto": false
+      }
     },
-  {
-  "id": "art_1904",
-  "numero": 1904,
-  "texto": "Quien no es dueño puede arrendar si tiene facultad por autorización del dueño o por disposición de la ley. El arrendamiento se sujeta a los límites de la autorización o de la ley.",
-  "ontologia_target": ["titular", "bien", "vinculo"],
-  "categoria_juridica": "limites_legales",
-  "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
-    "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendador declara contar con facultades suficientes para arrendar el bien, sujetándose a los límites de la autorización o de la ley.",
-  "validacion_logica": "Si arrendador ≠ propietario → verificar existencia y límites de la autorización o facultad legal."
-},
+    {
+      "numero": 1904,
+      "nombre_ley": "Código Civil del Estado de Guanajuato",
+      "regla": "Quien no sea propietario puede arrendar si cuenta con autorización del dueño o con facultad otorgada por la ley, sujetándose a sus límites.",
+      "ontologia_target": ["titular", "bien", "vinculo"],
+      "jerarquia": 3,
+      "banderas": {
+        "irrenunciable": false,
+        "conflicto": false
+      }
+    },
+    {
+      "numero": 1905,
+      "nombre_ley": "Código Civil del Estado de Guanajuato",
+      "regla": "El copropietario de un bien indiviso no puede arrendarlo sin el consentimiento de los demás copropietarios.",
+      "ontologia_target": ["titular"],
+      "jerarquia": 3,
+      "banderas": {
+        "irrenunciable": true,
+        "conflicto": false
+      }
+    },
+    {
+      "numero": 1906,
+      "nombre_ley": "Código Civil del Estado de Guanajuato",
+      "regla": "Los magistrados, jueces y empleados públicos no pueden tomar en arrendamiento bienes relacionados con los asuntos en los que intervengan.",
+      "ontologia_target": ["usuario", "titular"],
+      "jerarquia": 3,
+      "banderas": {
+        "irrenunciable": true,
+        "conflicto": false
+      }
+    },
+    {
+      "numero": 1907,
+      "nombre_ley": "Código Civil del Estado de Guanajuato",
+      "regla": "Los encargados de establecimientos públicos y los funcionarios o empleados públicos no pueden arrendar los bienes que administren.",
+      "ontologia_target": ["usuario", "titular"],
+      "jerarquia": 3,
+      "banderas": {
+        "irrenunciable": true,
+        "conflicto": false
+      }
+    },
+    {
+      "numero": 1908,
+      "nombre_ley": "Código Civil del Estado de Guanajuato",
+      "regla": "El contrato de arrendamiento debe celebrarse por escrito.",
+      "ontologia_target": ["vinculo"],
+      "jerarquia": 3,
+      "banderas": {
+        "irrenunciable": true,
+        "conflicto": false
+      }
+    },
+    {
+      "numero": 1909,
+      "nombre_ley": "Código Civil del Estado de Guanajuato",
+      "regla": "El arrendamiento no termina por la muerte del arrendador o arrendatario salvo pacto. En vivienda, los familiares dependientes pueden continuar el arrendamiento.",
+      "ontologia_target": ["usuario", "tiempo", "vinculo"],
+      "jerarquia": 3,
+      "banderas": {
+        "irrenunciable": true,
+        "conflicto": false
+      }
+    },
+    {
+      "numero": 1910,
+      "nombre_ley": "Código Civil del Estado de Guanajuato",
+      "regla": "Si se transmite la propiedad del bien arrendado, el contrato subsiste y el arrendatario debe pagar al nuevo propietario desde la notificación formal.",
+      "ontologia_target": ["vinculo", "contraprestacion", "tiempo"],
+      "jerarquia": 3,
+      "banderas": {
+        "irrenunciable": true,
+        "conflicto": false
+      }
+    },
 {
-  "id": "art_1905",
-  "numero": 1905,
-  "texto": "El copropietario de cosa indivisa no puede arrendar sin consentimiento de los demás copropietarios.",
-  "ontologia_target": ["titular"],
-  "categoria_juridica": "prohibiciones",
-  "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": true,
-    "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": "Si bien es indiviso → verificar consentimiento de todos los copropietarios."
-},
-{
-  "id": "art_1906",
-  "numero": 1906,
-  "texto": "Se prohíbe a magistrados, jueces y empleados públicos tomar en arrendamiento bienes que deban arrendarse en los negocios en que intervengan.",
-  "ontologia_target": ["usuario", "titular"],
-  "categoria_juridica": "prohibiciones",
-  "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": true,
-    "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": "Verificar que ninguna parte sea funcionario involucrado en el negocio relacionado con el bien."
-},
-{
-  "id": "art_1907",
-  "numero": 1907,
-  "texto": "Se prohíbe a encargados de establecimientos públicos y a los funcionarios y empleados públicos tomar en arrendamiento los bienes que administren.",
-  "ontologia_target": ["usuario", "titular"],
-  "categoria_juridica": "prohibiciones",
-  "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": true,
-    "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": "Verificar que ninguna parte administre el bien público objeto del arrendamiento."
-},
-{
-  "id": "art_1908",
-  "numero": 1908,
-  "texto": "El contrato de arrendamiento debe celebrarse por escrito.",
-  "ontologia_target": ["vinculo"],
-  "categoria_juridica": "formalidades",
-  "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": true,
-    "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": "Verificar que el contrato se genere en forma escrita."
-},
-{
-  "id": "art_1909",
-  "numero": 1909,
-  "texto": "El contrato no termina por muerte del arrendador o arrendatario salvo pacto. En vivienda, el pacto de terminación por muerte del arrendatario no surte efectos si familiares dependientes que vivían con él desean continuar.",
-  "ontologia_target": ["usuario", "tiempo", "vinculo"],
-  "categoria_juridica": "reglas_supletorias",
-  "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
-    "irrenunciable": true,
-    "supletoria": true
-  },
-  "plantilla_clausula": "La muerte de cualquiera de las partes no producirá la terminación del contrato, salvo pacto permitido por la ley. En vivienda, los familiares dependientes podrán continuar el arrendamiento conforme a la ley.",
-  "validacion_logica": ""
-},
-{
-  "id": "art_1910",
-  "numero": 1910,
-  "texto": "Si se transmite la propiedad del bien, el arrendamiento subsiste. El arrendatario debe pagar al nuevo propietario desde la notificación formal, salvo adelanto de rentas pactado.",
-  "ontologia_target": ["vinculo", "contraprestacion", "tiempo"],
-  "categoria_juridica": "obligaciones_usuario",
-  "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
-    "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "En caso de transmisión de propiedad, el contrato subsistirá y el arrendatario pagará la renta al nuevo propietario desde la notificación formal.",
-  "validacion_logica": "Verificar que cualquier adelanto de rentas esté expresamente pactado."
-},
-{
-  "id": "art_1911",
   "numero": 1911,
-  "texto": "Si la transmisión de propiedad es por utilidad pública, el contrato se rescinde y ambas partes deben ser indemnizadas conforme a la ley.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si la propiedad del bien se transmite por causa de utilidad pública, el contrato de arrendamiento se rescinde y ambas partes deben ser indemnizadas conforme a la ley.",
   "ontologia_target": ["vinculo", "bien"],
-  "categoria_juridica": "riesgos",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1912",
   "numero": 1912,
-  "texto": "Los arrendamientos de bienes del Estado, Municipales o de establecimientos públicos se rigen por derecho administrativo y supletoriamente por este capítulo.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Los arrendamientos de bienes del Estado, municipios o establecimientos públicos se rigen por derecho administrativo y supletoriamente por este capítulo.",
   "ontologia_target": ["vinculo"],
-  "categoria_juridica": "limites_legales",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1913",
   "numero": 1913,
-  "texto": "El arrendador debe entregar la cosa en buen estado, conservarla, no estorbar su uso, garantizar el goce pacífico y responder por vicios ocultos.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendador debe entregar el bien en buen estado, conservarlo, no estorbar su uso, garantizar el goce pacífico y responder por vicios ocultos.",
   "ontologia_target": ["bien", "obligaciones_basicas", "usuario"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": true,
-    "supletoria": true
-  },
-  "plantilla_clausula": "El arrendador entregará el bien en estado adecuado, realizará las reparaciones necesarias, no interferirá en su uso legítimo y garantizará el goce pacífico, respondiendo por vicios ocultos.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1914",
   "numero": 1914,
-  "texto": "El arrendador debe indemnizar al arrendatario si pierde el uso de la cosa por evicción.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendador debe indemnizar al arrendatario si pierde el uso del bien por evicción.",
   "ontologia_target": ["usuario", "vinculo"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": true,
-    "supletoria": true
-  },
-  "plantilla_clausula": "El arrendador indemnizará al arrendatario en caso de evicción que le prive del uso del bien.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1915",
   "numero": 1915,
-  "texto": "La entrega debe hacerse en el tiempo convenido o cuando el arrendatario lo requiera.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "La entrega del bien debe realizarse en el tiempo convenido o, en ausencia de pacto, cuando el arrendatario lo requiera.",
   "ontologia_target": ["bien", "tiempo"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "La entrega del bien se realizará en la fecha pactada o, en ausencia de pacto, cuando el arrendatario lo requiera.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
-
 {
-  "id": "art_1916",
   "numero": 1916,
-  "texto": "El arrendador no puede alterar la cosa ni interferir en su uso legítimo salvo reparaciones urgentes.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendador no puede alterar el bien ni interferir en su uso legítimo, salvo para realizar reparaciones urgentes.",
   "ontologia_target": ["bien", "usuario"],
-  "categoria_juridica": "prohibiciones",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendador no modificará el bien ni interferirá en su uso legítimo, salvo para realizar reparaciones urgentes.",
-  "validacion_logica": "Si arrendador intenta modificar el bien sin causa urgente → bloquear."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1917",
   "numero": 1917,
-  "texto": "La garantía del goce pacífico no cubre vías de hecho de terceros sin derecho ni abusos de fuerza.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "La garantía del goce pacífico no cubre vías de hecho de terceros sin derecho ni abusos de fuerza.",
   "ontologia_target": ["usuario"],
-  "categoria_juridica": "limites_legales",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1918",
   "numero": 1918,
-  "texto": "El arrendatario puede pedir reducción de renta, rescisión y daños si el arrendador pierde en juicio parte de la cosa.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario puede solicitar reducción de renta, rescisión y daños si el arrendador pierde en juicio parte del bien arrendado.",
   "ontologia_target": ["usuario", "contraprestacion", "vinculo"],
-  "categoria_juridica": "derechos_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "Si el arrendador pierde en juicio parte del bien, el arrendatario podrá solicitar reducción de renta, rescisión y daños.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1919",
   "numero": 1919,
-  "texto": "El arrendador responde por vicios que impidan el uso, incluso si no los conocía, salvo que el arrendatario los supiera antes.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendador responde por vicios que impidan el uso del bien, incluso si no los conocía, salvo que el arrendatario los hubiera conocido previamente.",
   "ontologia_target": ["bien", "usuario"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": true,
-    "supletoria": true
-  },
-  "plantilla_clausula": "El arrendador responderá por vicios que impidan el uso del bien, salvo que el arrendatario los conociera previamente.",
-  "validacion_logica": "Si arrendatario declara conocimiento previo de vicios → no procede responsabilidad."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1920",
   "numero": 1920,
-  "texto": "El arrendador debe devolver cualquier saldo a favor del arrendatario al terminar el contrato, salvo derecho propio.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Al terminar el contrato, el arrendador debe devolver cualquier saldo a favor del arrendatario, salvo que tenga derecho propio que ejercer.",
   "ontologia_target": ["contraprestacion"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "Al finalizar el contrato, el arrendador devolverá cualquier saldo a favor del arrendatario salvo que tenga derecho que ejercer.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
-
 {
-  "id": "art_1921",
   "numero": 1921,
-  "texto": "El arrendador debe pagar ciertas mejoras hechas por el arrendatario cuando fueron autorizadas o cuando la rescisión es culpa del arrendador.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendador debe pagar las mejoras hechas por el arrendatario cuando fueron autorizadas o cuando la rescisión sea imputable al arrendador.",
   "ontologia_target": ["bien", "contraprestacion"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "El arrendador pagará las mejoras autorizadas o aquellas derivadas de rescisión imputable al arrendador.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1922",
   "numero": 1922,
-  "texto": "Las mejoras útiles deben pagarse aunque el contrato diga que quedan en beneficio del bien.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Las mejoras útiles deben ser pagadas por el arrendador, aun cuando el contrato disponga que quedan en beneficio del bien.",
   "ontologia_target": ["bien"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Las mejoras útiles serán pagadas por el arrendador, aun si el contrato establece que quedan en beneficio del bien.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1923",
   "numero": 1923,
-  "texto": "El arrendatario debe pagar la renta, usar el bien conforme a lo pactado o a su naturaleza, devolverlo al finalizar y responder por daños causados por él o personas relacionadas.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario debe pagar la renta, usar el bien conforme a lo pactado o a su naturaleza, devolverlo al finalizar y responder por daños causados por él o por personas bajo su responsabilidad.",
   "ontologia_target": ["usuario", "contraprestacion", "bien", "obligaciones_basicas"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario pagará la renta en tiempo y forma, usará el bien conforme a lo pactado o a su naturaleza, lo devolverá al finalizar el contrato y responderá por daños causados por él o personas bajo su responsabilidad.",
-  "validacion_logica": "Verificar que el uso declarado coincida con el destino permitido y que el arrendatario acepte responsabilidad por daños."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1924",
   "numero": 1924,
-  "texto": "El arrendatario paga renta desde que recibe el bien, salvo pacto distinto.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario debe pagar la renta desde el momento en que recibe el bien, salvo pacto distinto.",
   "ontologia_target": ["contraprestacion", "bien"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "El arrendatario comenzará a pagar la renta desde la entrega del bien, salvo acuerdo diferente.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1925",
   "numero": 1925,
-  "texto": "La renta se paga en el lugar convenido o, en ausencia de pacto, en el domicilio del arrendatario.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "La renta se paga en el lugar convenido o, en ausencia de pacto, en el domicilio del arrendatario.",
   "ontologia_target": ["contraprestacion"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "La renta será pagada en el lugar convenido por las partes o, en ausencia de pacto, en el domicilio del arrendatario.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1926",
   "numero": 1926,
-  "texto": "Las reglas sobre devolución de saldos aplicables al arrendador también aplican al arrendatario.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Las reglas sobre devolución de saldos aplicables al arrendador también aplican al arrendatario.",
   "ontologia_target": ["contraprestacion"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1927",
   "numero": 1927,
-  "texto": "El arrendatario debe pagar la renta hasta el día en que entregue el bien.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario debe pagar la renta hasta el día en que entregue el bien.",
   "ontologia_target": ["contraprestacion", "bien"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario pagará la renta hasta la fecha efectiva de entrega del bien.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1928",
   "numero": 1928,
-  "texto": "Si la renta es en frutos y no se entregan a tiempo, el arrendatario debe pagar en dinero el mayor valor que hayan tenido en el periodo pactado.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si la renta consiste en frutos y estos no se entregan oportunamente, el arrendatario debe pagar en dinero el mayor valor que hayan tenido en el periodo pactado.",
   "ontologia_target": ["contraprestacion"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Si la renta consiste en frutos y estos no se entregan oportunamente, el arrendatario pagará en dinero el mayor valor que hayan alcanzado en el periodo pactado.",
-  "validacion_logica": "Si renta_en_frutos = true y no_entrega = true → calcular mayor valor del periodo."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1929",
   "numero": 1929,
-  "texto": "Si un caso fortuito impide totalmente el uso del bien, no se paga renta y si dura más de dos meses el arrendatario puede pedir la terminación.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si un caso fortuito impide totalmente el uso del bien, no se paga renta y, si el impedimento dura más de dos meses, el arrendatario puede solicitar la terminación del contrato.",
   "ontologia_target": ["usuario", "bien", "contraprestacion"],
-  "categoria_juridica": "derechos_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Si un caso fortuito impide totalmente el uso del bien, no se causará renta y, si el impedimento dura más de dos meses, el arrendatario podrá solicitar la terminación del contrato.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1930",
   "numero": 1930,
-  "texto": "Si el uso se impide parcialmente, el arrendatario puede pedir reducción de renta y si dura más de dos meses ambas partes pueden optar por terminar.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el uso del bien se impide parcialmente, el arrendatario puede pedir reducción de renta y, si el impedimento dura más de dos meses, cualquiera de las partes puede optar por la terminación.",
   "ontologia_target": ["usuario", "contraprestacion", "bien"],
-  "categoria_juridica": "derechos_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Si el uso del bien se ve parcialmente impedido, el arrendatario podrá solicitar reducción proporcional de la renta y, si el impedimento dura más de dos meses, cualquiera de las partes podrá optar por la terminación.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1931",
   "numero": 1931,
-  "texto": "Las reglas sobre impedimento total o parcial del uso no pueden renunciarse.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Las reglas sobre impedimento total o parcial del uso no pueden renunciarse.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "limites_legales",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": true,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": "Bloquear cualquier intento de renuncia a derechos derivados de impedimento total o parcial del uso."
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1932",
   "numero": 1932,
-  "texto": "Si la privación del uso proviene de evicción aplican las reglas de impedimento total y si el arrendador actuó de mala fe responde por daños.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si la privación del uso proviene de evicción, aplican las reglas de impedimento total y, si el arrendador actuó de mala fe, responde por daños.",
   "ontologia_target": ["usuario", "bien", "vinculo"],
-  "categoria_juridica": "derechos_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "En caso de evicción que prive al arrendatario del uso del bien, aplicarán las reglas de impedimento total y, si el arrendador actuó de mala fe, responderá por daños.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1933",
   "numero": 1933,
-  "texto": "El arrendatario es responsable del incendio salvo que provenga de caso fortuito, fuerza mayor o vicio de construcción.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario es responsable del incendio salvo que provenga de caso fortuito, fuerza mayor o vicio de construcción.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "riesgos",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario será responsable del incendio salvo que derive de caso fortuito, fuerza mayor o vicio de construcción.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1934",
   "numero": 1934,
-  "texto": "El arrendatario no responde del incendio que provenga de otra parte si tomó precauciones razonables.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario no es responsable del incendio que provenga de otra parte si tomó precauciones razonables.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "riesgos",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario no será responsable del incendio que provenga de otra parte si tomó las precauciones razonables para evitar su propagación.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1935",
   "numero": 1935,
-  "texto": "Si hay varios arrendatarios y no se sabe dónde inició el incendio, todos responden proporcionalmente salvo prueba de origen.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si existen varios arrendatarios y no se puede determinar el origen del incendio, todos responden proporcionalmente salvo prueba en contrario.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "riesgos",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Cuando existan varios arrendatarios y no sea posible determinar el origen del incendio, todos responderán proporcionalmente salvo prueba en contrario.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1936",
   "numero": 1936,
-  "texto": "El arrendatario queda libre de responsabilidad si prueba que el incendio no pudo originarse en su parte.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario queda libre de responsabilidad si demuestra que el incendio no pudo originarse en la parte que ocupa.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "riesgos",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario quedará libre de responsabilidad si demuestra que el incendio no pudo originarse en la parte que ocupa.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1937",
   "numero": 1937,
-  "texto": "La responsabilidad por incendio incluye daños al propietario y a terceros afectados directamente.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "La responsabilidad por incendio incluye los daños causados al propietario y a terceros afectados directamente.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "riesgos",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "La responsabilidad por incendio comprenderá los daños causados al propietario y a terceros afectados directamente.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1938",
   "numero": 1938,
-  "texto": "Si el arrendatario instala una industria peligrosa debe asegurar el inmueble a favor del arrendador.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el arrendatario instala una industria peligrosa, debe asegurar el inmueble a favor del arrendador.",
   "ontologia_target": ["usuario", "bien", "riesgos"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Si el arrendatario establece una industria peligrosa, deberá asegurar el inmueble contra los riesgos derivados, a favor del arrendador.",
-  "validacion_logica": "Si actividad = peligrosa → exigir póliza de seguro válida."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1939",
   "numero": 1939,
-  "texto": "El arrendatario debe avisar al arrendador sobre usurpaciones o daños inminentes o responde por su omisión.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario debe avisar al arrendador sobre usurpaciones o daños inminentes, siendo responsable por su omisión.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario notificará al arrendador cualquier usurpación o daño inminente respecto del bien, siendo responsable por su omisión.",
-  "validacion_logica": "Si arrendatario no notifica → advertir responsabilidad por daños."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1940",
   "numero": 1940,
-  "texto": "El arrendatario debe avisar al arrendador sobre la necesidad de reparaciones o responde por daños derivados de su omisión.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario debe avisar al arrendador sobre la necesidad de reparaciones, respondiendo por daños derivados de su omisión.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario notificará al arrendador la necesidad de reparaciones, siendo responsable por daños derivados de su omisión.",
-  "validacion_logica": "Si arrendatario no notifica → advertir responsabilidad."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1941",
   "numero": 1941,
-  "texto": "Si el arrendador no realiza reparaciones necesarias, el arrendatario puede terminar el contrato o acudir al juez para exigir su cumplimiento.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el arrendador no realiza reparaciones necesarias, el arrendatario puede terminar el contrato o acudir al juez para exigir su cumplimiento.",
   "ontologia_target": ["usuario", "bien", "vinculo"],
-  "categoria_juridica": "derechos_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Si el arrendador no realiza las reparaciones necesarias, el arrendatario podrá optar por la terminación del contrato o solicitar judicialmente que el arrendador sea obligado a cumplir.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1942",
   "numero": 1942,
-  "texto": "El juez decidirá si procede indemnizar al arrendatario por daños derivados de reparaciones tardías.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El juez decidirá si procede indemnizar al arrendatario por daños derivados de reparaciones tardías.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "riesgos",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1943",
   "numero": 1943,
-  "texto": "El arrendatario no puede modificar sustancialmente el bien sin permiso; si lo hace, el arrendador puede terminar el contrato, exigir restitución y reclamar daños. Si la modificación no es sustancial, el arrendador puede optar por terminar o exigir reparación.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario no puede modificar sustancialmente el bien sin permiso; si lo hace, el arrendador puede terminar el contrato, exigir restitución y reclamar daños. Para modificaciones no sustanciales, el arrendador puede optar por terminar o exigir reparación.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "prohibiciones",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario no podrá realizar modificaciones sustanciales sin autorización del arrendador; en caso contrario, el arrendador podrá rescindir el contrato, exigir la restitución del bien y reclamar daños. Para modificaciones no sustanciales, el arrendador podrá optar por la terminación o por exigir la reparación correspondiente.",
-  "validacion_logica": "Si arrendatario_modifica = true y no_autorizado = true → activar consecuencias según tipo de modificación."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1944",
   "numero": 1944,
-  "texto": "Si el bien fue entregado con descripción detallada, el arrendatario debe devolverlo igual salvo deterioro normal o inevitable.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el bien fue entregado con descripción detallada, el arrendatario debe devolverlo en el mismo estado salvo deterioro normal o inevitable.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "El arrendatario devolverá el bien en el estado descrito al inicio del contrato, salvo deterioro normal o inevitable.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1945",
   "numero": 1945,
-  "texto": "Si el bien se entregó sin descripción, se presume que estaba en buen estado salvo prueba en contrario.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el bien se entregó sin descripción, se presume que estaba en buen estado salvo prueba en contrario.",
   "ontologia_target": ["bien", "usuario"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1946",
   "numero": 1946,
-  "texto": "El arrendatario debe realizar las reparaciones menores derivadas del uso cotidiano del inmueble.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario debe realizar las reparaciones menores derivadas del uso ordinario del inmueble.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "El arrendatario realizará las reparaciones menores derivadas del uso ordinario del inmueble.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1947",
   "numero": 1947,
-  "texto": "Si por reparaciones el arrendatario pierde total o parcialmente el uso del bien, puede dejar de pagar renta, pedir reducción o solicitar rescisión si el impedimento dura más de dos meses.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si por reparaciones el arrendatario pierde total o parcialmente el uso del bien, puede dejar de pagar renta, pedir reducción o solicitar rescisión si el impedimento dura más de dos meses.",
   "ontologia_target": ["usuario", "bien", "contraprestacion"],
-  "categoria_juridica": "derechos_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Si por reparaciones el arrendatario pierde total o parcialmente el uso del bien, podrá dejar de pagar la renta, solicitar reducción proporcional o pedir la rescisión si el impedimento dura más de dos meses.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1948",
   "numero": 1948,
-  "texto": "Si el bien se arrienda a varias personas para el mismo periodo, prevalece el contrato más antiguo; si no se puede determinar, prevalece quien tenga la posesión; si requiere registro, solo vale el inscrito.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el bien se arrienda a varias personas para el mismo periodo, prevalece el contrato más antiguo; si no puede determinarse, prevalece quien tenga la posesión; si requiere registro, solo vale el inscrito.",
   "ontologia_target": ["vinculo", "bien"],
-  "categoria_juridica": "limites_legales",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": true,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": "Si múltiples contratos sobre mismo bien y periodo → aplicar prioridad por fecha, posesión o registro."
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1949",
   "numero": 1949,
-  "texto": "Si el arrendador hace mejoras, la renta puede aumentar proporcionalmente. El arrendatario tiene derecho preferente a renovar si el contrato duró más de cinco años o hizo mejoras importantes y está al corriente en pagos.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "La renta puede aumentar proporcionalmente si el arrendador hace mejoras. El arrendatario tiene derecho preferente a renovar si el contrato duró más de cinco años o si realizó mejoras importantes y está al corriente en pagos.",
   "ontologia_target": ["usuario", "bien", "contraprestacion"],
-  "categoria_juridica": "derechos_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "La renta podrá ajustarse proporcionalmente a las mejoras realizadas por el arrendador. El arrendatario tendrá derecho preferente a renovar si el contrato ha durado más de cinco años o si ha realizado mejoras importantes y se encuentra al corriente en los pagos.",
-  "validacion_logica": "Si arrendatario_solicita_preferencia = true → verificar antigüedad del contrato o existencia de mejoras importantes."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1950",
   "numero": 1950,
-  "texto": "No puede arrendarse un local que no cumpla con las condiciones mínimas de higiene y salubridad establecidas por la normativa sanitaria.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "No puede arrendarse un local que no cumpla con las condiciones mínimas de higiene y salubridad establecidas por la normativa sanitaria.",
   "ontologia_target": ["bien"],
-  "categoria_juridica": "limites_legales",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": true,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": "Verificar que el bien cumpla con requisitos básicos de higiene y salubridad."
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1951",
   "numero": 1951,
-  "texto": "El arrendador es responsable por daños si no realiza las obras ordenadas por la autoridad para que el local sea habitable; si las obras son urgentes, los inquilinos pueden hacerlas y exigir reembolso.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendador es responsable por daños si no realiza las obras ordenadas por la autoridad para que el local sea habitable; si las obras son urgentes, el arrendatario puede realizarlas y exigir reembolso.",
   "ontologia_target": ["bien", "usuario"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendador realizará las obras necesarias ordenadas por la autoridad para mantener el local habitable e higiénico; si no lo hace y las obras son urgentes, el arrendatario podrá ejecutarlas y exigir su reembolso.",
-  "validacion_logica": "Si autoridad_ordena_obras = true → verificar cumplimiento o permitir ejecución por arrendatario."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1952",
   "numero": 1952,
-  "texto": "No puede renunciarse por adelantado al derecho a reclamar indemnización derivada de la falta de obras necesarias.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "No puede renunciarse por adelantado al derecho a reclamar indemnización derivada de la falta de obras necesarias.",
   "ontologia_target": ["usuario"],
-  "categoria_juridica": "limites_legales",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": true,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": "Bloquear cualquier intento de renuncia anticipada al derecho de indemnización."
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1953",
   "numero": 1953,
-  "texto": "La renta debe pagarse en los plazos pactados y, si no hay pacto, por meses vencidos.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "La renta debe pagarse en los plazos pactados y, si no hay pacto, por meses vencidos.",
   "ontologia_target": ["contraprestacion"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "La renta será pagada en los plazos convenidos por las partes y, en ausencia de pacto, por meses vencidos.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1954",
   "numero": 1954,
-  "texto": "Los propietarios de predios rústicos deben cultivarlos o, si no lo hacen, arrendarlos o darlos en aparcería, salvo terrenos forestales o de pastoreo.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Los propietarios de predios rústicos deben cultivarlos o, si no lo hacen, arrendarlos o darlos en aparcería, salvo terrenos forestales o de pastoreo.",
   "ontologia_target": ["titular", "bien"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": "Verificar que el predio no esté ocioso salvo que sea forestal o de pastoreo."
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1955",
   "numero": 1955,
-  "texto": "La renta debe pagarse en los plazos pactados y, si no los hay, por semestres vencidos.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "La renta debe pagarse en los plazos pactados y, si no los hay, por semestres vencidos.",
   "ontologia_target": ["contraprestacion"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "La renta será pagada en los plazos convenidos y, en ausencia de pacto, por semestres vencidos.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1956",
   "numero": 1956,
-  "texto": "El arrendatario no puede pedir rebaja de renta por esterilidad o pérdidas ordinarias, pero sí cuando pierde más de la mitad de los frutos por eventos extraordinarios imprevisibles.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario no puede pedir rebaja de renta por esterilidad o pérdidas ordinarias, pero sí cuando pierde más de la mitad de los frutos por eventos extraordinarios imprevisibles.",
   "ontologia_target": ["usuario", "bien", "contraprestacion"],
-  "categoria_juridica": "derechos_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": true,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario podrá solicitar rebaja proporcional de la renta si pierde más de la mitad de los frutos por eventos extraordinarios imprevisibles.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1957",
   "numero": 1957,
-  "texto": "En arrendamientos rústicos a plazo fijo, el arrendatario debe permitir al dueño o sucesor preparar la tierra y usar instalaciones durante el último año.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "En arrendamientos rústicos a plazo fijo, el arrendatario debe permitir al dueño o sucesor preparar la tierra y usar instalaciones durante el último año.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Durante el último año del contrato, el arrendatario permitirá al arrendador o sucesor preparar la tierra y usar las instalaciones necesarias para el ciclo siguiente.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1958",
   "numero": 1958,
-  "texto": "El permiso para preparar la tierra solo es obligatorio por el tiempo estrictamente necesario según costumbres locales, salvo pacto distinto.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El permiso para preparar la tierra solo es obligatorio por el tiempo estrictamente necesario según costumbres locales, salvo pacto distinto.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1959",
   "numero": 1959,
-  "texto": "Al terminar el contrato, el arrendatario saliente puede usar temporalmente la tierra y edificios para recoger y aprovechar los frutos pendientes.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Al terminar el contrato, el arrendatario saliente puede usar temporalmente la tierra y edificios para recoger y aprovechar los frutos pendientes.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "derechos_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Al concluir el contrato, el arrendatario podrá usar temporalmente la tierra y edificios para recolectar y aprovechar los frutos pendientes.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1960",
   "numero": 1960,
-  "texto": "Las reglas generales del arrendamiento aplican a bienes muebles cuando sean compatibles con su naturaleza.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Las reglas generales del arrendamiento aplican a bienes muebles cuando sean compatibles con su naturaleza.",
   "ontologia_target": ["bien"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1961",
   "numero": 1961,
-  "texto": "El arrendamiento de bienes muebles termina al vencimiento del plazo pactado o, si no hay plazo, cuando concluye el uso previsto.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendamiento de bienes muebles termina al vencimiento del plazo pactado o, si no hay plazo, cuando concluye el uso previsto.",
   "ontologia_target": ["tiempo", "bien"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "El arrendamiento terminará al vencimiento del plazo pactado o, en ausencia de éste, cuando concluya el uso previsto.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1962",
   "numero": 1962,
-  "texto": "Si no se fijó plazo ni uso, el arrendatario puede devolver el bien cuando quiera y el arrendador solo puede exigirlo después de cinco días.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si no se fijó plazo ni uso, el arrendatario puede devolver el bien cuando quiera y el arrendador solo puede exigirlo después de cinco días.",
   "ontologia_target": ["tiempo", "bien"],
-  "categoria_juridica": "derechos_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Si no se fijó plazo ni uso, el arrendatario podrá devolver el bien en cualquier momento y el arrendador solo podrá exigirlo después de cinco días de celebrado el contrato.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1963",
   "numero": 1963,
-  "texto": "Si el bien se arrienda por periodos definidos, la renta se paga al final de cada periodo salvo pacto distinto.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el bien se arrienda por periodos definidos, la renta se paga al final de cada periodo salvo pacto distinto.",
   "ontologia_target": ["contraprestacion"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "La renta se pagará al vencimiento de cada periodo pactado, salvo acuerdo diferente.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1964",
   "numero": 1964,
-  "texto": "Si el contrato tiene un plazo fijo, la renta se paga al vencimiento del plazo salvo pacto distinto.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el contrato tiene un plazo fijo, la renta se paga al vencimiento del plazo salvo pacto distinto.",
   "ontologia_target": ["contraprestacion", "tiempo"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "La renta será pagada al vencimiento del plazo pactado, salvo acuerdo diferente.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1965",
   "numero": 1965,
-  "texto": "Si el arrendatario devuelve el bien antes del plazo, debe pagar el precio completo si se pactó uno único; si se pactó por periodos, solo paga los periodos transcurridos.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el arrendatario devuelve el bien antes del plazo, debe pagar el precio completo si se pactó uno único; si se pactó por periodos, solo paga los periodos transcurridos.",
   "ontologia_target": ["contraprestacion", "tiempo"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Si el arrendatario devuelve el bien antes del plazo, pagará el precio completo si se pactó uno único, o solo los periodos transcurridos si se pactó por periodos.",
-  "validacion_logica": "Si precio_unico = true → cobrar total; si precio_periodos = true → cobrar periodos transcurridos."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1966",
   "numero": 1966,
-  "texto": "Si el arrendamiento es por tiempo fijo y los periodos solo sirven para pago, el arrendatario debe pagar el precio total.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el arrendamiento es por tiempo fijo y los periodos solo sirven como plazos de pago, el arrendatario debe pagar el precio total.",
   "ontologia_target": ["contraprestacion"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Cuando el arrendamiento sea por tiempo fijo y los periodos solo sirvan como plazos de pago, el arrendatario deberá cubrir el precio total.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
-
 {
-  "id": "art_1967",
   "numero": 1967,
-  "texto": "Si se arrienda un edificio o habitación amueblada, aplican las reglas del arrendamiento de fincas urbanas.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si se arrienda un edificio o habitación amueblada, aplican las reglas del arrendamiento de fincas urbanas.",
   "ontologia_target": ["bien"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1968",
   "numero": 1968,
-  "texto": "Si los muebles se alquilan por separado del edificio, se aplican las reglas del arrendamiento de bienes muebles.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si los muebles se alquilan por separado del edificio, se aplican las reglas del arrendamiento de bienes muebles.",
   "ontologia_target": ["bien"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1969",
   "numero": 1969,
-  "texto": "El arrendatario debe realizar las pequeñas reparaciones derivadas del uso normal del bien mueble.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario debe realizar las pequeñas reparaciones derivadas del uso normal del bien mueble.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "El arrendatario realizará las pequeñas reparaciones derivadas del uso ordinario del bien.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1970",
   "numero": 1970,
-  "texto": "Se presume que la pérdida o deterioro del bien es culpa del arrendatario salvo prueba en contrario.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Se presume que la pérdida o deterioro del bien es culpa del arrendatario salvo prueba en contrario.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "riesgos",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "La pérdida o deterioro del bien se presumirá responsabilidad del arrendatario salvo prueba en contrario.",
-  "validacion_logica": "Si arrendatario_prueba_no_culpa = true → responsabilidad del arrendador."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1971",
   "numero": 1971,
-  "texto": "El arrendatario responde incluso por caso fortuito si usó el bien de manera distinta a lo pactado y ese uso provocó el daño.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario responde incluso por caso fortuito si usó el bien de manera distinta a lo pactado y ese uso provocó el daño.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "riesgos",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario será responsable incluso por caso fortuito si el daño deriva de un uso no conforme al contrato.",
-  "validacion_logica": "Si uso_no_conforme = true → responsabilidad arrendatario."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1972",
   "numero": 1972,
-  "texto": "Si se alquilan animales en general, el arrendador debe entregar ejemplares aptos para el uso previsto.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si se alquilan animales en general, el arrendador debe entregar ejemplares aptos para el uso previsto.",
   "ontologia_target": ["bien", "titular"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendador entregará animales aptos para el uso previsto.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1973",
   "numero": 1973,
-  "texto": "Si se alquila un animal específico, el arrendador debe entregar exactamente el designado.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si se alquila un animal específico, el arrendador debe entregar exactamente el designado.",
   "ontologia_target": ["bien", "titular"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendador entregará el animal específicamente designado en el contrato.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1974",
   "numero": 1974,
-  "texto": "El arrendatario debe alimentar y cuidar al animal, evitando su deterioro y atendiendo enfermedades leves sin cobrar al dueño.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario debe alimentar y cuidar al animal, evitando su deterioro y atendiendo enfermedades leves sin cobrar al dueño.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario alimentará y cuidará al animal, evitando su deterioro y atendiendo enfermedades leves sin costo para el arrendador.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1975",
   "numero": 1975,
-  "texto": "Los frutos del animal alquilado pertenecen al dueño salvo pacto distinto.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Los frutos del animal alquilado pertenecen al dueño salvo pacto distinto.",
   "ontologia_target": ["bien"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1976",
   "numero": 1976,
-  "texto": "Si un animal alquilado muere, el arrendatario debe entregar los restos al dueño si tienen utilidad y pueden transportarse.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si un animal alquilado muere, el arrendatario debe entregar los restos al dueño si tienen utilidad y pueden transportarse.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "En caso de muerte del animal, el arrendatario entregará los restos al arrendador si tienen utilidad y pueden transportarse.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1977",
   "numero": 1977,
-  "texto": "Si se arriendan animales que funcionan como conjunto y uno se inutiliza, el contrato termina salvo que el dueño proporcione un reemplazo adecuado.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si se arriendan animales que funcionan como conjunto y uno se inutiliza, el contrato termina salvo que el dueño proporcione un reemplazo adecuado.",
   "ontologia_target": ["bien", "vinculo"],
-  "categoria_juridica": "limites_legales",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": "Si conjunto_animal_inutilizado = true → verificar si arrendador ofrece reemplazo."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1978",
   "numero": 1978,
-  "texto": "Si un animal específico se inutiliza sin culpa del arrendador antes de entregarse, éste queda libre si avisa de inmediato; si hay culpa o falta de aviso, debe pagar daños o reemplazarlo.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si un animal específico se inutiliza sin culpa del arrendador antes de entregarse y éste avisa de inmediato, queda libre de responsabilidad; si hay culpa o falta de aviso, debe pagar daños o reemplazarlo.",
   "ontologia_target": ["bien", "titular", "usuario"],
-  "categoria_juridica": "riesgos",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Si el animal específico se inutiliza sin culpa del arrendador antes de la entrega y éste avisa de inmediato, quedará libre de responsabilidad; de lo contrario deberá pagar daños o reemplazarlo.",
-  "validacion_logica": "Si inutilizacion_sin_culpa = true y aviso_inmediato = true → sin responsabilidad; si no → daños o reemplazo."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1979",
   "numero": 1979,
-  "texto": "Si el contrato no designa un animal específico sino un género y número, el arrendador debe pagar daños si no entrega los animales.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el contrato no designa un animal específico sino un género y número, el arrendador debe pagar daños si no entrega los animales.",
   "ontologia_target": ["bien", "titular"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Si el contrato se refiere a animales por género y número, el arrendador deberá pagar daños si no cumple con la entrega.",
-  "validacion_logica": "Si falta_entrega = true → daños."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1980",
   "numero": 1980,
-  "texto": "Si el arrendamiento de un predio incluye ganado, el arrendatario tiene los mismos derechos y obligaciones que un usufructuario respecto del ganado, sin obligación de dar fianza.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el arrendamiento de un predio incluye ganado, el arrendatario tiene los derechos y obligaciones del usufructuario respecto del ganado, sin obligación de dar fianza.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "derechos_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Si el arrendamiento incluye ganado, el arrendatario tendrá respecto de éste los derechos y obligaciones del usufructuario, sin obligación de otorgar fianza.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1981",
   "numero": 1981,
-  "texto": "Las reglas sobre edificios amueblados y muebles separados también aplican a los aperos de la finca arrendada.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Las reglas sobre edificios amueblados y muebles separados aplican también a los aperos de la finca arrendada.",
   "ontologia_target": ["bien"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1982",
   "numero": 1982,
-  "texto": "Los arrendamientos sin plazo fijo pueden terminar a voluntad de cualquiera de las partes, con aviso previo de tres meses si es predio urbano y de un año si es rústico.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Los arrendamientos sin plazo fijo pueden terminar a voluntad de cualquiera de las partes, con aviso previo de tres meses si es predio urbano y de un año si es rústico.",
   "ontologia_target": ["vinculo", "tiempo"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "Cualquiera de las partes podrá dar por terminado el contrato mediante aviso previo de tres meses para predios urbanos y de un año para predios rústicos.",
-  "validacion_logica": "Si tipo_predio = urbano → aviso ≥ 3 meses; si rústico → aviso ≥ 12 meses."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1983",
   "numero": 1983,
-  "texto": "Tras el aviso de terminación, el arrendatario urbano debe permitir colocar avisos y mostrar el inmueble; en predios rústicos aplican las reglas sobre preparación del terreno.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Tras el aviso de terminación, el arrendatario urbano debe permitir colocar avisos y mostrar el inmueble; en predios rústicos aplican las reglas sobre preparación del terreno.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Tras el aviso de terminación, el arrendatario permitirá colocar avisos y mostrar el inmueble; en predios rústicos se aplicarán las reglas sobre preparación del terreno.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1984",
   "numero": 1984,
-  "texto": "El arrendatario no puede subarrendar ni ceder derechos sin permiso; si lo hace, responde solidariamente con el subarrendatario por daños.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario no puede subarrendar ni ceder derechos sin permiso; si lo hace, responde solidariamente con el subarrendatario por daños.",
   "ontologia_target": ["usuario", "bien", "vinculo"],
-  "categoria_juridica": "prohibiciones",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario no podrá subarrendar ni ceder derechos sin autorización del arrendador; en caso contrario responderá solidariamente con el subarrendatario por daños.",
-  "validacion_logica": "Si subarriendo_sin_permiso = true → activar responsabilidad solidaria."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1985",
   "numero": 1985,
-  "texto": "Si el subarriendo se hace con autorización general, el arrendatario sigue siendo responsable como si él usara el bien.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el subarriendo se hace con autorización general, el arrendatario sigue siendo responsable como si él usara el bien.",
   "ontologia_target": ["usuario", "vinculo"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "Si el subarriendo se realiza con autorización general, el arrendatario seguirá siendo responsable como si él mismo usara el bien.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1986",
   "numero": 1986,
-  "texto": "En subarriendos autorizados de forma general, el subarrendatario también responde directamente ante el arrendador.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "En subarriendos autorizados de forma general, el subarrendatario también responde directamente ante el arrendador.",
   "ontologia_target": ["usuario", "vinculo"],
-  "categoria_juridica": "obligaciones_usuario",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "En subarriendos autorizados de forma general, el subarrendatario responderá directamente ante el arrendador.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1987",
   "numero": 1987,
-  "texto": "Si el arrendador aprueba expresamente un subarriendo específico, el subarrendatario asume los derechos y obligaciones del arrendatario salvo pacto distinto.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el arrendador aprueba expresamente un subarriendo específico, el subarrendatario asume los derechos y obligaciones del arrendatario salvo pacto distinto.",
   "ontologia_target": ["usuario", "vinculo"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "Si el arrendador aprueba expresamente un subarriendo específico, el subarrendatario asumirá los derechos y obligaciones del arrendatario salvo pacto distinto.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1988",
   "numero": 1988,
-  "texto": "Si se autoriza expresamente subarrendar a una persona específica, el contrato principal se extingue y el arrendatario queda liberado salvo pacto contrario.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si se autoriza expresamente subarrendar a una persona específica, el contrato principal se extingue y el arrendatario queda liberado salvo pacto contrario.",
   "ontologia_target": ["vinculo"],
-  "categoria_juridica": "limites_legales",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": "Si autorización_específica = true → extinguir contrato salvo pacto contrario."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1989",
   "numero": 1989,
-  "texto": "El subarriendo debe cumplir las mismas formalidades legales que el arrendamiento.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El subarriendo debe cumplir las mismas formalidades legales que el arrendamiento.",
   "ontologia_target": ["vinculo"],
-  "categoria_juridica": "formalidades",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1990",
   "numero": 1990,
-  "texto": "El arrendamiento puede terminar por cumplimiento del plazo, acuerdo, nulidad, rescisión, pérdida del bien, expropiación o evicción.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendamiento puede terminar por cumplimiento del plazo, acuerdo, nulidad, rescisión, pérdida del bien, expropiación o evicción.",
   "ontologia_target": ["vinculo", "bien", "tiempo"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1991",
   "numero": 1991,
-  "texto": "Si el arrendamiento tiene plazo fijo termina en la fecha pactada; si no lo tiene, aplican las reglas de terminación por aviso.",
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el arrendamiento tiene plazo fijo termina en la fecha pactada; si no lo tiene, aplican las reglas de terminación por aviso.",
   "ontologia_target": ["tiempo", "vinculo"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "El contrato concluirá en la fecha pactada o conforme a las reglas de terminación por aviso cuando no exista plazo.",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1992",
-  "numero": 1992,
-  "texto": "El arrendatario al corriente puede pedir prórroga de hasta un año; el arrendador puede aumentar la renta según la variación de la UMA y puede negarse si ocupará el inmueble o hará obras mayores.",
-  "ontologia_target": ["usuario", "tiempo", "contraprestacion"],
-  "categoria_juridica": "derechos_usuario",
+  "numero": 1963,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el bien se arrienda por periodos definidos, la renta se paga al final de cada periodo salvo pacto distinto.",
+  "ontologia_target": ["contraprestacion"],
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario podrá solicitar prórroga de hasta un año si está al corriente, pudiendo el arrendador ajustar la renta conforme a la variación de la UMA y negarse en casos de ocupación propia o reconstrucción autorizada.",
-  "validacion_logica": "Si arrendatario_corriente = true y no_excepcion = true → permitir prórroga."
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1993",
-  "numero": 1993,
-  "texto": "La prórroga también aplica a contratos por tiempo indeterminado, iniciando un año después del aviso de terminación.",
-  "ontologia_target": ["tiempo", "vinculo"],
-  "categoria_juridica": "reglas_supletorias",
+  "numero": 1964,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el contrato tiene un plazo fijo, la renta se paga al vencimiento del plazo salvo pacto distinto.",
+  "ontologia_target": ["contraprestacion", "tiempo"],
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1994",
-  "numero": 1994,
-  "texto": "El arrendador debe notificar con 60 días de anticipación si usará el inmueble o hará obras; si no cumple lo anunciado, responde por daños.",
-  "ontologia_target": ["titular", "usuario", "tiempo"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "numero": 1965,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el arrendatario devuelve el bien antes del plazo, debe pagar el precio completo si se pactó uno único; si se pactó por periodos, solo paga los periodos transcurridos.",
+  "ontologia_target": ["contraprestacion", "tiempo"],
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendador notificará con 60 días de anticipación su intención de ocupar o modificar el inmueble, siendo responsable por daños si no cumple lo anunciado.",
-  "validacion_logica": "Si aviso < 60 días → no procede excepción."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_1995",
-  "numero": 1995,
-  "texto": "Si el arrendatario de un predio rústico continúa en posesión sin oposición tras el vencimiento, el contrato se renueva por un año.",
-  "ontologia_target": ["vinculo", "tiempo"],
-  "categoria_juridica": "reglas_supletorias",
+  "numero": 1966,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si el arrendamiento es por tiempo fijo y los periodos solo sirven como plazos de pago, el arrendatario debe pagar el precio total.",
+  "ontologia_target": ["contraprestacion"],
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1996",
-  "numero": 1996,
-  "texto": "Si el predio es urbano y el arrendatario sigue en posesión sin oposición, el contrato continúa indefinidamente sin nueva prórroga.",
-  "ontologia_target": ["vinculo", "tiempo"],
-  "categoria_juridica": "reglas_supletorias",
+  "numero": 1967,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si se arrienda un edificio o habitación amueblada, aplican las reglas del arrendamiento de fincas urbanas.",
+  "ontologia_target": ["bien"],
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1997",
-  "numero": 1997,
-  "texto": "El arrendador debe manifestar oposición dentro de 30 días para evitar la renovación tácita.",
-  "ontologia_target": ["titular", "tiempo"],
-  "categoria_juridica": "obligaciones_arrendador",
+  "numero": 1968,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si los muebles se alquilan por separado del edificio, se aplican las reglas del arrendamiento de bienes muebles.",
+  "ontologia_target": ["bien"],
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": "Si oposición > 30 días → renovación tácita."
+    "conflicto": false
+  }
 },
 {
-  "id": "art_1998",
-  "numero": 1998,
-  "texto": "Las garantías otorgadas por terceros dejan de aplicarse cuando hay prórroga voluntaria o renovación tácita, salvo pacto contrario.",
-  "ontologia_target": ["vinculo"],
-  "categoria_juridica": "reglas_supletorias",
-  "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
-    "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
-},
-{
-  "id": "art_1999",
-  "numero": 1999,
-  "texto": "El arrendador puede rescindir por falta de pago, uso indebido del bien o subarriendo prohibido.",
-  "ontologia_target": ["usuario", "bien", "vinculo"],
-  "categoria_juridica": "derechos_arrendador",
-  "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
-    "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendador podrá rescindir el contrato por falta de pago, uso indebido del bien o subarriendo no autorizado.",
-  "validacion_logica": "Si falta_pago = true o uso_indebido = true o subarriendo_prohibido = true → permitir rescisión."
-},
-{
-  "id": "art_2000",
-  "numero": 2000,
-  "texto": "El arrendatario puede rescindir si pierde totalmente el uso del bien o si la reparación dura más de dos meses.",
-  "ontologia_target": ["usuario", "bien", "vinculo"],
-  "categoria_juridica": "derechos_usuario",
-  "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
-    "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario podrá rescindir si pierde totalmente el uso del bien o si la reparación dura más de dos meses.",
-  "validacion_logica": ""
-},
-{
-  "id": "art_2001",
-  "numero": 2001,
-  "texto": "Si el arrendatario no ejerce su derecho a rescindir, tras la reparación continúa usando el bien pagando la misma renta.",
+  "numero": 1969,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario debe realizar las pequeñas reparaciones derivadas del uso normal del bien mueble.",
   "ontologia_target": ["usuario", "bien"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_2002",
-  "numero": 2002,
-  "texto": "Si el arrendador se opone sin causa al subarriendo permitido, el arrendatario puede pedir la rescisión.",
-  "ontologia_target": ["usuario", "vinculo"],
-  "categoria_juridica": "derechos_usuario",
+  "numero": 1970,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Se presume que la pérdida o deterioro del bien es culpa del arrendatario salvo prueba en contrario.",
+  "ontologia_target": ["usuario", "bien"],
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario podrá solicitar la rescisión si el arrendador se opone sin causa al subarriendo permitido.",
-  "validacion_logica": "Si oposición_injustificada = true → permitir rescisión."
+    "conflicto": true
+  }
 },
 {
-  "id": "art_2003",
-  "numero": 2003,
-  "texto": "Si el usufructuario no informó su calidad y el propietario exige la desocupación, el arrendatario puede reclamar daños.",
-  "ontologia_target": ["usuario", "titular"],
-  "categoria_juridica": "derechos_usuario",
+  "numero": 1971,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario responde incluso por caso fortuito si usó el bien de manera distinta a lo pactado y ese uso provocó el daño.",
+  "ontologia_target": ["usuario", "bien"],
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": true,
-    "solo_asesoria": false,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "El arrendatario podrá reclamar daños si el usufructuario no informó su calidad y el propietario exige la desocupación.",
-  "validacion_logica": ""
+    "conflicto": true
+  }
 },
 {
-  "id": "art_2004",
-  "numero": 2004,
-  "texto": "En caso de desocupación por consolidación del usufructo, aplican las reglas de renovación tácita según sea predio rústico o urbano.",
-  "ontologia_target": ["vinculo", "tiempo"],
-  "categoria_juridica": "reglas_supletorias",
+  "numero": 1972,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si se alquilan animales en general, el arrendador debe entregar ejemplares aptos para el uso previsto.",
+  "ontologia_target": ["bien", "titular"],
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": false
+  }
 },
 {
-  "id": "art_2005",
-  "numero": 2005,
-  "texto": "Si el predio se vende judicialmente, el arrendamiento subsiste salvo que se haya celebrado dentro de los 60 días previos al secuestro.",
-  "ontologia_target": ["vinculo", "bien"],
-  "categoria_juridica": "limites_legales",
+  "numero": 1973,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si se alquila un animal específico, el arrendador debe entregar exactamente el designado.",
+  "ontologia_target": ["bien", "titular"],
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": true,
     "irrenunciable": false,
-    "supletoria": false
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": "Si fecha_contrato < 60 días antes del secuestro → permitir terminación."
+    "conflicto": false
+  }
 },
 {
-  "id": "art_2006",
-  "numero": 2006,
-  "texto": "En casos de expropiación o ejecución judicial aplican las reglas sobre preparación del terreno y aprovechamiento de frutos.",
+  "numero": 1974,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "El arrendatario debe alimentar y cuidar al animal, evitando su deterioro y atendiendo enfermedades leves sin cobrar al dueño.",
+  "ontologia_target": ["usuario", "bien"],
+  "jerarquia": 3,
+  "banderas": {
+    "irrenunciable": false,
+    "conflicto": false
+  }
+},
+{
+  "numero": 1975,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Los frutos del animal alquilado pertenecen al dueño salvo pacto distinto.",
+  "ontologia_target": ["bien"],
+  "jerarquia": 3,
+  "banderas": {
+    "irrenunciable": false,
+    "conflicto": false
+  }
+},
+{
+  "numero": 1976,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si un animal alquilado muere, el arrendatario debe entregar los restos al dueño si tienen utilidad y pueden transportarse.",
+  "ontologia_target": ["usuario", "bien"],
+  "jerarquia": 3,
+  "banderas": {
+    "irrenunciable": false,
+    "conflicto": false
+  }
+},
+{
+  "numero": 1977,
+  "nombre_ley": "Código Civil del Estado de Guanajuato",
+  "regla": "Si se arriendan animales que funcionan como conjunto y uno se inutiliza, el contrato termina salvo que el dueño proporcione un reemplazo adecuado.",
   "ontologia_target": ["bien", "vinculo"],
-  "categoria_juridica": "reglas_supletorias",
+  "jerarquia": 3,
   "banderas": {
-    "incluir_en_contrato": false,
-    "solo_asesoria": true,
-    "validacion": false,
     "irrenunciable": false,
-    "supletoria": true
-  },
-  "plantilla_clausula": "",
-  "validacion_logica": ""
+    "conflicto": true
+      }
+    },
+{
+  "numero": 17,
+  "nombre_ley": "Constitución Política de los Estados Unidos Mexicanos",
+  "regla": "Nadie puede hacerse justicia por sí mismo; toda persona tiene derecho a una justicia pronta, completa, imparcial y gratuita, con tribunales expeditos y mecanismos que privilegien la solución del conflicto sobre formalismos. Se regulan acciones colectivas, mecanismos alternativos, independencia judicial, defensoría pública y se prohíbe la prisión por deudas civiles.",
+  "ontologia_target": [
+    "vinculo",
+    "debido_proceso",
+    "acceso_justicia",
+    "tribunales",
+    "defensoria_publica"
+  ],
+  "jerarquia": 1,
+  "banderas": {
+    "irrenunciable": true,
+    "conflicto": true
+  }
+},
+{
+  "numero": 14,
+  "nombre_ley": "Constitución Política de los Estados Unidos Mexicanos",
+  "regla": "Se prohíbe la retroactividad en perjuicio; nadie puede ser privado de libertad, propiedad o derechos sin juicio ante tribunal competente con formalidades esenciales y leyes previas al hecho. En materia penal solo procede pena prevista en ley exactamente aplicable; en materia civil la sentencia debe basarse en la ley o, en su ausencia, en principios generales del derecho.",
+  "ontologia_target": [
+    "derechos_fundamentales",
+    "debido_proceso",
+    "legalidad",
+    "seguridad_juridica",
+    "no_retroactividad"
+  ],
+  "jerarquia": 1,
+  "banderas": {
+    "irrenunciable": true,
+    "conflicto": true
+  }
+},
+{
+  "numero": 16,
+  "nombre_ley": "Constitución Política de los Estados Unidos Mexicanos",
+  "regla": "Nadie puede ser molestado en su persona, familia, domicilio, papeles o posesiones sin mandamiento escrito de autoridad competente que funde y motive la causa legal. En procedimientos orales basta cualquier medio que dé certeza del contenido y del cumplimiento de este requisito.",
+  "ontologia_target": [
+    "debido_proceso",
+    "seguridad_juridica",
+    "autoridad_competente",
+    "vinculo",
+    "proteccion_domicilio"
+  ],
+  "jerarquia": 1,
+  "banderas": {
+    "irrenunciable": true,
+    "conflicto": true
+  }
 }
-    
   ]
 }
