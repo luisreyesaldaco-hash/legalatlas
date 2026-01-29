@@ -287,38 +287,48 @@
         </a>
     </div>
 
+
+<div class="consulta-config">
+    
     <div class="config-group">
         <label for="pais">Jurisdicción</label>
         <select id="pais">
             <option value="">SELECCIONE PAÍS...</option>
             <option value="mexico">MÉXICO</option>
+            <option value="usa">USA</option>
+            <option value="chequia">CHEQUIA</option>
             <option value="uruguay">URUGUAY</option>
             <option value="espana">ESPAÑA</option>
-            <option value="chequia">CHEQUIA</option>
         </select>
+    </div>
 
-        <label for="estado">Estado / Región</label>
+    <div class="config-group" id="group-estado" style="display: none;">
+        <label for="estado">Estado / Provincia</label>
         <select id="estado">
-            <option value="">SELECCIONAR ESTADO...</option>
-            <option value="guanajuato">GUANAJUATO</option>
-            <option value="queretaro">QUERÉTARO</option>
-            <option value="jalisco">JALISCO</option>
-        </select>
+            </select>
+    </div>
 
-        <label for="tema">Tema jurídico</label>
+    <div class="config-group">
+        <label for="tema">Materia</label>
         <select id="tema">
-            <option value="">SELECCIONAR TEMA...</option>
-            <option value="arrendamiento">ARRENDAMIENTO</option>
-            <option value="laboral">LABORAL</option>
-            <option value="mercantil">MERCANTIL</option>
+            <option value="">SELECCIONE TEMA...</option>
+            <option value="arrendamiento">Arrendamiento</option>
+            <option value="laboral">Laboral</option>
+            <option value="civil">Civil</option>
         </select>
+    </div>
+</div>
 
-        <label>Estatus del Sistema</label>
-        <div id="status-badge" class="modulo-badge">
-            SISTEMA LISTO // SEGURO
-        </div>
+<div id="mensajes" class="chat-container">
+    </div>
 
-        <div id="fuente-oficial-display" style="display:none"></div>
+<div class="input-area">
+    <textarea id="pregunta" placeholder="Escribe tu duda legal aquí..."></textarea>
+    <button id="enviar">Consultar</button>
+</div>
+
+<div id="fuente-oficial-display" style="display: none; font-size: 10px; color: #888; margin-top: 5px;"></div>
+
     </div>
 
     <div class="footer-tag">
