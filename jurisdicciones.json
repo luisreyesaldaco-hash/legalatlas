@@ -1,0 +1,25 @@
+{
+  "mexico": {
+    "esFederal": true,
+    "labelEstado": "Estado / Entidad",
+    "estados": [
+      { "val": "guanajuato", "nom": "Guanajuato" },
+      { "val": "queretaro", "nom": "Querétaro" },
+      { "val": "zacatecas", "nom": "Zacatecas" },
+      { "val": "cdmx", "nom": "Ciudad de México" },
+      { "val": "jalisco", "nom": "Jalisco" },
+      { "val": "nuevo-leon", "nom": "Nuevo León" }
+    ]
+  },
+  "usa": {
+    "esFederal": true,
+    "labelEstado": "State / Province",
+    "estados": [
+      { "val": "texas", "nom": "Texas" },
+      { "val": "iowa", "nom": "Iowa" },
+      { "val": "minnesota", "nom": "Minnesota" },
+      { "val": "california", "nom": "California" },
+      { "val": "florida", "nom": "Florida" }
+    ]
+  }
+}
