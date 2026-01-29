@@ -1,0 +1,795 @@
+{
+  "materia": "arrendamiento",
+  "fuentes": [
+    "Constitución Política de los Estados Unidos Mexicanos",
+    "Código Civil del Estado de Guanajuato"
+  ],
+  "articulos": [
+    {
+  "numero": 17,
+  "nombre_ley": "Constitución Política de los Estados Unidos Mexicanos",
+  "regla": "Nadie puede hacerse justicia por sí mismo; toda persona tiene derecho a una justicia pronta, completa, imparcial y gratuita, con tribunales expeditos y mecanismos que privilegien la solución del conflicto sobre formalismos. Se regulan acciones colectivas, mecanismos alternativos, independencia judicial, defensoría pública y se prohíbe la prisión por deudas civiles.",
+  "ontologia_target": [
+    "vinculo",
+    "debido_proceso",
+    "acceso_justicia",
+    "tribunales",
+    "defensoria_publica"
+  ],
+  "jerarquia": 1,
+  "banderas": {
+    "irrenunciable": true,
+    "conflicto": true
+  }
+},
+{
+  "numero": 14,
+  "nombre_ley": "Constitución Política de los Estados Unidos Mexicanos",
+  "regla": "Se prohíbe la retroactividad en perjuicio; nadie puede ser privado de libertad, propiedad o derechos sin juicio ante tribunal competente con formalidades esenciales y leyes previas al hecho. En materia penal solo procede pena prevista en ley exactamente aplicable; en materia civil la sentencia debe basarse en la ley o, en su ausencia, en principios generales del derecho.",
+  "ontologia_target": [
+    "derechos_fundamentales",
+    "debido_proceso",
+    "legalidad",
+    "seguridad_juridica",
+    "no_retroactividad"
+  ],
+  "jerarquia": 1,
+  "banderas": {
+    "irrenunciable": true,
+    "conflicto": true
+  }
+},
+{
+  "numero": 16,
+  "nombre_ley": "Constitución Política de los Estados Unidos Mexicanos",
+  "regla": "Nadie puede ser molestado en su persona, familia, domicilio, papeles o posesiones sin mandamiento escrito de autoridad competente que funde y motive la causa legal. En procedimientos orales basta cualquier medio que dé certeza del contenido y del cumplimiento de este requisito.",
+  "ontologia_target": [
+    "debido_proceso",
+    "seguridad_juridica",
+    "autoridad_competente",
+    "vinculo",
+    "proteccion_domicilio"
+  ],
+  "jerarquia": 1,
+  "banderas": {
+    "irrenunciable": true,
+    "conflicto": true
+    }
+    },
+
+    {
+      "numero": 2398,
+      "nombre_ley": "Código Civil de la Ciudad de México",
+      "regla": "El arrendamiento es un acuerdo donde una parte concede el uso temporal de un bien y la otra paga un precio cierto. Los contratos de vivienda deben durar al menos un año, mientras que los destinados a comercio o industria no pueden exceder veinte años.",
+      "ontologia_target": ["vinculo", "bien", "tiempo", "contraprestacion"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": true }
+    },
+    {
+      "numero": 2399,
+      "nombre_ley": "Código Civil de la Ciudad de México",
+      "regla": "La renta puede consistir en dinero o en cualquier cosa equivalente, siempre que sea cierta y determinada.",
+      "ontologia_target": ["contraprestacion"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": false }
+    },
+    {
+      "numero": 2400,
+      "nombre_ley": "Código Civil de la Ciudad de México",
+      "regla": "Pueden arrendarse los bienes que permiten su uso sin consumirse, salvo los prohibidos por ley o aquellos que sean derechos estrictamente personales.",
+      "ontologia_target": ["bien", "prohibiciones"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": false }
+    },
+    {
+      "numero": 2401,
+      "nombre_ley": "Código Civil de la Ciudad de México",
+      "regla": "Una persona que no sea propietaria puede arrendar un bien si tiene facultades legales o un mandato que lo autorice.",
+      "ontologia_target": ["vinculo", "representacion", "facultades"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": false }
+    },
+    {
+      "numero": 2402,
+      "nombre_ley": "Código Civil de la Ciudad de México",
+      "regla": "Cuando el arrendamiento se celebra por mandato, debe ajustarse estrictamente a los límites establecidos en dicho mandato.",
+      "ontologia_target": ["vinculo", "representacion"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": false }
+    },
+    {
+      "numero": 2403,
+      "nombre_ley": "Código Civil de la Ciudad de México",
+      "regla": "Un copropietario no puede arrendar un bien indiviso sin el consentimiento de los demás copropietarios.",
+      "ontologia_target": ["bien", "vinculo", "prohibiciones"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": true }
+    },
+    {
+      "numero": 2404,
+      "nombre_ley": "Código Civil de la Ciudad de México",
+      "regla": "Magistrados, jueces y otros funcionarios públicos no pueden arrendar bienes involucrados en asuntos donde intervienen, ni directa ni indirectamente.",
+      "ontologia_target": ["prohibiciones", "funcion_publica"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": true }
+    },
+    {
+      "numero": 2405,
+      "nombre_ley": "Código Civil de la Ciudad de México",
+      "regla": "Los encargados de establecimientos públicos y funcionarios que administren bienes públicos no pueden arrendarlos para sí mismos.",
+      "ontologia_target": ["prohibiciones", "funcion_publica"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": true }
+    },
+    {
+      "numero": 2406,
+      "nombre_ley": "Código Civil de la Ciudad de México",
+      "regla": "El contrato de arrendamiento debe constar por escrito. Si el arrendador omite esta formalidad y causa daños al arrendatario, este puede exigir reparación cuando exista relación directa entre la omisión y el perjuicio.",
+      "ontologia_target": ["formalidades", "vinculo", "riesgos"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": true }
+    },
+    {
+      "numero": 2408,
+      "nombre_ley": "Código Civil de la Ciudad de México",
+      "regla": "La muerte del arrendador o del arrendatario no extingue el contrato, salvo que las partes hayan pactado lo contrario.",
+      "ontologia_target": ["vinculo", "tiempo"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": false }
+    },
+    {
+      "numero": 2409,
+      "nombre_ley": "Código Civil de la Ciudad de México",
+      "regla": "Si la propiedad del inmueble arrendado se transmite, el contrato continúa vigente. El arrendatario debe pagar rentas al nuevo propietario, y el arrendador debe notificar de forma fehaciente la transmisión para poder exigir el pago.",
+      "ontologia_target": ["vinculo", "bien", "contraprestacion", "formalidades"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": true }
+    },
+    {
+      "numero": 2410,
+      "nombre_ley": "Código Civil de la Ciudad de México",
+      "regla": "Si la propiedad se transmite por causa de utilidad pública, el contrato se rescinde y tanto arrendador como arrendatario deben ser indemnizados. El arrendatario tiene derecho a compensación adicional por mejoras necesarias realizadas en los últimos seis meses.",
+      "ontologia_target": ["terminacion", "indemnizacion", "bien", "riesgos"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": true, "conflicto": true }
+    },
+    {
+      "numero": 2411,
+      "nombre_ley": "Código Civil de la Ciudad de México",
+      "regla": "Los arrendamientos de bienes del dominio público o de establecimientos públicos se rigen por el derecho administrativo y, de manera supletoria, por las reglas civiles de arrendamiento.",
+      "ontologia_target": ["bien", "funcion_publica", "vinculo"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": false }
+    },
+  {
+    "numero": 2412,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendador debe entregar el inmueble con sus accesorios en condiciones aptas para el uso pactado o, si no se pactó, para el uso natural del bien, garantizando higiene y seguridad.",
+    "ontologia_target": ["obligaciones_arrendador", "bien", "uso"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+  {
+    "numero": "2412-II",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendador debe conservar el inmueble en buen estado, realizar reparaciones necesarias y ejecutar obras de mantenimiento que aseguren su funcionalidad y seguridad.",
+    "ontologia_target": ["obligaciones_arrendador", "bien", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+  {
+    "numero": "2412-III",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendador no debe interferir con el uso del inmueble, salvo cuando se trate de reparaciones urgentes e indispensables.",
+    "ontologia_target": ["obligaciones_arrendador", "uso"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+  {
+    "numero": "2412-IV",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendador debe garantizar que el arrendatario pueda usar y disfrutar el inmueble pacíficamente durante toda la vigencia del contrato.",
+    "ontologia_target": ["obligaciones_arrendador", "uso", "vinculo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+  {
+    "numero": "2412-V",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendador responde por daños causados al arrendatario debido a defectos ocultos del inmueble existentes antes del arrendamiento.",
+    "ontologia_target": ["obligaciones_arrendador", "riesgos", "bien"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+  {
+    "numero": "2412-VI",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "En inmuebles destinados a oficinas, el arrendador debe elaborar el Programa Interno de Protección Civil para áreas comunes y entregar la documentación correspondiente a los arrendatarios.",
+    "ontologia_target": ["obligaciones_arrendador", "riesgos", "formalidades"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2413,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "La entrega del inmueble debe hacerse en la fecha pactada o, si no se pactó, cuando el arrendador sea requerido por el arrendatario.",
+    "ontologia_target": ["obligaciones_arrendador", "formalidades"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2414,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendador no puede modificar el inmueble ni interferir en su uso legítimo durante el contrato, salvo para reparaciones urgentes.",
+    "ontologia_target": ["obligaciones_arrendador", "uso", "bien"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2415,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendatario debe avisar al arrendador, lo antes posible, cuando el inmueble requiera reparaciones, siendo responsable por daños derivados de su omisión.",
+    "ontologia_target": ["obligaciones_arrendatario", "riesgos", "bien"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2416,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si el arrendador no realiza reparaciones necesarias, el arrendatario puede optar por rescindir el contrato o acudir al juez. El arrendador responde por daños causados por su omisión.",
+    "ontologia_target": ["obligaciones_arrendador", "terminacion", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 2417,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El juez determinará, según las circunstancias, si procede el pago de daños al arrendatario por la tardanza en realizar reparaciones.",
+    "ontologia_target": ["riesgos", "indemnizacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2418,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "La obligación del arrendador de garantizar el uso pacífico no cubre actos de terceros sin derecho sobre el inmueble ni abusos de fuerza. En esos casos, el arrendatario solo puede reclamar directamente a los responsables.",
+    "ontologia_target": ["uso", "riesgos", "vinculo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2419,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendatario debe informar al propietario sobre cualquier usurpación o daño que terceros realicen o preparen en el inmueble, siendo responsable por daños derivados de su silencio. Puede defender el bien como poseedor.",
+    "ontologia_target": ["obligaciones_arrendatario", "riesgos", "bien"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2420,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si el arrendador pierde en juicio una parte del inmueble arrendado, el arrendatario puede pedir reducción de renta, rescisión del contrato y daños y perjuicios.",
+    "ontologia_target": ["terminacion", "contraprestacion", "indemnizacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 2421,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendador responde por vicios del inmueble que impidan su uso, incluso si no los conocía. El arrendatario puede pedir reducción de renta o rescisión, salvo que conociera los defectos antes del contrato.",
+    "ontologia_target": ["obligaciones_arrendador", "riesgos", "terminacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 2422,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Al finalizar el arrendamiento, si existe un saldo a favor del arrendatario, el arrendador debe devolverlo de inmediato o depositarlo judicialmente si tiene un derecho pendiente contra él.",
+    "ontologia_target": ["contraprestacion", "vinculo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+  {
+    "numero": 2423,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendador debe pagar las mejoras realizadas por el arrendatario cuando las autorizó por escrito, cuando sean útiles o urgentes por fuerza mayor, o cuando el contrato sea por tiempo indeterminado y lo termine antes de que el arrendatario recupere su inversión mediante el uso.",
+    "ontologia_target": ["obligaciones_arrendador", "indemnizacion", "bien"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2424,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Las mejoras útiles o urgentes que el arrendador debe pagar conforme al artículo anterior deben cubrirse aun cuando el contrato haya establecido que quedarían en beneficio del inmueble.",
+    "ontologia_target": ["obligaciones_arrendador", "indemnizacion", "bien"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2425,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendatario debe pagar la renta en tiempo y forma, responder por daños causados al inmueble por su culpa o la de personas bajo su responsabilidad, y usar el bien únicamente conforme al destino pactado o natural.",
+    "ontologia_target": ["obligaciones_arrendatario", "contraprestacion", "uso", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2426,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendatario debe pagar la renta desde el día en que recibe el inmueble, aunque el contrato se haya firmado antes.",
+    "ontologia_target": ["obligaciones_arrendatario", "contraprestacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2427,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "La renta debe pagarse en el lugar acordado; si no se pactó, se paga en el domicilio o despacho del arrendatario.",
+    "ontologia_target": ["contraprestacion", "formalidades"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2428,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Las reglas sobre devolución de saldos a favor del arrendador aplican también al arrendatario en situaciones equivalentes.",
+    "ontologia_target": ["contraprestacion", "vinculo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2429,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendatario debe pagar la renta que se genere hasta el día en que entregue el inmueble.",
+    "ontologia_target": ["obligaciones_arrendatario", "contraprestacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2430,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si la renta debe pagarse en frutos y el arrendatario no los entrega a tiempo, debe pagar en dinero el precio más alto que hayan tenido dentro del periodo pactado.",
+    "ontologia_target": ["contraprestacion", "obligaciones_arrendatario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2431,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si un caso fortuito o fuerza mayor impide totalmente el uso del inmueble, no se causa renta mientras dure el impedimento; si dura más de dos meses, el arrendatario puede pedir la rescisión.",
+    "ontologia_target": ["terminacion", "riesgos", "contraprestacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 2432,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si el uso del inmueble solo se afecta parcialmente, el arrendatario puede pedir una reducción proporcional de la renta, salvo que las partes prefieran rescindir si el impedimento dura más de dos meses.",
+    "ontologia_target": ["contraprestacion", "terminacion", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 2433,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Los derechos del arrendatario a no pagar renta por impedimento total o a obtener reducción por impedimento parcial no pueden renunciarse.",
+    "ontologia_target": ["derechos_arrendatario", "contraprestacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2434,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si el arrendatario pierde el uso del inmueble por evicción, se aplican las reglas sobre impedimento total; si el arrendador actuó de mala fe, debe pagar daños y perjuicios.",
+    "ontologia_target": ["terminacion", "riesgos", "indemnizacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 2435,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendatario es responsable por incendios ocurridos en el inmueble, salvo que se deban a caso fortuito, fuerza mayor o defectos de construcción.",
+    "ontologia_target": ["obligaciones_arrendatario", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2436,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendatario no responde por incendios que provengan de otra parte si tomó las precauciones necesarias para evitar su propagación.",
+    "ontologia_target": ["obligaciones_arrendatario", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2437,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si hay varios arrendatarios y no se sabe dónde inició un incendio, todos responden proporcionalmente; si se prueba el origen en una habitación específica, solo ese arrendatario responde. Si el incendio fue intencional, solo responde quien lo provocó.",
+    "ontologia_target": ["riesgos", "obligaciones_arrendatario", "indemnizacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 2438,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Un arrendatario queda libre de responsabilidad por incendio si demuestra que el fuego no pudo originarse en la parte del inmueble que ocupa.",
+    "ontologia_target": ["riesgos", "obligaciones_arrendatario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2439,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "La responsabilidad por incendios incluye daños al propietario y también a terceros, siempre que deriven directamente del incendio.",
+    "ontologia_target": ["indemnizacion", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+  {
+    "numero": 2440,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendatario que pretenda instalar una actividad peligrosa debe asegurar el inmueble contra los riesgos propios de esa industria dentro de los dos meses siguientes al inicio del arrendamiento; si no lo hace, procede la rescisión.",
+    "ontologia_target": ["obligaciones_arrendatario", "riesgos", "terminacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+    },
+  {
+    "numero": 2441,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendatario no puede modificar el inmueble sin autorización expresa del arrendador; si lo hace, debe devolverlo al estado original y responder por los daños ocasionados.",
+    "ontologia_target": ["obligaciones_arrendatario", "bien", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2442,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si el inmueble fue recibido con una descripción detallada de sus partes, el arrendatario debe devolverlo en las mismas condiciones, salvo deterioro por uso normal o causas inevitables.",
+    "ontologia_target": ["obligaciones_arrendatario", "bien"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2443,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si el arrendatario recibe el inmueble sin descripción formal, se presume que lo recibió en buen estado, salvo prueba en contrario.",
+    "ontologia_target": ["bien", "formalidades"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2444,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendatario debe realizar las reparaciones menores derivadas del uso cotidiano del inmueble por quienes lo habitan.",
+    "ontologia_target": ["obligaciones_arrendatario", "bien"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2445,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si por reparaciones el arrendatario pierde total o parcialmente el uso del inmueble, puede dejar de pagar renta, pedir reducción o solicitar la rescisión si la afectación dura más de dos meses.",
+    "ontologia_target": ["terminacion", "contraprestacion", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 2446,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si un mismo inmueble se arrienda a varias personas para el mismo periodo, prevalece el contrato más antiguo, salvo que otra persona tenga la posesión material, en cuyo caso prevalece quien posee. El arrendatario afectado tiene derecho a indemnización mínima equivalente a tres meses de renta. Si el arrendamiento requiere inscripción, solo es válido el inscrito.",
+    "ontologia_target": ["vinculo", "indemnizacion", "formalidades"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 2447,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "En arrendamientos mayores a tres años, el arrendatario al corriente en pagos tiene derecho de preferencia para renovar el contrato en igualdad de condiciones. También tiene preferencia si el propietario decide vender el inmueble.",
+    "ontologia_target": ["derechos_arrendatario", "vinculo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2448,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Las normas sobre arrendamiento habitacional son de orden público e interés social, por lo que no pueden renunciarse y cualquier pacto contrario se considera inválido.",
+    "ontologia_target": ["orden_publico", "vinculo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "2448-A",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "No puede arrendarse un inmueble destinado a habitación que no cumpla con condiciones mínimas de higiene y salubridad; el arrendador puede ser sancionado si lo hace.",
+    "ontologia_target": ["obligaciones_arrendador", "bien", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "2448-B",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendador es responsable por daños sufridos por los inquilinos cuando no realiza las obras ordenadas por la autoridad para garantizar habitabilidad, higiene y seguridad.",
+    "ontologia_target": ["obligaciones_arrendador", "riesgos", "indemnizacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": "2448-C",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Los contratos de arrendamiento habitacional deben durar al menos un año obligatorio para ambas partes y pueden prorrogarse por un año adicional a voluntad del arrendatario si está al corriente en pagos.",
+    "ontologia_target": ["tiempo", "vinculo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "2448-D",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "La renta en arrendamientos habitacionales debe fijarse en moneda nacional y solo puede incrementarse una vez al año. Para rentas dentro de ciertos límites basados en la Unidad de Cuenta, el aumento no puede exceder el 10%.",
+    "ontologia_target": ["contraprestacion", "orden_publico"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "2448-E",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "La renta debe pagarse puntualmente en los plazos pactados o, si no se pactó, por meses vencidos. El arrendador debe entregar recibos; si no lo hace por más de tres meses, se presume que la renta fue pagada salvo requerimiento oportuno. El arrendador no puede exigir más de una mensualidad como depósito.",
+    "ontologia_target": ["contraprestacion", "formalidades", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+    {
+    "numero": "2448-E",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "La renta debe pagarse puntualmente conforme a lo pactado o, si no hay acuerdo, por meses vencidos. El arrendador debe entregar recibos; si no lo hace durante más de tres meses, se presume que la renta fue pagada salvo requerimiento oportuno. No puede exigirse más de una mensualidad como depósito.",
+    "ontologia_target": ["contraprestacion", "formalidades", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "2448-F",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El contrato de arrendamiento habitacional debe celebrarse por escrito, siendo responsabilidad del arrendador cumplir esta formalidad. El contrato debe incluir datos de las partes, ubicación y descripción del inmueble, monto y lugar de pago, garantía, destino habitacional, duración, obligaciones adicionales, depósito o fiador, y documentos que acrediten la personalidad del arrendador.",
+    "ontologia_target": ["formalidades", "vinculo", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "2448-H",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendamiento habitacional no termina por la muerte del arrendador o del arrendatario. Se subrogan en el contrato, con preferencia absoluta, el cónyuge, concubina o concubinario, hijos y ascendientes que hayan habitado permanentemente el inmueble. No se aplica a subarrendatarios o cesionarios.",
+    "ontologia_target": ["vinculo", "tiempo", "orden_publico"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "2448-J",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si el propietario decide vender el inmueble arrendado, el arrendatario al corriente en pagos tiene derecho preferente para adquirirlo. El propietario debe notificar de forma fehaciente el precio y condiciones. El arrendatario tiene treinta días para aceptar por escrito y exhibir las cantidades exigibles. Si el propietario modifica la oferta, debe emitir un nuevo aviso, salvo cambios menores al 10% del precio. En condominios aplican reglas especiales. Si la venta se realiza violando este derecho, el arrendatario puede ejercer retracto, pedir nulidad y reclamar daños, con indemnización mínima del 50% de las rentas del último año. El derecho se pierde si el arrendatario no cumple los requisitos de aceptación. Los notarios responden si formalizan ventas contrarias a este artículo con conocimiento de causa.",
+    "ontologia_target": ["derechos_arrendatario", "vinculo", "formalidades", "indemnizacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": "2448-K",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si varios arrendatarios ejercen el derecho de preferencia para adquirir el inmueble, se prefiere al que tenga mayor antigüedad en el arrendamiento; si es igual, al que primero exhiba la cantidad exigible, salvo pacto distinto.",
+    "ontologia_target": ["derechos_arrendatario", "vinculo", "formalidades"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "2448-M",
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "En caso de divorcio del arrendatario, si la custodia de los hijos se otorga judicialmente al cónyuge, éste se subroga en el contrato de arrendamiento, siempre que haya cohabitado el inmueble. Lo mismo aplica en casos de concubinato.",
+    "ontologia_target": ["vinculo", "tiempo", "derechos_arrendatario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2454,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "En arrendamientos de fincas rústicas, la renta debe pagarse en los plazos pactados o, si no hay acuerdo, por semestres vencidos.",
+    "ontologia_target": ["contraprestacion", "obligaciones_arrendatario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2455,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendatario no puede pedir rebaja de renta por esterilidad de la tierra o pérdidas ordinarias de frutos. Sí procede reducción proporcional si se pierde más de la mitad de los frutos por casos extraordinarios como incendio, guerra, peste, inundación insólita, langosta o terremoto. Estas disposiciones son irrenunciables.",
+    "ontologia_target": ["contraprestacion", "riesgos", "orden_publico"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 2456,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "En arrendamientos rústicos por plazo determinado, el arrendatario debe permitir al sucesor o al dueño, en el último año, preparar la tierra y usar edificios necesarios para labores del siguiente ciclo.",
+    "ontologia_target": ["obligaciones_arrendatario", "bien", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2457,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El permiso para barbecho y uso de instalaciones solo es obligatorio en el tiempo estrictamente indispensable conforme a costumbres locales, salvo pacto distinto.",
+    "ontologia_target": ["obligaciones_arrendatario", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2458,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Al terminar el arrendamiento rústico, el arrendatario saliente tiene derecho a usar tierras y edificios por el tiempo indispensable para recoger y aprovechar frutos pendientes.",
+    "ontologia_target": ["derechos_arrendatario", "tiempo", "bien"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2478,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Los arrendamientos sin plazo expreso concluyen a voluntad de cualquiera de las partes, con aviso escrito fehaciente dado con treinta días hábiles de anticipación si el predio es urbano, y con un año si es rústico, de comercio o de industria.",
+    "ontologia_target": ["terminacion", "formalidades", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2479,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Tras el aviso de terminación, el arrendatario de predios urbanos, de comercio o industria debe permitir visitas al inmueble. En predios rústicos se aplican las reglas de barbecho y uso previstas en los artículos anteriores.",
+    "ontologia_target": ["terminacion", "obligaciones_arrendatario", "formalidades"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2480,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendatario no puede subarrendar ni ceder derechos sin consentimiento del arrendador; si lo hace, responde solidariamente con el subarrendatario por daños y perjuicios.",
+    "ontologia_target": ["subarrendamiento", "obligaciones_arrendatario", "vinculo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 2481,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si el subarriendo se realiza con autorización contractual, arrendatario y subarrendatario responden ante el arrendador conforme a lo pactado, salvo convenio distinto.",
+    "ontologia_target": ["subarrendamiento", "vinculo", "obligaciones_arrendatario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+  {
+    "numero": 2483,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendamiento puede terminar por: cumplimiento del plazo o del objeto, convenio expreso, nulidad, rescisión, confusión, pérdida o destrucción del inmueble por caso fortuito o fuerza mayor, expropiación por utilidad pública, evicción o venta judicial.",
+    "ontologia_target": ["terminacion", "vinculo", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2484,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si el arrendamiento es por tiempo determinado, concluye en la fecha pactada. Si no se fijó plazo, se aplican las reglas de terminación previstas en los artículos 2478 y 2479.",
+    "ontologia_target": ["terminacion", "tiempo", "formalidades"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+  {
+    "numero": 2487,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si al terminar el plazo del contrato el arrendatario continúa usando el inmueble sin oposición del arrendador, el arrendamiento se vuelve de tiempo indeterminado. El arrendatario debe pagar la renta correspondiente y cualquiera de las partes puede terminar el contrato conforme al artículo 2478. Las garantías otorgadas por terceros solo obligan durante el plazo original, salvo pacto distinto.",
+    "ontologia_target": ["vinculo", "tiempo", "contraprestacion", "terminacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+  },
+
+  {
+    "numero": 2489,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendador puede pedir la rescisión del contrato por falta de pago, uso indebido del inmueble, subarriendo no autorizado, daños graves imputables al arrendatario, modificaciones sin consentimiento o cualquier otra causa prevista por la ley.",
+    "ontologia_target": ["terminacion", "obligaciones_arrendatario", "vinculo", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 2490,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "El arrendatario puede exigir la rescisión del contrato cuando el arrendador incumple su obligación de conservar el inmueble, cuando se pierde total o parcialmente el uso del bien por caso fortuito o fuerza mayor, o cuando existen vicios ocultos previos al arrendamiento que desconocía.",
+    "ontologia_target": ["terminacion", "obligaciones_arrendador", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 2492,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si el arrendador se opone sin causa justificada a un subarriendo que el arrendatario tiene derecho a realizar, el arrendatario puede solicitar la rescisión del contrato.",
+    "ontologia_target": ["subarrendamiento", "terminacion", "vinculo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+
+  {
+    "numero": 2493,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si un usufructuario arrienda un inmueble sin revelar su calidad y luego el propietario exige la desocupación al consolidarse la propiedad, el arrendatario puede reclamar al arrendador la indemnización de daños y perjuicios.",
+    "ontologia_target": ["indemnizacion", "vinculo", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+
+  {
+    "numero": 2495,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "Si el inmueble arrendado es vendido judicialmente, el contrato continúa vigente, salvo que se haya celebrado dentro de los setenta días previos al secuestro del inmueble, en cuyo caso puede darse por terminado.",
+    "ontologia_target": ["terminacion", "vinculo", "formalidades"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": 2496,
+    "nombre_ley": "Código Civil de la Ciudad de México",
+    "regla": "En casos de expropiación o ejecución judicial del inmueble arrendado, se aplican las reglas sobre barbecho, uso temporal y aprovechamiento de frutos previstas para arrendamientos rústicos.",
+    "ontologia_target": ["terminacion", "bien", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false }
+   
+   }
+  ] 
+
+}
+
+ 
+
+
