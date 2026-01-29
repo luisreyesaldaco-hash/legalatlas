@@ -1,6 +1,6 @@
 import { ejecutarMotorEstructurado } from './motor.js';
 
-let DATA_JURISDICCIONES = null; // Aquí guardaremos lo que lea del JSON
+let DATA_JURISDICCIONES = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. SELECTORES DE INTERFAZ
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const groupEstado = document.getElementById("group-estado");
     const displayFuente = document.getElementById("fuente-oficial-display");
 
-    // 2. CARGA DEL JSON DE JURISDICCIONES
+    // 2. CARGA DE CONFIGURACIÓN
     async function cargarConfiguracion() {
         try {
             const res = await fetch('./jurisdicciones.json');
@@ -29,12 +29,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const config = DATA_JURISDICCIONES ? DATA_JURISDICCIONES[pais] : null;
 
         if (config && config.esFederal) {
-            // Es federal (México/USA): Mostrar estados y cambiar etiqueta
             groupEstado.style.display = "block";
             const label = groupEstado.querySelector('label');
             if (label) label.innerText = config.labelEstado;
 
-            // Llenar estados
             selectEstado.innerHTML = '<option value="">SELECCIONE...</option>';
             config.estados.forEach(est => {
                 const opt = document.createElement('option');
@@ -43,17 +41,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 selectEstado.appendChild(opt);
             });
         } else {
-            // No es federal (Chequia/Uruguay): Ocultar estados
             groupEstado.style.display = "none";
             selectEstado.innerHTML = ''; 
         }
     }
 
-    // Inicializar
     await cargarConfiguracion();
     selectPais.addEventListener('change', actualizarInterfazPorPais);
 
-    // 4. DETECTORES LÓGICOS (Tu código original)
+    // 4. DETECTORES LÓGICOS
     function detectarRedaccion(texto) {
         const t = texto.toLowerCase();
         return (t.includes("redacta") || t.includes("redacción") || t.includes("contrato"));
@@ -61,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function detectarConflicto(texto) {
         const t = texto.toLowerCase();
-        const claves = ["qué hago si", "demanda", "desalojo", "problema", "incumplio", "reparar"];
+        const claves = ["qué hago si", "demanda", "desalojo", "problema", "incumplio", "reparar", "incumplimiento"];
         return claves.some(c => t.includes(c));
     }
 
@@ -72,7 +68,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         const estado = selectEstado.value;
         const tema = selectTema.value;
 
-        // Validación dinámica usando el JSON
         const config = DATA_JURISDICCIONES ? DATA_JURISDICCIONES[pais] : null;
         const necesitaEstado = config && config.esFederal;
 
@@ -81,7 +76,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // Interfaz Usuario
         agregarMensaje(pregunta, "usuario");
         inputPregunta.value = "";
 
@@ -94,12 +88,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Llamada al Motor Local
             const dataLocal = await ejecutarMotorEstructurado(pais, estadoBusqueda, tema, pregunta);
 
+            // ACTUALIZACIÓN DE LA FUENTE (Franja dorada en Index)
             if (dataLocal.fuente && displayFuente) {
-                displayFuente.innerText = dataLocal.fuente;
+                displayFuente.innerHTML = `<i class="fas fa-shield-halved"></i> JURISPRUDENCIA APLICADA: ${dataLocal.fuente}`;
                 displayFuente.style.display = "block";
             }
 
-            // Petición a la API (Asumimos que existe tu endpoint)
+            // Petición a la API
             const res = await fetch("/api/asesoria", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -117,27 +112,37 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!res.ok) throw new Error("Error en la API");
             const dataIA = await res.json();
 
-            // Limpiar loader
             const loadingElement = document.getElementById(idCarga);
             if (loadingElement) loadingElement.remove();
 
-            // Procesar Respuesta
             const r = dataIA.respuesta;
             const idBotonTriage = "btn-" + Date.now();
             const necesitaTriage = detectarConflicto(pregunta) || r.confianza === "Baja";
 
+            // CONSTRUCCIÓN DEL HTML DE RESPUESTA
             let html = `
                 <div class="apolo-resumen"><strong>Análisis:</strong> ${r.resumen}</div>
-                <div class="apolo-draft" style="margin-top:10px; background:white; padding:15px; border-radius:8px; border-left:4px solid #b8973d; font-family:serif;">
+                <div class="apolo-draft" style="margin-top:10px; background:white; padding:15px; border-radius:8px; border-left:4px solid #b8973d; font-family:serif; color:#333;">
                     ${r.draftHtml}
                 </div>
             `;
 
+            // BLOQUE DEL MAZO DE JUEZ (Fundamentación)
+            if (r.articulos && r.articulos.length > 0) {
+                html += `
+                    <div style="margin-top:15px; font-size:11px; color:var(--accent-gold); font-weight:bold; display:flex; align-items:center; gap:8px; letter-spacing:0.05em;">
+                        <i class="fas fa-gavel"></i> 
+                        <span>FUNDAMENTACIÓN TÉCNICA: Arts. ${r.articulos.join(", ")}</span>
+                    </div>
+                `;
+            }
+
+            // BOTÓN DE DIRECTORIO
             if (necesitaTriage) {
                 const ubicacionTexto = necesitaEstado ? estado.toUpperCase() : pais.toUpperCase();
                 html += `
                     <div class="apolo-triage" style="margin-top:15px; padding:12px; background:#f4f4f0; border-radius:8px; border:1px solid #e5e5e0;">
-                        <button id="${idBotonTriage}" style="background:#1a1a1a; color:white; border:none; padding:10px; border-radius:4px; cursor:pointer; width:100%;">
+                        <button id="${idBotonTriage}" style="background:var(--stone-dark); color:white; border:none; padding:10px; border-radius:4px; cursor:pointer; width:100%; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em;">
                             Ver abogados en ${ubicacionTexto}
                         </button>
                     </div>`;
