@@ -1,1 +1,357 @@
-aaa
+{
+  "fuente_oficial": "Ley Federal del Trabajo (México)",
+  "normas":
+  [
+  {
+    "numero": 47,
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Se establecen las causas específicas por las que el patrón puede rescindir la relación de trabajo sin responsabilidad, así como las formalidades del aviso de despido y sus efectos sobre la prescripción y la presunción de despido injustificado.",
+    "ontologia_target": [
+      "terminacion",
+      "causa_justificada",
+      "formalidades",
+      "conducta_trabajador",
+      "procedimiento"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": "47-I",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Constituye causa justificada de rescisión que el trabajador, o el sindicato que lo recomendó, engañe al patrón con certificados o referencias falsos sobre capacidades o aptitudes; esta causa solo puede invocarse dentro de los primeros treinta días de servicios.",
+    "ontologia_target": [
+      "causa_justificada",
+      "engaño_en_contratacion",
+      "conducta_trabajador"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-II",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión que el trabajador, durante sus labores, incurra en faltas de probidad u honradez, violencia, amenazas, injurias o malos tratos contra el patrón, sus familiares, personal directivo o administrativo, clientes o proveedores, salvo provocación o legítima defensa.",
+    "ontologia_target": [
+      "causa_justificada",
+      "faltas_probidad",
+      "violencia",
+      "conducta_trabajador",
+      "disciplina"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-III",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión que el trabajador cometa contra sus compañeros los actos previstos en la fracción anterior, cuando ello altere la disciplina del lugar de trabajo.",
+    "ontologia_target": [
+      "causa_justificada",
+      "violencia",
+      "disciplina",
+      "conducta_trabajador"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-IV",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión que el trabajador, fuera del servicio, cometa contra el patrón, sus familiares o personal directivo actos de la fracción II, cuando sean tan graves que hagan imposible continuar la relación de trabajo.",
+    "ontologia_target": [
+      "causa_justificada",
+      "violencia",
+      "conducta_trabajador",
+      "terminacion"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-V",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión que el trabajador ocasione intencionalmente daños materiales, durante o con motivo de sus labores, a bienes relacionados con el trabajo como edificios, obras, maquinaria, instrumentos o materias primas.",
+    "ontologia_target": [
+      "causa_justificada",
+      "danos_intencionales",
+      "conducta_trabajador",
+      "riesgos"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-VI",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión que el trabajador ocasione daños materiales graves, sin dolo pero con negligencia tal que sea la causa única del perjuicio.",
+    "ontologia_target": [
+      "causa_justificada",
+      "danos_negligencia_grave",
+      "conducta_trabajador",
+      "riesgos"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-VII",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión que el trabajador, por imprudencia o descuido inexcusable, comprometa la seguridad del establecimiento o de las personas que se encuentren en él.",
+    "ontologia_target": [
+      "causa_justificada",
+      "comprometer_seguridad",
+      "conducta_trabajador",
+      "riesgos"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-VIII",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión que el trabajador cometa actos inmorales o de hostigamiento y/o acoso sexual contra cualquier persona en el establecimiento o lugar de trabajo.",
+    "ontologia_target": [
+      "causa_justificada",
+      "actos_inmorales",
+      "acoso_hostigamiento",
+      "conducta_trabajador",
+      "disciplina"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-IX",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión que el trabajador revele secretos de fabricación o asuntos reservados con perjuicio para la empresa.",
+    "ontologia_target": [
+      "causa_justificada",
+      "revelacion_secretos",
+      "conducta_trabajador"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-X",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión que el trabajador tenga más de tres faltas de asistencia en un periodo de treinta días sin permiso o sin causa justificada.",
+    "ontologia_target": [
+      "causa_justificada",
+      "inasistencias_injustificadas",
+      "conducta_trabajador",
+      "disciplina"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-XI",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión que el trabajador desobedezca al patrón o a sus representantes, sin causa justificada, respecto del trabajo contratado.",
+    "ontologia_target": [
+      "causa_justificada",
+      "desobediencia",
+      "conducta_trabajador",
+      "disciplina"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-XII",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión que el trabajador se niegue a adoptar medidas preventivas o a seguir procedimientos indicados para evitar accidentes o enfermedades.",
+    "ontologia_target": [
+      "causa_justificada",
+      "incumplimiento_medidas_seguridad",
+      "conducta_trabajador",
+      "riesgos"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-XIII",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión que el trabajador acuda a laborar en estado de embriaguez o bajo la influencia de narcóticos o drogas enervantes, salvo que exista prescripción médica previamente informada y presentada al patrón.",
+    "ontologia_target": [
+      "causa_justificada",
+      "embriaguez_o_drogas",
+      "conducta_trabajador",
+      "riesgos"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-XIV",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión la sentencia firme que imponga al trabajador pena de prisión que le impida cumplir la relación de trabajo.",
+    "ontologia_target": [
+      "causa_justificada",
+      "pena_prision",
+      "terminacion"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-XIV-Bis",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Es causa de rescisión la falta, imputable al trabajador, de documentos exigidos por leyes o reglamentos necesarios para prestar el servicio, cuando la falta excede el periodo previsto en el artículo 43 fracción IV.",
+    "ontologia_target": [
+      "causa_justificada",
+      "falta_documentos_obligatorios",
+      "conducta_trabajador"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "47-XV",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "También son causa de rescisión las conductas análogas a las previstas en las fracciones anteriores, igualmente graves y con consecuencias semejantes en relación con el trabajo.",
+    "ontologia_target": [
+      "causa_justificada",
+      "causa_analoga",
+      "conducta_trabajador"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "clausula_abierta": true }
+  },
+
+  {
+    "numero": "47-formalidades",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "El patrón que despide debe entregar aviso escrito que describa claramente las conductas y fechas que motivan la rescisión, ya sea personalmente al trabajador en el momento del despido o mediante comunicación al Tribunal dentro de cinco días hábiles, proporcionando el último domicilio registrado para notificación personal.",
+    "ontologia_target": [
+      "formalidades",
+      "terminacion",
+      "procedimiento"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": "47-prescripcion_y_presuncion",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "La prescripción de las acciones derivadas del despido inicia cuando el trabajador recibe personalmente el aviso de rescisión; la falta de aviso personal o por conducto del Tribunal genera presunción de separación no justificada, salvo prueba en contrario que acredite despido justificado.",
+    "ontologia_target": [
+      "procedimiento",
+      "formalidades",
+      "terminacion",
+      "derechos_trabajador"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": 48,
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "El trabajador despedido puede optar ante la autoridad conciliadora o el Tribunal entre reinstalación en su puesto o indemnización de tres meses de salario, previa observancia del procedimiento de conciliación.",
+    "ontologia_target": [
+      "derechos_trabajador",
+      "terminacion",
+      "procedimiento"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": "48-salarios_vencidos",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Si el patrón no acredita la causa de la rescisión en el juicio, el trabajador tiene derecho, cualquiera que haya sido la acción elegida, al pago de salarios vencidos desde la fecha del despido hasta por un máximo de doce meses.",
+    "ontologia_target": [
+      "derechos_trabajador",
+      "remuneracion",
+      "terminacion",
+      "procedimiento"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": "48-intereses",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Si al término de los doce meses no ha concluido el procedimiento o no se ha cumplido la sentencia, se generan intereses sobre el importe de quince meses de salario al dos por ciento mensual capitalizable al pago, sin que estos intereses se apliquen a otras indemnizaciones o prestaciones.",
+    "ontologia_target": [
+      "derechos_trabajador",
+      "remuneracion",
+      "procedimiento"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+
+  {
+    "numero": "48-muerte_trabajador",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "En caso de muerte del trabajador, el cómputo de salarios vencidos como parte del conflicto se detiene a partir de la fecha del fallecimiento.",
+    "ontologia_target": [
+      "derechos_trabajador",
+      "remuneracion",
+      "terminacion"
+    ],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true }
+  },
+
+  {
+    "numero": "48-sanciones_litigantes",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Los abogados, litigantes o representantes que promuevan actuaciones notoriamente improcedentes para dilatar u obstaculizar el juicio laboral pueden ser sancionados con multa de 100 a 1000 veces la Unidad de Medida y Actualización.",
+    "ontologia_target": [
+      "sanciones",
+      "procedimiento"
+    ],
+    "jerarquia": 3,
+    "banderas": { "conflicto": true }
+  },
+
+  {
+    "numero": "48-sanciones_servidores_publicos",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Si la dilación del procedimiento deriva de omisiones o conductas irregulares de servidores públicos, procede suspensión hasta por noventa días sin salario y, en caso de reincidencia, destitución, además de dar vista al Ministerio Público por posibles delitos contra la administración de justicia.",
+    "ontologia_target": [
+      "sanciones",
+      "procedimiento"
+    ],
+    "jerarquia": 3,
+    "banderas": { "conflicto": true }
+  },
+
+  {
+    "numero": "48-sanciones_centros_conciliacion",
+    "nombre_ley": "Ley Federal del Trabajo (México)",
+    "regla": "Los servidores públicos del Centro Federal de Conciliación y Registro Laboral y de los Centros de Conciliación locales que retrasen, obstruyan o influyan indebidamente en registros sindicales, contratos colectivos, reglamentos interiores o constancias de representatividad pueden ser sancionados con multa de 100 a 1000 veces la Unidad de Medida y Actualización.",
+    "ontologia_target": [
+      "sanciones",
+      "procedimiento"
+    ],
+    "jerarquia": 3,
+    "banderas": { "conflicto": true }
+  }
+ ]
+}

@@ -1,0 +1,114 @@
+{
+  "dominio": "despido",
+  "conceptos": {
+    "terminacion": {
+      "descripcion": "Fin de la relación laboral por voluntad del patrón, del trabajador o por causas externas.",
+      "subtipos": [
+        "despido_justificado",
+        "despido_injustificado",
+        "rescision_con_causa",
+        "rescision_sin_causa",
+        "renuncia",
+        "terminacion_por_causa_ajena"
+      ]
+    },
+
+    "causa_justificada": {
+      "descripcion": "Hechos atribuibles al trabajador que permiten rescindir sin responsabilidad.",
+      "categorias": [
+        "engaño_en_contratacion",
+        "faltas_probidad",
+        "violencia",
+        "danos_intencionales",
+        "danos_negligencia_grave",
+        "comprometer_seguridad",
+        "actos_inmorales",
+        "acoso_hostigamiento",
+        "revelacion_secretos",
+        "inasistencias_injustificadas",
+        "desobediencia",
+        "incumplimiento_medidas_seguridad",
+        "embriaguez_o_drogas",
+        "pena_prision",
+        "falta_documentos_obligatorios",
+        "causa_analoga"
+      ]
+    },
+
+    "formalidades": {
+      "descripcion": "Requisitos legales para que el despido sea válido.",
+      "elementos": [
+        "aviso_escrito",
+        "descripcion_hechos",
+        "fechas_conductas",
+        "entrega_personal",
+        "notificacion_tribunal",
+        "domicilio_registrado",
+        "inicio_prescripcion_por_recepcion"
+      ]
+    },
+
+    "derechos_trabajador": {
+      "descripcion": "Derechos derivados del despido.",
+      "elementos": [
+        "reinstalacion",
+        "indemnizacion_3_meses",
+        "salarios_vencidos",
+        "intereses_2pct_mensual",
+        "presuncion_despido_injustificado",
+        "eleccion_accion"
+      ]
+    },
+
+    "obligaciones_patron": {
+      "descripcion": "Deberes del patrón en caso de rescisión.",
+      "elementos": [
+        "acreditar_causa",
+        "entregar_aviso",
+        "pagar_indemnizacion",
+        "pagar_salarios_vencidos",
+        "pagar_intereses",
+        "notificar_tribunal"
+      ]
+    },
+
+    "conducta_trabajador": {
+      "descripcion": "Acciones u omisiones del trabajador relevantes para la rescisión.",
+      "tipos": [
+        "violencia",
+        "injurias",
+        "faltas_probidad",
+        "negligencia",
+        "acoso",
+        "revelacion_secretos",
+        "inasistencias",
+        "desobediencia",
+        "embriaguez",
+        "drogas",
+        "omision_documentos"
+      ]
+    },
+
+    "procedimiento": {
+      "descripcion": "Etapas procesales relacionadas con el despido.",
+      "elementos": [
+        "conciliacion_previa",
+        "demanda",
+        "carga_prueba_patron",
+        "sentencia",
+        "ejecucion",
+        "prescripcion"
+      ]
+    },
+
+    "sanciones": {
+      "descripcion": "Consecuencias para litigantes o autoridades que dilatan o entorpecen el proceso.",
+      "tipos": [
+        "multa_litigantes",
+        "suspension_servidores_publicos",
+        "destitucion",
+        "vista_ministerio_publico"
+      ]
+    }
+  }
+}
