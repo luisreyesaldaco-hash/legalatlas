@@ -141,9 +141,9 @@
            gap: 40px;
        }
        .mensaje {
-           line-height: 1.8;
-           font-size: 15px;
-           max-width: 85%;
+           .mensaje { line-height: 1.8; font-size: 15px; max-width: 85%; padding: 15px; border-radius: 12px; }
+           .asistente { background: var(--white); align-self: flex-start; border: 1px solid var(--border-stone); }
+           .usuario { background: var(--stone-dark); color: var(--white); align-self: flex-end; }
        }
        .input-container {
            max-width: 900px;
@@ -277,9 +277,10 @@
 <body>
 <aside>
     <div class="logo-section">
-        <h1>LEGAL<span>ATLAS</span></h1>
-        <span class="subtitle">Motor Normativo APOLO</span>
-    </div>
+    <h1>LEGAL<span>ATLAS</span></h1>
+    <span class="subtitle">Motor Normativo APOLO</span>
+    <div id="status-badge" class="modulo-badge" style="margin-top: 15px;">APOLO // ESTRUCTURADO</div>
+</div>
 
     <div class="nav-buttons">
         <a href="mailto:soporte@legalatlas.ai" class="nav-btn-contact">
@@ -287,48 +288,33 @@
         </a>
     </div>
 
-
 <div class="consulta-config">
-    
-    <div class="config-group">
-        <label for="pais">Jurisdicción</label>
-        <select id="pais">
-            <option value="">SELECCIONE PAÍS...</option>
-            <option value="mexico">MÉXICO</option>
-            <option value="usa">USA</option>
-            <option value="chequia">CHEQUIA</option>
-            <option value="uruguay">URUGUAY</option>
-            <option value="espana">ESPAÑA</option>
-        </select>
-    </div>
-
-    <div class="config-group" id="group-estado" style="display: none;">
-        <label for="estado">Estado / Provincia</label>
-        <select id="estado">
+        <div class="config-group">
+            <label for="pais">Jurisdicción</label>
+            <select id="pais">
+                <option value="">SELECCIONE PAÍS...</option>
+                <option value="mexico">MÉXICO</option>
+                <option value="usa">USA</option>
+                <option value="chequia">CHEQUIA</option>
+                <option value="uruguay">URUGUAY</option>
+                <option value="espana">ESPAÑA</option>
             </select>
-    </div>
+        </div>
 
-    <div class="config-group">
-        <label for="tema">Materia</label>
-        <select id="tema">
-            <option value="">SELECCIONE TEMA...</option>
-            <option value="arrendamiento">Arrendamiento</option>
-            <option value="laboral">Laboral</option>
-            <option value="civil">Civil</option>
-        </select>
-    </div>
-</div>
+        <div class="config-group" id="group-estado" style="display: none;">
+            <label for="estado">Estado / Provincia</label>
+            <select id="estado"></select>
+        </div>
 
-<div id="mensajes" class="chat-container">
-    </div>
-
-<div class="input-area">
-    <textarea id="pregunta" placeholder="Escribe tu duda legal aquí..."></textarea>
-    <button id="enviar">Consultar</button>
-</div>
-
-<div id="fuente-oficial-display" style="display: none; font-size: 10px; color: #888; margin-top: 5px;"></div>
-
+        <div class="config-group">
+            <label for="tema">Materia</label>
+            <select id="tema">
+                <option value="">SELECCIONE TEMA...</option>
+                <option value="arrendamiento">Arrendamiento</option>
+                <option value="laboral">Laboral</option>
+                <option value="civil">Civil</option>
+            </select>
+        </div>
     </div>
 
     <div class="footer-tag">
@@ -347,17 +333,18 @@
     <div class="input-container">
 
 
+      <div class="input-container">
         <div class="input-wrapper">
             <input type="text" id="pregunta" placeholder="Consulte la norma..." autocomplete="off">
             <button id="enviar">
-                <span id="btn-content"><i class="fas fa-paper-plane"></i></span>
+                <i class="fas fa-paper-plane"></i>
             </button>
         </div>
 
         <div class="directory-offer">
             <div class="directory-text">
                 <p>¿Necesitas representación legal?</p>
-                <p>Si necesitas que un abogado lleve tu caso, o ayuda más específica consulta con nuestros colaboradores.</p>
+                <p>Si necesitas que un abogado lleve tu caso, consulta con nuestros colaboradores.</p>
             </div>
             <a href="directorio.html" class="directory-btn">Ver Directorio</a>
         </div>
@@ -367,28 +354,17 @@
 <script type="module" src="/src/app.js"></script>
 
 <script>
-    // Badge de estatus según tema
-    const temaSelect = document.getElementById('tema');
-    const statusBadge = document.getElementById('status-badge');
-    if (temaSelect && statusBadge) {
-        temaSelect.addEventListener('change', () => {
-            const val = temaSelect.value || 'APOLO';
-            statusBadge.innerText = `${val.toUpperCase()} // ESTRUCTURADO`;
-        });
-    }
-
     // Color de selects (placeholder vs seleccionado)
     (function () {
-        const selects = Array.from(document.querySelectorAll('select'));
+        const selects = document.querySelectorAll('select');
         function applyClosedColor(sel) {
-            if (!sel) return;
-            sel.style.color = !sel.value ? 'rgba(255,255,255,0.78)' : '#ffffff';
+            sel.style.color = !sel.value ? 'rgba(255,255,255,0.5)' : '#ffffff';
         }
         selects.forEach(sel => {
             applyClosedColor(sel);
+            sel.addEventListener('change', () => applyClosedColor(sel));
             sel.addEventListener('focus', () => { sel.style.color = '#111111'; });
             sel.addEventListener('blur', () => applyClosedColor(sel));
-            sel.addEventListener('change', () => applyClosedColor(sel));
         });
     })();
 </script>
