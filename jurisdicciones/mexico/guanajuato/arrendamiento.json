@@ -19,7 +19,7 @@
     {
       "numero": 1900,
       "nombre_ley": "Código Civil del Estado de Guanajuato",
-      "regla": "La duración del arrendamiento no puede exceder de quince años para habitación, veinte para comercio y veinticinco para industria o agricultura.",
+      "regla": "La duración del arrendamiento no puede exceder de quince años para inmueble, o veinte para comercio y veinticinco para industria o agricultura.",
       "ontologia_target": ["tiempo"],
       "jerarquia": 3,
       "banderas": {
