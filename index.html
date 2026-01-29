@@ -141,10 +141,15 @@
            gap: 40px;
        }
        .mensaje {
-           .mensaje { line-height: 1.8; font-size: 15px; max-width: 85%; padding: 15px; border-radius: 12px; }
-           .asistente { background: var(--white); align-self: flex-start; border: 1px solid var(--border-stone); }
-           .usuario { background: var(--stone-dark); color: var(--white); align-self: flex-end; }
+           line-height: 1.8; 
+           font-size: 15px; 
+           max-width: 85%; 
+           padding: 15px; 
+           border-radius: 12px; 
        }
+       .asistente { background: var(--white); align-self: flex-start; border: 1px solid var(--border-stone); }
+       .usuario { background: var(--stone-dark); color: var(--white); align-self: flex-end; }
+       
        .input-container {
            max-width: 900px;
            margin: 0 auto;
@@ -246,41 +251,15 @@
                text-align: center;
            }
        }
-
-       .modo-selector {
-           display: flex;
-           gap: 10px;
-           margin-bottom: 15px;
-           justify-content: center;
-       }
-       .modo-btn {
-           background: var(--white);
-           border: 1px solid var(--border-stone);
-           padding: 10px 18px;
-           border-radius: 12px;
-           font-size: 11px;
-           font-weight: 600;
-           text-transform: uppercase;
-           letter-spacing: 0.08em;
-           cursor: pointer;
-           transition: all 0.25s ease;
-           color: var(--text-muted);
-       }
-       .modo-btn.active {
-           background: var(--stone-dark);
-           color: var(--white);
-           border-color: var(--stone-dark);
-       }
-       .modo-btn:hover { transform: translateY(-1px); }
    </style>
 </head>
 <body>
 <aside>
     <div class="logo-section">
-    <h1>LEGAL<span>ATLAS</span></h1>
-    <span class="subtitle">Motor Normativo APOLO</span>
-    <div id="status-badge" class="modulo-badge" style="margin-top: 15px;">APOLO // ESTRUCTURADO</div>
-</div>
+        <h1>LEGAL<span>ATLAS</span></h1>
+        <span class="subtitle">Motor Normativo APOLO</span>
+        <div id="status-badge" class="modulo-badge" style="margin-top: 15px;">APOLO // ESTRUCTURADO</div>
+    </div>
 
     <div class="nav-buttons">
         <a href="mailto:soporte@legalatlas.ai" class="nav-btn-contact">
@@ -288,7 +267,7 @@
         </a>
     </div>
 
-<div class="consulta-config">
+    <div class="consulta-config">
         <div class="config-group">
             <label for="pais">Jurisdicción</label>
             <select id="pais">
@@ -331,11 +310,10 @@
     </div>
 
     <div class="input-container">
-      <div id="fuente-oficial-display" style="display: none; font-size: 10px; color: var(--accent-gold); letter-spacing: 0.1em; margin-bottom: 8px; font-weight: 700; text-transform: uppercase;">
-        <i class="fas fa-book"></i> Cargando base legal...
-</div>
+        <div id="fuente-oficial-display" style="display: none; font-size: 10px; color: var(--accent-gold); letter-spacing: 0.1em; margin-bottom: 12px; font-weight: 700; text-transform: uppercase;">
+            <i class="fas fa-book"></i> Cargando base legal...
+        </div>
 
-<div class="input-wrapper">
         <div class="input-wrapper">
             <input type="text" id="pregunta" placeholder="Consulte la norma..." autocomplete="off">
             <button id="enviar">
