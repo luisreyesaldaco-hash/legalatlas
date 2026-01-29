@@ -5,16 +5,17 @@
 let ontologiaGlobal = {};
 
 // Cargar ontología
-async function cargarOntologia() {
-    if (Object.keys(ontologiaGlobal).length > 0) return;
+async function cargarOntologia(tema) {
     try {
-        const res = await fetch('/src/ontologia.json');
-        if (!res.ok) throw new Error("No se pudo cargar ontologia.json");
+        const res = await fetch(`/ontologias/${tema}.json`);
+        if (!res.ok) throw new Error("No se pudo cargar la ontología del tema");
         ontologiaGlobal = await res.json();
     } catch (err) {
         console.warn("⚠️ Ontología no disponible, usando búsqueda textual.");
+        ontologiaGlobal = {};
     }
 }
+
 
 function normalizar(texto) {
     return (texto || "")

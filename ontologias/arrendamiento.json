@@ -1,0 +1,150 @@
+{
+  "usuario": [
+    "arrendatario",
+    "inquilino",
+    "locatario",
+    "habitante",
+    "ocupante",
+    "usuario",
+    "contratante"
+  ],
+
+  "titular": [
+    "arrendador",
+    "propietario",
+    "dueño",
+    "locador"
+  ],
+
+  "bien": [
+    "inmueble",
+    "casa",
+    "departamento",
+    "vivienda",
+    "predio",
+    "local",
+    "habitación",
+    "edificio",
+    "finca",
+    "terreno"
+  ],
+
+  "contraprestacion": [
+    "renta",
+    "alquiler",
+    "pago",
+    "precio",
+    "cuota",
+    "mensualidad",
+    "canon"
+  ],
+
+  "tiempo": [
+    "plazo",
+    "duración",
+    "vencimiento",
+    "fecha",
+    "periodo",
+    "mes",
+    "año",
+    "renovación",
+    "terminación"
+  ],
+
+  "vinculo": [
+    "contrato",
+    "arrendamiento",
+    "acuerdo",
+    "obligación",
+    "pacto",
+    "relación jurídica"
+  ],
+
+  "uso": [
+    "uso",
+    "destino",
+    "habitar",
+    "ocupar",
+    "actividad",
+    "explotación"
+  ],
+
+  "riesgos": [
+    "daño",
+    "pérdida",
+    "deterioro",
+    "responsabilidad",
+    "culpa",
+    "caso fortuito",
+    "accidente",
+    "vicios",
+    "defectos"
+  ],
+
+  "prohibiciones": [
+    "prohibido",
+    "no permitido",
+    "restricción",
+    "ilegal",
+    "limitación"
+  ],
+
+  "formalidades": [
+    "escritura",
+    "documento",
+    "registro",
+    "forma",
+    "formalidad",
+    "contrato escrito"
+  ],
+
+  "limites_legales": [
+    "límite",
+    "restricción",
+    "impedimento",
+    "prohibición legal"
+  ],
+
+  "derechos_usuario": [
+    "derecho",
+    "facultad",
+    "beneficio",
+    "prerrogativa",
+    "protección",
+    "garantía"
+  ],
+
+  "obligaciones_usuario": [
+    "obligación",
+    "deber",
+    "responsabilidad",
+    "pago",
+    "cuidado",
+    "mantenimiento"
+  ],
+
+  "obligaciones_arrendador": [
+    "obligación",
+    "deber",
+    "responsabilidad",
+    "entregar",
+    "reparar",
+    "garantizar"
+  ],
+
+  "derechos_arrendador": [
+    "derecho",
+    "facultad",
+    "prerrogativa",
+    "cobro",
+    "verificación"
+  ],
+
+  "reglas_supletorias": [
+    "supletoria",
+    "costumbre",
+    "uso",
+    "regla general",
+    "interpretación"
+  ]
+}

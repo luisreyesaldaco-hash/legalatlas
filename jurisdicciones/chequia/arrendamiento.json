@@ -1,0 +1,1079 @@
+{
+  "materia": "arrendamiento",
+  "fuentes": [
+    "občanský zákoník  (89/2012 Sb.)"
+  ],
+  "articulos": [
+    {
+      "numero": 2201,
+      "nombre_ley": "občanský zákoník  (89/2012 Sb.)",
+      "regla": "El arrendador se obliga a entregar al arrendatario la cosa para su uso temporal y el arrendatario se obliga a pagar renta.",
+      "logica_deontica": ["O(entregar_bien)", "O(pagar_renta)", "P(usar_bien)"],
+      "ontologia_target": ["titular", "usuario", "bien", "uso", "contraprestacion"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": false, "conflicto": true }
+    },
+    {
+      "numero": 2202,
+      "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+      "regla": "Puede arrendarse un inmueble, un bien mueble no consumible o una parte de un inmueble, incluso si el bien aún no existe pero puede identificarse con precisión.",
+      "logica_deontica": ["P(arrendar_inmueble)", "P(arrendar_mueble)", "P(arrendar_parte)", "P(arrendar_bien_futuro)"],
+      "ontologia_target": ["bien", "vinculo", "formalidades"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": false, "conflicto": false }
+    },
+    {
+      "numero": 2203,
+      "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+      "regla": "Si el bien arrendado está inscrito en un registro público, el derecho de arrendamiento puede inscribirse también con consentimiento del propietario.",
+      "logica_deontica": ["P(inscribir_arrendamiento)"],
+      "ontologia_target": ["formalidades", "bien", "vinculo"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": false, "conflicto": false }
+    },
+    {
+      "numero": 2204,
+      "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+      "regla": "Si no se pacta duración, el arrendamiento es por tiempo indefinido. Si se pacta por más de 50 años, se considera indefinido con restricciones para terminarlo en los primeros 50 años.",
+      "logica_deontica": ["P(arrendamiento_indefinido)", "P(arrendamiento_largo_plazo)"],
+      "ontologia_target": ["tiempo", "vinculo"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": false, "conflicto": false }
+    },
+    {
+      "numero": 2205,
+      "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+      "regla": "El arrendador debe entregar la cosa en estado apto, mantenerla en condiciones adecuadas y garantizar el uso pacífico durante el arrendamiento.",
+      "logica_deontica": ["O(entregar_bien)", "O(mantener_bien)", "O(garantizar_uso_pacifico)"],
+      "ontologia_target": ["obligaciones_arrendador", "bien", "uso"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": true, "conflicto": true }
+    },
+    {
+      "numero": 2206,
+      "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+      "regla": "El arrendador debe entregar la cosa en el tiempo pactado o al día siguiente de que el arrendatario lo solicite, junto con todo lo necesario para su uso adecuado.",
+      "logica_deontica": ["O(entregar_bien)", "O(entregar_accesorios)"],
+      "ontologia_target": ["obligaciones_arrendador", "bien", "uso", "formalidades"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": true, "conflicto": true }
+    },
+    {
+      "numero": 2207,
+      "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+      "regla": "El arrendatario realiza el mantenimiento ordinario; el arrendador realiza el mantenimiento restante y las reparaciones necesarias, salvo pacto en contrario.",
+      "logica_deontica": ["O(mantenimiento_usuario)", "O(reparaciones_arrendador)"],
+      "ontologia_target": ["obligaciones_usuario", "obligaciones_arrendador", "bien", "riesgos"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": false, "conflicto": true }
+    },
+    {
+      "numero": 2208,
+      "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+      "regla": "Si el arrendador no repara una vicia notificada, el arrendatario puede pedir descuento, reparar por sí mismo y reclamar gastos, o incluso terminar el contrato si la vicia impide el uso.",
+      "logica_deontica": ["P(descuento_renta)", "P(reparar_usuario)", "P(terminar_sin_preaviso)"],
+      "ontologia_target": ["riesgos", "obligaciones_arrendador", "derechos_usuario", "contraprestacion"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": true, "conflicto": true }
+    },
+    {
+      "numero": 2209,
+      "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+      "regla": "El arrendador no puede modificar la cosa arrendada por su propia voluntad durante el arrendamiento.",
+      "logica_deontica": ["F(modificar_bien)"],
+      "ontologia_target": ["prohibiciones", "obligaciones_arrendador", "bien"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": true, "conflicto": true }
+    },
+    {
+      "numero": 2210,
+      "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+      "regla": "El arrendatario debe tolerar reparaciones urgentes; si la reparación limita el uso, tiene derecho a descuento o a terminar el contrato si el bien no puede usarse.",
+      "logica_deontica": ["O(tolerar_reparacion)", "P(descuento_renta)", "P(terminar_sin_preaviso)"],
+      "ontologia_target": ["riesgos", "obligaciones_usuario", "derechos_usuario", "bien"],
+      "jerarquia": 3,
+      "banderas": { "irrenunciable": true, "conflicto": true }
+    },
+    {
+  "numero": 2211,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Si un tercero amenaza o perjudica el derecho de arrendamiento del arrendatario, este puede defenderse directamente.",
+  "logica_deontica": ["P(defensa_directa_usuario)"],
+  "ontologia_target": ["usuario", "derechos_usuario", "vinculo"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+{
+  "numero": 2212,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "El arrendatario debe informar al arrendador si un tercero reclama derechos sobre la cosa; si el arrendador no lo protege, el arrendatario puede terminar el contrato sin preaviso y pedir descuento si hubo perturbación.",
+  "logica_deontica": ["O(notificar_titular)", "O(proteger_usuario)", "P(terminar_sin_preaviso)", "P(descuento_renta)"],
+  "ontologia_target": ["usuario", "titular", "riesgos", "derechos_usuario", "vinculo"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+{
+  "numero": 2213,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "El arrendatario debe usar la cosa como un buen administrador y pagar la renta.",
+  "logica_deontica": ["O(uso_debido)", "O(pagar_renta)"],
+  "ontologia_target": ["usuario", "obligaciones_usuario", "uso", "contraprestacion"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+{
+  "numero": 2214,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "El arrendatario debe informar al arrendador de cualquier vicio que este deba reparar tan pronto como lo detecte.",
+  "logica_deontica": ["O(notificar_vicio)"],
+  "ontologia_target": ["usuario", "obligaciones_usuario", "riesgos", "obligaciones_arrendador"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+{
+  "numero": 2215,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "El arrendatario puede conceder a un tercero un derecho de uso solo con consentimiento del arrendador; hacerlo sin permiso constituye incumplimiento grave.",
+  "logica_deontica": ["P(subarrendar_con_permiso)", "F(subarrendar_sin_permiso)"],
+  "ontologia_target": ["usuario", "titular", "uso", "prohibiciones"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": false, "conflicto": true }
+},
+{
+  "numero": 2216,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "El arrendatario responde frente al arrendador por los actos del tercero al que permitió usar la cosa.",
+  "logica_deontica": ["O(responder_por_tercero)"],
+  "ontologia_target": ["usuario", "titular", "uso", "riesgos"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+{
+  "numero": 2217,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "La renta se paga en la cantidad pactada o, si no se pactó, en la cantidad usual para bienes similares. Si se paga en especie, se usa su valor monetario.",
+  "logica_deontica": ["O(pagar_renta)", "P(renta_en_especie)"],
+  "ontologia_target": ["contraprestacion", "usuario", "titular"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": false, "conflicto": true }
+},
+{
+  "numero": 2218,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "La renta se paga mensualmente y de forma diferida.",
+  "logica_deontica": ["O(pago_mensual)", "O(pago_diferido)"],
+  "ontologia_target": ["contraprestacion", "tiempo", "usuario"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": false, "conflicto": false }
+},
+{
+  "numero": 2219,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "El arrendatario debe permitir inspecciones y acceso para reparaciones si el arrendador lo notifica; si la actividad causa molestias relevantes, el arrendatario tiene derecho a descuento.",
+  "logica_deontica": ["O(permitir_inspeccion)", "P(descuento_renta)"],
+  "ontologia_target": ["usuario", "titular", "uso", "riesgos"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+{
+  "numero": 2220,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "El arrendatario solo puede modificar la cosa con consentimiento del arrendador; si la mejora aumenta el valor, el arrendador debe compensarlo al final del contrato.",
+  "logica_deontica": ["P(modificar_con_permiso)", "F(modificar_sin_permiso)", "P(compensacion_mejoras)"],
+  "ontologia_target": ["usuario", "titular", "bien", "uso"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": false, "conflicto": true }
+},
+{
+  "numero": 2221,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Si cambia el propietario del bien, los derechos y obligaciones del arrendamiento pasan al nuevo propietario.",
+  "logica_deontica": ["P(transmision_arrendamiento)"],
+  "ontologia_target": ["vinculo", "titular", "usuario", "bien"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": false }
+},
+{
+  "numero": 2222,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "El cambio de propietario no es motivo para terminar el arrendamiento, salvo pacto expreso. Ambas partes pueden terminar dentro de tres meses desde que conocen el cambio.",
+  "logica_deontica": ["F(terminar_por_cambio_propietario)", "P(terminar_en_3_meses)"],
+  "ontologia_target": ["vinculo", "titular", "usuario", "tiempo"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+{
+  "numero": 2223,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "La parte que termina el arrendamiento debe pagar una compensación razonable a la otra parte.",
+  "logica_deontica": ["O(pagar_compensacion)"],
+  "ontologia_target": ["contraprestacion", "vinculo", "titular", "usuario"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": false, "conflicto": true }
+},
+{
+  "numero": 2224,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Si el arrendamiento es de un departamento habitado por el arrendatario, el arrendador no puede terminarlo por cambio de propietario.",
+  "logica_deontica": ["F(terminar_por_cambio_propietario_en_vivienda)"],
+  "ontologia_target": ["prohibiciones", "usuario", "bien", "vivienda"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+{
+  "numero": 2225,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Al terminar el arrendamiento, el arrendatario debe devolver la cosa en el lugar y estado en que la recibió, considerando el desgaste normal.",
+  "logica_deontica": ["O(devolver_bien)", "P(retirar_mejoras_separables)"],
+  "ontologia_target": ["usuario", "bien", "uso", "obligaciones_usuario"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+{
+  "numero": 2226,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Si el bien se destruye totalmente, el arrendamiento termina. Si se destruye parcialmente, el arrendatario puede pedir descuento o terminar sin preaviso.",
+  "logica_deontica": ["P(terminar_sin_preaviso)", "P(descuento_renta)"],
+  "ontologia_target": ["riesgos", "usuario", "vinculo", "bien"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": false, "conflicto": true }
+},
+{
+  "numero": 2227,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Si la cosa se vuelve inutilizable para el fin pactado por causas ajenas al arrendatario, este puede terminar el contrato sin preaviso.",
+  "logica_deontica": ["P(terminar_sin_preaviso)"],
+  "ontologia_target": ["usuario", "uso", "riesgos", "vinculo"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+{
+  "numero": 2228,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Si el arrendatario usa la cosa de forma que la daña o amenaza con dañarla, el arrendador puede advertirlo y, si no corrige, terminar sin preaviso. También puede terminar si no paga la renta.",
+  "logica_deontica": ["O(advertir_usuario)", "P(terminar_sin_preaviso)", "F(uso_danino)", "F(no_pagar_renta)"],
+  "ontologia_target": ["usuario", "titular", "riesgos", "prohibiciones", "contraprestacion"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": false, "conflicto": true }
+},
+{
+  "numero": 2229,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Un arrendamiento por tiempo determinado solo puede terminarse si el contrato incluye causas y plazos de terminación.",
+  "logica_deontica": ["F(terminar_sin_causas_pactadas)"],
+  "ontologia_target": ["vinculo", "tiempo", "formalidades"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": false }
+},
+{
+  "numero": 2230,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Si el arrendatario sigue usando la cosa tras el vencimiento y el arrendador no exige su devolución en un mes, el contrato se renueva automáticamente.",
+  "logica_deontica": ["P(renovacion_tacita)"],
+  "ontologia_target": ["usuario", "titular", "tiempo", "vinculo"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": false, "conflicto": false }
+},
+{
+  "numero": 2231,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Un arrendamiento por tiempo indefinido termina por aviso; el plazo es de un mes para bienes muebles y tres meses para inmuebles.",
+  "logica_deontica": ["P(terminar_con_preaviso)"],
+  "ontologia_target": ["vinculo", "tiempo", "bien"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": false, "conflicto": false }
+},
+{
+  "numero": 2232,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Si una parte incumple gravemente y causa daño significativo, la otra puede terminar el contrato sin preaviso.",
+  "logica_deontica": ["P(terminar_sin_preaviso)"],
+  "ontologia_target": ["vinculo", "riesgos", "prohibiciones"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+{
+  "numero": 2233,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Tres meses antes del fin del arrendamiento, el arrendatario debe permitir visitas de interesados en presencia del arrendador.",
+  "logica_deontica": ["O(permitir_visitas)"],
+  "ontologia_target": ["usuario", "titular", "uso", "tiempo"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": false, "conflicto": true }
+},
+{
+  "numero": 2234,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "El arrendador tiene derecho de retención sobre bienes muebles del arrendatario para garantizar deudas derivadas del arrendamiento.",
+  "logica_deontica": ["P(retencion_bienes)"],
+  "ontologia_target": ["titular", "usuario", "contraprestacion", "riesgos"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": false, "conflicto": true }
+},
+{
+  "numero": 2235,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Si el arrendamiento tiene por objeto satisfacer las necesidades de vivienda del arrendatario y su hogar, no se aplican los pactos que reduzcan los derechos del arrendatario. No aplica a arrendamientos recreativos o de corta duración.",
+  "logica_deontica": ["F(reducir_derechos_usuario)", "P(arrendamiento_recreativo)"],
+  "ontologia_target": ["vivienda", "usuario", "derechos_usuario", "prohibiciones"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+{
+  "numero": 2236,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Se considera vivienda cualquier espacio destinado y usado para habitar. Si se arrienda un espacio no destinado a vivienda pero se usa para habitar, se aplican las reglas de arrendamiento de vivienda.",
+  "logica_deontica": ["P(tratar_como_vivienda)", "F(perjudicar_por_destino_no_residencial)"],
+  "ontologia_target": ["vivienda", "bien", "uso", "usuario"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+{
+  "numero": 2237,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "El contrato de arrendamiento de vivienda requiere forma escrita, pero el arrendador no puede alegar invalidez por falta de forma contra el arrendatario.",
+  "logica_deontica": ["O(forma_escrita)", "F(invocar_falta_de_forma_contra_usuario)"],
+  "ontologia_target": ["formalidades", "vivienda", "usuario", "titular"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": false }
+},
+{
+  "numero": 2238,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "Si el arrendatario usa la vivienda durante tres años de buena fe creyendo que el contrato es válido, se considera válidamente celebrado.",
+  "logica_deontica": ["P(validacion_por_uso)", "P(buena_fe_usuario)"],
+  "ontologia_target": ["vivienda", "usuario", "vinculo", "tiempo"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": false }
+},
+{
+  "numero": 2239,
+  "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+  "regla": "No se consideran válidos los pactos que impongan obligaciones desproporcionadas al arrendatario. Se presume válido el pacto de notificación mediante buzón electrónico.",
+  "logica_deontica": ["F(obligacion_desproporcionada)", "P(notificacion_electronica)"],
+  "ontologia_target": ["prohibiciones", "formalidades", "usuario", "vivienda"],
+  "jerarquia": 3,
+  "banderas": { "irrenunciable": true, "conflicto": true }
+},
+  {
+    "numero": 2242,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pronajímatel zpřístupní byt nejpozději první den měsíce po účinnosti smlouvy, pokud není sjednáno jinak. Byt je zpřístupněn, jakmile nájemce obdrží klíče a nic mu nebrání ve vstupu. Strany mohou sjednat předání i nezpůsobilého bytu, pokud současně upraví zvláštní práva a povinnosti.",
+    "logica_deontica": ["O(zpristupnit_byt)", "P(predat_nezpusobily_byt)", "O(ujednat_zvlastni_podminky)"],
+    "ontologia_target": ["vivienda", "bien", "uso", "obligaciones_arrendador", "formalidades"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2243,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Byt je způsobilý k nastěhování, pokud odpovídá smlouvě nebo je v běžně dobrém stavu, čistý a s funkčními základními službami.",
+    "logica_deontica": ["O(zpusobilost_bytu)"],
+    "ontologia_target": ["vivienda", "bien", "uso", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2244,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Není-li byt způsobilý k nastěhování nebo neodpovídá-li stavu sdělenému pronajímatelem, nájemce může odmítnout převzetí nebo požadovat splnění smlouvy. Právo zaniká, pokud není uplatněno bez zbytečného odkladu. Neplatí, pokud nájemce o stavu věděl nebo si byt neprohlédl, ač byl vyzván.",
+    "logica_deontica": ["P(odmitnout_prevzeti)", "P(pozadovat_splneni)", "F(zanedbat_uplatneni_prava)"],
+    "ontologia_target": ["vivienda", "riesgos", "derechos_usuario", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2245,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pokud se nájemce nenastěhuje kvůli vadě, nájemné se neplatí. Nastěhuje-li se, má právo na slevu, dokud pronajímatel vadu neodstraní, včetně vad služeb spojených s užíváním bytu.",
+    "logica_deontica": ["P(neplatit_najem)", "P(sleva_najemneho)"],
+    "ontologia_target": ["contraprestacion", "vivienda", "riesgos", "derechos_usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2246,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemné se sjednává pevnou částkou, obvykle za měsíc. Není-li sjednáno, určí se podle obvyklé výše v místě a čase.",
+    "logica_deontica": ["O(sjednat_najemne)", "P(najemne_obvykle)"],
+    "ontologia_target": ["contraprestacion", "tiempo", "usuario", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2247,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pronajímatel zajišťuje nezbytné služby spojené s užíváním bytu, pokud se strany nedohodnou jinak. Patří sem voda, teplo, odpad, osvětlení společných prostor, úklid, příjem vysílání, čištění komínů a případně výtah.",
+    "logica_deontica": ["O(zajistit_sluzby)", "P(dohodnout_sluzby)"],
+    "ontologia_target": ["vivienda", "servicios", "obligaciones_arrendador", "uso"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2248,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Strany si mohou sjednat každoroční zvyšování nájemného.",
+    "logica_deontica": ["P(sjednat_zvyseni)"],
+    "ontologia_target": ["contraprestacion", "vinculo", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2249,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Není-li zvyšování sjednáno, může pronajímatel navrhnout zvýšení až na obvyklé nájemné, nejvýše o 20 % za tři roky. Nájemce může souhlasit, odmítnout nebo věc předat soudu. Stejný postup platí i pro návrh na snížení nájemného.",
+    "logica_deontica": ["P(navrh_zvyseni)", "P(odmitnout_zvyseni)", "P(soud_urci_najemne)"],
+    "ontologia_target": ["contraprestacion", "tiempo", "derechos_usuario", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2250,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Po stavebních úpravách zvyšujících hodnotu bytu může pronajímatel navrhnout zvýšení nájemného až o 10 % nákladů ročně, případně o 3,5 %, pokud není dohoda. Zvýšení může platit i pro ostatní nájemce, pokud souhlasí dvě třetiny.",
+    "logica_deontica": ["P(zvyseni_po_upravach)", "P(zvyseni_3_5pct)"],
+    "ontologia_target": ["contraprestacion", "vivienda", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2251,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce platí nájemné předem do pátého dne období. Pronajímatel nesmí požadovat jiné platby ani zvláštní vklady.",
+    "logica_deontica": ["O(platit_predem)", "F(pozadovat_jine_platby)"],
+    "ontologia_target": ["contraprestacion", "usuario", "titular", "prohibiciones"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2252,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce má právo nahlédnout do vyúčtování služeb a pořídit kopie. Nedoplatky i přeplatky jsou splatné do tří měsíců.",
+    "logica_deontica": ["P(nahlizet_vyuctovani)", "O(uhradit_nedoplatek)"],
+    "ontologia_target": ["servicios", "contraprestacion", "usuario", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2253,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájem nelze vypovědět pro nezaplacení, pokud nájemce složí dlužné nájemné do notářské úschovy a informuje pronajímatele. Totéž platí při sporu o plnění.",
+    "logica_deontica": ["P(uschova_najemneho)", "F(vypoved_pro_nezaplaceni_pri_uschove)"],
+    "ontologia_target": ["contraprestacion", "usuario", "titular", "vinculo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2254,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Jistota a smluvní pokuta nesmí přesáhnout trojnásobek měsíčního nájemného. Po skončení nájmu se jistota vrací s úroky a započtením dluhů.",
+    "logica_deontica": ["F(jistota_vyssi_3x)", "O(vratit_jistotu)", "O(uroky_z_jistoty)"],
+    "ontologia_target": ["contraprestacion", "vinculo", "usuario", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2255,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce užívá byt řádně podle smlouvy. Může v něm pracovat nebo podnikat, pokud to nepřetěžuje byt nebo dům.",
+    "logica_deontica": ["O(radny_uzivani)", "P(prace_v_byte)"],
+    "ontologia_target": ["vivienda", "uso", "usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2256,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pronajímatel zajišťuje v domě obvyklý pořádek a nájemce dodržuje pravidla chování a pokyny pronajímatele k jeho zachování.",
+    "logica_deontica": ["O(udrzovat_poriadek_titular)", "O(dodrzovat_poriadek_uzivatel)"],
+    "ontologia_target": ["vivienda", "uso", "obligaciones_usuario", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2257,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pronajímatel udržuje byt i dům ve stavu způsobilém k užívání. Nájemce provádí jen běžnou údržbu a drobné opravy.",
+    "logica_deontica": ["O(udrzovat_byt_titular)", "O(bezna_udrzba_uzivatel)"],
+    "ontologia_target": ["vivienda", "obligaciones_arrendador", "obligaciones_usuario", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2258,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce může chovat v bytě zvíře, pokud tím nepůsobí nepřiměřené obtíže. Zvýšené náklady na údržbu společných prostor hradí nájemce.",
+    "logica_deontica": ["P(chov_zvirete)", "O(nahradit_naklady)"],
+    "ontologia_target": ["vivienda", "uso", "obligaciones_usuario", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2259,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce musí strpět úpravy nebo přestavbu, pokud nesnižují kvalitu bydlení nebo jsou nařízeny úřadem či nutné k odvrácení újmy. V ostatních případech je nutný jeho souhlas.",
+    "logica_deontica": ["O(strpet_upravy)", "P(upravy_se_souhlasem)"],
+    "ontologia_target": ["vivienda", "uso", "obligaciones_usuario", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2260,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pokud úprava vyžaduje vyklizení bytu a není třeba souhlasu nájemce, pronajímatel musí poskytnout náhradu nákladů a zálohu. O pracích informuje nejméně tři měsíce předem. Nevyjádří-li se nájemce do deseti dnů, má se za odmítnutí.",
+    "logica_deontica": ["O(poskytnout_nahradu)", "O(oznamit_prace)", "P(odmitnuti_vyklizeni)"],
+    "ontologia_target": ["vivienda", "riesgos", "obligaciones_arrendador", "derechos_usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2261,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Vyklizení na dobu kratší než týden se oznamuje alespoň deset dnů předem; lhůta pro vyjádření nájemce je pět dnů.",
+    "logica_deontica": ["O(oznameni_kratke_vyklizeni)"],
+    "ontologia_target": ["vivienda", "tiempo", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2262,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Odmítne-li nájemce vyklidit byt, může pronajímatel podat návrh k soudu do deseti dnů. Soud vyhoví, pokud je úprava účelná a vyklizení nezbytné. Práce nelze provádět před rozhodnutím, ledaže soud povolí.",
+    "logica_deontica": ["P(soudni_vyklizeni)", "F(provadet_prace_pred_rozhodnutim)"],
+    "ontologia_target": ["vivienda", "vinculo", "riesgos", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2263,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce může provést změnu bytu se souhlasem pronajímatele. Pokud je změna nezbytná kvůli zdravotnímu postižení a pronajímatel odmítá bez vážného důvodu, může souhlas nahradit soud. Po skončení nájmu nájemce změny odstraní, pokud pronajímatel nepožaduje opak.",
+    "logica_deontica": ["P(uprava_se_souhlasem)", "P(soud_nahradi_souhlas)", "O(odstranit_zmeny)"],
+    "ontologia_target": ["vivienda", "uso", "derechos_usuario", "obligaciones_usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2264,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce musí ihned oznámit vady vyžadující okamžité odstranění a ostatní vady bez zbytečného odkladu. Musí zabránit dalším škodám a má právo na náhradu účelných nákladů, pokud vadu nezpůsobil.",
+    "logica_deontica": ["O(oznamit_vadu)", "O(zabranit_skode)", "P(nahrada_nakladu)"],
+    "ontologia_target": ["vivienda", "riesgos", "obligaciones_usuario", "derechos_usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2265,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pronajímatel odstraní vadu v přiměřené době. Neodstraní-li ji, může ji odstranit nájemce a požadovat náhradu nebo slevu, pokud jde o podstatnou vadu. Neoznámí-li nájemce vadu včas, nemá právo na náhradu ani slevu.",
+    "logica_deontica": ["O(odstranit_vadu)", "P(odstranit_vadu_uzivatel)", "P(sleva_najemneho)", "F(narok_pri_neoznameni)"],
+    "ontologia_target": ["vivienda", "riesgos", "obligaciones_arrendador", "derechos_usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2266,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Neodstraní-li pronajímatel vadu ani v dodatečné lhůtě a nájemce ji nezpůsobil, může nájemce vypovědět nájem bez výpovědní doby, pokud jde o hrubé porušení povinností pronajímatele.",
+    "logica_deontica": ["P(vypoved_bez_lhuty)"],
+    "ontologia_target": ["vivienda", "vinculo", "riesgos", "derechos_usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2267,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Neodstraní-li nájemce vadu, kterou způsobil, odstraní ji pronajímatel na náklady nájemce.",
+    "logica_deontica": ["O(uhradit_opravu)"],
+    "ontologia_target": ["vivienda", "riesgos", "obligaciones_usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2268,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pravidla o vadách se použijí i tehdy, brání-li užívání bytu právo třetí osoby nebo rozhodnutí orgánu veřejné moci.",
+    "logica_deontica": ["P(aplikace_pravidel_vad)"],
+    "ontologia_target": ["vivienda", "riesgos", "derechos_usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": false }
+  },
+  {
+    "numero": 2269,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Očekává-li nájemce nepřítomnost delší než dva měsíce, oznámí to pronajímateli a určí osobu pro vstup do bytu v nutných případech. Nesplnění povinnosti je závažným porušením, pokud způsobí újmu.",
+    "logica_deontica": ["O(oznamit_nepritomnost)", "O(urcit_osobu_vstupu)", "F(zavazne_porusenipovinnosti)"],
+    "ontologia_target": ["vivienda", "tiempo", "obligaciones_usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2270,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Uzavře-li smlouvu více osob, stávají se společnými nájemci. Společným nájemcem se stává i osoba, která ke smlouvě přistoupí se souhlasem stran.",
+    "logica_deontica": ["P(spolecny_najem)"],
+    "ontologia_target": ["vinculo", "usuario", "vivienda"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2271,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Společní nájemci mají stejná práva a povinnosti a použijí se na ně pravidla o společnosti.",
+    "logica_deontica": ["O(rovnost_spolecnych_najemcu)"],
+    "ontologia_target": ["vinculo", "usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2272,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce může přijmout do domácnosti kohokoli, ale musí oznámit zvýšení počtu osob. Pronajímatel si může vyhradit souhlas, kromě osob blízkých. Počet osob musí být přiměřený velikosti bytu.",
+    "logica_deontica": ["P(prijmout_osobu)", "O(oznamit_zmenu)", "P(vyhrada_souhlasu)", "O(omezit_pocet_osob)"],
+    "ontologia_target": ["vivienda", "usuario", "titular", "uso"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2273,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Sníží-li se počet členů domácnosti, nájemce to oznámí pronajímateli bez zbytečného odkladu.",
+    "logica_deontica": ["O(oznamit_snizeni_osob)"],
+    "ontologia_target": ["vivienda", "usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2274,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce může podnajmout část bytu bez souhlasu pronajímatele, pokud v bytě trvale bydlí.",
+    "logica_deontica": ["P(podnajem_casti_bytu)"],
+    "ontologia_target": ["vivienda", "uso", "usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2275,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Neby dlí-li nájemce v bytě trvale, může podnajmout byt nebo jeho část jen se souhlasem pronajímatele. Nevyjádří-li se pronajímatel do měsíce, má se za souhlas.",
+    "logica_deontica": ["P(podnajem_se_souhlasem)", "P(mlcky_souhlas)"],
+    "ontologia_target": ["vivienda", "uso", "usuario", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2276,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Podnájem v rozporu s pravidly je hrubým porušením povinností nájemce.",
+    "logica_deontica": ["F(podnajem_v_rozporu)"],
+    "ontologia_target": ["vivienda", "prohibiciones", "usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2277,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Podnájem končí společně s nájmem. Nájemce musí podnájemci sdělit rozhodné skutečnosti o skončení nájmu.",
+    "logica_deontica": ["O(informovat_podnajemce)"],
+    "ontologia_target": ["vivienda", "vinculo", "usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2278,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Podnájem vždy končí nejpozději se skončením nájmu.",
+    "logica_deontica": ["P(konec_podnajmu_s_najmem)"],
+    "ontologia_target": ["vivienda", "vinculo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2279,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Po smrti nájemce přechází nájem na člena domácnosti, který v bytě žil a nemá vlastní byt; u vzdálenějších osob je nutný souhlas pronajímatele. Nájem po přechodu trvá nejvýše dva roky, s výjimkou osob mladších 18 nebo starších 70 let. Pokud podmínky splňuje více osob, stávají se společnými nájemci. Každý může do měsíce oznámit, že nechce pokračovat. U družstevního bytu přechází i členství v družstvu na dědice členského podílu.",
+    "logica_deontica": [
+      "P(prechod_najmu_domacnost)",
+      "O(souhlas_pronajimatele_u_vzdalenych_osob)",
+      "P(prechod_spolecne)",
+      "P(odmitnout_pokracovani)",
+      "P(prechod_druzstevniho_clenstvi)"
+    ],
+    "ontologia_target": ["vivienda", "vinculo", "usuario", "titular", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2280,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Potomek nájemce má přednostní právo na přechod nájmu. Je-li potomků více, stávají se společnými nájemci, pokud některý neodmítne pokračovat.",
+    "logica_deontica": ["P(prednost_potomka)", "P(spolecny_prechod)", "P(odmitnout_pokracovani)"],
+    "ontologia_target": ["vivienda", "usuario", "vinculo", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2281,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Osoba, na kterou nájem přešel, může být povinna složit jistotu, pokud ji zemřelý nájemce nesložil. Pokud bylo nájemné zaplaceno předem, musí osoba vrátit dědici to, co tím získala.",
+    "logica_deontica": ["O(slozit_jistotu)", "O(vratit_predplacene_najemne)"],
+    "ontologia_target": ["contraprestacion", "vinculo", "usuario", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2282,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nepřejde-li nájem na člena domácnosti, přechází na dědice. Osoby žijící s nájemcem ve společné domácnosti ručí společně a nerozdílně za dluhy vzniklé před jeho smrtí.",
+    "logica_deontica": ["P(prechod_na_dedice)", "O(spolecna_odpovednost_dluhy)"],
+    "ontologia_target": ["vivienda", "vinculo", "usuario", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2282,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Přejde-li nájem na nezletilého, lze dluhy vymáhat jen z majetku chráněného zvláštním režimem. Zákonný zástupce, který nájem neukončil, ač měl, ručí za dluhy vzniklé po převzetí funkce, pokud s nezletilým žil v bytě.",
+    "logica_deontica": ["P(omezeny_vykon_dluhu)", "O(ruceni_zastupce)", "F(vymahani_po_nezletilem)"],
+    "ontologia_target": ["vivienda", "vinculo", "usuario", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2283,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pronajímatel může vypovědět nájem do dvou měsíců bez uvedení důvodu, pokud nájem nepřešel na člena domácnosti. Dědic může nájem vypovědět do tří měsíců od zjištění svého postavení, nejpozději do šesti měsíců od smrti nájemce.",
+    "logica_deontica": ["P(vypoved_pronajimatele)", "P(vypoved_dedice)", "O(dodrzet_lhuty)"],
+    "ontologia_target": ["vivienda", "vinculo", "tiempo", "usuario", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2284,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Není-li dědic znám do šesti měsíců, může pronajímatel byt vyklidit a nájem tím zaniká. Věci uloží do úschovy a může je prodat na účet dědice, pokud si je nepřevezme.",
+    "logica_deontica": ["P(vyklizeni_pronajimatelem)", "O(ulozit_veci)", "P(prodej_na_ucet_dedice)"],
+    "ontologia_target": ["vivienda", "vinculo", "riesgos", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2285,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pokračuje-li nájemce v užívání bytu tři měsíce po skončení nájmu a pronajímatel jej nevyzve k opuštění, nájem se obnoví na původní dobu, nejvýše však na dva roky. Výzva musí být písemná.",
+    "logica_deontica": ["P(obnova_najmu)", "O(pisemna_vyzva)"],
+    "ontologia_target": ["vivienda", "vinculo", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2286,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Výpověď musí být písemná a doručena. Výpovědní doba běží od prvního dne následujícího měsíce. Pronajímatel musí poučit nájemce o právu podat námitky a žádat soudní přezkum, jinak je výpověď neplatná.",
+    "logica_deontica": ["O(pisemna_forma)", "O(pouceni_o_pravech)", "F(neplatna_vypoved_bez_pouceni)"],
+    "ontologia_target": ["formalidades", "vinculo", "usuario", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2287,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce může vypovědět nájem na dobu určitou, pokud se podstatně změnily okolnosti, z nichž strany při uzavření smlouvy vycházely.",
+    "logica_deontica": ["P(vypoved_zmenene_okolnosti)"],
+    "ontologia_target": ["vinculo", "usuario", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2288,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pronajímatel může vypovědět nájem ve tříměsíční lhůtě, pokud nájemce hrubě porušuje povinnosti, byl odsouzen za úmyslný trestný čin související s domem, má být byt vyklizen z veřejného zájmu nebo existuje jiný závažný důvod. U nájmu na dobu neurčitou může vypovědět i z důvodu vlastní potřeby nebo potřeby blízkých osob. Výpověď musí obsahovat důvod.",
+    "logica_deontica": [
+      "P(vypoved_hrube_porusenipovinnosti)",
+      "P(vypoved_trestny_cin)",
+      "P(vypoved_verejny_zajem)",
+      "P(vypoved_vazny_duvod)",
+      "P(vypoved_vlastni_potreba)",
+      "O(uvest_duvod_vypovedi)"
+    ],
+    "ontologia_target": ["vivienda", "vinculo", "prohibiciones", "usuario", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2289,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pokud pronajímatel vypověděl nájem z důvodů vlastní potřeby nebo potřeby blízkých osob a byt následně nevyužije k uvedenému účelu do jednoho měsíce od vyklizení, musí nájemci buď byt znovu pronajmout, nebo nahradit škodu. Lhůta se staví po dobu nezbytných úprav, pokud byly zahájeny včas a řádně pokračují.",
+    "logica_deontica": ["O(znovu_pronajmout_nebo_nahradit)", "P(staveni_lhuty_upravami)"],
+    "ontologia_target": ["vivienda", "vinculo", "titular", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2290,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce může do dvou měsíců požádat soud o přezkum oprávněnosti výpovědi.",
+    "logica_deontica": ["P(soudni_prezkum_vypovedi)"],
+    "ontologia_target": ["vinculo", "usuario", "formalidades"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2291,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Při zvlášť závažném porušení povinností může pronajímatel vypovědět nájem bez výpovědní doby a požadovat okamžité odevzdání bytu. Závažné porušení zahrnuje dlouhodobé neplacení, závažné poškození bytu, způsobování škod nebo neoprávněné užívání. Výpověď je neplatná, pokud pronajímatel neuvede konkrétní důvod nebo předem nevyzve k nápravě.",
+    "logica_deontica": [
+      "P(vypoved_bez_lhuty)",
+      "O(odevzdat_okamzite)",
+      "F(neplatna_vypoved_bez_duvodu)",
+      "O(vyzvat_k_naprave)"
+    ],
+    "ontologia_target": ["vivienda", "prohibiciones", "usuario", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2292,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce musí odevzdat byt v den skončení nájmu. Odevzdání nastává předáním klíčů a umožněním přístupu. Pokud nájemce byt opustí tak, že je zjevné, že nájem skončil, považuje se byt za odevzdaný ihned.",
+    "logica_deontica": ["O(odevzdat_v_den_skonceni)", "P(odevzdani_opustenim)"],
+    "ontologia_target": ["vivienda", "tiempo", "usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2293,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce vrací byt ve stavu odpovídajícím převzetí s ohledem na běžné opotřebení. Změny provedené se souhlasem odstraní, pokud to bylo ujednáno. Změny bez souhlasu musí odstranit vždy, pokud pronajímatel neřekne jinak; nájemce nemá nárok na náhradu a pronajímatel může požadovat kompenzaci za snížení hodnoty.",
+    "logica_deontica": [
+      "O(vratit_v_puvodnim_stavu)",
+      "O(odstranit_zmeny_bez_souhlasu)",
+      "P(nepozadovat_nahradu_za_zvyseni_hodnoty)",
+      "P(nahrada_za_snizeni_hodnoty)"
+    ],
+    "ontologia_target": ["vivienda", "uso", "obligaciones_usuario", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2294,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Zabudované prvky, které nelze odstranit bez poškození nebo snížení hodnoty, přecházejí do vlastnictví pronajímatele. Nájemce má právo na vyrovnání, pokud změny provedl se souhlasem. Vyrovnání je splatné při skončení nájmu.",
+    "logica_deontica": ["P(prechod_vlastnictvi)", "P(narok_na_vyrovnani)", "F(vyrovnani_bez_souhlasu)"],
+    "ontologia_target": ["vivienda", "bien", "contraprestacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2295,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Neodevzdá-li nájemce byt včas, má pronajímatel právo na náhradu ve výši sjednaného nájemného až do skutečného odevzdání.",
+    "logica_deontica": ["P(nahrada_za_prodleni)"],
+    "ontologia_target": ["contraprestacion", "vivienda", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2296,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Zůstanou-li v bytě věci nájemce, pronajímatel je uschová na jeho účet a může je po upozornění prodat, pokud si je nájemce nepřevezme. Toto neplatí pro věci zjevně opuštěné.",
+    "logica_deontica": ["O(uschovat_veci)", "P(prodej_po_lhute)", "F(uschova_opustenych_veci)"],
+    "ontologia_target": ["vivienda", "bien", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2297,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "U služebního bytu mohou být práva nájemce omezena, pokud je nájem spojen s výkonem práce nebo funkce.",
+    "logica_deontica": ["P(omezeni_prav_sluzebni_byt)"],
+    "ontologia_target": ["vivienda", "vinculo", "usuario", "titular"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2298,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájem služebního bytu končí měsíc po ukončení práce, pokud nájemce neměl vážný důvod. Pokud přestal pracovat kvůli věku, zdraví nebo z důvodů na straně pronajímatele, trvá nájem ještě dva roky.",
+    "logica_deontica": ["P(konec_sluzebniho_najmu)", "P(prodlouzeni_2_roky)"],
+    "ontologia_target": ["vivienda", "tiempo", "usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2299,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Smrtí nájemce služebního bytu nájem končí. Osoba žijící s nájemcem může v bytě zůstat, ale musí jej vyklidit do tří měsíců po výzvě pronajímatele.",
+    "logica_deontica": ["P(docasne_bydleni)", "O(vyklidit_do_3_mesicu)"],
+    "ontologia_target": ["vivienda", "usuario", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2300,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Byt určený pro osoby se zdravotním postižením nebo v domě s pečovatelskou službou je bytem zvláštního určení. Nájem lze sjednat jen na základě písemného doporučení zřizovatele.",
+    "logica_deontica": ["P(najem_zvlastniho_urceni)", "O(pisemne_doporuceni)"],
+    "ontologia_target": ["vivienda", "formalidades", "usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": false }
+  },
+  {
+    "numero": 2301,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Po smrti nájemce bytu zvláštního určení nájem končí a osoby bez vlastního bytu musí byt vyklidit do šesti měsíců. Pokud v bytě žila zdravotně postižená osoba nebo osoba nad 70 let, která s nájemcem žila alespoň rok, nájem na ni přechází. Výpověď nájmu vyžaduje souhlas zřizovatele.",
+    "logica_deontica": [
+      "O(vyklidit_do_6_mesicu)",
+      "P(prechod_na_postizeneho_nebo_seniora)",
+      "O(souhlas_zrizovatele_k_vypovedi)"
+    ],
+    "ontologia_target": ["vivienda", "usuario", "vinculo", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2316,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Podnikatel pronajímající movité věci přenechává věc k dočasnému užívání za nájemné; subsidiárně platí obecná ustanovení o nájmu.",
+    "logica_deontica": ["P(podnikatelsky_najem)", "P(aplikace_obecnych_ustanoveni)"],
+    "ontologia_target": ["vinculo", "bien", "contraprestacion", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2317,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pronajímatel ověří stav věci, předvede její funkčnost a seznámí nájemce s pravidly užívání nebo mu je předá písemně.",
+    "logica_deontica": ["O(overit_stav)", "O(predvest_funkcnost)", "O(poskytnout_pokyny)"],
+    "ontologia_target": ["bien", "obligaciones_arrendador", "uso"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": false }
+  },
+  {
+    "numero": 2318,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Má-li věc vadu bránící řádnému užívání, nájemce může požadovat náhradní věc. Po dobu omezeného užívání má právo na prominutí nebo slevu z nájemného, pokud právo uplatní do konce nájmu.",
+    "logica_deontica": ["P(nahradni_vec)", "P(sleva_nebo_prominuti)", "F(zanik_prava_neuplatnenim)"],
+    "ontologia_target": ["bien", "riesgos", "derechos_usuario", "contraprestacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2319,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce oznámí poškození, ztrátu nebo zničení věci bez odkladu. Nájemné platí do oznámení nebo do vrácení věci. Neodpovídá za běžné opotřebení.",
+    "logica_deontica": ["O(oznamit_poskozeni)", "O(platit_do_oznameni)", "P(neodpovednost_za_opotrebeni)"],
+    "ontologia_target": ["bien", "riesgos", "obligaciones_usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2320,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce může nájem kdykoli vypovědět s desetidenní výpovědní dobou. Automatické obnovení nájmu se nepoužije.",
+    "logica_deontica": ["P(vypoved_kdykoli)", "F(obnova_najmu)"],
+    "ontologia_target": ["vinculo", "tiempo", "usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2321,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájem dopravního prostředku spočívá v přenechání vozidla k dočasnému užívání za nájemné.",
+    "logica_deontica": ["P(najem_dopravniho_prostredku)"],
+    "ontologia_target": ["bien", "vinculo", "contraprestacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2322,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Pronajímatel předá dopravní prostředek s doklady včas a ve stavu způsobilém k provozu. Není-li způsobilý, nájemce může odmítnout převzetí, žádat opravu, náhradní prostředek nebo zrušení smlouvy.",
+    "logica_deontica": ["O(odevzdat_zpusobily_prostredek)", "P(odmitnout_prevzeti)", "P(zadat_opravu_nebo_nahradu)", "P(zruseni_smlouvy)"],
+    "ontologia_target": ["bien", "riesgos", "derechos_usuario", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2323,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce pojistí dopravní prostředek pouze tehdy, bylo-li to ujednáno.",
+    "logica_deontica": ["P(pojisteni_podle_ujednani)"],
+    "ontologia_target": ["riesgos", "usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2324,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemné se platí po ukončení užívání; u nájmu delšího než tři měsíce se platí měsíčně.",
+    "logica_deontica": ["O(platit_po_uzivani)", "O(platit_mesicne_u_dlouheho_najmu)"],
+    "ontologia_target": ["contraprestacion", "tiempo"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2325,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Nájemce udržuje dopravní prostředek s ohledem na běžné opotřebení. Pronajímatel hradí náklady na údržbu, pokud je nájemce uplatní do tří měsíců.",
+    "logica_deontica": ["O(udrzovat_prostredek)", "P(nahrada_nakladu)", "F(zanik_prava_po_lhute)"],
+    "ontologia_target": ["bien", "obligaciones_usuario", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  },
+  {
+    "numero": 2326,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Smlouvou o ubytování se poskytuje přechodné ubytování za úplatu v zařízení k tomu určeném.",
+    "logica_deontica": ["P(ubytovani)"],
+    "ontologia_target": ["vivienda", "vinculo", "contraprestacion"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": false }
+  },
+  {
+    "numero": 2327,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Ubytovaný může užívat vyhrazený i společný prostor a služby. Ubytovatel převezme cennosti do úschovy, pokud nejsou nebezpečné nebo nepřiměřené.",
+    "logica_deontica": ["P(uzivat_prostory)", "O(prevzit_cennosti)", "F(odmitnout_nebezpecne_veci)"],
+    "ontologia_target": ["vivienda", "derechos_usuario", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": false }
+  },
+  {
+    "numero": 2328,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Ubytovatel předá prostor způsobilý k užívání a zajistí nerušené ubytování.",
+    "logica_deontica": ["O(odevzdat_zpusobily_prostor)", "O(zajistit_nerusene_uzivani)"],
+    "ontologia_target": ["vivienda", "obligaciones_arrendador"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": false }
+  },
+  {
+    "numero": 2329,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Ubytovaný užívá prostor řádně a nesmí provádět podstatné změny bez souhlasu ubytovatele.",
+    "logica_deontica": ["O(radne_uzivat)", "F(zmeny_bez_souhlasu)"],
+    "ontologia_target": ["vivienda", "obligaciones_usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2330,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Ubytovaný může smlouvu vypovědět předčasně. Ubytovatel může požadovat náhradu škody, pokud prokáže, že jí nemohl zabránit.",
+    "logica_deontica": ["P(predcasna_vypoved)", "P(nahrada_skody)"],
+    "ontologia_target": ["vivienda", "vinculo", "riesgos"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": false, "conflicto": true }
+  },
+  {
+    "numero": 2331,
+    "nombre_ley": "občanský zákoník (89/2012 Sb.)",
+    "regla": "Ubytovatel může smlouvu vypovědět bez výpovědní doby, pokud ubytovaný i přes výstrahu hrubě porušuje povinnosti nebo dobré mravy.",
+    "logica_deontica": ["P(vypoved_bez_lhuty)", "O(vystraha_pred_vypovedi)"],
+    "ontologia_target": ["vivienda", "prohibiciones", "usuario"],
+    "jerarquia": 3,
+    "banderas": { "irrenunciable": true, "conflicto": true }
+  }
+]
+}
