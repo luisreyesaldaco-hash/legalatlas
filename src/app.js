@@ -84,6 +84,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const estadoBusqueda = necesitaEstado ? estado : "nacional";
 
+// --- CAMBIO QUIRÚRGICO PARA MÉXICO LABORAL ---
+let rutaFinalEstado = estadoBusqueda;
+
+if (pais === "mexico" && tema === "despido") {
+    rutaFinalEstado = "federal"; // Forzamos que busque en la carpeta 'federal'
+}
+// ----------------------------------------------
+
         try {
             // Llamada al Motor Local
             const dataLocal = await ejecutarMotorEstructurado(pais, estadoBusqueda, tema, pregunta);
