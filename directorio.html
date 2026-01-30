@@ -186,15 +186,23 @@
     let todosLosAbogados = [];
 
     async function init() {
-        const { data, error } = await client
-            .from('abogados')
-            .select('*')
-            .eq('flag_activo', true);
+    console.log("Intentando conectar...");
+    const { data, error } = await client
+        .from('abogados')
+        .select('*')
+        .eq('flag_activo', true);
 
-        if (error) {
-            console.error("Error Supabase:", error);
-            return;
-        }
+    if (error) {
+        console.error("Error de conexión:", error);
+        return;
+    }
+
+// ESTO TE DIRÁ LA VERDAD EN LA CONSOLA
+    console.log("Datos recibidos de Supabase:", data);
+
+    if (data.length === 0) {
+        console.warn("Supabase no devolvió nada. ¿Está bien el nombre de la tabla?");
+    }
 
         todosLosAbogados = data || [];
 
