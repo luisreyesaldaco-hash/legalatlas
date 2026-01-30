@@ -176,79 +176,64 @@
     </main>
 
     <script>
-    // 1. Configuración de Supabase (Sustituye con tus credenciales)
+    // Configuración con tus credenciales actuales
     const supabaseUrl = 'https://nuzzmcxirsghykzqbmmn.supabase.co';
     const supabaseKey = 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff';
+    
+    // IMPORTANTE: Asegúrate de que la librería cargue como 'supabase'
     const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    // 2. Inicializar mapa
     const map = L.map('map-picker').setView([21.12, -101.68], 13);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
     let marker;
-    let ciudadDetectada = "Leon"; // Default por si falla la detección
 
-    map.on('click', async function (e) {
+    map.on('click', function (e) {
         const lat = e.latlng.lat.toFixed(6);
         const lng = e.latlng.lng.toFixed(6);
 
-        if (marker) {
-            marker.setLatLng(e.latlng);
-        } else {
-            marker = L.marker(e.latlng).addTo(map);
-        }
+        if (marker) { marker.setLatLng(e.latlng); } 
+        else { marker = L.marker(e.latlng).addTo(map); }
 
         document.getElementById('coords').value = `${lat}, ${lng}`;
         document.getElementById('coord-status').innerText = `Ubicación marcada: ${lat}, ${lng}`;
         document.getElementById('coord-status').style.color = "#b8973d";
-
-        // EXTRA: Intentar detectar la ciudad automáticamente usando Nominatim (Gratis)
-        try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
-            const data = await response.json();
-            ciudadDetectada = data.address.city || data.address.town || data.address.village || "Leon";
-            console.log("Ciudad detectada:", ciudadDetectada);
-        } catch (err) {
-            console.warn("No se pudo detectar la ciudad, se usará valor por defecto.");
-        }
     });
 
-    // 3. Envío del Formulario
     document.getElementById('registroForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const coordValue = document.getElementById('coords').value;
         if (!coordValue) {
-            alert("Por favor, selecciona tu ubicación en el mapa haciendo clic.");
+            alert("Por favor, selecciona tu ubicación en el mapa.");
             return;
         }
 
-        // Desactivar botón para evitar doble envío
         const btn = e.target.querySelector('button');
-        const originalText = btn.innerText;
-        btn.innerText = "PROCESANDO REGISTRO...";
+        btn.innerText = "PROCESANDO...";
         btn.disabled = true;
 
+        // DATOS A ENVIAR (Asegúrate que estas columnas EXISTAN en Supabase)
         const nuevoAbogado = {
             nombre: document.getElementById('nombre').value,
             materia: document.getElementById('materia').value,
             coords: coordValue,
             whatsapp: document.getElementById('whatsapp').value,
-            ciudad: ciudadDetectada, // Vital para tu filtro del directorio
-            estado: "guanajuato",    // Lo forzamos a guanajuato por ahora
-            flag_activo: false,      // Empieza inactivo hasta que lo verifiques
+            ciudad: "Leon",      // Valor temporal, puedes hacerlo dinámico después
+            estado: "guanajuato", // ESTA ES LA COLUMNA QUE DEBES CREAR EN SUPABASE
+            flag_activo: false,
             flag_pago: false
         };
 
         const { error } = await _supabase.from('abogados').insert([nuevoAbogado]);
 
         if (error) {
-            alert("Error al registrar: " + error.message);
-            btn.innerText = originalText;
+            alert("Error: " + error.message);
+            console.error(error);
+            btn.innerText = "ENVIAR PERFIL";
             btn.disabled = false;
         } else {
-            // Éxito: Guardar en local para que el usuario sepa que terminó
-            alert("Registro exitoso. Su firma pasará a proceso de validación por nuestro comité ético.");
+            alert("Registro exitoso. Tu perfil pasará a revisión.");
             window.location.href = "directorio.html";
         }
     });
