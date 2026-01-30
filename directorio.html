@@ -236,17 +236,17 @@
             const cont = document.getElementById('contenedor-abogados');
             cont.innerHTML = '';
 
-            const visibles = todosLosAbogados.filter(a => {
-        if (!a.coords) return false;
+        const visibles = todosLosAbogados.filter(a => {
+            if (!a.coords) return false;
 
-        const latlng = a.coords.split(',').map(Number);
-        const estaEnMapa = bounds.contains(latlng);
+            const latlng = a.coords.split(',').map(Number);
+            const estaEnMapa = bounds.contains(latlng);
 
-        if (!estaEnMapa) return false;
+            if (!estaEnMapa) return false;
 
-        if (materiaFiltro) {
-        return a.materia.toLowerCase().includes(materiaFiltro.toLowerCase());
-    }
+            if (materiaFiltro) {
+            return a.materia.toLowerCase().includes(materiaFiltro.toLowerCase());
+            }
 
     return true;
 });
