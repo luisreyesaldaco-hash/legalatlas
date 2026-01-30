@@ -14,12 +14,13 @@
         .font-classic { font-family: 'Cinzel', serif; }
         .hidden-panel { display: none !important; }
         
-        /* Estilo tipo Excel */
         table { border-collapse: collapse; width: 100%; background: white; font-size: 11px; }
-        th { background: #f1f1ee; color: #787870; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 12px 15px; text-align: left; border: 1px solid #e5e5e0; }
-        td { padding: 10px 15px; border: 1px solid #e5e5e0; color: #444; vertical-align: middle; }
+        th { background: #f1f1ee; color: #787870; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 10px 15px; text-align: left; border: 1px solid #e5e5e0; }
+        td { padding: 8px 15px; border: 1px solid #e5e5e0; color: #444; vertical-align: middle; }
         tr:hover { background-color: #fcfcf9; }
         .status-pill { padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 9px; }
+        .bulk-actions { background: #1a1a1a; color: white; padding: 10px 20px; border-radius: 8px; display: none; align-items: center; gap: 15px; margin-bottom: 15px; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -33,18 +34,30 @@
     <div id="admin-panel" class="hidden-panel max-w-[1400px] mx-auto">
         <header class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="font-classic text-2xl tracking-widest text-stone-900">ADMIN CONTROL TABLE</h1>
+                <h1 class="font-classic text-2xl tracking-widest text-stone-900 uppercase">Admin Control Table</h1>
                 <p class="text-[9px] uppercase tracking-[0.3em] text-[#b8973d]">Gestión de Base de Datos Legal Atlas</p>
             </div>
-            <button onclick="location.reload()" class="text-stone-400 hover:text-red-600 text-[10px] font-bold uppercase tracking-widest">
-                <i class="fas fa-power-off mr-2"></i>Salir
-            </button>
+            <div class="flex gap-4 items-center">
+                <input type="text" id="tabla-search" onkeyup="filtrarTabla()" placeholder="Buscar por nombre, ciudad o materia..." 
+                    class="p-2 border border-stone-300 rounded text-xs w-64 outline-none focus:border-stone-900">
+                <button onclick="location.reload()" class="text-stone-400 hover:text-red-600 text-[10px] font-bold uppercase tracking-widest">
+                    <i class="fas fa-power-off mr-2"></i>Salir
+                </button>
+            </div>
         </header>
 
+        <div id="bulk-bar" class="bulk-actions">
+            <span id="selected-count" class="text-[10px] font-bold uppercase tracking-widest text-stone-400">0 Seleccionados</span>
+            <div class="h-4 w-[1px] bg-stone-700"></div>
+            <button onclick="batchUpdate(true)" class="text-[9px] font-bold uppercase hover:text-green-400"><i class="fas fa-check-double mr-1"></i> Aprobar Todo</button>
+            <button onclick="batchUpdate(false)" class="text-[9px] font-bold uppercase hover:text-red-400"><i class="fas fa-ban mr-1"></i> Suspender Todo</button>
+        </div>
+
         <div class="overflow-x-auto shadow-sm border border-stone-200 rounded-lg">
-            <table>
+            <table id="main-table">
                 <thead>
                     <tr>
+                        <th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all" onclick="toggleAll(this)"></th>
                         <th style="width: 50px;">ID</th>
                         <th>Profesional / Firma</th>
                         <th>Materia</th>
@@ -86,7 +99,8 @@
                 const sText = a.flag_activo ? 'ACTIVO' : 'PENDIENTE';
 
                 tbody.innerHTML += `
-                    <tr>
+                    <tr class="item-row">
+                        <td style="text-align: center;"><input type="checkbox" class="row-check" value="${a.id}" onclick="updateUI()"></td>
                         <td class="font-mono text-stone-400">#${a.id}</td>
                         <td>
                             <div class="flex items-center gap-3">
@@ -94,18 +108,11 @@
                                 <span class="font-bold text-stone-800 uppercase">${a.nombre}</span>
                             </div>
                         </td>
-                        <td><span class="text-[10px] bg-stone-100 px-2 py-0.5 rounded text-stone-600 font-semibold">${a.materia}</span></td>
-                        <td><i class="fas fa-map-marker-alt text-[#b8973d] mr-1"></i> ${a.ciudad}, ${a.estado}</td>
+                        <td class="searchable">${a.materia}</td>
+                        <td class="searchable"><i class="fas fa-map-marker-alt text-[#b8973d] mr-1"></i> ${a.ciudad}, ${a.estado}</td>
                         <td><a href="https://wa.me/${a.whatsapp}" target="_blank" class="text-stone-500 hover:text-green-600 font-mono">${a.whatsapp}</a></td>
-                        <td>
-                            <div class="flex flex-col gap-0.5">
-                                <span class="text-stone-400 italic">${a.email || 'N/A'}</span>
-                                ${a.web_url ? `<a href="${a.web_url}" target="_blank" class="text-blue-400 hover:underline">Ver sitio web</a>` : ''}
-                            </div>
-                        </td>
-                        <td style="text-align: center;">
-                            <span class="status-pill ${sColor}">${sText}</span>
-                        </td>
+                        <td><span class="text-stone-400 italic">${a.email || 'N/A'}</span></td>
+                        <td style="text-align: center;"><span class="status-pill ${sColor}">${sText}</span></td>
                         <td style="text-align: center;">
                             <button onclick="cambiarEstado(${a.id}, ${!a.flag_activo})" 
                                 class="px-3 py-1 rounded text-[9px] font-bold uppercase transition-all
@@ -116,6 +123,47 @@
                     </tr>
                 `;
             });
+            updateUI();
+        }
+
+        // LÓGICA DE FILTRADO
+        function filtrarTabla() {
+            const input = document.getElementById('tabla-search').value.toLowerCase();
+            const rows = document.querySelectorAll('.item-row');
+            
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(input) ? '' : 'none';
+            });
+        }
+
+        // LÓGICA MULTI-SELECCIÓN
+        function toggleAll(source) {
+            document.querySelectorAll('.row-check').forEach(ch => ch.checked = source.checked);
+            updateUI();
+        }
+
+        function updateUI() {
+            const selected = document.querySelectorAll('.row-check:checked');
+            const bar = document.getElementById('bulk-bar');
+            document.getElementById('selected-count').innerText = `${selected.length} SELECCIONADOS`;
+            bar.style.display = selected.length > 0 ? 'flex' : 'none';
+        }
+
+        // ACCIÓN MASIVA (UPDATE)
+        async function batchUpdate(status) {
+            const ids = Array.from(document.querySelectorAll('.row-check:checked')).map(ch => ch.value);
+            if(!ids.length) return;
+
+            if(!confirm(`¿Estás seguro de cambiar el estado a ${ids.length} registros?`)) return;
+
+            const { error } = await _supabase.from('abogados').update({ flag_activo: status }).in('id', ids);
+            
+            if (error) alert("Error masivo: " + error.message);
+            else {
+                document.getElementById('select-all').checked = false;
+                cargarAbogados();
+            }
         }
 
         async function cambiarEstado(id, nuevoEstado) {
