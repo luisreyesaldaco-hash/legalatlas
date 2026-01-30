@@ -176,57 +176,83 @@
     </main>
 
     <script>
-        // Inicializar mapa
-        const map = L.map('map-picker').setView([21.12, -101.68], 13);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+    // 1. Configuración de Supabase (Sustituye con tus credenciales)
+    const supabaseUrl = 'https://nuzzmcxirsghykzqbmmn.supabase.co';
+    const supabaseKey = 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff';
+    const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        let marker;
+    // 2. Inicializar mapa
+    const map = L.map('map-picker').setView([21.12, -101.68], 13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
-        map.on('click', function (e) {
-            const lat = e.latlng.lat.toFixed(6);
-            const lng = e.latlng.lng.toFixed(6);
+    let marker;
+    let ciudadDetectada = "Leon"; // Default por si falla la detección
 
-            if (marker) {
-                marker.setLatLng(e.latlng);
-            } else {
-                marker = L.marker(e.latlng).addTo(map);
-            }
+    map.on('click', async function (e) {
+        const lat = e.latlng.lat.toFixed(6);
+        const lng = e.latlng.lng.toFixed(6);
 
-            document.getElementById('coords').value = `${lat}, ${lng}`;
-            document.getElementById('coord-status').innerText = `Ubicación marcada: ${lat}, ${lng}`;
-            document.getElementById('coord-status').classList.add('text-[#b8973d]');
-        });
+        if (marker) {
+            marker.setLatLng(e.latlng);
+        } else {
+            marker = L.marker(e.latlng).addTo(map);
+        }
 
-        // Supabase
-        const supabase = supabasejs.createClient('TU_URL', 'TU_KEY');
+        document.getElementById('coords').value = `${lat}, ${lng}`;
+        document.getElementById('coord-status').innerText = `Ubicación marcada: ${lat}, ${lng}`;
+        document.getElementById('coord-status').style.color = "#b8973d";
 
-        document.getElementById('registroForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // EXTRA: Intentar detectar la ciudad automáticamente usando Nominatim (Gratis)
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+            const data = await response.json();
+            ciudadDetectada = data.address.city || data.address.town || data.address.village || "Leon";
+            console.log("Ciudad detectada:", ciudadDetectada);
+        } catch (err) {
+            console.warn("No se pudo detectar la ciudad, se usará valor por defecto.");
+        }
+    });
 
-            if (!document.getElementById('coords').value) {
-                alert("Por favor, selecciona tu ubicación en el mapa.");
-                return;
-            }
+    // 3. Envío del Formulario
+    document.getElementById('registroForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-            const nuevoAbogado = {
-                nombre: document.getElementById('nombre').value,
-                tipo_perfil: document.getElementById('tipo_perfil').value,
-                materia: document.getElementById('materia').value,
-                coords: document.getElementById('coords').value,
-                whatsapp: document.getElementById('whatsapp').value,
-                flag_activo: false
-            };
+        const coordValue = document.getElementById('coords').value;
+        if (!coordValue) {
+            alert("Por favor, selecciona tu ubicación en el mapa haciendo clic.");
+            return;
+        }
 
-            const { error } = await supabase.from('abogados').insert([nuevoAbogado]);
+        // Desactivar botón para evitar doble envío
+        const btn = e.target.querySelector('button');
+        const originalText = btn.innerText;
+        btn.innerText = "PROCESANDO REGISTRO...";
+        btn.disabled = true;
 
-            if (error) {
-                alert("Error: " + error.message);
-            } else {
-                alert("Registro exitoso. Tu perfil entrará en fase de verificación.");
-                window.location.href = "directorio.html";
-            }
-        });
-    </script>
+        const nuevoAbogado = {
+            nombre: document.getElementById('nombre').value,
+            materia: document.getElementById('materia').value,
+            coords: coordValue,
+            whatsapp: document.getElementById('whatsapp').value,
+            ciudad: ciudadDetectada, // Vital para tu filtro del directorio
+            estado: "guanajuato",    // Lo forzamos a guanajuato por ahora
+            flag_activo: false,      // Empieza inactivo hasta que lo verifiques
+            flag_pago: false
+        };
+
+        const { error } = await _supabase.from('abogados').insert([nuevoAbogado]);
+
+        if (error) {
+            alert("Error al registrar: " + error.message);
+            btn.innerText = originalText;
+            btn.disabled = false;
+        } else {
+            // Éxito: Guardar en local para que el usuario sepa que terminó
+            alert("Registro exitoso. Su firma pasará a proceso de validación por nuestro comité ético.");
+            window.location.href = "directorio.html";
+        }
+    });
+</script>
 
 </body>
 </html>
