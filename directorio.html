@@ -204,6 +204,8 @@
         let map;
         let todosLosAbogados = [];
 
+        console.log("SUPABASE:", data);
+
         async function init() {
             const { data } = await supabase
                 .from('abogados')
