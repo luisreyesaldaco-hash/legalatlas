@@ -185,28 +185,22 @@
     let map;
     let todosLosAbogados = [];
 
-    async function init() {
-    console.log("Intentando conectar...");
-    const { data, error } = await client
-        .from('abogados')
-        .select('*')
-        .eq('flag_activo', true);
+   async function init() {
+        console.log("Intentando conectar...");
+        const { data, error } = await client
+            .from('abogados')
+            .select('*')
+            .eq('flag_activo', true);
 
-    if (error) {
-        console.error("Error de conexión:", error);
-        return;
-    }
+        if (error) {
+            console.error("Error de conexión:", error);
+            return;
+        }
 
-// ESTO TE DIRÁ LA VERDAD EN LA CONSOLA
-    console.log("Datos recibidos de Supabase:", data);
-
-    if (data.length === 0) {
-        console.warn("Supabase no devolvió nada. ¿Está bien el nombre de la tabla?");
-    }
-
+        console.log("Datos recibidos de Supabase:", data);
         todosLosAbogados = data || [];
 
-        // 1. Inicializar Mapa
+        // 1. Inicializar Mapa (León por defecto)
         map = L.map('map', { zoomControl: false }).setView([21.12, -101.68], 12);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
@@ -215,7 +209,7 @@
             iconSize: [12, 12]
         });
 
-        // 2. Dibujar Marcadores con validación estricta
+        // 2. Dibujar Marcadores iniciales
         todosLosAbogados.forEach(a => {
             const coords = validarCoordenadas(a.coords);
             if (coords) {
@@ -224,18 +218,27 @@
             }
         });
 
+        // 3. Escuchar cambios en los filtros para mover el mapa
+        document.getElementById('filtro-estado').addEventListener('change', function(e) {
+            const estado = e.target.value;
+            if (estado === "guanajuato") {
+                map.flyTo([21.12, -101.68], 12); // Vuela a León/Gto
+            }
+            // Aquí puedes añadir: if(estado === "cdmx") map.flyTo([...], 12);
+        });
+
         map.on('moveend', actualizarTarjetasVisibles);
+        
+        // Ejecutamos una vez para mostrar el mensaje de "Seleccione..."
         actualizarTarjetasVisibles();
     }
 
-    // FUNCIÓN ESCUDO: Evita que el mapa truene si el dato es nulo o mal texto
     function validarCoordenadas(coordString) {
-        if (!coordString || typeof coordString !== 'string' || !coordString.includes(',')) return null;
-        
-        const parts = coordString.split(',');
+        if (!coordString || typeof coordString !== 'string') return null;
+        // Limpia posibles espacios y separa por coma
+        const parts = coordString.split(',').map(p => p.trim());
         const lat = parseFloat(parts[0]);
         const lng = parseFloat(parts[1]);
-
         if (isNaN(lat) || isNaN(lng)) return null;
         return [lat, lng];
     }
@@ -243,16 +246,31 @@
     function actualizarTarjetasVisibles() {
         if (!map) return;
         
-        const bounds = map.getBounds();
+        const estadoSeleccionado = document.getElementById('filtro-estado').value;
         const cont = document.getElementById('contenedor-abogados');
+        const bounds = map.getBounds();
+        
         cont.innerHTML = '';
+
+        // REGLA: Si no hay estado seleccionado en el sidebar, no mostrar tarjetas
+        if (!estadoSeleccionado) {
+            cont.innerHTML = `
+                <div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">
+                    Seleccione un país y estado para localizar especialistas
+                </div>`;
+            return;
+        }
 
         const visibles = todosLosAbogados.filter(a => {
             const coords = validarCoordenadas(a.coords);
             if (!coords) return false;
 
             const estaEnMapa = bounds.contains(coords);
-            if (!estaEnMapa) return false;
+            
+            // Filtramos por: Está en el mapa + Coincide con el selector de estado
+            const coincideEstado = a.estado?.toLowerCase() === estadoSeleccionado.toLowerCase();
+
+            if (!estaEnMapa || !coincideEstado) return false;
 
             if (materiaFiltro && a.materia) {
                 return a.materia.toLowerCase().includes(materiaFiltro.toLowerCase());
@@ -261,7 +279,7 @@
         });
 
         if (visibles.length === 0) {
-            cont.innerHTML = '<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Sin especialistas en este sector</div>';
+            cont.innerHTML = '<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Sin especialistas visibles en este sector</div>';
             return;
         }
 
@@ -276,10 +294,10 @@
                         <h3 class="font-classic text-2xl text-stone-900 mb-2">${a.nombre}</h3>
                         <p class="text-[10px] text-stone-400 uppercase tracking-widest mb-6">Firma Verificada // Legal Atlas</p>
                         <p class="text-stone-500 text-sm font-light leading-relaxed mb-8">
-                            Especialista en materia ${a.materia || 'legal'}. Representación jurídica con rigor técnico y compromiso ético en la región.
+                            Especialista en materia ${a.materia || 'legal'}. Representación jurídica con rigor técnico y compromiso ético en la región de ${a.ciudad || 'Guanajuato'}.
                         </p>
                     </div>
-                    <a href="https://wa.me/${a.whatsapp}" target="_blank" class="btn-wa">
+                    <a href="https://wa.me/${a.whatsapp?.replace(/\s+/g, '')}" target="_blank" class="btn-wa">
                         Consultar Representación
                     </a>
                 </div>
