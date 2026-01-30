@@ -5,13 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Directorio | Legal Atlas</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Tailwind (ok para desarrollo) -->
+<script src="https://cdn.tailwindcss.com"></script>
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Supabase: versión correcta y NO bloqueada por navegadores -->
+<script src="https://unpkg.com/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"></script>
+
+<!-- Iconos -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<!-- Tipografías -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
         :root {
@@ -200,7 +208,7 @@
         const materiaFiltro = urlParams.get('materia'); // Captura ?materia=arrendamiento
         
         
-        const supabase = supabasejs.createClient('https://nuzzmcxirsghykzqbmmn.supabase.co', 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff');
+        const supabase = supabase.createClient('https://nuzzmcxirsghykzqbmmn.supabase.co', 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff');
         let map;
         let todosLosAbogados = [];
 
