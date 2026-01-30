@@ -57,13 +57,21 @@
             }
         }
 
-        async function cargarAbogados() {
-            const { data, error } = await _supabase
-                .from('abogados')
-                .select('*')
-                .order('id', { ascending: false });
+        async function cambiarEstado(id, nuevoEstado) {
+    console.log("Cambiando estado de ID:", id, "a:", nuevoEstado);
+    
+    const { data, error } = await _supabase
+        .from('abogados')
+        .update({ flag_activo: nuevoEstado })
+        .eq('id', id)
+        .select(); // Agregamos .select() para confirmar el cambio
 
-            if (error) return console.error(error);
+    if (error) {
+        console.error("Error de Supabase:", error);
+        alert("Error al actualizar: " + error.message);
+    } else {
+        console.log("Cambio exitoso:", data);
+        cargarAbogados(); // Recargar la lista visualmente
 
             const cont = document.getElementById('lista-pendientes');
             cont.innerHTML = '';
