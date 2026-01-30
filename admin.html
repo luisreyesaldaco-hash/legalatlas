@@ -76,29 +76,40 @@
             const cont = document.getElementById('lista-pendientes');
             cont.innerHTML = '';
 
-            data.forEach(a => {
-                const statusColor = a.flag_activo ? 'text-green-600' : 'text-amber-500';
-                const statusText = a.flag_activo ? 'ACTIVO' : 'PENDIENTE';
+data.forEach(a => {
+    const statusColor = a.flag_activo ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700';
+    const statusText = a.flag_activo ? 'Activo' : 'Pendiente';
 
-                cont.innerHTML += `
-                    <div class="admin-card flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-3 mb-2">
-                                <span class="text-[9px] font-bold uppercase tracking-tighter ${statusColor}">${statusText}</span>
-                                <h3 class="font-classic text-xl text-stone-900">${a.nombre}</h3>
-                            </div>
-                            <p class="text-xs text-stone-500">${a.materia} // ${a.ciudad}, ${a.estado}</p>
-                            <p class="text-[10px] text-stone-400 mt-1">WA: ${a.whatsapp} | Coords: ${a.coords}</p>
-                        </div>
-                        <div class="flex gap-3">
-                            ${!a.flag_activo ? 
-                                `<button onclick="cambiarEstado(${a.id}, true)" class="px-6 py-3 bg-[#b8973d] text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-black transition-all">Aprobar Firma</button>` :
-                                `<button onclick="cambiarEstado(${a.id}, false)" class="px-6 py-3 border border-stone-200 text-stone-400 text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-red-50 hover:text-red-600 transition-all">Suspender</button>`
-                            }
-                        </div>
-                    </div>
-                `;
-            });
+    cont.innerHTML += `
+        <div class="flex items-center justify-between p-4 border-b border-stone-200 bg-white hover:bg-stone-50 transition-all">
+            <div class="flex items-center gap-4 w-1/3">
+                <img src="${a.foto_url || 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-full object-cover border border-stone-200">
+                <div>
+                    <h3 class="font-bold text-sm text-stone-900">${a.nombre}</h3>
+                    <p class="text-[10px] text-stone-400 uppercase tracking-tighter">${a.materia}</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col w-1/4">
+                <span class="text-[10px] font-bold text-stone-800">${a.email || 'Sin Email'}</span>
+                <a href="${a.web_url || '#'}" target="_blank" class="text-[10px] text-blue-500 underline">${a.web_url ? 'Sitio Web' : 'No Web'}</a>
+            </div>
+
+            <div class="w-1/6">
+                <span class="px-3 py-1 rounded-full text-[9px] font-bold uppercase ${statusColor}">
+                    ${statusText}
+                </span>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="cambiarEstado(${a.id}, ${!a.flag_activo})" 
+                    class="p-2 text-[10px] font-bold uppercase tracking-widest ${a.flag_activo ? 'text-red-400 hover:text-red-600' : 'text-[#b8973d] hover:text-black'}">
+                    ${a.flag_activo ? 'Suspender' : 'Aprobar'}
+                </button>
+            </div>
+        </div>
+    `;
+});
         }
 
         async function cambiarEstado(id, nuevoEstado) {

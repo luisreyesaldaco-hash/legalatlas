@@ -126,51 +126,49 @@
 
         <!-- COLUMNA DERECHA — FORMULARIO -->
         <section>
-            <form id="registroForm" class="space-y-6">
 
-                <div>
-                    <label class="text-[9px] uppercase font-bold text-stone-400 tracking-widest mb-2 block">
-                        Información General
-                    </label>
-                    <input type="text" id="nombre" placeholder="Nombre completo o Firma"
-                        class="w-full p-4 rounded-xl input-field text-sm outline-none" required>
-                </div>
+<form id="registroForm" class="space-y-6">
+    <div>
+        <label class="text-[9px] uppercase font-bold text-stone-400 tracking-widest mb-2 block">Información General</label>
+        <input type="text" id="nombre" placeholder="Nombre completo o Firma" class="w-full p-4 rounded-xl input-field text-sm outline-none" required>
+    </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <select id="tipo_perfil" class="p-4 rounded-xl input-field text-sm outline-none cursor-pointer">
-                        <option value="Particular">Abogado Particular</option>
-                        <option value="Despacho">Despacho / Firma</option>
-                    </select>
+    <div class="grid grid-cols-2 gap-4">
+        <select id="tipo_perfil" class="p-4 rounded-xl input-field text-sm outline-none cursor-pointer">
+            <option value="Particular">Abogado Particular</option>
+            <option value="Despacho">Despacho / Firma</option>
+        </select>
 
-                    <select id="materia" class="p-4 rounded-xl input-field text-sm outline-none cursor-pointer">
-                        <option value="Civil">Materia Civil</option>
-                        <option value="Penal">Materia Penal</option>
-                        <option value="Laboral">Materia Laboral</option>
-                        <option value="Familiar">Materia Familiar</option>
-                    </select>
-                </div>
+        <select id="materia" class="p-4 rounded-xl input-field text-sm outline-none cursor-pointer">
+            <option value="Civil">Materia Civil</option>
+            <option value="Penal">Materia Penal</option>
+            <option value="Laboral">Materia Laboral</option>
+            <option value="Familiar">Materia Familiar</option>
+        </select>
+    </div>
 
-                <div>
-                    <label class="text-[9px] uppercase font-bold text-stone-400 tracking-widest mb-2 block text-center">
-                        Ubicación del Despacho (Haz clic en el mapa)
-                    </label>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="email" id="email" placeholder="Email Profesional" class="p-4 rounded-xl input-field text-sm outline-none" required>
+        <input type="url" id="web_url" placeholder="Sitio Web (https://...)" class="p-4 rounded-xl input-field text-sm outline-none">
+    </div>
 
-                    <div id="map-picker"></div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="text" id="foto_url" placeholder="URL de Foto o Logo (link)" class="p-4 rounded-xl input-field text-sm outline-none">
+        <input type="tel" id="whatsapp" placeholder="WhatsApp (52...)" class="p-4 rounded-xl input-field text-sm outline-none" required>
+    </div>
 
-                    <input type="hidden" id="coords" required>
-                    <p id="coord-status" class="text-[10px] text-center text-stone-400 italic mt-1">
-                        Selecciona tu oficina en el mapa
-                    </p>
-                </div>
+    <div>
+        <label class="text-[9px] uppercase font-bold text-stone-400 tracking-widest mb-2 block text-center">Ubicación del Despacho (Haz clic)</label>
+        <div id="map-picker"></div>
+        <input type="hidden" id="coords" required>
+        <p id="coord-status" class="text-[10px] text-center text-stone-400 italic mt-1">Selecciona tu oficina en el mapa</p>
+    </div>
 
-                <input type="tel" id="whatsapp" placeholder="WhatsApp (ej. 524771234567)"
-                    class="w-full p-4 rounded-xl input-field text-sm outline-none" required>
+    <button type="submit" class="w-full py-5 btn-primary text-white rounded-2xl font-bold uppercase tracking-[0.2em] text-[10px] shadow-lg">
+        Enviar Perfil para Verificación
+    </button>
+</form>
 
-                <button type="submit"
-                    class="w-full py-5 btn-primary text-white rounded-2xl font-bold uppercase tracking-[0.2em] text-[10px] shadow-lg">
-                    Enviar Perfil para Verificación
-                </button>
-            </form>
         </section>
 
     </main>
@@ -215,15 +213,17 @@
 
         // DATOS A ENVIAR (Asegúrate que estas columnas EXISTAN en Supabase)
         const nuevoAbogado = {
-            nombre: document.getElementById('nombre').value,
-            materia: document.getElementById('materia').value,
-            coords: coordValue,
-            whatsapp: document.getElementById('whatsapp').value,
-            ciudad: "Leon",      // Valor temporal, puedes hacerlo dinámico después
-            estado: "guanajuato", // ESTA ES LA COLUMNA QUE DEBES CREAR EN SUPABASE
-            flag_activo: false,
-            flag_pago: false
-        };
+             nombre: document.getElementById('nombre').value,
+             materia: document.getElementById('materia').value,
+             coords: coordValue,
+             whatsapp: document.getElementById('whatsapp').value,
+             email: document.getElementById('email').value,
+             web_url: document.getElementById('web_url').value,
+             foto_url: document.getElementById('foto_url').value,
+             ciudad: ciudadDetectada,
+             estado: "guanajuato",
+             flag_activo: false
+          };
 
         const { error } = await _supabase.from('abogados').insert([nuevoAbogado]);
 
