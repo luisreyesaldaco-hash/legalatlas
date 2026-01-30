@@ -130,18 +130,31 @@
 <form id="registroForm" class="space-y-6">
     <div>
     <label class="text-[9px] uppercase font-bold text-stone-400 tracking-widest mb-2 block text-center">
-        Busca tu dirección o haz clic en el mapa
+        Ubicación de la Firma
     </label>
     
-    <div class="flex gap-2 mb-2">
-        <input type="text" id="address-search" placeholder="Ej: Av. Insurgentes 10, CDMX" 
+    <div class="flex flex-col md:flex-row gap-2 mb-2">
+        <select id="country-filter" class="p-3 rounded-xl border border-stone-200 text-xs outline-none bg-white">
+            <option value="mx">México 🇲🇽</option>
+            <option value="es">España 🇪🇸</option>
+            <option value="us">USA 🇺🇸</option>
+            <option value="ar">Argentina 🇦🇷</option>
+            <option value="co">Colombia 🇨🇴</option>
+            </select>
+
+        <input type="text" id="address-search" placeholder="Escribe tu ciudad o calle..." 
             class="flex-1 p-3 rounded-xl border border-stone-200 text-xs outline-none focus:border-[#b8973d]">
-        <button type="button" onclick="buscarDireccion()" class="px-4 bg-stone-200 rounded-xl text-[10px] font-bold uppercase">Buscar</button>
+        
+        <button type="button" onclick="buscarDireccion()" class="px-6 bg-[#1a1a1a] text-white rounded-xl text-[9px] font-bold uppercase tracking-widest">
+            Localizar
+        </button>
     </div>
 
-    <div id="map-picker"></div>
+    <div id="map-picker" style="height: 300px; border-radius: 20px;"></div>
     <input type="hidden" id="coords" required>
-    <p id="coord-status" class="text-[10px] text-center text-stone-400 italic mt-1">Esperando ubicación...</p>
+    <p id="coord-status" class="text-[10px] text-center text-stone-400 italic mt-2 uppercase tracking-tighter">
+        Selecciona tu punto exacto en el mapa
+    </p>
 </div>
 
     <div class="grid grid-cols-2 gap-4">
