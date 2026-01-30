@@ -174,99 +174,110 @@
         </main>
     </div>
 
-    <script>
-        // 1. Configuración de parámetros y Supabase
-        const urlParams = new URLSearchParams(window.location.search);
-        const materiaFiltro = urlParams.get('materia'); 
-        
-        // Usamos 'client' para evitar conflictos con la palabra reservada supabase
-        const client = supabase.createClient('https://nuzzmcxirsghykzqbmmn.supabase.co', 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff');
-        
-        let map;
-        let todosLosAbogados = [];
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const materiaFiltro = urlParams.get('materia'); 
+    
+    const client = supabase.createClient('https://nuzzmcxirsghykzqbmmn.supabase.co', 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff');
+    
+    let map;
+    let todosLosAbogados = [];
 
-        async function init() {
-            // Carga de datos
-            const { data, error } = await client
-                .from('abogados')
-                .select('*')
-                .eq('flag_activo', true);
+    async function init() {
+        const { data, error } = await client
+            .from('abogados')
+            .select('*')
+            .eq('flag_activo', true);
 
-            if (error) {
-                console.error("Error Supabase:", error);
-                return;
-            }
+        if (error) {
+            console.error("Error Supabase:", error);
+            return;
+        }
 
-            todosLosAbogados = data || [];
+        todosLosAbogados = data || [];
 
-            // Inicialización de Mapa
-            map = L.map('map', { zoomControl: false }).setView([21.12, -101.68], 12);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+        // 1. Inicializar Mapa
+        map = L.map('map', { zoomControl: false }).setView([21.12, -101.68], 12);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
-            const goldIcon = L.divIcon({
-                html: `<div style="background:#b8973d; width:12px; height:12px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px rgba(0,0,0,0.1);"></div>`,
-                iconSize: [12, 12]
-            });
+        const goldIcon = L.divIcon({
+            html: `<div style="background:#b8973d; width:12px; height:12px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px rgba(0,0,0,0.1);"></div>`,
+            iconSize: [12, 12]
+        });
 
-            // Marcadores
-            todosLosAbogados.forEach(a => {
-                if (!a.coords) return;
-                const latlng = a.coords.split(',').map(Number);
-                L.marker(latlng, { icon: goldIcon }).addTo(map)
+        // 2. Dibujar Marcadores con validación estricta
+        todosLosAbogados.forEach(a => {
+            const coords = validarCoordenadas(a.coords);
+            if (coords) {
+                L.marker(coords, { icon: goldIcon }).addTo(map)
                     .bindPopup(`<b class="font-classic">${a.nombre}</b><br><span class="text-[10px] text-stone-400">${a.materia}</span>`);
-            });
-
-            map.on('moveend', actualizarTarjetasVisibles);
-            actualizarTarjetasVisibles();
-        }
-
-        function actualizarTarjetasVisibles() {
-            const bounds = map.getBounds();
-            const cont = document.getElementById('contenedor-abogados');
-            cont.innerHTML = '';
-
-            const visibles = todosLosAbogados.filter(a => {
-                if (!a.coords) return false;
-                const latlng = a.coords.split(',').map(Number);
-                const estaEnMapa = bounds.contains(latlng);
-                
-                if (!estaEnMapa) return false;
-
-                // Si hay filtro de materia en la URL, filtramos. Si no, mostramos todos los de la zona.
-                if (materiaFiltro && a.materia) {
-                    return a.materia.toLowerCase().includes(materiaFiltro.toLowerCase());
-                }
-                return true;
-            });
-
-            if (visibles.length === 0) {
-                cont.innerHTML = '<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Sin especialistas en este sector</div>';
-                return;
             }
+        });
 
-            visibles.forEach(a => {
-                cont.innerHTML += `
-                    <div class="lawyer-card">
-                        <div>
-                            <div class="flex justify-between items-start mb-6">
-                                <span class="badge-materia">${a.materia}</span>
-                                <i class="fas fa-shield-check text-stone-200 text-xl"></i>
-                            </div>
-                            <h3 class="font-classic text-2xl text-stone-900 mb-2">${a.nombre}</h3>
-                            <p class="text-[10px] text-stone-400 uppercase tracking-widest mb-6">Firma Verificada // Legal Atlas</p>
-                            <p class="text-stone-500 text-sm font-light leading-relaxed mb-8">
-                                Especialista en materia ${a.materia}. Representación jurídica con rigor técnico y compromiso ético en la región.
-                            </p>
-                        </div>
-                        <a href="https://wa.me/${a.whatsapp}" target="_blank" class="btn-wa">
-                            Consultar Representación
-                        </a>
-                    </div>
-                `;
-            });
+        map.on('moveend', actualizarTarjetasVisibles);
+        actualizarTarjetasVisibles();
+    }
+
+    // FUNCIÓN ESCUDO: Evita que el mapa truene si el dato es nulo o mal texto
+    function validarCoordenadas(coordString) {
+        if (!coordString || typeof coordString !== 'string' || !coordString.includes(',')) return null;
+        
+        const parts = coordString.split(',');
+        const lat = parseFloat(parts[0]);
+        const lng = parseFloat(parts[1]);
+
+        if (isNaN(lat) || isNaN(lng)) return null;
+        return [lat, lng];
+    }
+
+    function actualizarTarjetasVisibles() {
+        if (!map) return;
+        
+        const bounds = map.getBounds();
+        const cont = document.getElementById('contenedor-abogados');
+        cont.innerHTML = '';
+
+        const visibles = todosLosAbogados.filter(a => {
+            const coords = validarCoordenadas(a.coords);
+            if (!coords) return false;
+
+            const estaEnMapa = bounds.contains(coords);
+            if (!estaEnMapa) return false;
+
+            if (materiaFiltro && a.materia) {
+                return a.materia.toLowerCase().includes(materiaFiltro.toLowerCase());
+            }
+            return true;
+        });
+
+        if (visibles.length === 0) {
+            cont.innerHTML = '<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Sin especialistas en este sector</div>';
+            return;
         }
 
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+        visibles.forEach(a => {
+            cont.innerHTML += `
+                <div class="lawyer-card">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <span class="badge-materia">${a.materia || 'General'}</span>
+                            <i class="fas fa-certificate text-stone-200 text-xl"></i>
+                        </div>
+                        <h3 class="font-classic text-2xl text-stone-900 mb-2">${a.nombre}</h3>
+                        <p class="text-[10px] text-stone-400 uppercase tracking-widest mb-6">Firma Verificada // Legal Atlas</p>
+                        <p class="text-stone-500 text-sm font-light leading-relaxed mb-8">
+                            Especialista en materia ${a.materia || 'legal'}. Representación jurídica con rigor técnico y compromiso ético en la región.
+                        </p>
+                    </div>
+                    <a href="https://wa.me/${a.whatsapp}" target="_blank" class="btn-wa">
+                        Consultar Representación
+                    </a>
+                </div>
+            `;
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>
