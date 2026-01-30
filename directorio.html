@@ -119,7 +119,6 @@
                     <div class="flex flex-col space-y-3">
                         <label class="text-[9px] uppercase font-bold tracking-widest">País</label>
                         <select id="filtro-pais" class="bg-white/10 border border-white/20 rounded-xl p-3 text-xs outline-none text-white">
-                            <option value="">SELECCIONE PAÍS...</option>
                             <option value="mexico" class="text-black">MÉXICO</option>
                         </select>
                     </div>
@@ -127,8 +126,16 @@
                     <div class="flex flex-col space-y-3">
                         <label class="text-[9px] uppercase font-bold tracking-widest">Estado</label>
                         <select id="filtro-estado" class="bg-white/10 border border-white/20 rounded-xl p-3 text-xs outline-none text-white">
-                            <option value="">SELECCIONE PAÍS...</option>
+                            <option value="">SELECCIONE ESTADO...</option>
                             <option value="guanajuato" class="text-black">GUANAJUATO</option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col space-y-3">
+                        <label class="text-[9px] uppercase font-bold tracking-widest">Ciudad</label>
+                        <select id="filtro-ciudad" class="bg-white/10 border border-white/20 rounded-xl p-3 text-xs outline-none text-white">
+                            <option value="">TODAS LAS CIUDADES</option>
+                            <option value="leon" class="text-black">LEÓN</option>
                         </select>
                     </div>
                 </div>
@@ -148,10 +155,7 @@
             </div>
 
             <div id="contenedor-abogados" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-                <div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-xs animate-pulse">
-                    Sincronizando especialistas en la zona...
                 </div>
-            </div>
 
             <div class="space-y-6 mb-20">
                 <div class="flex items-center justify-between px-2">
@@ -185,22 +189,20 @@
     let map;
     let todosLosAbogados = [];
 
-   async function init() {
-        console.log("Intentando conectar...");
+    async function init() {
         const { data, error } = await client
             .from('abogados')
             .select('*')
             .eq('flag_activo', true);
 
         if (error) {
-            console.error("Error de conexión:", error);
+            console.error("Error:", error);
             return;
         }
 
-        console.log("Datos recibidos de Supabase:", data);
         todosLosAbogados = data || [];
 
-        // 1. Inicializar Mapa (León por defecto)
+        // Inicializar Mapa
         map = L.map('map', { zoomControl: false }).setView([21.12, -101.68], 12);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
@@ -209,55 +211,50 @@
             iconSize: [12, 12]
         });
 
-        // 2. Dibujar Marcadores iniciales
+        // Dibujar Marcadores
         todosLosAbogados.forEach(a => {
             const coords = validarCoordenadas(a.coords);
             if (coords) {
                 L.marker(coords, { icon: goldIcon }).addTo(map)
-                    .bindPopup(`<b class="font-classic">${a.nombre}</b><br><span class="text-[10px] text-stone-400">${a.materia}</span>`);
+                    .bindPopup(`<b class="font-classic">${a.nombre}</b>`);
             }
         });
 
-        // 3. Escuchar cambios en los filtros para mover el mapa
+        // Eventos de Filtros
         document.getElementById('filtro-estado').addEventListener('change', function(e) {
-            const estado = e.target.value;
-            if (estado === "guanajuato") {
-                map.flyTo([21.12, -101.68], 12); // Vuela a León/Gto
+            if (e.target.value === "guanajuato") {
+                map.flyTo([21.12, -101.68], 12);
             }
-            // Aquí puedes añadir: if(estado === "cdmx") map.flyTo([...], 12);
+            actualizarTarjetasVisibles();
         });
+
+        document.getElementById('filtro-ciudad').addEventListener('change', actualizarTarjetasVisibles);
 
         map.on('moveend', actualizarTarjetasVisibles);
-        
-        // Ejecutamos una vez para mostrar el mensaje de "Seleccione..."
         actualizarTarjetasVisibles();
     }
 
     function validarCoordenadas(coordString) {
-        if (!coordString || typeof coordString !== 'string') return null;
-        // Limpia posibles espacios y separa por coma
-        const parts = coordString.split(',').map(p => p.trim());
+        if (!coordString || typeof coordString !== 'string' || !coordString.includes(',')) return null;
+        const parts = coordString.split(',');
         const lat = parseFloat(parts[0]);
         const lng = parseFloat(parts[1]);
-        if (isNaN(lat) || isNaN(lng)) return null;
-        return [lat, lng];
+        return (isNaN(lat) || isNaN(lng)) ? null : [lat, lng];
     }
 
     function actualizarTarjetasVisibles() {
         if (!map) return;
         
-        const estadoSeleccionado = document.getElementById('filtro-estado').value;
+        const estadoSel = document.getElementById('filtro-estado').value;
+        const ciudadSel = document.getElementById('filtro-ciudad').value;
         const cont = document.getElementById('contenedor-abogados');
         const bounds = map.getBounds();
         
         cont.innerHTML = '';
 
-        // REGLA: Si no hay estado seleccionado en el sidebar, no mostrar tarjetas
-        if (!estadoSeleccionado) {
-            cont.innerHTML = `
-                <div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">
-                    Seleccione un país y estado para localizar especialistas
-                </div>`;
+        // Si no han seleccionado estado, invitamos a filtrar
+        if (!estadoSel) {
+            cont.innerHTML = `<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Seleccione un estado para explorar especialistas</div>`;
             return;
         }
 
@@ -267,10 +264,12 @@
 
             const estaEnMapa = bounds.contains(coords);
             
-            // Filtramos por: Está en el mapa + Coincide con el selector de estado
-            const coincideEstado = a.estado?.toLowerCase() === estadoSeleccionado.toLowerCase();
+            // FILTRO FLEXIBLE: 
+            // Si tu tabla no tiene columna 'estado', esta línea fallará. 
+            // Vamos a usar la columna 'ciudad' que vimos en tu consola de F12.
+            const coincideCiudad = !ciudadSel || a.ciudad?.toLowerCase().trim() === ciudadSel.toLowerCase();
 
-            if (!estaEnMapa || !coincideEstado) return false;
+            if (!estaEnMapa || !coincideCiudad) return false;
 
             if (materiaFiltro && a.materia) {
                 return a.materia.toLowerCase().includes(materiaFiltro.toLowerCase());
@@ -279,7 +278,7 @@
         });
 
         if (visibles.length === 0) {
-            cont.innerHTML = '<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Sin especialistas visibles en este sector</div>';
+            cont.innerHTML = '<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Sin especialistas visibles en esta zona</div>';
             return;
         }
 
@@ -292,16 +291,13 @@
                             <i class="fas fa-certificate text-stone-200 text-xl"></i>
                         </div>
                         <h3 class="font-classic text-2xl text-stone-900 mb-2">${a.nombre}</h3>
-                        <p class="text-[10px] text-stone-400 uppercase tracking-widest mb-6">Firma Verificada // Legal Atlas</p>
+                        <p class="text-[10px] text-stone-400 uppercase tracking-widest mb-6">Firma Verificada</p>
                         <p class="text-stone-500 text-sm font-light leading-relaxed mb-8">
-                            Especialista en materia ${a.materia || 'legal'}. Representación jurídica con rigor técnico y compromiso ético en la región de ${a.ciudad || 'Guanajuato'}.
+                            Especialista en materia ${a.materia || 'legal'}. Ubicado en ${a.ciudad || 'Guanajuato'}.
                         </p>
                     </div>
-                    <a href="https://wa.me/${a.whatsapp?.replace(/\s+/g, '')}" target="_blank" class="btn-wa">
-                        Consultar Representación
-                    </a>
-                </div>
-            `;
+                    <a href="https://wa.me/${a.whatsapp?.replace(/\s+/g, '')}" target="_blank" class="btn-wa">Consultar Representación</a>
+                </div>`;
         });
     }
 
