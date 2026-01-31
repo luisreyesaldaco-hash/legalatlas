@@ -116,30 +116,42 @@
     <div id="graph-panel">
         <h3 style="color: #2c3e50; margin-top: 0;">Ruta Crítica: Costas y Garantías</h3>
         <div class="mermaid">
-            graph TD
-                %% Art 11: Determinación de la pérdida
-                A[Sentencia / Fallo] --> B{¿Quién pierde?}
-                B -- "Una parte (Total/Parcial)" --> C[Condena en Costas: Reembolso 100%]
-                B -- "Ambas partes (Recíproco)" --> D{Criterio del Juez}
-                D -- "Exoneración" --> E[Cada parte paga lo suyo]
-                D -- "Reembolso Parcial" --> F[Proporcionalidad de pérdida]
+ graph TD
+    %% REGLAS GENERALES
+    A82[Art. 82: Medios para conocer la verdad] --> A83[Art. 83: Facultades del Juez]
+    A84[Art. 84: Carga de la Prueba] --> A85{Art. 85: ¿Cuándo probar negación?}
+    A85 -- I --> A85_1[Afirmación expresa]
+    A85 -- II --> A85_2[Desconoce presunción]
+    A85 -- III --> A85_3[Desconoce capacidad]
+    
+    A89[Art. 89: Prueba de Hechos vs Derecho] --> A90{Art. 90: Admisión de Pruebas}
+    A90 -- Admite --> A90_1[Auto no recurrible]
+    A90 -- Desecha --> A90_2[Apelación - Suspende Juicio]
+    
+    A92[Art. 92: Resistencia a Inspección] --> A92_1[Se tienen por ciertas afirmaciones contraparte]
+    A93[Art. 93: Deber de Terceros] --> A93_1{¿Exentos?}
+    A93_1 -- Sí --> A93_2[Familiares / Secreto Prof.]
+    
+    A96[Art. 96: Catálogo de Pruebas] --> CONF[Cap. II: Confesión]
 
-                %% Art 12: El multiplicador por conducta
-                C --> G{¿Actitud del vencido?}
-                G -- "Ecuanimidad / No provocó juicio" --> H[Exoneración total o parcial]
-                G -- "Dilación / Entorpecimiento" --> I[Condena + Daños y Perjuicios + 10% Agravante]
-
-                %% Art 13 y 15: Medidas Precautorias de Pago
-                J[Temor de Insolvencia] --> K[Petición de Garantía]
-                K --> L{¿Otorga Garantía?}
-                L -- NO --> M[Embargo de Bienes Suficientes]
-                L -- SÍ --> N{Formas de Garantía Art. 15}
-                N --> N1[Fiador con bienes en la zona]
-                N --> N2[Hipoteca en 1er Lugar]
-                N --> N3[Depósito efectivo Fondo Auxiliar]
-                
-                %% Art 14: Pluralidad
-                O[Múltiples Vencidos] --> P[Distribución Proporcional al Interés]
+    %% CONFESIÓN
+    CONF --> A98{Art. 98: Tipo de Confesión}
+    A98 -- Expresa --> A98_1[Escrito / Posiciones]
+    A98 -- Tácita --> A98_2[Presunción legal]
+    
+    A105[Art. 105: Plazo 20 días] --> A107[Art. 107: Citación - 3 días mín.]
+    A107 --> A107_1{¿No asiste?}
+    A107_1 -- Sin causa --> A107_2[Declarado Confeso]
+    
+    A108[Art. 108: Calificación de Posiciones] --> A110[Art. 110: Reglas de Absolución]
+    A110 --> A110_1[Sin abogado ni asistencia]
+    
+    A112[Art. 112: Contestación] --> A112_1[Afirmativa / Negativa]
+    A112_1 --> A114{Art. 114: Evasivas}
+    A114 -- Insiste --> A114_1[Apercibimiento de Confeso]
+    
+    A117[Art. 117: Asentamiento] --> A119[Art. 119: No varianza de firma]
+    A120[Art. 120: Enfermedad] --> A120_1[Diligencia en domicilio]
         </div>
         
         <p style="font-size: 0.8rem; color: #666;">* Haz clic en los botones para saltar al texto legal.</p>
@@ -151,30 +163,30 @@
     </div>
 
     <div id="text-panel">
-        <div id="art-11" class="art-block">
-            <span class="art-title">Artículo 11</span>
-            <p>La parte que pierde será condenada a indemnizar a la otra de las costas del juicio. Cuando la pérdida fuera recíproca, el juzgador puede exonerar de la condena, o imponerla proporcionalmente.</p>
-        </div>
+            <div id="art-82" class="art-block">
+            <span class="art-title">Artículo 82</span>
+             <div class="art-text">Para conocer la verdad, puede el juzgador valerse de cualquier persona, sea parte o tercero...</div>
+    </div>
 
-        <div id="art-12" class="art-block">
-            <span class="art-title">Artículo 12</span>
-            <p>Podrá el juzgador exonerar de la condena en costas al vencido, cuando aparezca que obró con ecuanimidad y que no fue él quien provocó el juicio. En caso de conducta dilatoria, se agravará con un 10% adicional.</p>
-        </div>
+    <div id="art-84" class="art-block">
+            <span class="art-title">Artículo 84</span>
+            <div class="art-text">El actor debe probar los hechos constitutivos de su acción y el reo los de sus excepciones.</div>
+    </div>
 
-        <div id="art-13" class="art-block">
-            <span class="art-title">Artículo 13</span>
-            <p>Siempre que hubiere temor fundado de que la persona obligada a la indemnización se ausente o se oculte, o de que sus bienes desaparezcan, podrá pedirse garantía.</p>
-        </div>
+<div id="art-90" class="art-block">
+    <span class="art-title">Artículo 90</span>
+    <div class="art-text">El tribunal debe recibir las pruebas... los autos en que se admita alguna prueba no son recurribles; los que la desechen son apelables.</div>
+</div>
 
-        <div id="art-14" class="art-block">
-            <span class="art-title">Artículo 14</span>
-            <p>Si fueren varios los vencidos, la condena se distribuirá proporcionalmente al interés que cada uno de ellos tenga en el negocio.</p>
-        </div>
+<div id="art-105" class="art-block">
+    <span class="art-title">Artículo 105</span>
+    <div class="art-text">Todo litigante está obligado a absolver posiciones... dentro de los primeros veinte días del término probatorio.</div>
+</div>
 
-        <div id="art-15" class="art-block">
-            <span class="art-title">Artículo 15</span>
-            <p>La garantía a que se refiere el artículo 13 puede consistir en: I. Fiador con bienes raíces; II. Hipoteca en primer lugar; III. Depósito de dinero ante el Fondo Auxiliar para la Administración de Justicia.</p>
-        </div>
+<div id="art-107" class="art-block">
+    <span class="art-title">Artículo 107</span>
+    <div class="art-text">El que haya de absolver posiciones será citado personalmente... bajo apercibimiento de que, si dejare de comparecer, será tenido por confeso.</div>
+</div>
     </div>
 </div>
 
