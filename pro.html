@@ -86,6 +86,21 @@
             cursor: pointer;
             font-size: 0.8rem;
         }
+        /* Estilo para el nodo resaltado en el mapa */
+        .node-highlight rect, .node-highlight polygon, .node-highlight circle {
+            fill: #f1c40f !important;
+            stroke: #2c3e50 !important;
+            stroke-width: 3px !important;
+            transition: all 0.3s ease;
+        }
+
+        .art-block { cursor: pointer; border-left: 4px solid transparent; transition: 0.2s; }
+    
+        /* Cuando pasas el mouse por el texto */
+        .art-block:hover {
+            background-color: #f0f7ff;
+            border-left: 4px solid #3498db;
+        }
     </style>
 </head>
 <body>
@@ -162,20 +177,61 @@
 </div>
 
 <script>
-    // Inicializar Mermaid
-    mermaid.initialize({ startOnLoad: true });
+    mermaid.initialize({ startOnLoad: true, securityLevel: 'loose' });
 
-    // Función de salto y resaltado
+    // 1. Sincronización: Texto -> Mapa
+    // Al pasar el mouse sobre un artículo, resaltamos el nodo correspondiente
+    document.addEventListener('mouseover', (e) => {
+        const artBlock = e.target.closest('.art-block');
+        if (artBlock) {
+            const artId = artBlock.id; // ej: "art-11"
+            resaltarNodoEnMapa(artId, true);
+        }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        const artBlock = e.target.closest('.art-block');
+        if (artBlock) {
+            const artId = artBlock.id;
+            resaltarNodoEnMapa(artId, false);
+        }
+    });
+
+    function resaltarNodoEnMapa(artId, activar) {
+        // Buscamos el nodo en el SVG de Mermaid que contenga el texto del artículo
+        // Nota: Esto busca nodos que tengan el texto exacto o IDs relacionados
+        const nodes = document.querySelectorAll('.nodes .node');
+        nodes.forEach(node => {
+            if (node.textContent.includes(artId.replace('art-', 'Art '))) {
+                if (activar) node.classList.add('node-highlight');
+                else node.classList.remove('node-highlight');
+            }
+        });
+    }
+
+    // 2. Sincronización: Mapa -> Texto
+    // Añadimos eventos de clic a los nodos del mapa después de que Mermaid cargue
+    setTimeout(() => {
+        const nodes = document.querySelectorAll('.nodes .node');
+        nodes.forEach(node => {
+            node.style.cursor = 'pointer';
+            node.addEventListener('click', () => {
+                // Extraemos el número del artículo del texto del nodo
+                const match = node.textContent.match(/Art\.?\s?(\[?\d+\]?)/i);
+                if (match) {
+                    const id = 'art-' + match[1];
+                    highlightArt(id);
+                }
+            });
+        });
+    }, 1000); // Esperamos a que el SVG se dibuje
+
     function highlightArt(id) {
-        // Quitar resaltado anterior
-        const blocks = document.querySelectorAll('.art-block');
-        blocks.forEach(b => b.classList.remove('highlight'));
-
-        // Ir al elemento
-        const element = document.getElementById(id);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            element.classList.add('highlight');
+        const el = document.getElementById(id);
+        if(el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.querySelectorAll('.art-block').forEach(b => b.classList.remove('highlight'));
+            el.classList.add('highlight');
         }
     }
 </script>
