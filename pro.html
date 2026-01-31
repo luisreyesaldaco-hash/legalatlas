@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Atlas PRO - Visualizador Procesal</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --highlight-color: #fff3cd;
+            --border-color: #dee2e6;
+        }
+
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        /* Contenedor Principal */
+        .pro-dashboard {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Panel Izquierdo: El Gráfico */
+        #graph-panel {
+            flex: 1.2;
+            background-color: #fcfcfc;
+            border-right: 1px solid var(--border-color);
+            overflow: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Panel Derecho: La Ley */
+        #text-panel {
+            flex: 0.8;
+            background-color: #ffffff;
+            overflow-y: scroll;
+            padding: 40px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .header-pro {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Estilos del texto legal */
+        .art-block {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .art-block:hover { background-color: #f8f9fa; }
+
+        /* Resaltado cuando haces clic en el gráfico */
+        .highlight {
+            background-color: var(--highlight-color) !important;
+            border-left: 4px solid #f1c40f;
+        }
+
+        .art-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        button.nav-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-pro">
+    <span>LEGAL ATLAS PRO - Guanajuato: Código de Procedimientos Civiles</span>
+    <span>Suscripción: ACTIVA (Stripe)</span>
+</div>
+
+<div class="pro-dashboard">
+    <div id="graph-panel">
+        <h3 style="color: #2c3e50; margin-top: 0;">Ruta Crítica: Costas y Garantías</h3>
+        <div class="mermaid">
+            graph TD
+                %% Art 11: Determinación de la pérdida
+                A[Sentencia / Fallo] --> B{¿Quién pierde?}
+                B -- "Una parte (Total/Parcial)" --> C[Condena en Costas: Reembolso 100%]
+                B -- "Ambas partes (Recíproco)" --> D{Criterio del Juez}
+                D -- "Exoneración" --> E[Cada parte paga lo suyo]
+                D -- "Reembolso Parcial" --> F[Proporcionalidad de pérdida]
+
+                %% Art 12: El multiplicador por conducta
+                C --> G{¿Actitud del vencido?}
+                G -- "Ecuanimidad / No provocó juicio" --> H[Exoneración total o parcial]
+                G -- "Dilación / Entorpecimiento" --> I[Condena + Daños y Perjuicios + 10% Agravante]
+
+                %% Art 13 y 15: Medidas Precautorias de Pago
+                J[Temor de Insolvencia] --> K[Petición de Garantía]
+                K --> L{¿Otorga Garantía?}
+                L -- NO --> M[Embargo de Bienes Suficientes]
+                L -- SÍ --> N{Formas de Garantía Art. 15}
+                N --> N1[Fiador con bienes en la zona]
+                N --> N2[Hipoteca en 1er Lugar]
+                N --> N3[Depósito efectivo Fondo Auxiliar]
+                
+                %% Art 14: Pluralidad
+                O[Múltiples Vencidos] --> P[Distribución Proporcional al Interés]
+        </div>
+        
+        <p style="font-size: 0.8rem; color: #666;">* Haz clic en los botones para saltar al texto legal.</p>
+        <div style="display: flex; gap: 10px;">
+            <button class="nav-btn" onclick="highlightArt('art-11')">Ver Art. 11</button>
+            <button class="nav-btn" onclick="highlightArt('art-12')">Ver Art. 12</button>
+            <button class="nav-btn" onclick="highlightArt('art-15')">Ver Art. 15</button>
+        </div>
+    </div>
+
+    <div id="text-panel">
+        <div id="art-11" class="art-block">
+            <span class="art-title">Artículo 11</span>
+            <p>La parte que pierde será condenada a indemnizar a la otra de las costas del juicio. Cuando la pérdida fuera recíproca, el juzgador puede exonerar de la condena, o imponerla proporcionalmente.</p>
+        </div>
+
+        <div id="art-12" class="art-block">
+            <span class="art-title">Artículo 12</span>
+            <p>Podrá el juzgador exonerar de la condena en costas al vencido, cuando aparezca que obró con ecuanimidad y que no fue él quien provocó el juicio. En caso de conducta dilatoria, se agravará con un 10% adicional.</p>
+        </div>
+
+        <div id="art-13" class="art-block">
+            <span class="art-title">Artículo 13</span>
+            <p>Siempre que hubiere temor fundado de que la persona obligada a la indemnización se ausente o se oculte, o de que sus bienes desaparezcan, podrá pedirse garantía.</p>
+        </div>
+
+        <div id="art-14" class="art-block">
+            <span class="art-title">Artículo 14</span>
+            <p>Si fueren varios los vencidos, la condena se distribuirá proporcionalmente al interés que cada uno de ellos tenga en el negocio.</p>
+        </div>
+
+        <div id="art-15" class="art-block">
+            <span class="art-title">Artículo 15</span>
+            <p>La garantía a que se refiere el artículo 13 puede consistir en: I. Fiador con bienes raíces; II. Hipoteca en primer lugar; III. Depósito de dinero ante el Fondo Auxiliar para la Administración de Justicia.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Inicializar Mermaid
+    mermaid.initialize({ startOnLoad: true });
+
+    // Función de salto y resaltado
+    function highlightArt(id) {
+        // Quitar resaltado anterior
+        const blocks = document.querySelectorAll('.art-block');
+        blocks.forEach(b => b.classList.remove('highlight'));
+
+        // Ir al elemento
+        const element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('highlight');
+        }
+    }
+</script>
+
+</body>
+</html>
