@@ -79,8 +79,19 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="url" id="web_url" placeholder="Sitio Web (https://...)" class="p-4 rounded-xl input-field text-sm outline-none">
-                    <input type="text" id="foto_url" placeholder="Link de Foto de Perfil o Logo" class="p-4 rounded-xl input-field text-sm outline-none">
+                <div class="space-y-1">
+                    <input type="text" id="web_url" placeholder="Sitio Web (ej: www.tuweb.com)" 
+                    class="w-full p-4 rounded-xl input-field text-sm outline-none">
+                </div>
+
+                <div class="space-y-1">
+                <label for="foto_file" class="flex items-center justify-between p-4 rounded-xl input-field text-sm cursor-pointer bg-white">
+                <span id="file-label" class="text-stone-400">Subir Foto (Máx 150kb)</span>
+                <i class="fas fa-camera text-stone-300"></i>
+                <input type="file" id="foto_file" accept="image/*" class="hidden">
+                </label>
+                <p id="error-foto" class="text-[9px] text-red-500 uppercase hidden">La imagen excede los 150kb</p>
+                </div>
                 </div>
 
                 <div class="pt-4 border-t border-stone-200">
@@ -123,7 +134,42 @@
         let marker;
         let ciudadNormalizada = "";
         let estadoNormalizado = "";
+        let paisNormalizado = "";
+        let fotoBase64 = ""; // Variable para guardar la imagen procesada
 
+        // --- 1. VALIDACIÓN DE FOTO EN TIEMPO REAL ---
+        document.getElementById('foto_file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const label = document.getElementById('file-label');
+        const errorMsg = document.getElementById('error-foto');
+        
+        if (file) {
+            if (file.size > 150 * 1024) { // 150 KB limit
+                errorMsg.classList.remove('hidden');
+                label.innerText = "Archivo demasiado grande";
+                this.value = ""; 
+                fotoBase64 = "";
+            } else {
+                errorMsg.classList.add('hidden');
+                label.innerText = file.name;
+                
+                // Convertir a Base64 para enviarlo a Supabase como texto
+                const reader = new FileReader();
+                reader.onloadend = () => { fotoBase64 = reader.result; };
+                reader.readAsDataURL(file);
+            }
+        }
+    });
+
+    // --- 2. FUNCIÓN PARA LIMPIAR URL (Añade https:// si falta) ---
+    function limpiarURL(url) {
+        if (!url) return "";
+        let limpia = url.trim().toLowerCase();
+        if (limpia && !limpia.startsWith('http://') && !limpia.startsWith('https://')) {
+            limpia = 'https://' + limpia;
+        }
+        return limpia;
+    }
         async function buscarDireccion() {
             const query = document.getElementById('address-search').value;
             const country = document.getElementById('country-filter').value;
@@ -147,26 +193,28 @@
 
         map.on('click', (e) => colocarMarcador(e.latlng.lat, e.latlng.lng));
 
-        async function colocarMarcador(lat, lng) {
-            const latFixed = parseFloat(lat).toFixed(6);
-            const lngFixed = parseFloat(lng).toFixed(6);
+          async function colocarMarcador(lat, lng) {
+          const latFixed = parseFloat(lat).toFixed(6);
+          const lngFixed = parseFloat(lng).toFixed(6);
 
-            if (marker) marker.setLatLng([lat, lng]);
-            else marker = L.marker([lat, lng]).addTo(map);
+         if (marker) marker.setLatLng([lat, lng]);
+         else marker = L.marker([lat, lng]).addTo(map);
 
-            document.getElementById('coords').value = `${latFixed}, ${lngFixed}`;
-            
-            try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latFixed}&lon=${lngFixed}`);
-                const info = await res.json();
-                
-                ciudadNormalizada = info.address.city || info.address.town || info.address.village || info.address.suburb || "Desconocida";
-                estadoNormalizado = info.address.state || "Desconocido";
+         document.getElementById('coords').value = `${latFixed}, ${lngFixed}`;
+    
+         try {
+         const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latFixed}&lon=${lngFixed}`);
+         const info = await res.json();
+        
+          // Extraemos los datos con seguridad
+         ciudadNormalizada = info.address.city || info.address.town || info.address.village || info.address.suburb || "Desconocida";
+         estadoNormalizado = info.address.state || "Desconocido";
+         paisNormalizado = info.address.country || "Desconocido"; // <--- Extraemos el País
 
-                document.getElementById('coord-status').innerText = `SELECCIONADO: ${ciudadNormalizada}, ${estadoNormalizado}`;
-                document.getElementById('coord-status').style.color = "#b8973d";
-            } catch (e) { console.error(e); }
-        }
+         document.getElementById('coord-status').innerText = `SELECCIONADO: ${ciudadNormalizada}, ${estadoNormalizado}, ${paisNormalizado}`;
+         document.getElementById('coord-status').style.color = "#b8973d";
+         } catch (e) { console.error(e); }
+         }
 
         document.getElementById('registroForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -178,17 +226,22 @@
             btn.innerText = "VERIFICANDO...";
             btn.disabled = true;
 
+            // Limpiamos la URL de la web antes de guardar
+            const webLimpia = limpiarURL(document.getElementById('web_url').value);
+
             const nuevoAbogado = {
                 nombre: document.getElementById('nombre').value,
                 tipo_perfil: document.getElementById('tipo_perfil').value,
                 materia: document.getElementById('materia').value,
                 email: document.getElementById('email').value,
-                web_url: document.getElementById('web_url').value,
-                foto_url: document.getElementById('foto_url').value,
+                web_url: webLimpia,
+                // Guardamos el Base64 en la columna foto_url
+                foto_url: fotoBase64 || document.getElementById('foto_url')?.value || "",
                 whatsapp: document.getElementById('whatsapp').value,
                 coords: document.getElementById('coords').value,
                 ciudad: ciudadNormalizada.toLowerCase().trim(),
                 estado: estadoNormalizado.toLowerCase().trim(),
+                pais: paisNormalizado.toLowerCase().trim(),
                 flag_activo: false
             };
 
