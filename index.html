@@ -250,6 +250,55 @@
                flex-direction: column;
                text-align: center;
            }
+           .btn-pro-access {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+    border: 1px solid rgba(184, 151, 61, 0.3);
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-top: 25px;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-pro-access:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-gold);
+    box-shadow: 0 10px 20px rgba(184, 151, 61, 0.15);
+}
+
+.pro-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pro-content i {
+    color: var(--accent-gold);
+    font-size: 14px;
+    filter: drop-shadow(0 0 5px rgba(184, 151, 61, 0.4));
+}
+
+.pro-content span {
+    color: var(--white);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+}
+
+.pro-content strong {
+    color: var(--accent-gold);
+    font-weight: 800;
+}
+
+.btn-pro-access .arrow {
+    color: rgba(255,255,255,0.2);
+    font-size: 10px;
+    
        }
    </style>
 </head>
@@ -258,6 +307,15 @@
     <div class="logo-section">
         <h1>LEGAL<span>ATLAS</span></h1>
         <span class="subtitle">Motor Normativo APOLO</span>
+
+        <a href="/pro.html" class="btn-pro-access">
+            <div class="pro-content">
+                <i class="fas fa-crown"></i>
+                <span>LEGAL ATLAS <strong>PRO</strong></span>
+            </div>
+            <i class="fas fa-chevron-right arrow"></i>
+        </a>
+
         <div id="status-badge" class="modulo-badge" style="margin-top: 15px;">APOLO // ESTRUCTURADO</div>
     </div>
 
