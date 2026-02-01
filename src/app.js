@@ -13,6 +13,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     const groupEstado = document.getElementById("group-estado");
     const displayFuente = document.getElementById("fuente-oficial-display");
 
+    // --- NUEVO CÓDIGO: Función para guardar en memoria ---
+    function guardarFiltrosEnMemoria() {
+        const filtros = {
+            pais: selectPais.value,
+            estado: selectEstado.value || '', // Por si está oculto/vacío
+            tema: selectTema.value
+        };
+        // Guardamos en el navegador
+        localStorage.setItem('filtroUsuario', JSON.stringify(filtros));
+        console.log("Filtros guardados:", filtros); // Para que veas en consola si funciona
+    }
+
+    // --- ESCUCHADORES DE EVENTOS ---
+    // Cada vez que cambien el select, actualizamos la memoria
+    selectPais.addEventListener('change', guardarFiltrosEnMemoria);
+    selectEstado.addEventListener('change', guardarFiltrosEnMemoria);
+    selectTema.addEventListener('change', guardarFiltrosEnMemoria);
+    
     // 2. CARGA DE CONFIGURACIÓN
     async function cargarConfiguracion() {
         try {
