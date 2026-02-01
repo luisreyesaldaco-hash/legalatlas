@@ -1,20 +1,19 @@
 import { ejecutarMotorEstructurado } from './motor.js';
 
 let DATA_JURISDICCIONES = null;
-let contenedorMensajes = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. SELECTORES DE INTERFAZ
+    // 1. SELECTORES (Verifica que estos IDs existan en tu HTML)
     const btnEnviar = document.getElementById("enviar");
     const inputPregunta = document.getElementById("pregunta");
-    contenedorMensajes = document.getElementById("mensajes");
+    const contenedorMensajes = document.getElementById("mensajes");
     const selectEstado = document.getElementById("estado");
     const selectTema = document.getElementById("tema");
     const selectPais = document.getElementById("pais");
     const groupEstado = document.getElementById("group-estado");
     const displayFuente = document.getElementById("fuente-oficial-display");
 
-    // --- ESCUCHADORES PARA GUARDAR FILTROS ---
+    // 2. MEMORIA Y PERSISTENCIA
     function guardarFiltrosEnMemoria() {
         const filtros = {
             pais: selectPais.value,
@@ -24,37 +23,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         localStorage.setItem('filtroUsuario', JSON.stringify(filtros));
     }
 
-    selectPais.addEventListener('change', () => {
-        actualizarInterfazPorPais();
-        guardarFiltrosEnMemoria();
-    });
-    selectEstado.addEventListener('change', guardarFiltrosEnMemoria);
-    selectTema.addEventListener('change', guardarFiltrosEnMemoria);
-
-    // 2. CARGA DE CONFIGURACIÓN
+    // 3. CARGA DE CONFIGURACIÓN
     async function cargarConfiguracion() {
         try {
             const res = await fetch('./jurisdicciones.json');
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
             DATA_JURISDICCIONES = await res.json();
+            console.log("✅ Jurisdicciones cargadas:", DATA_JURISDICCIONES);
         } catch (e) {
-            console.error("No se pudo cargar el archivo de jurisdicciones:", e);
-            DATA_JURISDICCIONES = {}; // fallback seguro
+            console.error("❌ Error cargando JSON:", e);
         }
     }
 
-    // 3. LÓGICA DE INTERFAZ DINÁMICA (Muestra/Oculta estados)
+    // 4. INTERFAZ DINÁMICA
     function actualizarInterfazPorPais() {
         const pais = selectPais.value;
         const config = DATA_JURISDICCIONES ? DATA_JURISDICCIONES[pais] : null;
 
         if (config && config.esFederal) {
             groupEstado.style.display = "block";
-            const label = groupEstado.querySelector('label');
-            if (label) label.innerText = config.labelEstado || 'Estado';
-
             selectEstado.innerHTML = '<option value="">SELECCIONE...</option>';
-            (config.estados || []).forEach(est => {
+            config.estados.forEach(est => {
                 const opt = document.createElement('option');
                 opt.value = est.val;
                 opt.innerText = est.nom;
@@ -62,169 +50,121 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         } else {
             groupEstado.style.display = "none";
-            selectEstado.innerHTML = '';
+            selectEstado.innerHTML = ''; 
         }
+        guardarFiltrosEnMemoria();
     }
 
-    // Inicialización
-    await cargarConfiguracion();
-    actualizarInterfazPorPais();
-
-    // 4. DETECTORES LÓGICOS
-    function detectarRedaccion(texto) {
-        const t = (texto || '').toLowerCase();
-        return (t.includes("redacta") || t.includes("redacción") || t.includes("contrato"));
-    }
-
-    function detectarConflicto(texto) {
-        const t = (texto || '').toLowerCase();
-        const claves = ["qué hago si", "demanda", "desalojo", "problema", "incumplio", "reparar", "incumplimiento"];
-        return claves.some(c => t.includes(c));
-    }
-
-    // 5. FUNCIÓN PRINCIPAL DE CONSULTA
+    // 5. FUNCIÓN DE ENVÍO (CORREGIDA)
     async function enviarConsulta() {
+        console.log("🚀 Intento de envío detectado...");
+        
         const pregunta = inputPregunta.value.trim();
         const pais = selectPais.value;
         const estado = selectEstado.value;
         const tema = selectTema.value;
 
+        // Validaciones
         const config = DATA_JURISDICCIONES ? DATA_JURISDICCIONES[pais] : null;
         const necesitaEstado = config && config.esFederal;
 
         if (!pregunta || !pais || !tema || (necesitaEstado && !estado)) {
-            alert("⚠️ Por favor, completa todos los campos requeridos.");
+            alert("⚠️ Por favor, completa todos los campos.");
             return;
         }
 
-        agregarMensaje(escapeHtml(pregunta), "usuario");
+        // Interfaz: Mensaje usuario
+        agregarMensaje(pregunta, "usuario");
         inputPregunta.value = "";
 
         const idCarga = "loading-" + Date.now();
-        agregarMensaje("APOLO está consultando la base legal...", "asistente", idCarga);
+        agregarMensaje("APOLO analizando...", "asistente", idCarga);
 
+        // Lógica de carpetas (Ruta Federal México)
         const estadoBusqueda = necesitaEstado ? estado : "nacional";
-
-        // --- CAMBIO QUIRÚRGICO PARA MÉXICO LABORAL ---
         let rutaFinalEstado = estadoBusqueda;
         if (pais === "mexico" && tema === "despido") {
             rutaFinalEstado = "federal";
         }
-        // ----------------------------------------------
 
         try {
-            // Llamada al motor local
+            console.log(`Buscando en: ${pais}/${rutaFinalEstado}/${tema}`);
+            
+            // 1. Motor Local
             const dataLocal = await ejecutarMotorEstructurado(pais, rutaFinalEstado, tema, pregunta);
 
-            if (dataLocal && dataLocal.fuente && displayFuente) {
-                displayFuente.innerHTML = `<i class="fas fa-shield-halved"></i> JURISPRUDENCIA APLICADA: ${escapeHtml(dataLocal.fuente)}`;
-                displayFuente.style.display = "block";
-            } else if (displayFuente) {
-                displayFuente.style.display = "none";
-            }
-
-            // Llamada a la API de asesoría
+            // 2. Llamada a API
             const res = await fetch("/api/asesoria", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    pais,
-                    estado: rutaFinalEstado,
-                    tema,
+                    pais, 
+                    estado: rutaFinalEstado, 
+                    tema, 
                     pregunta,
-                    modo: detectarRedaccion(pregunta) ? "redactar" : (detectarConflicto(pregunta) ? "articulador" : "consulta"),
-                    contextoLegal: (dataLocal && dataLocal.reglas_relevantes) ? dataLocal.reglas_relevantes : [],
-                    fuente: (dataLocal && dataLocal.fuente) ? dataLocal.fuente : "Legislación Local"
+                    contextoLegal: dataLocal.reglas_relevantes || [],
+                    fuente: dataLocal.fuente || "Legislación Local"
                 })
             });
 
-            if (!res.ok) throw new Error("Error en la API: " + res.status);
+            if (!res.ok) throw new Error("Error en servidor API");
             const dataIA = await res.json();
+            
+            // Limpiar cargador
+            document.getElementById(idCarga)?.remove();
 
-            // limpiar loader
-            const loadingElement = document.getElementById(idCarga);
-            if (loadingElement) loadingElement.remove();
+            const r = dataIA.respuesta;
+            const idBtn = "btn-" + Date.now();
+            const necesitaTriage = (tema === "despido") || r.confianza === "Baja";
 
-            const r = dataIA.respuesta || {};
-            const idBotonTriage = "btn-" + Date.now();
-            const necesitaTriage = detectarConflicto(pregunta) || r.confianza === "Baja";
-
-            // CONSTRUCCIÓN DEL HTML DE RESPUESTA (una sola vez)
+            // HTML de respuesta
             let html = `
-                <div class="apolo-resumen"><strong>Análisis:</strong> ${escapeHtml(r.resumen || '')}</div>
-                <div class="apolo-draft" style="margin-top:10px; background:white; padding:15px; border-radius:8px; border-left:4px solid #b8973d; font-family:serif; color:#333;">
-                    ${r.draftHtml || ''}
+                <div class="apolo-resumen"><strong>Análisis:</strong> ${r.resumen}</div>
+                <div class="apolo-draft" style="margin-top:10px; border-left:4px solid #b8973d; padding-left:10px;">
+                    ${r.draftHtml}
                 </div>
             `;
 
-            // FUNDAMENTACIÓN
-            if (r.articulos && Array.isArray(r.articulos) && r.articulos.length > 0) {
+            if (necesitaTriage) {
+                const txtUbicacion = (rutaFinalEstado === "federal") ? pais.toUpperCase() : estado.toUpperCase();
                 html += `
-                    <div style="margin-top:15px; font-size:11px; color:var(--accent-gold); font-weight:bold; display:flex; align-items:center; gap:8px; letter-spacing:0.05em;">
-                        <i class="fas fa-gavel"></i> 
-                        <span>FUNDAMENTACIÓN TÉCNICA: Arts. ${r.articulos.map(a => escapeHtml(String(a))).join(", ")}</span>
-                    </div>
+                    <button id="${idBtn}" style="margin-top:15px; width:100%; background:#2d2d2d; color:white; padding:10px; border-radius:5px; cursor:pointer;">
+                        VER ESPECIALISTAS EN ${txtUbicacion}
+                    </button>
                 `;
             }
 
-            // BLOQUE TRIAGE (si aplica)
-            if (necesitaTriage) {
-                const ubicacionTexto = (rutaFinalEstado === "federal" || !necesitaEstado) ? pais.toUpperCase() : estado.toUpperCase();
-                html += `
-                    <div class="apolo-triage" style="margin-top:15px; padding:12px; background:#f4f4f0; border-radius:8px; border:1px solid #e5e5e0;">
-                        <button id="${idBotonTriage}" style="background:var(--stone-dark); color:white; border:none; padding:10px; border-radius:4px; cursor:pointer; width:100%; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em;">
-                            Ver especialistas en ${escapeHtml(ubicacionTexto)}
-                        </button>
-                    </div>`;
-            }
-
-            // Inyectar HTML una sola vez
             agregarMensaje(html, "asistente");
 
-            // Asignar listener al botón triage (si existe)
             if (necesitaTriage) {
-                const botonRegistrado = document.getElementById(idBotonTriage);
-                if (botonRegistrado) {
-                    botonRegistrado.addEventListener("click", () => {
-                        window.location.href = `directorio.html?materia=${encodeURIComponent(tema)}&estado=${encodeURIComponent(rutaFinalEstado)}&pais=${encodeURIComponent(pais)}`;
-                    });
-                }
+                document.getElementById(idBtn).onclick = () => {
+                    window.location.href = `directorio.html?materia=${tema}&estado=${rutaFinalEstado}&pais=${pais}`;
+                };
             }
 
         } catch (err) {
-            console.error("ERROR CRÍTICO:", err);
-            const loader = document.getElementById(idCarga);
-            if (loader) loader.innerHTML = "Error al conectar con el motor legal.";
-            else agregarMensaje("Error al conectar con el motor legal.", "asistente");
+            console.error("❌ ERROR EN CONSULTA:", err);
+            document.getElementById(idCarga).innerHTML = "Error al conectar con el motor legal.";
         }
     }
 
-    // Asignar listeners (solo una vez)
-    btnEnviar.addEventListener("click", enviarConsulta);
-    inputPregunta.addEventListener("keypress", (e) => { if (e.key === "Enter") enviarConsulta(); });
-
-    // Utilidad: escape básico para evitar inyección en partes no HTML (dejamos draftHtml sin escapar por diseño)
-    function escapeHtml(str) {
-        if (!str && str !== 0) return '';
-        return String(str)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
-    // agregarMensaje usa la variable global contenedorMensajes
     function agregarMensaje(texto, remitente, id = null) {
-        if (!contenedorMensajes) {
-            console.error("contenedorMensajes no inicializado");
-            return;
-        }
         const div = document.createElement("div");
-        div.classList.add("mensaje", remitente);
+        div.className = `mensaje ${remitente}`;
         if (id) div.id = id;
         div.innerHTML = texto;
         contenedorMensajes.appendChild(div);
         contenedorMensajes.scrollTop = contenedorMensajes.scrollHeight;
     }
-}); // Cierre del DOMContentLoaded
+
+    // --- INICIO ---
+    await cargarConfiguracion();
+    
+    // Escuchadores
+    selectPais.addEventListener('change', actualizarInterfazPorPais);
+    selectEstado.addEventListener('change', guardarFiltrosEnMemoria);
+    selectTema.addEventListener('change', guardarFiltrosEnMemoria);
+    
+    btnEnviar.addEventListener("click", enviarConsulta);
+    inputPregunta.addEventListener("keypress", (e) => { if (e.key === "Enter") enviarConsulta(); });
+});
