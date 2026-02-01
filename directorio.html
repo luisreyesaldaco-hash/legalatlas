@@ -117,25 +117,16 @@
                 <div class="space-y-6">
                     <div class="flex flex-col space-y-3">
                         <label class="text-[9px] uppercase font-bold tracking-widest">País</label>
-                        <select id="filtro-pais" class="bg-white/10 border border-white/20 rounded-xl p-3 text-xs outline-none text-white">
-                            <option value="">SELECCIONE PAÍS...</option>
-                            <option value="mexico" class="text-black">MÉXICO</option>
-                        </select>
-                    </div>
+                        <select id="filtro-pais" class="bg-white/10 border border-white/20 rounded-xl p-3 text-xs outline-none text-white w-full">
+                             <option value="">CARGANDO PAÍSES...</option>
+                         </select>
 
-                    <div class="flex flex-col space-y-3">
-                        <label class="text-[9px] uppercase font-bold tracking-widest">Estado</label>
-                        <select id="filtro-estado" class="bg-white/10 border border-white/20 rounded-xl p-3 text-xs outline-none text-white">
-                            <option value="">SELECCIONE ESTADO...</option>
-                            <option value="guanajuato" class="text-black">GUANAJUATO</option>
-                        </select>
-                    </div>
+                        <select id="filtro-estado" class="bg-white/10 border border-white/20 rounded-xl p-3 text-xs outline-none text-white w-full">
+                             <option value="">SELECCIONE PAÍS PRIMERO...</option>
+                         </select>
 
-                    <div class="flex flex-col space-y-3">
-                        <label class="text-[9px] uppercase font-bold tracking-widest">Ciudad</label>
-                        <select id="filtro-ciudad" class="bg-white/10 border border-white/20 rounded-xl p-3 text-xs outline-none text-white">
-                            <option value="">TODAS LAS CIUDADES</option>
-                            <option value="león" class="text-black">LEÓN</option>
+                        <select id="filtro-ciudad" class="bg-white/10 border border-white/20 rounded-xl p-3 text-xs outline-none text-white w-full">
+                             <option value="">TODAS LAS CIUDADES</option>
                         </select>
                     </div>
                 </div>
@@ -181,128 +172,142 @@
     </div>
 
 <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    let materiaFiltro = urlParams.get('materia') || ""; 
-    
     const client = supabase.createClient('https://nuzzmcxirsghykzqbmmn.supabase.co', 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff');
-    
     let map;
     let todosLosAbogados = [];
+    const urlParams = new URLSearchParams(window.location.search);
+    let materiaFiltro = urlParams.get('materia') || "";
 
     async function init() {
         // 1. Cargar datos de Supabase
-        const { data, error } = await client
-            .from('abogados')
-            .select('*')
-            .eq('flag_activo', true);
-
-        if (error) {
-            console.error("Error cargando Supabase:", error);
-            return;
-        }
-
+        const { data, error } = await client.from('abogados').select('*').eq('flag_activo', true);
+        if (error) return console.error("Error Supabase:", error);
         todosLosAbogados = data || [];
 
-        // 2. Inicializar Mapa (Vista neutra de México)
-        map = L.map('map', { zoomControl: false }).setView([23.6345, -102.5528], 5); 
+        // 2. Inicializar Mapa
+        map = L.map('map', { zoomControl: false }).setView([23.6345, -102.5528], 5);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
-
         const goldIcon = L.divIcon({
-            html: `<div style="background:#b8973d; width:12px; height:12px; border-radius:50%; border:2px solid white; box-shadow:0 0 10px rgba(0,0,0,0.15);"></div>`,
+            html: `<div style="background:#b8973d; width:12px; height:12px; border-radius:50%; border:2px solid white;"></div>`,
             iconSize: [12, 12]
         });
 
-        // 3. Dibujar TODOS los Marcadores en el mapa
-        todosLosAbogados.forEach(a => {
-            const coords = validarCoordenadas(a.coords);
-            if (coords) {
-                L.marker(coords, { icon: goldIcon }).addTo(map)
-                    .bindPopup(`<b class="font-classic">${a.nombre}</b>`);
-            }
-        });
+        // 3. Marcadores e inicializar Filtros Dinámicos
+        dibujarMarcadores(goldIcon);
+        poblarDropdownPais();
 
-        // 4. Configurar Eventos de los Selects
-        document.getElementById('filtro-pais').addEventListener('change', actualizarTarjetasVisibles);
-        document.getElementById('filtro-estado').addEventListener('change', actualizarTarjetasVisibles);
+        // 4. Eventos
+        document.getElementById('filtro-pais').addEventListener('change', () => {
+            poblarDropdownEstado();
+            actualizarTarjetasVisibles();
+        });
+        document.getElementById('filtro-estado').addEventListener('change', () => {
+            poblarDropdownCiudad();
+            actualizarTarjetasVisibles();
+        });
         document.getElementById('filtro-ciudad').addEventListener('change', actualizarTarjetasVisibles);
-        
-        // Al mover el mapa, también refrescamos (por si el usuario busca manualmente)
         map.on('moveend', actualizarTarjetasVisibles);
 
-        // Ejecución inicial
         actualizarTarjetasVisibles();
     }
 
-    function validarCoordenadas(coordString) {
-        if (!coordString || typeof coordString !== 'string' || !coordString.includes(',')) return null;
-        const parts = coordString.split(',');
-        const lat = parseFloat(parts[0]);
-        const lng = parseFloat(parts[1]);
+    // --- FUNCIONES DINÁMICAS ---
+
+    function poblarDropdownPais() {
+        const paises = [...new Set(todosLosAbogados.map(a => a.pais))].filter(Boolean).sort();
+        actualizarOpciones('filtro-pais', paises, "SELECCIONE PAÍS...");
+    }
+
+    function poblarDropdownEstado() {
+        const paisSel = document.getElementById('filtro-pais').value;
+        const estados = [...new Set(todosLosAbogados
+            .filter(a => a.pais?.toLowerCase() === paisSel)
+            .map(a => a.estado))].filter(Boolean).sort();
+        actualizarOpciones('filtro-estado', estados, paisSel ? "SELECCIONE ESTADO..." : "SELECCIONE PAÍS PRIMERO...");
+    }
+
+    function poblarDropdownCiudad() {
+        const paisSel = document.getElementById('filtro-pais').value;
+        const estadoSel = document.getElementById('filtro-estado').value;
+        const ciudades = [...new Set(todosLosAbogados
+            .filter(a => a.pais?.toLowerCase() === paisSel && a.estado?.toLowerCase() === estadoSel)
+            .map(a => a.ciudad))].filter(Boolean).sort();
+        actualizarOpciones('filtro-ciudad', ciudades, "TODAS LAS CIUDADES");
+    }
+
+    function actualizarOpciones(id, lista, textoDefault) {
+        const select = document.getElementById(id);
+        select.innerHTML = `<option value="">${textoDefault}</option>`;
+        lista.forEach(item => {
+            const opt = document.createElement('option');
+            opt.value = item.toLowerCase();
+            opt.textContent = item.toUpperCase();
+            opt.className = "text-black";
+            select.appendChild(opt);
+        });
+    }
+
+    function dibujarMarcadores(icon) {
+        todosLosAbogados.forEach(a => {
+            const coords = validarCoordenadas(a.coords);
+            if (coords) L.marker(coords, { icon }).addTo(map).bindPopup(`<b>${a.nombre}</b>`);
+        });
+    }
+
+    function validarCoordenadas(c) {
+        if (!c || typeof c !== 'string' || !c.includes(',')) return null;
+        const p = c.split(',');
+        const lat = parseFloat(p[0]), lng = parseFloat(p[1]);
         return (isNaN(lat) || isNaN(lng)) ? null : [lat, lng];
     }
 
     function actualizarTarjetasVisibles() {
         if (!map) return;
-        
-        const paisSel = document.getElementById('filtro-pais').value.toLowerCase();
-        const estadoSel = document.getElementById('filtro-estado').value.toLowerCase();
-        const ciudadSel = document.getElementById('filtro-ciudad').value.toLowerCase();
+        const paisSel = document.getElementById('filtro-pais').value;
+        const estadoSel = document.getElementById('filtro-estado').value;
+        const ciudadSel = document.getElementById('filtro-ciudad').value;
         const cont = document.getElementById('contenedor-abogados');
-        const bounds = map.getBounds();
         
-        cont.innerHTML = '';
-
-        // Filtrar los abogados que coinciden con los SELECTS
-        const filtradosPorTexto = todosLosAbogados.filter(a => {
-            const coincidePais = !paisSel || a.pais?.toLowerCase() === paisSel;
-            const coincideEstado = !estadoSel || a.estado?.toLowerCase() === estadoSel;
-            const coincideCiudad = !ciudadSel || a.ciudad?.toLowerCase() === ciudadSel;
-            
-            let coincideMateria = true;
-            if (materiaFiltro && a.materia) {
-                coincideMateria = a.materia.toLowerCase().includes(materiaFiltro.toLowerCase());
-            }
-
-            return coincidePais && coincideEstado && coincideCiudad && coincideMateria;
-        });
-
-        // LÓGICA DE AUTO-ENFOQUE: 
-        // Si el usuario acaba de elegir un país o estado, movemos el mapa hacia esos abogados automáticamente
-        if (filtradosPorTexto.length > 0 && (paisSel || estadoSel)) {
-            const puntos = filtradosPorTexto.map(a => validarCoordenadas(a.coords)).filter(c => c);
-            if (puntos.length > 0) {
-                const group = L.latLngBounds(puntos);
-                // Usamos un flag temporal para no entrar en un bucle infinito de eventos moveend
-                map.fitBounds(group, { padding: [50, 50], maxZoom: 12 });
-            }
-        }
-
-        // Ahora filtramos cuáles de esos están VISIBLES en el área actual del mapa para mostrar sus fichas
-        const visiblesEnMapa = filtradosPorTexto.filter(a => {
-            const coords = validarCoordenadas(a.coords);
-            return coords && bounds.contains(coords);
-        });
-
-        // Renderizar las tarjetas de los que están en el área visible
-        if (visiblesEnMapa.length === 0) {
-            cont.innerHTML = '<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Sin especialistas visibles en esta zona del mapa</div>';
+        if (!paisSel && !estadoSel) {
+            cont.innerHTML = `<div class="col-span-full text-center py-20 text-stone-400 text-[10px] tracking-widest uppercase">Seleccione una ubicación</div>`;
             return;
         }
 
-        visiblesEnMapa.forEach(a => {
+        const filtrados = todosLosAbogados.filter(a => {
+            const cPais = !paisSel || a.pais?.toLowerCase() === paisSel;
+            const cEdo = !estadoSel || a.estado?.toLowerCase() === estadoSel;
+            const cCiu = !ciudadSel || a.ciudad?.toLowerCase() === ciudadSel;
+            const cMat = !materiaFiltro || a.materia?.toLowerCase().includes(materiaFiltro.toLowerCase());
+            return cPais && cEdo && cCiu && cMat;
+        });
+
+        // Auto-enfoque
+        if (filtrados.length > 0) {
+            const pts = filtrados.map(a => validarCoordenadas(a.coords)).filter(c => c);
+            if (pts.length > 0) map.fitBounds(L.latLngBounds(pts), { padding: [50, 50], maxZoom: 12 });
+        }
+
+        cont.innerHTML = '';
+        const visibles = filtrados.filter(a => {
+            const coords = validarCoordenadas(a.coords);
+            return coords && map.getBounds().contains(coords);
+        });
+
+        if (visibles.length === 0) {
+            cont.innerHTML = `<div class="col-span-full text-center py-20 text-stone-400 text-[10px] uppercase">Sin resultados en esta zona</div>`;
+            return;
+        }
+
+        visibles.forEach(a => {
             cont.innerHTML += `
                 <div class="lawyer-card">
-                    <div>
-                        <div class="flex justify-between items-start mb-6">
-                            <span class="badge-materia">${a.materia || 'General'}</span>
-                            <i class="fas fa-certificate text-stone-200 text-xl"></i>
-                        </div>
-                        <h3 class="font-classic text-2xl text-stone-900 mb-2">${a.nombre}</h3>
-                        <p class="text-[10px] text-stone-400 uppercase tracking-widest mb-6">Firma Verificada</p>
-                        <p class="text-stone-500 text-sm font-light leading-relaxed mb-8">
-                            Especialista en materia ${a.materia || 'legal'}. Ubicado en ${a.ciudad || a.estado}.
-                        </p>
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="badge-materia">${a.materia || 'General'}</span>
+                        <i class="fas fa-certificate text-stone-200 text-xl"></i>
                     </div>
+                    <h3 class="font-classic text-2xl text-stone-900 mb-2">${a.nombre}</h3>
+                    <p class="text-[10px] text-stone-400 uppercase tracking-widest mb-6">Firma Verificada</p>
+                    <p class="text-stone-500 text-sm font-light mb-8">Especialista en ${a.materia}. Ubicado en ${a.ciudad}, ${a.estado}.</p>
                     <a href="https://wa.me/${a.whatsapp?.replace(/\s+/g, '')}" target="_blank" class="btn-wa">Consultar Representación</a>
                 </div>`;
         });
