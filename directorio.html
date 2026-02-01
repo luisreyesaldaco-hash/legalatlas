@@ -242,13 +242,25 @@
     }
 
     function actualizarTarjetasVisibles() {
-        if (!map) return;
-        
-        const paisSel = document.getElementById('filtro-pais').value.toLowerCase();
-        const estadoSel = document.getElementById('filtro-estado').value.toLowerCase();
-        const ciudadSel = document.getElementById('filtro-ciudad').value.toLowerCase();
-        const cont = document.getElementById('contenedor-abogados');
-        const bounds = map.getBounds();
+    if (!map) return;
+    
+    // 1. Obtener valores de los filtros
+    const paisSel = document.getElementById('filtro-pais').value;
+    const estadoSel = document.getElementById('filtro-estado').value;
+    const cont = document.getElementById('contenedor-abogados');
+    
+    // === EL BLOQUEO DE SEGURIDAD ===
+    // Si el usuario no ha seleccionado NI país NI estado, vaciamos todo y salimos.
+    if (!paisSel && !estadoSel) {
+        cont.innerHTML = `
+            <div class="col-span-full text-center py-20">
+                <p class="text-stone-400 uppercase tracking-[0.3em] text-[10px] mb-4">Exploración Geográfica</p>
+                <h3 class="font-classic text-xl text-stone-800">Seleccione un País o Estado para comenzar</h3>
+                <p class="text-stone-500 font-light mt-2 text-sm italic">Utilice los filtros laterales para encontrar especialistas verificados.</p>
+            </div>`;
+        return; // Esto detiene la función aquí mismo
+    }
+     const bounds = map.getBounds();
         
         cont.innerHTML = '';
 
