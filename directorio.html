@@ -190,7 +190,7 @@
     let todosLosAbogados = [];
 
     async function init() {
-        // 1. Cargar datos
+        // 1. Cargar datos de Supabase
         const { data, error } = await client
             .from('abogados')
             .select('*')
@@ -203,8 +203,8 @@
 
         todosLosAbogados = data || [];
 
-        // 2. Inicializar Mapa
-        map = L.map('map', { zoomControl: false }).setView([23.6345, -102.5528], 5); // Vista general México
+        // 2. Inicializar Mapa (Centro inicial neutro)
+        map = L.map('map', { zoomControl: false }).setView([23.6345, -102.5528], 5); 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
         const goldIcon = L.divIcon({
@@ -212,7 +212,7 @@
             iconSize: [12, 12]
         });
 
-        // 3. Dibujar Marcadores iniciales
+        // 3. Dibujar Marcadores
         todosLosAbogados.forEach(a => {
             const coords = validarCoordenadas(a.coords);
             if (coords) {
@@ -221,34 +221,31 @@
             }
         });
 
-        // 4. RECUPERAR FILTROS DEL CHAT
-        const memoria = localStorage.getItem('filtroUsuario');
-        if (memoria) {
-            const filtros = JSON.parse(memoria);
-            const sPais = document.getElementById('filtro-pais');
-            const sEdo  = document.getElementById('filtro-estado');
-            const sTema = document.getElementById('filtro-materia');
-
-            if (filtros.pais && sPais) sPais.value = filtros.pais.toLowerCase();
-            if (filtros.estado && sEdo) sEdo.value = filtros.estado.toLowerCase();
-            if (filtros.tema) {
-                if (sTema) sTema.value = filtros.tema;
-                materiaFiltro = filtros.tema;
-                window.materiaFiltro = filtros.tema;
-            }
-
-            localStorage.removeItem('filtroUsuario');
-        }
-
-        // 5. Configurar Eventos
+        // 4. Configurar Eventos
         document.getElementById('filtro-pais').addEventListener('change', actualizarTarjetasVisibles);
         document.getElementById('filtro-estado').addEventListener('change', actualizarTarjetasVisibles);
         document.getElementById('filtro-ciudad').addEventListener('change', actualizarTarjetasVisibles);
         map.on('moveend', actualizarTarjetasVisibles);
 
-        // Ejecución inicial
-        actualizarTarjetasVisibles();
-    } // AQUÍ CIERRA INIT
+        // 5. RECUPERAR FILTROS (EL PUENTE)
+        const memoria = localStorage.getItem('filtroUsuario');
+        if (memoria) {
+            const filtros = JSON.parse(memoria);
+            const sPais = document.getElementById('filtro-pais');
+            const sEdo  = document.getElementById('filtro-estado');
+
+            if (filtros.pais && sPais) sPais.value = filtros.pais.toLowerCase();
+            if (filtros.estado && sEdo) sEdo.value = filtros.estado.toLowerCase();
+            if (filtros.tema) materiaFiltro = filtros.tema;
+
+            localStorage.removeItem('filtroUsuario'); // Limpiar maleta
+            
+            // TRICK: Disparar el cambio manualmente para que se ejecute la lógica
+            actualizarTarjetasVisibles();
+        } else {
+            actualizarTarjetasVisibles();
+        }
+    }
 
     function validarCoordenadas(coordString) {
         if (!coordString || typeof coordString !== 'string' || !coordString.includes(',')) return null;
@@ -269,6 +266,7 @@
         
         cont.innerHTML = '';
 
+        // Si no hay nada seleccionado, no filtramos, solo mostramos mensaje
         if (!paisSel && !estadoSel) {
             cont.innerHTML = `<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Seleccione una ubicación para explorar especialistas</div>`;
             return;
@@ -278,7 +276,6 @@
             const coords = validarCoordenadas(a.coords);
             if (!coords) return false;
 
-            const estaEnMapa = bounds.contains(coords);
             const coincidePais = !paisSel || a.pais?.toLowerCase() === paisSel.toLowerCase();
             const coincideEstado = !estadoSel || a.estado?.toLowerCase() === estadoSel.toLowerCase();
             const coincideCiudad = !ciudadSel || a.ciudad?.toLowerCase() === ciudadSel.toLowerCase();
@@ -288,18 +285,27 @@
                 coincideMateria = a.materia.toLowerCase().includes(materiaFiltro.toLowerCase());
             }
 
-            return coincidePais && coincideEstado && coincideCiudad && estaEnMapa && coincideMateria;
+            // Para que aparezcan en la lista, deben estar en el área del mapa Y coincidir con los filtros
+            return coincidePais && coincideEstado && coincideCiudad && bounds.contains(coords) && coincideMateria;
         });
 
-        // Auto-zoom si hay resultados nuevos
-        if (visibles.length > 0) {
-            const puntos = visibles.map(a => validarCoordenadas(a.coords));
-            const group = L.latLngBounds(puntos);
-            map.fitBounds(group, { padding: [50, 50], maxZoom: 12 });
+        // AUTO-ZOOM: Si filtramos por estado/país por primera vez, movemos el mapa a esos abogados
+        const abogadosFiltradosPorTexto = todosLosAbogados.filter(a => {
+            const coincidePais = !paisSel || a.pais?.toLowerCase() === paisSel.toLowerCase();
+            const coincideEstado = !estadoSel || a.estado?.toLowerCase() === estadoSel.toLowerCase();
+            return coincidePais && coincideEstado;
+        });
+
+        if (abogadosFiltradosPorTexto.length > 0 && (paisSel || estadoSel)) {
+            const puntos = abogadosFiltradosPorTexto.map(a => validarCoordenadas(a.coords)).filter(c => c);
+            if (puntos.length > 0) {
+                const group = L.latLngBounds(puntos);
+                map.fitBounds(group, { padding: [50, 50], maxZoom: 12 });
+            }
         }
 
         if (visibles.length === 0) {
-            cont.innerHTML = '<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Sin especialistas en esta zona</div>';
+            cont.innerHTML = '<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Sin especialistas visibles en esta zona</div>';
             return;
         }
 
