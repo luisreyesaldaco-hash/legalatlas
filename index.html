@@ -98,7 +98,7 @@
     }
     .btn-pro-access:hover::after { left: 100%; }
 
-    /* --- ELEMENTOS DE NAVEGACIÓN Y CONFIG --- */
+    /* --- NAVEGACIÓN Y CONFIG --- */
     .nav-buttons { margin-bottom: 40px; }
     .nav-btn-contact {
         background: rgba(255,255,255,0.05);
@@ -149,17 +149,6 @@
     }
     select option { color: #111111; background-color: #ffffff; }
 
-    .modulo-badge {
-        background: rgba(184, 151, 61, 0.1);
-        color: var(--accent-gold);
-        padding: 15px;
-        border-radius: 10px;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        border: 1px solid rgba(184, 151, 61, 0.2);
-    }
-
     .footer-tag {
         margin-top: 28px;
         font-size: 10px;
@@ -169,7 +158,7 @@
         font-weight: 600;
     }
 
-    /* --- MAIN CHAT AREA --- */
+    /* --- ÁREA DE CHAT --- */
     main { flex-grow: 1; display: flex; flex-direction: column; padding: 60px; }
     #mensajes {
         flex-grow: 1;
@@ -207,14 +196,85 @@
     }
     button#enviar:hover { background-color: var(--accent-gold); transform: scale(1.05); }
 
+    /* --- TARJETA DEL DIRECTORIO --- */
+    .directory-card {
+        background: var(--white);
+        border: 1px solid var(--border-stone);
+        border-radius: 16px;
+        padding: 25px;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        margin-top: 40px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    }
+
+    .directory-icon {
+        background: var(--stone-light);
+        color: var(--accent-gold);
+        width: 45px;
+        height: 45px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .directory-content h4 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        letter-spacing: -0.01em;
+    }
+
+    .directory-content p {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 18px;
+        line-height: 1.5;
+    }
+
+    .directory-link-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        border: 1.5px solid var(--stone-dark);
+        border-radius: 8px;
+        color: var(--stone-dark);
+        text-decoration: none;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        transition: all 0.3s ease;
+    }
+
+    .directory-link-btn:hover {
+        background: var(--stone-dark);
+        color: var(--white);
+        transform: translateY(-2px);
+    }
+
+    .directory-link-btn i { font-size: 9px; transition: transform 0.3s ease; }
+    .directory-link-btn:hover i { transform: translateX(4px); }
+
     /* --- RESPONSIVE --- */
     @media (max-width: 768px) {
         body { flex-direction: column; overflow-y: auto; height: auto; }
         aside { width: 100%; padding: 30px; max-height: 45vh; overflow-y: auto; }
         main { padding: 20px !important; height: auto; min-height: 55vh; }
         #mensajes { min-height: 40vh; }
+        
+        /* Ajuste para la tarjeta en móvil */
+        .directory-card {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
     }
-</style>
+   </style>
 </head>
 <body>
 <aside>
@@ -230,7 +290,6 @@
             <i class="fas fa-chevron-right arrow"></i>
         </a>
 
-        <div id="status-badge" class="modulo-badge" style="margin-top: 15px;">APOLO // ESTRUCTURADO</div>
     </div>
 
     <div class="nav-buttons">
@@ -293,14 +352,18 @@
             </button>
         </div>
 
-        <div class="directory-offer">
-            <div class="directory-text">
-                <p>¿Necesitas representación legal?</p>
-                <p>Si necesitas que un abogado lleve tu caso, consulta con nuestros colaboradores.</p>
-            </div>
-            <a href="directorio.html" class="directory-btn">Ver Directorio</a>
-        </div>
+        <div class="directory-card">
+    <div class="directory-icon">
+        <i class="fas fa-balance-scale"></i>
     </div>
+    <div class="directory-content">
+        <h4>¿Necesitas representación legal?</h4>
+        <p>Si buscas que un abogado lleve tu caso, consulta nuestra red de especialistas certificados.</p>
+        <a href="directorio.html" class="directory-link-btn">
+            EXPLORAR DIRECTORIO <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</div>
 </main>
 
  
