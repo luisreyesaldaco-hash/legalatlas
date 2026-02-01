@@ -183,7 +183,8 @@
 
 <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const materiaFiltro = urlParams.get('materia'); 
+    // Cambiamos a 'let' para poder actualizarla si viene de la memoria
+    let materiaFiltro = urlParams.get('materia') || ""; 
     
     const client = supabase.createClient('https://nuzzmcxirsghykzqbmmn.supabase.co', 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff');
     
@@ -191,6 +192,7 @@
     let todosLosAbogados = [];
 
     async function init() {
+        // 1. Cargar datos de Supabase
         const { data, error } = await client
             .from('abogados')
             .select('*')
@@ -203,7 +205,7 @@
 
         todosLosAbogados = data || [];
 
-        // Inicializar Mapa
+        // 2. Inicializar Mapa
         map = L.map('map', { zoomControl: false }).setView([21.12, -101.68], 12);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
@@ -212,7 +214,7 @@
             iconSize: [12, 12]
         });
 
-        // Dibujar Marcadores
+        // 3. Dibujar Marcadores
         todosLosAbogados.forEach(a => {
             const coords = validarCoordenadas(a.coords);
             if (coords) {
@@ -221,7 +223,27 @@
             }
         });
 
-        // Eventos de Filtros
+        // 4. RECUPERAR FILTROS DEL CHAT (LOCALSTORAGE)
+        const memoria = localStorage.getItem('filtroUsuario');
+        if (memoria) {
+            const filtros = JSON.parse(memoria);
+            
+            if (filtros.estado) {
+                const selectEdo = document.getElementById('filtro-estado');
+                if (selectEdo) selectEdo.value = filtros.estado.toLowerCase();
+            }
+            if (filtros.tema) {
+                const selectTema = document.getElementById('filtro-materia'); 
+                if (selectTema) selectTema.value = filtros.tema;
+                materiaFiltro = filtros.tema; // Actualizamos la variable global
+            }
+            
+            if (filtros.estado?.toLowerCase() === "guanajuato") {
+                map.flyTo([21.12, -101.68], 12);
+            }
+        }
+
+        // 5. Configurar Eventos
         document.getElementById('filtro-estado').addEventListener('change', function(e) {
             if (e.target.value === "guanajuato") {
                 map.flyTo([21.12, -101.68], 12);
@@ -232,6 +254,8 @@
         document.getElementById('filtro-ciudad').addEventListener('change', actualizarTarjetasVisibles);
 
         map.on('moveend', actualizarTarjetasVisibles);
+        
+        // Ejecución inicial
         actualizarTarjetasVisibles();
     }
 
@@ -253,7 +277,6 @@
         
         cont.innerHTML = '';
 
-        // Si no han seleccionado estado, invitamos a filtrar
         if (!estadoSel) {
             cont.innerHTML = `<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Seleccione un estado para explorar especialistas</div>`;
             return;
@@ -264,18 +287,15 @@
             if (!coords) return false;
 
             const estaEnMapa = bounds.contains(coords);
-            
-            // FILTRO FLEXIBLE: 
-            // Si tu tabla no tiene columna 'estado', esta línea fallará. 
-            // Vamos a usar la columna 'ciudad' que vimos en tu consola de F12.
             const coincideCiudad = !ciudadSel || a.ciudad?.toLowerCase().trim() === ciudadSel.toLowerCase();
-
-            if (!estaEnMapa || !coincideCiudad) return false;
-
+            
+            // Filtro de materia (viene de URL o de Memoria)
+            let coincideMateria = true;
             if (materiaFiltro && a.materia) {
-                return a.materia.toLowerCase().includes(materiaFiltro.toLowerCase());
+                coincideMateria = a.materia.toLowerCase().includes(materiaFiltro.toLowerCase());
             }
-            return true;
+
+            return estaEnMapa && coincideCiudad && coincideMateria;
         });
 
         if (visibles.length === 0) {
@@ -303,6 +323,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', init);
+    
 </script>
 </body>
 </html>
