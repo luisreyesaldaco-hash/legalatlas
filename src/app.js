@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 4. FUNCIÓN DE ENVÍO AL MOTOR APOLO
     async function enviarConsulta() {
+        if (displayFuente) displayFuente.style.display = "none"; // Limpia la fuente anterior
         const pregunta = inputPregunta.value.trim();
         const pais = selectPais.value;
         const estado = selectEstado.value;
@@ -78,7 +79,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             // A. Ejecutar Motor Local (Ontos)
             const dataLocal = await ejecutarMotorEstructurado(pais, rutaEstado, tema, pregunta);
-
+          if (dataLocal.fuente && displayFuente) {
+          displayFuente.innerHTML = `<i class="fas fa-shield-halved"></i> JURISPRUDENCIA APLICADA: ${dataLocal.fuente}`;
+          displayFuente.style.display = "block"; // Esto hace que aparezca sobre el input
+        }
             // B. Llamada a la IA (Asesoría)
             const res = await fetch("/api/asesoria", {
                 method: "POST",
@@ -102,15 +106,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // C. Construir Respuesta en el Chat
             let html = `
-                <div><strong>Análisis:</strong> ${r.resumen}</div>
-                <div style="margin-top:10px; border-left:4px solid #b8973d; padding-left:15px; font-family:serif;">
-                    ${r.draftHtml}
-                </div>
-            `;
+    <div><strong>Análisis:</strong> ${r.resumen}</div>
+    <div style="margin-top:10px; border-left:4px solid #b8973d; padding-left:15px; font-family:serif; color:#333;">
+        ${r.draftHtml}
+    </div>
+`;
+
+// FUNDAMENTACIÓN (El mazo de juez)
+// Aquí cerramos el string de arriba y usamos lógica real de JS
+if (r.articulos && r.articulos.length > 0) {
+    html += `
+        <div style="margin-top:15px; font-size:11px; color:#b8973d; font-weight:bold; display:flex; align-items:center; gap:8px; letter-spacing:0.05em;">
+            <i class="fas fa-gavel"></i> 
+            <span>FUNDAMENTACIÓN TÉCNICA: Arts. ${r.articulos.join(", ")}</span>
+        </div>
+    `;
+}
+
+// BOTÓN DE DIRECTORIO
 
             if (necesitaAbogado) {
-                const destino = (rutaEstado === "federal") ? pais.toUpperCase() : estado.toUpperCase();
-                html += `
+                // Si hay estado lo usa, si no, usa el nombre del país
+                    const nombreLugar = estado ? estado.toUpperCase() : pais.toUpperCase();
+                    const destino = (rutaEstado === "federal") ? pais.toUpperCase() : nombreLugar;
+                    html += `
                     <button id="${idBtn}" style="margin-top:15px; width:100%; background:#1a1a1a; color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; font-size:10px;">
                         VER ESPECIALISTAS EN ${destino}
                     </button>
