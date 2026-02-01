@@ -13,38 +13,37 @@ document.addEventListener('DOMContentLoaded', async () => {
     const groupEstado = document.getElementById("group-estado");
     const displayFuente = document.getElementById("fuente-oficial-display");
 
-    // --- NUEVO CÓDIGO: Función para guardar en memoria ---
+    // --- ESCUCHADORES PARA GUARDAR FILTROS ---
     function guardarFiltrosEnMemoria() {
         const filtros = {
             pais: selectPais.value,
-            estado: selectEstado.value || '', // Por si está oculto/vacío
+            estado: selectEstado.value || '',
             tema: selectTema.value
         };
-        // Guardamos en el navegador
         localStorage.setItem('filtroUsuario', JSON.stringify(filtros));
-        console.log("Filtros guardados:", filtros); // Para que veas en consola si funciona
     }
 
-    // --- ESCUCHADORES DE EVENTOS ---
-    // Cada vez que cambien el select, actualizamos la memoria
-    selectPais.addEventListener('change', guardarFiltrosEnMemoria);
+    selectPais.addEventListener('change', () => {
+        actualizarInterfazPorPais();
+        guardarFiltrosEnMemoria();
+    });
     selectEstado.addEventListener('change', guardarFiltrosEnMemoria);
     selectTema.addEventListener('change', guardarFiltrosEnMemoria);
-    
+
     // 2. CARGA DE CONFIGURACIÓN
     async function cargarConfiguracion() {
         try {
             const res = await fetch('./jurisdicciones.json');
-            DATA_JURISDICCIONES = await res.json();
+            window.DATA_JURISDICCIONES = await res.json();
         } catch (e) {
             console.error("No se pudo cargar el archivo de jurisdicciones:", e);
         }
     }
 
-    // 3. LÓGICA DE INTERFAZ DINÁMICA
+    // 3. LÓGICA DE INTERFAZ DINÁMICA (Muestra/Oculta estados)
     function actualizarInterfazPorPais() {
         const pais = selectPais.value;
-        const config = DATA_JURISDICCIONES ? DATA_JURISDICCIONES[pais] : null;
+        const config = window.DATA_JURISDICCIONES ? window.DATA_JURISDICCIONES[pais] : null;
 
         if (config && config.esFederal) {
             groupEstado.style.display = "block";
@@ -64,8 +63,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    await cargarConfiguracion();
-    selectPais.addEventListener('change', actualizarInterfazPorPais);
+await cargarConfiguracion(); // 1. Carga el JSON de países/estados
+    actualizarInterfazPorPais(); // 2. Revisa si debe mostrar estados al inicio
+    
+    // 3. Escuchadores de botones y teclado
+    btnEnviar.addEventListener("click", enviarConsulta);
+    inputPregunta.addEventListener("keypress", (e) => { 
+        if (e.key === "Enter") enviarConsulta(); 
+    });
+}); // Cierre del DOMContentLoaded
 
     // 4. DETECTORES LÓGICOS
     function detectarRedaccion(texto) {
@@ -106,34 +112,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 let rutaFinalEstado = estadoBusqueda;
 
 if (pais === "mexico" && tema === "despido") {
-    rutaFinalEstado = "federal"; // Forzamos que busque en la carpeta 'federal'
+    rutaFinalEstado = "federal"; 
 }
 // ----------------------------------------------
 
-        try {
-            // Llamada al Motor Local
-            const dataLocal = await ejecutarMotorEstructurado(pais, estadoBusqueda, tema, pregunta);
+try {
+    // *** CORRECCIÓN 1: Usar rutaFinalEstado para el motor local
+    const dataLocal = await ejecutarMotorEstructurado(pais, rutaFinalEstado, tema, pregunta);
 
-            // ACTUALIZACIÓN DE LA FUENTE (Franja dorada en Index)
-            if (dataLocal.fuente && displayFuente) {
-                displayFuente.innerHTML = `<i class="fas fa-shield-halved"></i> JURISPRUDENCIA APLICADA: ${dataLocal.fuente}`;
-                displayFuente.style.display = "block";
-            }
+    if (dataLocal.fuente && displayFuente) {
+        displayFuente.innerHTML = `<i class="fas fa-shield-halved"></i> JURISPRUDENCIA APLICADA: ${dataLocal.fuente}`;
+        displayFuente.style.display = "block";
+    }
 
-            // Petición a la API
-            const res = await fetch("/api/asesoria", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    pais, 
-                    estado: estadoBusqueda, 
-                    tema, 
-                    pregunta,
-                    modo: detectarRedaccion(pregunta) ? "redactar" : (detectarConflicto(pregunta) ? "articulador" : "consulta"),
-                    contextoLegal: dataLocal.reglas_relevantes || [],
-                    fuente: dataLocal.fuente || "Legislación Local"
-                })
-            });
+    const res = await fetch("/api/asesoria", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            pais, 
+            // *** CORRECCIÓN 2: Usar rutaFinalEstado para que la IA sepa que es Federal
+            estado: rutaFinalEstado, 
+            tema, 
+            pregunta,
+            modo: detectarRedaccion(pregunta) ? "redactar" : (detectarConflicto(pregunta) ? "articulador" : "consulta"),
+            contextoLegal: dataLocal.reglas_relevantes || [],
+            fuente: dataLocal.fuente || "Legislación Local"
+        })
+    });
+    
+    // ... resto del código
 
             if (!res.ok) throw new Error("Error en la API");
             const dataIA = await res.json();
@@ -176,10 +183,33 @@ if (pais === "mexico" && tema === "despido") {
 
             agregarMensaje(html, "asistente");
 
+// BOTÓN DE DIRECTORIO (CORREGIDO)
             if (necesitaTriage) {
-                document.getElementById(idBotonTriage).addEventListener("click", () => {
-                    window.location.href = `directorio.html?materia=${tema}&estado=${estadoBusqueda}&pais=${pais}`;
-                });
+                // Si es federal, mostramos el país, si no, el estado.
+                const ubicacionTexto = (rutaFinalEstado === "federal" || !necesitaEstado) 
+                    ? pais.toUpperCase() 
+                    : estado.toUpperCase();
+
+                html += `
+                    <div class="apolo-triage" style="margin-top:15px; padding:12px; background:#f4f4f0; border-radius:8px; border:1px solid #e5e5e0;">
+                        <button id="${idBotonTriage}" style="background:var(--stone-dark); color:white; border:none; padding:10px; border-radius:4px; cursor:pointer; width:100%; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em;">
+                            Ver especialistas en ${ubicacionTexto}
+                        </button>
+                    </div>`;
+            }
+
+            // 1. Primero inyectamos el HTML al DOM
+            agregarMensaje(html, "asistente");
+
+            // 2. AHORA QUE YA EXISTE EN EL DOM, le asignamos el click
+            if (necesitaTriage) {
+                const botonRegistrado = document.getElementById(idBotonTriage);
+                if (botonRegistrado) {
+                    botonRegistrado.addEventListener("click", () => {
+                        // Usamos rutaFinalEstado para que el directorio también sepa que es federal
+                        window.location.href = `directorio.html?materia=${tema}&estado=${rutaFinalEstado}&pais=${pais}`;
+                    });
+                }
             }
 
         } catch (err) {
