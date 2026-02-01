@@ -96,7 +96,6 @@
         }
     </style>
 </head>
-
 <body class="min-h-screen flex flex-col">
 
     <nav class="w-full h-28 flex justify-between items-center px-6 md:px-24">
@@ -183,7 +182,6 @@
 
 <script>
     const urlParams = new URLSearchParams(window.location.search);
-    // Cambiamos a 'let' para poder actualizarla si viene de la memoria
     let materiaFiltro = urlParams.get('materia') || ""; 
     
     const client = supabase.createClient('https://nuzzmcxirsghykzqbmmn.supabase.co', 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff');
@@ -192,7 +190,7 @@
     let todosLosAbogados = [];
 
     async function init() {
-        // 1. Cargar datos de Supabase
+        // 1. Cargar datos
         const { data, error } = await client
             .from('abogados')
             .select('*')
@@ -206,7 +204,7 @@
         todosLosAbogados = data || [];
 
         // 2. Inicializar Mapa
-        map = L.map('map', { zoomControl: false }).setView([21.12, -101.68], 12);
+        map = L.map('map', { zoomControl: false }).setView([23.6345, -102.5528], 5); // Vista general México
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
 
         const goldIcon = L.divIcon({
@@ -214,7 +212,7 @@
             iconSize: [12, 12]
         });
 
-        // 3. Dibujar Marcadores
+        // 3. Dibujar Marcadores iniciales
         todosLosAbogados.forEach(a => {
             const coords = validarCoordenadas(a.coords);
             if (coords) {
@@ -223,97 +221,89 @@
             }
         });
 
-        // 4. RECUPERAR FILTROS DEL CHAT (LOCALSTORAGE)
- // === RECUPERAR FILTROS DEL CHAT (DINÁMICO Y GLOBAL) ===
-const memoria = localStorage.getItem('filtroUsuario');
+        // 4. RECUPERAR FILTROS DEL CHAT
+        const memoria = localStorage.getItem('filtroUsuario');
+        if (memoria) {
+            const filtros = JSON.parse(memoria);
+            const sPais = document.getElementById('filtro-pais');
+            const sEdo  = document.getElementById('filtro-estado');
+            const sTema = document.getElementById('filtro-materia');
 
-if (memoria) {
-    const filtros = JSON.parse(memoria);
-    
-    // 1. Referencias a los selectores del directorio
-    const sPais = document.getElementById('filtro-pais');
-    const sEdo  = document.getElementById('filtro-estado');
-    const sTema = document.getElementById('filtro-materia');
+            if (filtros.pais && sPais) sPais.value = filtros.pais.toLowerCase();
+            if (filtros.estado && sEdo) sEdo.value = filtros.estado.toLowerCase();
+            if (filtros.tema) {
+                if (sTema) sTema.value = filtros.tema;
+                materiaFiltro = filtros.tema;
+                window.materiaFiltro = filtros.tema;
+            }
 
-    // 2. Asignar País (La base de la jerarquía)
-    if (filtros.pais && sPais) {
-        sPais.value = filtros.pais.toLowerCase();
-        // Disparamos change para que, si tienes lógica que cargue estados 
-        // dependiendo del país, esta se ejecute.
-        sPais.dispatchEvent(new Event('change'));
-    }
-
-    // 3. Asignar Estado
-    if (filtros.estado && sEdo) {
-        sEdo.value = filtros.estado.toLowerCase();
-        // Este trigger es el que normalmente dispara la búsqueda y el mapa
-        sEdo.dispatchEvent(new Event('change'));
-    }
-
-    // 4. Asignar Tema/Materia
-    if (filtros.tema && sTema) {
-        sTema.value = filtros.tema;
-        sTema.dispatchEvent(new Event('change'));
-        window.materiaFiltro = filtros.tema;
-    }
-
-    // 5. Limpiar memoria: el "ticket" ya se usó
-    localStorage.removeItem('filtroUsuario');
-    
-    console.log("Filtros internacionales aplicados:", filtros);
-}
-
-        // 5. Configurar Eventos
-   function actualizarTarjetasVisibles() {
-    if (!map) return;
-    
-    // 1. Obtener valores de los filtros
-    const paisSel = document.getElementById('filtro-pais')?.value || "";
-    const estadoSel = document.getElementById('filtro-estado').value;
-    const ciudadSel = document.getElementById('filtro-ciudad').value;
-    const cont = document.getElementById('contenedor-abogados');
-    const bounds = map.getBounds();
-    
-    cont.innerHTML = '';
-
-    // 2. Si no hay país o estado seleccionado (dependiendo de tu flujo), avisar
-    if (!paisSel && !estadoSel) {
-        cont.innerHTML = `<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Seleccione una ubicación para explorar especialistas</div>`;
-        return;
-    }
-
-    // 3. Filtrar abogados por ubicación, materia y vista del mapa
-    const visibles = todosLosAbogados.filter(a => {
-        const coords = validarCoordenadas(a.coords);
-        if (!coords) return false;
-
-        const estaEnMapa = bounds.contains(coords);
-        const coincidePais = !paisSel || a.pais?.toLowerCase() === paisSel.toLowerCase();
-        const coincideEstado = !estadoSel || a.estado?.toLowerCase() === estadoSel.toLowerCase();
-        const coincideCiudad = !ciudadSel || a.ciudad?.toLowerCase() === ciudadSel.toLowerCase();
-        
-        // Filtro de materia (procedente de URL o Memoria)
-        let coincideMateria = true;
-        if (window.materiaFiltro && a.materia) {
-            coincideMateria = a.materia.toLowerCase().includes(window.materiaFiltro.toLowerCase());
+            localStorage.removeItem('filtroUsuario');
         }
 
-        return coincidePais && coincideEstado && coincideCiudad && estaEnMapa && coincideMateria;
-    });
+        // 5. Configurar Eventos
+        document.getElementById('filtro-pais').addEventListener('change', actualizarTarjetasVisibles);
+        document.getElementById('filtro-estado').addEventListener('change', actualizarTarjetasVisibles);
+        document.getElementById('filtro-ciudad').addEventListener('change', actualizarTarjetasVisibles);
+        map.on('moveend', actualizarTarjetasVisibles);
 
-    // 4. LÓGICA DE AUTO-ZOOM: Si hay abogados, centramos el mapa en ellos
-    if (visibles.length > 0) {
-        const puntos = visibles.map(a => validarCoordenadas(a.coords));
-        const group = L.latLngBounds(puntos);
-        // El mapa se ajusta solo a los marcadores encontrados
-        map.fitBounds(group, { padding: [50, 50], maxZoom: 12 });
+        // Ejecución inicial
+        actualizarTarjetasVisibles();
+    } // AQUÍ CIERRA INIT
+
+    function validarCoordenadas(coordString) {
+        if (!coordString || typeof coordString !== 'string' || !coordString.includes(',')) return null;
+        const parts = coordString.split(',');
+        const lat = parseFloat(parts[0]);
+        const lng = parseFloat(parts[1]);
+        return (isNaN(lat) || isNaN(lng)) ? null : [lat, lng];
     }
 
-    // 5. Renderizar tarjetas (Tu bucle forEach que ya tenías)
-    if (visibles.length === 0) {
-        cont.innerHTML = '<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Sin especialistas en esta zona</div>';
-        return;
-    }
+    function actualizarTarjetasVisibles() {
+        if (!map) return;
+        
+        const paisSel = document.getElementById('filtro-pais')?.value || "";
+        const estadoSel = document.getElementById('filtro-estado').value;
+        const ciudadSel = document.getElementById('filtro-ciudad').value;
+        const cont = document.getElementById('contenedor-abogados');
+        const bounds = map.getBounds();
+        
+        cont.innerHTML = '';
+
+        if (!paisSel && !estadoSel) {
+            cont.innerHTML = `<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Seleccione una ubicación para explorar especialistas</div>`;
+            return;
+        }
+
+        const visibles = todosLosAbogados.filter(a => {
+            const coords = validarCoordenadas(a.coords);
+            if (!coords) return false;
+
+            const estaEnMapa = bounds.contains(coords);
+            const coincidePais = !paisSel || a.pais?.toLowerCase() === paisSel.toLowerCase();
+            const coincideEstado = !estadoSel || a.estado?.toLowerCase() === estadoSel.toLowerCase();
+            const coincideCiudad = !ciudadSel || a.ciudad?.toLowerCase() === ciudadSel.toLowerCase();
+            
+            let coincideMateria = true;
+            if (materiaFiltro && a.materia) {
+                coincideMateria = a.materia.toLowerCase().includes(materiaFiltro.toLowerCase());
+            }
+
+            return coincidePais && coincideEstado && coincideCiudad && estaEnMapa && coincideMateria;
+        });
+
+        // Auto-zoom si hay resultados nuevos
+        if (visibles.length > 0) {
+            const puntos = visibles.map(a => validarCoordenadas(a.coords));
+            const group = L.latLngBounds(puntos);
+            map.fitBounds(group, { padding: [50, 50], maxZoom: 12 });
+        }
+
+        if (visibles.length === 0) {
+            cont.innerHTML = '<div class="col-span-full text-center py-20 text-stone-400 uppercase tracking-widest text-[10px]">Sin especialistas en esta zona</div>';
+            return;
+        }
+
+        visibles.forEach(a => {
             cont.innerHTML += `
                 <div class="lawyer-card">
                     <div>
@@ -324,7 +314,7 @@ if (memoria) {
                         <h3 class="font-classic text-2xl text-stone-900 mb-2">${a.nombre}</h3>
                         <p class="text-[10px] text-stone-400 uppercase tracking-widest mb-6">Firma Verificada</p>
                         <p class="text-stone-500 text-sm font-light leading-relaxed mb-8">
-                            Especialista en materia ${a.materia || 'legal'}. Ubicado en ${a.ciudad || 'Guanajuato'}.
+                            Especialista en materia ${a.materia || 'legal'}. Ubicado en ${a.ciudad || a.estado}.
                         </p>
                     </div>
                     <a href="https://wa.me/${a.whatsapp?.replace(/\s+/g, '')}" target="_blank" class="btn-wa">Consultar Representación</a>
@@ -333,7 +323,6 @@ if (memoria) {
     }
 
     document.addEventListener('DOMContentLoaded', init);
-
 </script>
 </body>
 </html>
