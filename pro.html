@@ -3,87 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Legal Atlas PRO - Sistema Conectado</title>
+    <title>Legal Atlas PRO - Navegador Global</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-    /* Estilos del Sidebar */
-    #sidebar {
-        width: 300px;
-        background: #f8f9fa;
-        border-right: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-    }
-    .search-container { padding: 15px; border-bottom: 1px solid #eee; }
-    #map-search {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-    #menu-content { overflow-y: auto; flex-grow: 1; padding: 10px; }
-    
-    /* Estilos de los ítems del menú */
-    .menu-group { margin-bottom: 10px; }
-    .menu-label { 
-        font-weight: bold; 
-        font-size: 0.75rem; 
-        color: #7f8c8d; 
-        text-transform: uppercase; 
-        padding: 5px 0;
-        border-bottom: 1px solid #eee;
-        margin-bottom: 5px;
-    }
-    .menu-item {
-        padding: 8px 12px;
-        cursor: pointer;
-        border-radius: 4px;
-        font-size: 0.9rem;
-        transition: 0.2s;
-        color: #2c3e50;
-    }
-    .menu-item:hover { background: #e9ecef; color: #3498db; }
-    .menu-item.active { background: #3498db; color: white; font-weight: bold; }
-</style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --highlight-color: #fff3cd;
+            --border-color: #dee2e6;
+            --sidebar-bg: #f8f9fa;
+        }
+
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+
+        /* --- PANTALLA DE CARGA --- */
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; justify-content: center; align-items: center; z-index: 2000; display: none; }
+
+        /* --- AUTH --- */
+        #auth-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #f4f7f6; }
+        .auth-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 350px; text-align: center; }
+        .auth-box input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        .auth-box button { width: 100%; padding: 12px; background: var(--accent-color); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+
+        /* --- DASHBOARD PRINCIPAL --- */
+        #main-app { display: none; height: 100vh; flex-direction: column; }
+        
+        .header-pro { background: var(--primary-color); color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; height: 45px; }
+
+        .pro-dashboard { display: flex; height: calc(100vh - 45px); width: 100%; }
+
+        /* Sidebar Navegación */
+        #sidebar { width: 300px; background: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0; }
+        .search-container { padding: 15px; border-bottom: 1px solid #eee; }
+        #map-search { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        #menu-content { overflow-y: auto; flex-grow: 1; padding: 10px; }
+        
+        .menu-group { margin-bottom: 20px; }
+        .menu-label { font-weight: bold; font-size: 0.7rem; color: #7f8c8d; text-transform: uppercase; padding: 5px 0; border-bottom: 1px solid #eee; margin-bottom: 8px; }
+        .menu-item { padding: 10px 12px; cursor: pointer; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; color: #2c3e50; margin-bottom: 2px; }
+        .menu-item:hover { background: #e9ecef; }
+        .menu-item.active { background: var(--accent-color); color: white; font-weight: bold; }
+
+        /* Paneles de Contenido */
+        #graph-panel { flex: 1; background: white; border-right: 1px solid var(--border-color); overflow: auto; padding: 20px; }
+        #text-panel { width: 400px; background: white; overflow-y: auto; padding: 30px; line-height: 1.6; border-left: 1px solid var(--border-color); }
+
+        /* Mermaid & Text Styles */
+        .mermaid { width: 100%; }
+        .art-block { margin-bottom: 25px; padding: 15px; border-radius: 8px; border-left: 4px solid transparent; transition: 0.3s; }
+        .art-block:hover { background: #f8f9fa; }
+        .highlight { background: var(--highlight-color) !important; border-left-color: #f1c40f; }
+        .art-title { font-weight: bold; color: var(--primary-color); display: block; font-size: 0.8rem; margin-bottom: 5px; }
+    </style>
 </head>
 <body>
 
-<div id="loader" class="loading-overlay"><h3>Cargando Atlas PRO...</h3></div>
+<div id="loader" class="loading-overlay"><h3>Procesando Atlas Legal...</h3></div>
 
 <div id="auth-container">
     <div class="auth-box">
-        <h2 style="color: #2c3e50; margin-bottom: 5px;">Legal Atlas PRO</h2>
-        <p style="color: #666; font-size: 0.9rem; margin-bottom: 20px;">Área Protegida</p>
+        <h2 style="color: var(--primary-color); margin: 0;">Legal Atlas PRO</h2>
+        <p style="color: #666; font-size: 0.85rem; margin-bottom: 20px;">Inicia sesión para navegar</p>
         <input type="email" id="email" placeholder="Correo electrónico">
         <input type="password" id="password" placeholder="Contraseña">
-        <button onclick="handleLogin()">Entrar</button>
-        <button onclick="handleSignup()" style="background: #95a5a6;">Registrarme</button>
+        <button onclick="handleLogin()">Entrar al Sistema</button>
+        <button onclick="handleSignup()" style="background: #95a5a6;">Crear Cuenta</button>
     </div>
 </div>
 
 <div id="main-app">
     <div class="header-pro">
         <span id="label-jurisdiccion">Legal Atlas PRO</span>
-        <div>
+        <div style="display: flex; align-items: center;">
             <span id="user-email" style="margin-right: 15px; font-size: 0.8rem; opacity: 0.8;"></span>
-            <button onclick="handleLogout()" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Salir</button>
+            <button onclick="handleLogout()" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem;">Cerrar Sesión</button>
         </div>
     </div>
-    <div class="pro-dashboard">
-    <nav id="sidebar">
-        <div class="search-container">
-            <input type="text" id="map-search" placeholder="🔍 Buscar tema o ley..." onkeyup="filterMenu()">
-        </div>
-        <div id="menu-content">
-            <p style="padding: 20px; font-size: 0.8rem; color: #999;">Cargando catálogo...</p>
-        </div>
-    </nav>
 
-    <div id="graph-panel"> ... </div>
-    <div id="text-panel"> ... </div>
-</div>
+    <div class="pro-dashboard">
+        <nav id="sidebar">
+            <div class="search-container">
+                <input type="text" id="map-search" placeholder="🔍 Buscar tema..." onkeyup="filterMenu()">
+            </div>
+            <div id="menu-content">
+                </div>
+        </nav>
+
+        <main id="graph-panel">
+            <h3 id="titulo-capitulo" style="color: var(--primary-color); margin-top: 0;">Selecciona un tema</h3>
+            <div id="mermaid-container" class="mermaid"></div>
+        </main>
+
+        <aside id="text-panel">
+            </aside>
+    </div>
 </div>
 
 <script>
@@ -91,121 +105,111 @@
     const SUPABASE_KEY = 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff';
     const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // --- LÓGICA DE AUTH (Mantener igual) ---
-    // ... (handleLogin, handleSignup, handleLogout) ...
+    // --- AUTH ---
+    async function handleLogin() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const { error } = await sbClient.auth.signInWithPassword({ email, password });
+        if (error) alert(error.message);
+    }
+
+    async function handleSignup() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const { error } = await sbClient.auth.signUp({ email, password });
+        if (error) alert(error.message);
+        else alert("Confirma tu correo.");
+    }
+
+    async function handleLogout() { await sbClient.auth.signOut(); }
 
     sbClient.auth.onAuthStateChange((event, session) => {
-        const authContainer = document.getElementById('auth-container');
-        const mainApp = document.getElementById('main-app');
-
+        const auth = document.getElementById('auth-container');
+        const app = document.getElementById('main-app');
         if (session) {
-            authContainer.style.display = 'none';
-            mainApp.style.display = 'block';
+            auth.style.display = 'none';
+            app.style.display = 'flex';
             document.getElementById('user-email').innerText = session.user.email;
-            loadMenu(); // 1. Cargar el menú primero
+            loadMenu();
         } else {
-            authContainer.style.display = 'flex';
-            mainApp.style.display = 'none';
+            auth.style.display = 'flex';
+            app.style.display = 'none';
         }
     });
 
-    // --- NUEVA LÓGICA DE MENÚ ---
-
+    // --- MENÚ DINÁMICO ---
     async function loadMenu() {
         const { data, error } = await sbClient
             .from('mapas_legales')
-            .select('id, pais, jurisdiccion, materia, tema, titulo_capitulo')
-            .order('pais', { ascending: true });
+            .select('id, jurisdiccion, materia, tema, titulo_capitulo')
+            .order('jurisdiccion', { ascending: true });
 
-        if (error) {
-            console.error("Error cargando menú:", error);
-            return;
-        }
+        if (error) return console.error(error);
 
-        const menuContainer = document.getElementById('menu-content');
-        menuContainer.innerHTML = '';
+        const menu = document.getElementById('menu-content');
+        menu.innerHTML = '';
 
-        // Agrupamos por Jurisdicción/Materia para orden visual
         const groups = {};
         data.forEach(item => {
-            const groupName = `${item.jurisdiccion} - ${item.materia}`;
-            if (!groups[groupName]) groups[groupName] = [];
-            groups[groupName].push(item);
+            const key = `${item.jurisdiccion} | ${item.materia}`;
+            if (!groups[key]) groups[key] = [];
+            groups[key].push(item);
         });
 
-        for (const group in groups) {
+        for (const label in groups) {
             const groupDiv = document.createElement('div');
             groupDiv.className = 'menu-group';
-            groupDiv.innerHTML = `<div class="menu-label">${group}</div>`;
+            groupDiv.innerHTML = `<div class="menu-label">${label}</div>`;
             
-            groups[group].forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'menu-item';
-                itemDiv.innerText = `${item.tema}: ${item.titulo_capitulo}`;
-                itemDiv.onclick = () => {
-                    // Resaltar activo
+            groups[label].forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'menu-item';
+                div.innerText = `${item.tema}: ${item.titulo_capitulo}`;
+                div.onclick = () => {
                     document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
-                    itemDiv.classList.add('active');
-                    // Cargar mapa
+                    div.classList.add('active');
                     initAtlas(item.id);
                 };
-                groupDiv.appendChild(itemDiv);
+                groupDiv.appendChild(div);
             });
-            menuContainer.appendChild(groupDiv);
+            menu.appendChild(groupDiv);
         }
-
-        // Cargar el primero por defecto si hay datos
         if (data.length > 0) {
+            const firstItem = document.querySelector('.menu-item');
+            firstItem.classList.add('active');
             initAtlas(data[0].id);
-            document.querySelector('.menu-item').classList.add('active');
         }
     }
 
-    // --- BUSCADOR ---
     function filterMenu() {
-        const input = document.getElementById('map-search').value.toLowerCase();
-        const items = document.querySelectorAll('.menu-item');
-        
-        items.forEach(item => {
-            const text = item.innerText.toLowerCase();
-            item.style.display = text.includes(input) ? "block" : "none";
+        const query = document.getElementById('map-search').value.toLowerCase();
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.style.display = item.innerText.toLowerCase().includes(query) ? 'block' : 'none';
         });
     }
 
-    // --- LÓGICA DE DATOS MEJORADA ---
-
+    // --- CARGAR MAPA ---
     async function initAtlas(id) {
         document.getElementById('loader').style.display = 'flex';
         try {
-            const { data, error } = await sbClient
-                .from('mapas_legales')
-                .select('*')
-                .eq('id', id) // AHORA BUSCAMOS POR ID ÚNICO
-                .single();
-
+            const { data, error } = await sbClient.from('mapas_legales').select('*').eq('id', id).single();
             if (error) throw error;
 
-            // 1. Inyectar Texto Legal
             document.getElementById('text-panel').innerHTML = data.ley_humana_html;
             document.getElementById('titulo-capitulo').innerText = `${data.tema}: ${data.titulo_capitulo}`;
             document.getElementById('label-jurisdiccion').innerText = `Legal Atlas PRO - ${data.jurisdiccion}`;
 
-            // 2. Preparar Mermaid
             const container = document.getElementById('mermaid-container');
-            container.removeAttribute('data-processed'); 
+            container.removeAttribute('data-processed');
             container.innerHTML = data.grafo_json.diagrama;
-            
-            // 3. Renderizado
+
             setTimeout(async () => {
                 mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
                 await mermaid.run({ nodes: [container] });
             }, 100);
 
-        } catch (err) {
-            console.error('Error:', err);
-        } finally {
-            document.getElementById('loader').style.display = 'none';
-        }
+        } catch (e) { console.error(e); }
+        finally { document.getElementById('loader').style.display = 'none'; }
     }
 </script>
 
