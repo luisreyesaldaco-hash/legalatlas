@@ -70,16 +70,27 @@
     const SUPABASE_KEY = 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff';
     const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // --- PROTECCIÓN DE ENTRADA ---
-    sbClient.auth.onAuthStateChange((event, session) => {
-        if (!session || session.user.email !== 'TU_CORREO_REAL@GMAIL.COM') {
-            // Si no hay sesión o no eres tú, lo mandamos fuera
-            alert("Acceso denegado. Solo el administrador puede ver esta página.");
-            window.location.href = 'index.html'; 
-        }
-    });
+ // --- PROTECCIÓN POR CONTRASEÑA MANUAL ---
+    const PASSWORD_MAESTRA = "TUPASSWORD_AQUI"; // <--- Pon tu clave aquí
     
+    let acceso = prompt("Área de Ingeniería - Ingresa la contraseña:");
+
+    if (acceso !== PASSWORD_MAESTRA) {
+        alert("Contraseña incorrecta. Regresando al inicio.");
+        window.location.href = 'index.html';
+    }
+
+    // --- FUNCIÓN PARA SUBIR DATOS ---
     async function uploadData() {
+        // Antes de subir, verificamos si estás logueado en Supabase 
+        // (esto es necesario por las reglas RLS que pusimos)
+        const { data: { session } } = await sbClient.auth.getSession();
+        
+        if (!session) {
+            alert("Error: Debes haber iniciado sesión primero en el Atlas PRO para que la base de datos te reconozca.");
+            return;
+        }
+
         const payload = {
             pais: document.getElementById('pais').value,
             alcance: document.getElementById('alcance').value,
@@ -92,13 +103,13 @@
             metadata_json: JSON.parse(document.getElementById('metadata_json').value || '{}')
         };
 
-        const { data, error } = await sbClient.from('mapas_legales').insert([payload]);
+        const { error } = await sbClient.from('mapas_legales').insert([payload]);
 
         if (error) {
-            alert("Error al subir: " + error.message);
+            alert("Error de Supabase: " + error.message);
         } else {
-            alert("¡Éxito! El mapa ya está disponible para tus usuarios.");
-            // Limpiar campos si quieres
+            alert("¡Mapa publicado con éxito!");
+            // Opcional: limpiar los campos para el siguiente mapa
         }
     }
 </script>
