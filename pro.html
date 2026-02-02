@@ -287,6 +287,21 @@
             target.classList.add('highlight-law');
         }
     }
+    async function enviarFeedback() {
+    const comentario = prompt("Describa el error o la sugerencia para este mapa:");
+    if (!comentario) return;
+
+    const { data: { user } } = await sbClient.auth.getUser();
+    const temaActual = document.getElementById('titulo-capitulo').innerText;
+
+    const { error } = await sbClient.from('feedback_pro').insert([{
+        usuario_email: user.email,
+        mapa_tema: temaActual,
+        mensaje: comentario
+    }]);
+
+    if (!error) alert("Reporte enviado con éxito.");
+}
 </script>
 </body>
 </html>
