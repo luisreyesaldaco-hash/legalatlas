@@ -70,6 +70,15 @@
     const SUPABASE_KEY = 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff';
     const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // --- PROTECCIÓN DE ENTRADA ---
+    sbClient.auth.onAuthStateChange((event, session) => {
+        if (!session || session.user.email !== 'TU_CORREO_REAL@GMAIL.COM') {
+            // Si no hay sesión o no eres tú, lo mandamos fuera
+            alert("Acceso denegado. Solo el administrador puede ver esta página.");
+            window.location.href = 'index.html'; 
+        }
+    });
+    
     async function uploadData() {
         const payload = {
             pais: document.getElementById('pais').value,
