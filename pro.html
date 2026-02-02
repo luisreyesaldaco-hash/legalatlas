@@ -8,38 +8,68 @@
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root {
-            /* Paleta Funcional de Trabajo */
-            --bg-main: #f8f9fa;
-            --sidebar-bg: #2c3e50; /* Azul Pizarra */
-            --header-bg: #ffffff;
-            --accent-blue: #3498db;
-            --text-dark: #34495e;
-            --text-light: #ffffff;
-            --border-color: #dee2e6;
-            --danger: #e74c3c;
-            --warning: #f1c40f;
-            --success: #27ae60;
-        }
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap');
+
+:root {
+    --sidebar-bg: #2c3e50;
+    --accent-blue: #3498db;
+    --text-dark: #1c1c1c;
+    --border-stone: #e5e5e0;
+}
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html { height: 100%; font-family: 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-dark); overflow: hidden; }
 
         /* --- HEADER PROFESIONAL --- */
-        header {
-            height: 56px;
-            background-color: var(--header-bg);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 100;
-        }
+header {
+    height: 65px;
+    background-color: white;
+    border-bottom: 1px solid var(--border-stone);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    z-index: 1000;
+}
 
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .header-logo { font-weight: 700; font-size: 1.1rem; color: var(--sidebar-bg); display: flex; align-items: center; gap: 8px; }
-        .header-logo span { color: var(--accent-blue); }
+.header-left { display: flex; align-items: center; gap: 20px; }
+
+
+/* El Logo inspirado en el Index */
+.logo-brand { display: flex; align-items: center; gap: 12px; }
+.logo-brand h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    letter-spacing: 0.25em;
+    color: var(--text-dark);
+    margin: 0;
+    line-height: 1;
+}
+.logo-brand h1 span { color: #8a8a82; font-weight: 400; }
+.logo-brand .pro-tag {
+    color: var(--accent-blue);
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 800;
+    border: 1px solid var(--accent-blue);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 5px;
+}
+
+.toggle-btn {
+    background: #f8f9fa;
+    border: 1px solid var(--border-stone);
+    color: var(--sidebar-bg);
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.2s;
+}
+.toggle-btn:hover { background: #eee; }
 
         /* --- DASHBOARD LAYOUT --- */
         .dashboard-container { display: flex; height: calc(100vh - 56px); }
