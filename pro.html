@@ -64,10 +64,42 @@
 
         /* Mermaid & Text Styles */
         .mermaid { width: 100%; }
-        .art-block { margin-bottom: 25px; padding: 15px; border-radius: 8px; border-left: 4px solid transparent; transition: 0.3s; }
+        
+        /* Bloques de artículos de la ley */
+        .art-block { 
+            margin-bottom: 25px; 
+            padding: 15px; 
+            border-radius: 8px; 
+            border-left: 4px solid transparent; 
+            transition: 0.3s; 
+        }
         .art-block:hover { background: #f8f9fa; }
-        .highlight { background: var(--highlight-color) !important; border-left-color: #f1c40f; }
-        .art-title { font-weight: bold; color: var(--primary-color); display: block; font-size: 0.8rem; margin-bottom: 5px; }
+        
+        .art-title { 
+            font-weight: bold; 
+            color: var(--primary-color); 
+            display: block; 
+            font-size: 0.8rem; 
+            margin-bottom: 5px; 
+            text-transform: uppercase;
+        }
+
+        /* --- SISTEMA DE SEMÁFORO (CONEXIÓN GRÁFICO) --- */
+        
+        /* 1. Resaltado cuando haces clic en el nodo del mapa */
+        .highlight-law {
+            background-color: #fff3cd !important;
+            border-left: 5px solid #f1c40f !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: 0.5s;
+            transform: scale(1.02);
+        }
+
+        /* 2. Clases de "Peligro" para los nodos de Mermaid */
+        /* Estos estilos se aplican a los cuadros del diagrama */
+        .node.critical rect { fill: #ffcccc !important; stroke: #e74c3c !important; stroke-width: 2px; }
+        .node.warning rect { fill: #fff3cd !important; stroke: #f1c40f !important; stroke-width: 2px; }
+        .node.safe rect { fill: #d4edda !important; stroke: #27ae60 !important; stroke-width: 2px; }
     </style>
 </head>
 <body>
@@ -236,34 +268,65 @@
 
     // --- CARGAR MAPA (Actualizado para el nuevo Schema) ---
     async function initAtlas(id) {
-        document.getElementById('loader').style.display = 'flex';
-        try {
-            const { data, error } = await sbClient
-                .from('mapas_legales')
-                .select('*')
-                .eq('id', id)
-                .single();
+    document.getElementById('loader').style.display = 'flex';
+    try {
+        // 1. Conseguimos los datos de Supabase (¡Esto es vital!)
+        const { data, error } = await sbClient
+            .from('mapas_legales')
+            .select('*')
+            .eq('id', id)
+            .single();
 
-            if (error) throw error;
+        if (error) throw error;
 
-            document.getElementById('text-panel').innerHTML = data.ley_humana_html;
-            document.getElementById('titulo-capitulo').innerText = `${data.tema}: ${data.titulo_capitulo}`;
-            document.getElementById('label-jurisdiccion').innerText = `Legal Atlas PRO - ${data.pais} (${data.jurisdiccion})`;
+        // 2. Actualizamos la interfaz (Textos y Títulos)
+        document.getElementById('text-panel').innerHTML = data.ley_humana_html;
+        document.getElementById('titulo-capitulo').innerText = `${data.tema}: ${data.titulo_capitulo}`;
+        document.getElementById('label-jurisdiccion').innerText = `Legal Atlas PRO - ${data.pais} (${data.jurisdiccion})`;
 
-            const container = document.getElementById('mermaid-container');
-            container.removeAttribute('data-processed');
-            
-            // IMPORTANTE: Ahora usamos el 'mermaid_code', no el JSON antiguo
-            container.innerHTML = data.mermaid_code || data.grafo_json?.diagrama || "graph TD; A[Error de Datos] --> B[Revisar Admin]";
+        // 3. Preparamos el contenedor del mapa
+        const container = document.getElementById('mermaid-container');
+        container.removeAttribute('data-processed');
+        
+        // Usamos mermaid_code y damos una opción de respaldo
+        container.innerHTML = data.mermaid_code || "graph TD; A[Sin Mapa cargado] --> B[Contactar Soporte]";
 
-            setTimeout(async () => {
-                mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
-                await mermaid.run({ nodes: [container] });
-            }, 100);
+        // 4. Renderizado con "Súper Poderes" (Clics habilitados)
+        setTimeout(async () => {
+            mermaid.initialize({ 
+                startOnLoad: false, 
+                theme: 'default', 
+                securityLevel: 'loose', // ¡CRUCIAL! Para que funcione resaltarArticulo()
+                fontFamily: 'Segoe UI' 
+            });
+            await mermaid.run({ nodes: [container] });
+        }, 100);
 
-        } catch (e) { console.error(e); }
-        finally { document.getElementById('loader').style.display = 'none'; }
+    } catch (e) { 
+        console.error("Error en Atlas:", e); 
+    } finally { 
+        document.getElementById('loader').style.display = 'none'; 
     }
+}
+    // Esta función conecta el mapa con el texto
+function resaltarArticulo(idArticulo) {
+    // 1. Quitar resaltados previos
+    document.querySelectorAll('.art-block').forEach(el => el.classList.remove('highlight-law'));
+    
+    const elemento = document.getElementById(idArticulo);
+    if (elemento) {
+        // 2. Scroll suave hasta el artículo
+        elemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // 3. Aplicar efecto visual
+        elemento.classList.add('highlight-law');
+    }
+}
+
+// Necesario para que Mermaid permita clics
+mermaid.initialize({ 
+    startOnLoad: false, 
+    securityLevel: 'loose' 
+});
 </script>
 
 </body>
