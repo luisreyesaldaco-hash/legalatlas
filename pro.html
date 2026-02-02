@@ -3,201 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Legal Atlas PRO - Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Legal Atlas PRO - Terminal de Trabajo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --white: #ffffff;
-            --stone-light: #f4f4f0;
-            --stone-dark: #1a1a1a;
-            --text-main: #1c1c1c;
-            --text-muted: #8a8a82;
-            --accent-gold: #b8973d;
-            --border-stone: #e5e5e0;
+            /* Paleta Funcional de Trabajo */
+            --bg-main: #f8f9fa;
+            --sidebar-bg: #2c3e50; /* Azul Pizarra */
+            --header-bg: #ffffff;
+            --accent-blue: #3498db;
+            --text-dark: #34495e;
+            --text-light: #ffffff;
+            --border-color: #dee2e6;
+            --danger: #e74c3c;
+            --warning: #f1c40f;
+            --success: #27ae60;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html { height: 100%; font-family: 'Inter', sans-serif; background-color: var(--stone-light); overflow: hidden; }
+        body, html { height: 100%; font-family: 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-dark); overflow: hidden; }
 
-        /* --- HEADER PREMIUM --- */
+        /* --- HEADER PROFESIONAL --- */
         header {
-            height: 70px;
-            background-color: var(--white);
-            border-bottom: 1px solid var(--border-stone);
+            height: 56px;
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 30px;
+            padding: 0 20px;
             z-index: 100;
         }
 
-        .header-logo h1 {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            letter-spacing: 0.2em;
-            color: var(--stone-dark);
-            text-transform: uppercase;
-        }
-        .header-logo h1 span { color: var(--accent-gold); }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .header-logo { font-weight: 700; font-size: 1.1rem; color: var(--sidebar-bg); display: flex; align-items: center; gap: 8px; }
+        .header-logo span { color: var(--accent-blue); }
 
         /* --- DASHBOARD LAYOUT --- */
-        .dashboard-container { display: flex; height: calc(100vh - 70px); }
+        .dashboard-container { display: flex; height: calc(100vh - 56px); }
 
-        /* SIDEBAR (Estilo Home) */
+        /* SIDEBAR (Estilo SaaS / Herramienta) */
         #sidebar {
-            width: 320px;
-            background-color: var(--stone-dark);
-            color: var(--white);
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            color: var(--text-light);
             display: flex;
             flex-direction: column;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: width 0.3s ease;
             overflow: hidden;
             flex-shrink: 0;
         }
 
-        #sidebar.closed { width: 0; opacity: 0; }
+        #sidebar.closed { width: 0; }
 
-        .search-area { padding: 30px 20px 20px; }
+        .sidebar-header { padding: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
+        
+        .search-area { padding: 0 15px 15px; }
         #map-search {
             width: 100%;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: var(--white);
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 11px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
             outline: none;
         }
 
-        /* --- MENÚ JERÁRQUICO (Fija Chequia) --- */
-        #menu-content { flex-grow: 1; overflow-y: auto; padding: 0 20px 40px; }
+        /* --- MENÚ DE NAVEGACIÓN --- */
+        #menu-content { flex-grow: 1; overflow-y: auto; }
         
-        details { margin-bottom: 10px; }
+        details { margin-bottom: 2px; }
         summary { 
             list-style: none; 
             cursor: pointer; 
-            font-size: 10px; 
-            letter-spacing: 0.1em; 
-            text-transform: uppercase; 
-            color: var(--accent-gold); 
-            font-weight: 700;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.8rem; 
+            font-weight: 600;
+            padding: 12px 20px;
+            background: rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
         }
+        summary:hover { background: rgba(255,255,255,0.05); }
         
         .menu-item {
-            padding: 12px 15px;
-            font-size: 11px;
-            color: rgba(255,255,255,0.6);
+            padding: 10px 25px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
             cursor: pointer;
-            transition: 0.3s;
-            border-left: 1px solid rgba(255,255,255,0.1);
-            margin-left: 5px;
+            transition: 0.2s;
         }
-        .menu-item:hover { color: var(--white); background: rgba(255,255,255,0.03); }
-        .menu-item.active { color: var(--accent-gold); border-left-color: var(--accent-gold); font-weight: 600; }
+        .menu-item:hover { color: white; background: rgba(255,255,255,0.05); }
+        .menu-item.active { background: var(--accent-blue); color: white; font-weight: 600; }
 
-        /* --- PANELES DE CONTENIDO --- */
-        #graph-panel { flex: 1; background: var(--white); overflow: auto; padding: 40px; position: relative; }
+        /* --- PANELES DE TRABAJO --- */
+        #graph-panel { flex: 1; background: white; overflow: auto; padding: 25px; border-right: 1px solid var(--border-color); }
         #text-panel { 
-            width: 450px; 
-            background: var(--stone-light); 
-            border-left: 1px solid var(--border-stone); 
+            width: 420px; 
+            background: white; 
             overflow-y: auto; 
-            padding: 40px; 
-            line-height: 1.8;
-            color: var(--text-main);
-            font-size: 14px;
+            padding: 30px; 
+            line-height: 1.6;
+            color: #2c3e50;
+            font-size: 0.95rem;
         }
 
-        /* LEY HUMANA & HIGHLIGHT */
-        .art-block { margin-bottom: 30px; padding: 20px; border-radius: 4px; transition: 0.4s; border: 1px solid transparent; }
+        .panel-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; color: var(--sidebar-bg); border-bottom: 2px solid var(--bg-main); padding-bottom: 10px; }
+
+        /* LEY HUMANA & HIGHLIGHT (Funcional) */
+        .art-block { 
+            margin-bottom: 20px; 
+            padding: 15px; 
+            border-radius: 6px; 
+            border: 1px solid var(--border-color); 
+            background: var(--bg-main);
+            transition: 0.3s;
+        }
         .highlight-law { 
-            background: var(--white) !important; 
-            border-color: var(--accent-gold) !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transform: translateY(-2px);
+            background: #eef7ff !important; 
+            border-color: var(--accent-blue) !important;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.1);
         }
+        .art-header { font-size: 0.75rem; font-weight: 800; color: var(--accent-blue); margin-bottom: 5px; text-transform: uppercase; }
 
-        /* AUTH (Stone Mode) */
+        /* AUTH (Limpio / Trabajo) */
         #auth-container { 
             position: fixed; top:0; left:0; width:100%; height:100%; 
-            background: var(--stone-light); z-index: 2000; 
+            background: #f0f2f5; z-index: 2000; 
             display: flex; align-items: center; justify-content: center; 
         }
         .auth-box { 
-            background: var(--white); padding: 50px; border-radius: 2px; 
-            box-shadow: 0 20px 50px rgba(0,0,0,0.05); width: 400px; text-align: center;
-            border: 1px solid var(--border-stone);
+            background: white; padding: 40px; border-radius: 8px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 360px;
         }
-        .auth-box h2 { font-family: 'Cinzel', serif; letter-spacing: 0.3em; margin-bottom: 30px; font-size: 1.2rem; }
+        .auth-box h2 { font-weight: 700; margin-bottom: 25px; text-align: center; }
         .auth-box input { 
-            width: 100%; padding: 15px; margin-bottom: 15px; 
-            border: 1px solid var(--border-stone); background: var(--stone-light); outline: none;
+            width: 100%; padding: 12px; margin-bottom: 12px; 
+            border: 1px solid var(--border-color); border-radius: 4px; outline: none;
         }
         .auth-box button { 
-            width: 100%; padding: 15px; background: var(--stone-dark); 
-            color: var(--white); border: none; cursor: pointer; 
-            text-transform: uppercase; letter-spacing: 0.2em; font-size: 11px;
+            width: 100%; padding: 12px; background: var(--accent-blue); 
+            color: white; border: none; border-radius: 4px; cursor: pointer; 
+            font-weight: 600;
         }
 
         /* Botón hamburguesa */
-        .toggle-btn { 
-            background: none; border: none; cursor: pointer; color: var(--stone-dark); 
-            font-size: 1.2rem; margin-right: 20px; 
-        }
+        .toggle-btn { background: none; border: none; cursor: pointer; color: var(--text-dark); font-size: 1.2rem; margin-right: 15px; }
 
-        /* Mermaid Alertas */
-        .node.critical rect { fill: #fff0f0 !important; stroke: #e74c3c !important; }
-        .node.warning rect { fill: #fffdf0 !important; stroke: #b8973d !important; }
+        /* Mermaid Alertas Trabajo */
+        .node.critical rect { fill: #fdecea !important; stroke: var(--danger) !important; stroke-width: 2px; }
+        .node.warning rect { fill: #fef9e7 !important; stroke: var(--warning) !important; stroke-width: 2px; }
+        .node.safe rect { fill: #eafaf1 !important; stroke: var(--success) !important; stroke-width: 2px; }
     </style>
 </head>
 <body>
 
 <div id="auth-container">
     <div class="auth-box">
-        <h2>LEGAL ATLAS<span> PRO</span></h2>
-        <input type="email" id="email" placeholder="EMAIL CORPORATIVO">
-        <input type="password" id="password" placeholder="PASSWORD">
-        <button onclick="handleLogin()">ACCEDER A TERMINAL</button>
+        <div class="header-logo" style="justify-content:center; margin-bottom:15px; font-size:1.4rem;">
+            LEGAL <span> ATLAS</span>
+        </div>
+        <input type="email" id="email" placeholder="Correo electrónico">
+        <input type="password" id="password" placeholder="Contraseña">
+        <button onclick="handleLogin()">INICIAR SESIÓN</button>
     </div>
 </div>
 
 <div id="main-app" style="display:none; flex-direction:column; height:100vh;">
     <header>
-        <div style="display: flex; align-items: center;">
+        <div class="header-left">
             <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
             <div class="header-logo">
-                <h1>LEGAL ATLAS <span>PRO</span></h1>
+                LEGAL<span> ATLAS</span> <small style="font-size:0.7rem; opacity:0.6; font-weight:400; margin-left:5px;">PRO</small>
             </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 20px;">
-            <span id="user-email" style="font-size: 10px; letter-spacing: 0.1em; color: var(--text-muted);"></span>
-            <button onclick="handleLogout()" style="background: none; border: none; color: var(--accent-gold); font-size: 10px; font-weight: 700; cursor: pointer; letter-spacing: 0.1em;">LOGOUT</button>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span id="user-email" style="font-size: 0.8rem; color: var(--text-dark); font-weight:500;"></span>
+            <button onclick="handleLogout()" style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight:600;">Salir</button>
         </div>
     </header>
 
     <div class="dashboard-container">
         <aside id="sidebar">
+            <div class="sidebar-header">Jurisdicciones</div>
             <div class="search-area">
-                <label>Buscador de Jurisprudencia</label>
-                <input type="text" id="map-search" placeholder="Escriba tema o materia..." onkeyup="filterMenu()">
+                <input type="text" id="map-search" placeholder="🔍 Buscar materia o tema..." onkeyup="filterMenu()">
             </div>
-            <div id="menu-content">
-                </div>
+            <div id="menu-content"></div>
         </aside>
 
         <main id="graph-panel">
-            <h2 id="titulo-capitulo" style="font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--stone-dark); margin-bottom: 30px;">
-                Seleccione un proceso en el menú lateral
-            </h2>
+            <div class="panel-title" id="titulo-capitulo">Visualizador de Procesos</div>
             <div id="mermaid-container" class="mermaid"></div>
         </main>
 
         <div id="text-panel">
-            </div>
+            <div class="panel-title">Marco Normativo</div>
+            <div id="legal-content-area"></div>
+        </div>
     </div>
 </div>
 
@@ -220,7 +225,7 @@
         const app = document.getElementById('main-app');
         if (session) {
             auth.style.display = 'none'; app.style.display = 'flex';
-            document.getElementById('user-email').innerText = session.user.email.toUpperCase();
+            document.getElementById('user-email').innerText = session.user.email;
             loadMenu();
         } else {
             auth.style.display = 'flex'; app.style.display = 'none';
@@ -231,47 +236,35 @@
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
         sidebar.classList.toggle('closed');
-        setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 410);
+        setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 310);
     }
 
-    // --- CARGA DE MENÚ INTELIGENTE (Solución Chequia + México) ---
+    // --- MENÚ DINÁMICO ---
     async function loadMenu() {
-        const { data, error } = await sbClient
-            .from('mapas_legales')
-            .select('id, pais, alcance, jurisdiccion, materia, tema');
-        
+        const { data, error } = await sbClient.from('mapas_legales').select('id, pais, jurisdiccion, tema');
         if (error) return;
 
         const container = document.getElementById('menu-content');
         container.innerHTML = '';
 
-        // Agrupación por País
         const paises = [...new Set(data.map(item => item.pais))];
-
         paises.forEach(pais => {
-            const details = document.createElement('details');
-            details.open = true;
-            const summary = document.createElement('summary');
-            summary.innerText = pais;
-            details.appendChild(summary);
-
-            // Filtrar items de este país
-            const itemsPais = data.filter(i => i.pais === pais);
+            const det = document.createElement('details');
+            det.open = true;
+            det.innerHTML = `<summary>${pais} <span>▾</span></summary>`;
             
-            itemsPais.forEach(item => {
+            data.filter(i => i.pais === pais).forEach(item => {
                 const btn = document.createElement('div');
                 btn.className = 'menu-item';
-                // Mostramos Jurisdicción (Ej: Guanajuato o Nacional) + Tema
-                btn.innerText = `${item.jurisdiccion.toUpperCase()} • ${item.tema}`;
+                btn.innerText = `${item.jurisdiccion} - ${item.tema}`;
                 btn.onclick = () => {
                     document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
                     btn.classList.add('active');
                     initAtlas(item.id);
                 };
-                details.appendChild(btn);
+                det.appendChild(btn);
             });
-
-            container.appendChild(details);
+            container.appendChild(det);
         });
     }
 
@@ -281,20 +274,15 @@
             const { data, error } = await sbClient.from('mapas_legales').select('*').eq('id', id).single();
             if (error) throw error;
 
-            document.getElementById('text-panel').innerHTML = data.ley_humana_html;
-            document.getElementById('titulo-capitulo').innerText = data.tema.toUpperCase();
+            document.getElementById('legal-content-area').innerHTML = data.ley_humana_html;
+            document.getElementById('titulo-capitulo').innerText = data.tema;
 
             const container = document.getElementById('mermaid-container');
             container.removeAttribute('data-processed');
-            container.innerHTML = data.mermaid_code || "graph TD; A[Proceso no mapeado]";
+            container.innerHTML = data.mermaid_code || "graph TD; A[Mapa no disponible]";
 
             setTimeout(async () => {
-                mermaid.initialize({ 
-                    startOnLoad: false, 
-                    theme: 'neutral', 
-                    securityLevel: 'loose',
-                    fontFamily: 'Inter' 
-                });
+                mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose', fontFamily: 'Inter' });
                 await mermaid.run({ nodes: [container] });
             }, 100);
         } catch (e) { console.error(e); }
@@ -310,10 +298,9 @@
     }
 
     function filterMenu() {
-        const query = document.getElementById('map-search').value.toLowerCase();
-        document.querySelectorAll('.menu-item').forEach(item => {
-            const text = item.innerText.toLowerCase();
-            item.style.display = text.includes(query) ? 'block' : 'none';
+        const q = document.getElementById('map-search').value.toLowerCase();
+        document.querySelectorAll('.menu-item').forEach(i => {
+            i.style.display = i.innerText.toLowerCase().includes(q) ? 'block' : 'none';
         });
     }
 </script>
