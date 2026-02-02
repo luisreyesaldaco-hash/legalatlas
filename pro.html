@@ -300,8 +300,11 @@
         mensaje: comentario
     }]);
 
-    if (!error) alert("Reporte enviado con éxito.");
-}
+    if (!error) {
+        alert("Reporte enviado con éxito.");
+    } else {
+        alert("No se pudo enviar: " + error.message);
+    }
 </script>
 </body>
 </html>
