@@ -3,203 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Legal Atlas PRO</title>
+    <title>Legal Atlas PRO - Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --highlight-color: #fff3cd;
-            --border-color: #dee2e6;
-            --sidebar-bg: #f8f9fa;
+            --white: #ffffff;
+            --stone-light: #f4f4f0;
+            --stone-dark: #1a1a1a;
+            --text-main: #1c1c1c;
+            --text-muted: #8a8a82;
+            --accent-gold: #b8973d;
+            --border-stone: #e5e5e0;
         }
 
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { height: 100%; font-family: 'Inter', sans-serif; background-color: var(--stone-light); overflow: hidden; }
 
-        /* --- HEADER ESTILO STARTUP (Igual al Index) --- */
-        .header-pro { 
-            background: white; 
-            color: var(--primary-color); 
-            padding: 0 20px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            height: 60px; 
-            border-bottom: 1px solid var(--border-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            z-index: 1000;
+        /* --- HEADER PREMIUM --- */
+        header {
+            height: 70px;
+            background-color: var(--white);
+            border-bottom: 1px solid var(--border-stone);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 100;
         }
 
-        /* --- DASHBOARD Y SIDEBAR ANIMADO --- */
-        .pro-dashboard { display: flex; height: calc(100vh - 60px); width: 100%; }
+        .header-logo h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            color: var(--stone-dark);
+            text-transform: uppercase;
+        }
+        .header-logo h1 span { color: var(--accent-gold); }
 
-        #sidebar { 
-            width: 300px; 
-            background: var(--sidebar-bg); 
-            border-right: 1px solid var(--border-color); 
-            display: flex; 
-            flex-direction: column; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* --- DASHBOARD LAYOUT --- */
+        .dashboard-container { display: flex; height: calc(100vh - 70px); }
+
+        /* SIDEBAR (Estilo Home) */
+        #sidebar {
+            width: 320px;
+            background-color: var(--stone-dark);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             overflow: hidden;
             flex-shrink: 0;
         }
 
-        #sidebar.closed { width: 0; border-right: none; opacity: 0; }
+        #sidebar.closed { width: 0; opacity: 0; }
 
-        /* --- BOTONES Y MENÚ --- */
-        .btn-toggle { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--primary-color); padding: 5px; }
+        .search-area { padding: 30px 20px 20px; }
+        #map-search {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--white);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            outline: none;
+        }
+
+        /* --- MENÚ JERÁRQUICO (Fija Chequia) --- */
+        #menu-content { flex-grow: 1; overflow-y: auto; padding: 0 20px 40px; }
         
-        .menu-item { padding: 12px 15px; cursor: pointer; font-size: 0.9rem; border-left: 3px solid transparent; transition: 0.2s; }
-        .menu-item:hover { background: #eee; color: var(--accent-color); }
-        .menu-item.active { background: #e7f3ff; color: var(--accent-color); font-weight: bold; border-left-color: var(--accent-color); }
-
-        /* --- PANELES --- */
-        #graph-panel { flex: 1; overflow: auto; padding: 20px; background: white; position: relative; }
-        #text-panel { width: 400px; border-left: 1px solid var(--border-color); overflow-y: auto; padding: 25px; line-height: 1.6; background: white; }
-
-        /* --- LEY Y RESALTADO --- */
-        .art-block { margin-bottom: 25px; padding: 15px; border-radius: 8px; border-left: 4px solid transparent; transition: 0.4s; }
-        .highlight-law { background: #fff3cd !important; border-left-color: #f1c40f !important; transform: scale(1.02); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        details { margin-bottom: 10px; }
+        summary { 
+            list-style: none; 
+            cursor: pointer; 
+            font-size: 10px; 
+            letter-spacing: 0.1em; 
+            text-transform: uppercase; 
+            color: var(--accent-gold); 
+            font-weight: 700;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
         
-        /* Semáforo Mermaid */
-        .node.critical rect { fill: #ffcccc !important; stroke: #e74c3c !important; }
-        .node.warning rect { fill: #fff3cd !important; stroke: #f1c40f !important; }
+        .menu-item {
+            padding: 12px 15px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: 0.3s;
+            border-left: 1px solid rgba(255,255,255,0.1);
+            margin-left: 5px;
+        }
+        .menu-item:hover { color: var(--white); background: rgba(255,255,255,0.03); }
+        .menu-item.active { color: var(--accent-gold); border-left-color: var(--accent-gold); font-weight: 600; }
 
-        /* Auth */
-        #auth-container { display: flex; align-items: center; justify-content: center; height: 100vh; background: #f4f7f6; }
-        .auth-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 320px; text-align: center; }
-        .auth-box input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; }
-        .auth-box button { width: 100%; padding: 12px; background: var(--accent-color); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: flex; justify-content: center; align-items: center; z-index: 2000; display: none; }
+        /* --- PANELES DE CONTENIDO --- */
+        #graph-panel { flex: 1; background: var(--white); overflow: auto; padding: 40px; position: relative; }
+        #text-panel { 
+            width: 450px; 
+            background: var(--stone-light); 
+            border-left: 1px solid var(--border-stone); 
+            overflow-y: auto; 
+            padding: 40px; 
+            line-height: 1.8;
+            color: var(--text-main);
+            font-size: 14px;
+        }
+
+        /* LEY HUMANA & HIGHLIGHT */
+        .art-block { margin-bottom: 30px; padding: 20px; border-radius: 4px; transition: 0.4s; border: 1px solid transparent; }
+        .highlight-law { 
+            background: var(--white) !important; 
+            border-color: var(--accent-gold) !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
+        }
+
+        /* AUTH (Stone Mode) */
+        #auth-container { 
+            position: fixed; top:0; left:0; width:100%; height:100%; 
+            background: var(--stone-light); z-index: 2000; 
+            display: flex; align-items: center; justify-content: center; 
+        }
+        .auth-box { 
+            background: var(--white); padding: 50px; border-radius: 2px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05); width: 400px; text-align: center;
+            border: 1px solid var(--border-stone);
+        }
+        .auth-box h2 { font-family: 'Cinzel', serif; letter-spacing: 0.3em; margin-bottom: 30px; font-size: 1.2rem; }
+        .auth-box input { 
+            width: 100%; padding: 15px; margin-bottom: 15px; 
+            border: 1px solid var(--border-stone); background: var(--stone-light); outline: none;
+        }
+        .auth-box button { 
+            width: 100%; padding: 15px; background: var(--stone-dark); 
+            color: var(--white); border: none; cursor: pointer; 
+            text-transform: uppercase; letter-spacing: 0.2em; font-size: 11px;
+        }
+
+        /* Botón hamburguesa */
+        .toggle-btn { 
+            background: none; border: none; cursor: pointer; color: var(--stone-dark); 
+            font-size: 1.2rem; margin-right: 20px; 
+        }
+
+        /* Mermaid Alertas */
+        .node.critical rect { fill: #fff0f0 !important; stroke: #e74c3c !important; }
+        .node.warning rect { fill: #fffdf0 !important; stroke: #b8973d !important; }
     </style>
 </head>
 <body>
 
-<div id="loader" class="loading-overlay"><h3>Procesando Atlas...</h3></div>
-
 <div id="auth-container">
     <div class="auth-box">
-        <h2 style="margin:0; color:var(--primary-color);">Legal Atlas PRO</h2>
-        <p style="font-size:0.8rem; color:#666;">Inicia sesión para navegar</p>
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Contraseña">
-        <button onclick="handleLogin()">Entrar</button>
+        <h2>LEGAL ATLAS<span> PRO</span></h2>
+        <input type="email" id="email" placeholder="EMAIL CORPORATIVO">
+        <input type="password" id="password" placeholder="PASSWORD">
+        <button onclick="handleLogin()">ACCEDER A TERMINAL</button>
     </div>
 </div>
 
 <div id="main-app" style="display:none; flex-direction:column; height:100vh;">
-    <header class="header-pro">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <button class="btn-toggle" onclick="toggleSidebar()">☰</button>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2"><path d="M12 2L2 7L12 12L22 7L12 2Z"/><path d="M2 17L12 22L22 17"/><path d="M2 12L12 17L22 12"/></svg>
-                <span style="font-weight:bold; font-size:1.1rem; color:var(--primary-color);">Legal <span style="color:var(--accent-color);">Atlas</span></span>
-            </div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <span id="user-email" style="font-size:0.8rem;"></span>
-            <button onclick="handleLogout()" style="background:#eee; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Salir</button>
-        </div>
-    </header>
-
-    <div class="pro-dashboard">
-        <nav id="sidebar">
-            <div style="padding:15px; border-bottom:1px solid #eee;">
-                <input type="text" id="map-search" placeholder="🔍 Buscar tema..." onkeyup="filterMenu()" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
-            </div>
-            <div id="menu-content" style="overflow-y:auto;"></div>
-        </nav>
-
-        <main id="graph-panel">
-            <h3 id="titulo-capitulo" style="margin-top:0; color:var(--primary-color);">Selecciona un proceso</h3>
-            <div id="mermaid-container" class="mermaid"></div>
-        </main>
-
-        <aside id="text-panel"></aside>
-    </div>
-</div>
-
-<script>
-    const SUPABASE_URL = 'https://nuzzmcxirsghykzqbmmn.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff';
-    const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // --- AUTH ---
-    async function handleLogin() {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const { error } = await sbClient.auth.signInWithPassword({ email, password });
-        if (error) alert(error.message);
-    }
-    async function handleLogout() { await sbClient.auth.signOut(); }
-
-    sbClient.auth.onAuthStateChange((event, session) => {
-        const auth = document.getElementById('auth-container');
-        const app = document.getElementById('main-app');
-        if (session) {
-            auth.style.display = 'none'; app.style.display = 'flex';
-            document.getElementById('user-email').innerText = session.user.email;
-            loadMenu();
-        } else {
-            auth.style.display = 'flex'; app.style.display = 'none';
-        }
-    });
-
-    // --- SIDEBAR & MENU ---
-    function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('closed');
-        setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 310);
-    }
-
-    async function loadMenu() {
-        const { data, error } = await sbClient.from('mapas_legales').select('id, pais, alcance, jurisdiccion, materia, tema, titulo_capitulo');
-        if (error) return;
-        const container = document.getElementById('menu-content');
-        container.innerHTML = '';
-        data.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'menu-item';
-            div.innerText = `${item.jurisdiccion}: ${item.tema}`;
-            div.onclick = () => {
-                document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
-                div.classList.add('active');
-                initAtlas(item.id);
-            };
-            container.appendChild(div);
-        });
-    }
-
-    // --- RENDER MAPA ---
-    async function initAtlas(id) {
-        document.getElementById('loader').style.display = 'flex';
-        try {
-            const { data, error } = await sbClient.from('mapas_legales').select('*').eq('id', id).single();
-            if (error) throw error;
-
-            document.getElementById('text-panel').innerHTML = data.ley_humana_html;
-            document.getElementById('titulo-capitulo').innerText = data.titulo_capitulo;
-
-            const container = document.getElementById('mermaid-container');
-            container.removeAttribute('data-processed');
-            container.innerHTML = data.mermaid_code || "graph TD; A[Sin mapa]";
-
-            setTimeout(async () => {
-                mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
-                await mermaid.run({ nodes: [container] });
-            }, 100);
-        } finally { document.getElementById('loader').style.display = 'none'; }
-    }
-
-    function resaltarArticulo(idArticulo) {
-        document.querySelectorAll('.art-block').forEach(el => el.classList.remove('highlight-law'));
-        const target = document.getElementById(idArticulo);
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            target.classList.add('highlight-law');
-        }
-    }
-</script>
-</body>
-</html>
+    <header>
+        <div style="display: flex; align-items:
