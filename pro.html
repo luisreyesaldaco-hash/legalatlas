@@ -167,4 +167,155 @@
 
 <div id="main-app" style="display:none; flex-direction:column; height:100vh;">
     <header>
-        <div style="display: flex; align-items:
+        <div style="display: flex; align-items: center;">
+            <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+            <div class="header-logo">
+                <h1>LEGAL ATLAS <span>PRO</span></h1>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <span id="user-email" style="font-size: 10px; letter-spacing: 0.1em; color: var(--text-muted);"></span>
+            <button onclick="handleLogout()" style="background: none; border: none; color: var(--accent-gold); font-size: 10px; font-weight: 700; cursor: pointer; letter-spacing: 0.1em;">LOGOUT</button>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside id="sidebar">
+            <div class="search-area">
+                <label>Buscador de Jurisprudencia</label>
+                <input type="text" id="map-search" placeholder="Escriba tema o materia..." onkeyup="filterMenu()">
+            </div>
+            <div id="menu-content">
+                </div>
+        </aside>
+
+        <main id="graph-panel">
+            <h2 id="titulo-capitulo" style="font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--stone-dark); margin-bottom: 30px;">
+                Seleccione un proceso en el menú lateral
+            </h2>
+            <div id="mermaid-container" class="mermaid"></div>
+        </main>
+
+        <div id="text-panel">
+            </div>
+    </div>
+</div>
+
+<script>
+    const SUPABASE_URL = 'https://nuzzmcxirsghykzqbmmn.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff';
+    const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // --- AUTH ---
+    async function handleLogin() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const { error } = await sbClient.auth.signInWithPassword({ email, password });
+        if (error) alert("Credenciales incorrectas");
+    }
+    async function handleLogout() { await sbClient.auth.signOut(); }
+
+    sbClient.auth.onAuthStateChange((event, session) => {
+        const auth = document.getElementById('auth-container');
+        const app = document.getElementById('main-app');
+        if (session) {
+            auth.style.display = 'none'; app.style.display = 'flex';
+            document.getElementById('user-email').innerText = session.user.email.toUpperCase();
+            loadMenu();
+        } else {
+            auth.style.display = 'flex'; app.style.display = 'none';
+        }
+    });
+
+    // --- SIDEBAR UI ---
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('closed');
+        setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 410);
+    }
+
+    // --- CARGA DE MENÚ INTELIGENTE (Solución Chequia + México) ---
+    async function loadMenu() {
+        const { data, error } = await sbClient
+            .from('mapas_legales')
+            .select('id, pais, alcance, jurisdiccion, materia, tema');
+        
+        if (error) return;
+
+        const container = document.getElementById('menu-content');
+        container.innerHTML = '';
+
+        // Agrupación por País
+        const paises = [...new Set(data.map(item => item.pais))];
+
+        paises.forEach(pais => {
+            const details = document.createElement('details');
+            details.open = true;
+            const summary = document.createElement('summary');
+            summary.innerText = pais;
+            details.appendChild(summary);
+
+            // Filtrar items de este país
+            const itemsPais = data.filter(i => i.pais === pais);
+            
+            itemsPais.forEach(item => {
+                const btn = document.createElement('div');
+                btn.className = 'menu-item';
+                // Mostramos Jurisdicción (Ej: Guanajuato o Nacional) + Tema
+                btn.innerText = `${item.jurisdiccion.toUpperCase()} • ${item.tema}`;
+                btn.onclick = () => {
+                    document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+                    btn.classList.add('active');
+                    initAtlas(item.id);
+                };
+                details.appendChild(btn);
+            });
+
+            container.appendChild(details);
+        });
+    }
+
+    // --- RENDER MAPA ---
+    async function initAtlas(id) {
+        try {
+            const { data, error } = await sbClient.from('mapas_legales').select('*').eq('id', id).single();
+            if (error) throw error;
+
+            document.getElementById('text-panel').innerHTML = data.ley_humana_html;
+            document.getElementById('titulo-capitulo').innerText = data.tema.toUpperCase();
+
+            const container = document.getElementById('mermaid-container');
+            container.removeAttribute('data-processed');
+            container.innerHTML = data.mermaid_code || "graph TD; A[Proceso no mapeado]";
+
+            setTimeout(async () => {
+                mermaid.initialize({ 
+                    startOnLoad: false, 
+                    theme: 'neutral', 
+                    securityLevel: 'loose',
+                    fontFamily: 'Inter' 
+                });
+                await mermaid.run({ nodes: [container] });
+            }, 100);
+        } catch (e) { console.error(e); }
+    }
+
+    function resaltarArticulo(idArticulo) {
+        document.querySelectorAll('.art-block').forEach(el => el.classList.remove('highlight-law'));
+        const target = document.getElementById(idArticulo);
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            target.classList.add('highlight-law');
+        }
+    }
+
+    function filterMenu() {
+        const query = document.getElementById('map-search').value.toLowerCase();
+        document.querySelectorAll('.menu-item').forEach(item => {
+            const text = item.innerText.toLowerCase();
+            item.style.display = text.includes(query) ? 'block' : 'none';
+        });
+    }
+</script>
+</body>
+</html>
