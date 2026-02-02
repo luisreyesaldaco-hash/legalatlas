@@ -203,6 +203,11 @@
             <div class="panel-title">Marco Normativo</div>
             <div id="legal-content-area"></div>
         </div>
+        <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto;">
+    <button onclick="enviarFeedback()" style="width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">
+        📢 REPORTAR ERROR / SUGERENCIA
+    </button>
+</div>
     </div>
 </div>
 
@@ -302,6 +307,30 @@
         document.querySelectorAll('.menu-item').forEach(i => {
             i.style.display = i.innerText.toLowerCase().includes(q) ? 'block' : 'none';
         });
+    }
+    async function enviarFeedback() {
+    const comentario = prompt("¿Encontraste un error o tienes alguna sugerencia para este mapa?");
+    
+    if (!comentario) return;
+
+    // 1. Obtenemos el usuario actual de la sesión de Supabase
+    const { data: { user } } = await sbClient.auth.getUser();
+    
+    // 2. Obtenemos el título del mapa que está viendo ahorita
+    const temaActual = document.getElementById('titulo-capitulo').innerText;
+
+    // 3. Mandamos todo a la base de datos
+    const { error } = await sbClient.from('feedback_pro').insert([{
+        usuario_email: user.email,
+        mapa_tema: temaActual,
+        mensaje: comentario
+    }]);
+
+    if (!error) {
+        alert("¡Recibido! Gracias por ayudarnos a mejorar el Atlas.");
+    } else {
+        alert("Error al enviar: " + error.message);
+    }
     }
 </script>
 </body>
