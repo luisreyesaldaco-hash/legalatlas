@@ -4,197 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Legal Atlas PRO - Terminal de Trabajo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;600&display=swap');
-
-:root {
-    --sidebar-bg: #2c3e50;
-    --accent-blue: #3498db;
-    --text-dark: #1c1c1c;
-    --border-stone: #e5e5e0;
-}
+        :root {
+            --sidebar-bg: #2c3e50;
+            --accent-blue: #3498db;
+            --text-dark: #1c1c1c;
+            --border-stone: #e5e5e0;
+            --bg-main: #f8f9fa; /* Variable que faltaba */
+        }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html { height: 100%; font-family: 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-dark); overflow: hidden; }
 
-        /* --- HEADER PROFESIONAL --- */
-header {
-    height: 65px;
-    background-color: white;
-    border-bottom: 1px solid var(--border-stone);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 25px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-    z-index: 1000;
-}
+        /* --- HEADER ESTILO INDEX --- */
+        header {
+            height: 65px;
+            background-color: white;
+            border-bottom: 1px solid var(--border-stone);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            z-index: 1000;
+        }
 
-.header-left { display: flex; align-items: center; gap: 20px; }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .logo-brand { display: flex; align-items: center; gap: 12px; }
+        .logo-brand h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            letter-spacing: 0.25em;
+            color: var(--text-dark);
+            margin: 0;
+            line-height: 1;
+        }
+        .logo-brand h1 span { color: #8a8a82; font-weight: 400; }
+        .logo-brand .pro-tag {
+            color: var(--accent-blue);
+            font-size: 0.6rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            font-weight: 800;
+            border: 1px solid var(--accent-blue);
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 5px;
+        }
 
+        .toggle-btn {
+            background: #f8f9fa;
+            border: 1px solid var(--border-stone);
+            color: var(--sidebar-bg);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
 
-/* El Logo inspirado en el Index */
-.logo-brand { display: flex; align-items: center; gap: 12px; }
-.logo-brand h1 {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    letter-spacing: 0.25em;
-    color: var(--text-dark);
-    margin: 0;
-    line-height: 1;
-}
-.logo-brand h1 span { color: #8a8a82; font-weight: 400; }
-.logo-brand .pro-tag {
-    color: var(--accent-blue);
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    font-weight: 800;
-    border: 1px solid var(--accent-blue);
-    padding: 2px 6px;
-    border-radius: 3px;
-    margin-left: 5px;
-}
+        /* --- DASHBOARD Y SIDEBAR --- */
+        .dashboard-container { display: flex; height: calc(100vh - 65px); }
 
-.toggle-btn {
-    background: #f8f9fa;
-    border: 1px solid var(--border-stone);
-    color: var(--sidebar-bg);
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: 0.2s;
-}
-.toggle-btn:hover { background: #eee; }
-
-        /* --- DASHBOARD LAYOUT --- */
-        .dashboard-container { display: flex; height: calc(100vh - 56px); }
-
-        /* SIDEBAR (Estilo SaaS / Herramienta) */
         #sidebar {
             width: 280px;
             background-color: var(--sidebar-bg);
-            color: var(--text-light);
+            color: white;
             display: flex;
             flex-direction: column;
             transition: width 0.3s ease;
             overflow: hidden;
             flex-shrink: 0;
         }
-
         #sidebar.closed { width: 0; }
 
-        .sidebar-header { padding: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
-        
-        .search-area { padding: 0 15px 15px; }
-        #map-search {
-            width: 100%;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 10px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            outline: none;
-        }
-
-        /* --- MENÚ DE NAVEGACIÓN --- */
+        .sidebar-header { padding: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
         #menu-content { flex-grow: 1; overflow-y: auto; }
         
-        details { margin-bottom: 2px; }
-        summary { 
-            list-style: none; 
-            cursor: pointer; 
-            font-size: 0.8rem; 
-            font-weight: 600;
-            padding: 12px 20px;
-            background: rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-        }
-        summary:hover { background: rgba(255,255,255,0.05); }
-        
-        .menu-item {
-            padding: 10px 25px;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.7);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .menu-item:hover { color: white; background: rgba(255,255,255,0.05); }
+        summary { list-style: none; cursor: pointer; font-size: 0.8rem; font-weight: 600; padding: 12px 20px; background: rgba(0,0,0,0.1); }
+        .menu-item { padding: 10px 25px; font-size: 0.85rem; color: rgba(255,255,255,0.7); cursor: pointer; }
         .menu-item.active { background: var(--accent-blue); color: white; font-weight: 600; }
 
-        /* --- PANELES DE TRABAJO --- */
-        #graph-panel { flex: 1; background: white; overflow: auto; padding: 25px; border-right: 1px solid var(--border-color); }
-        #text-panel { 
-            width: 420px; 
-            background: white; 
-            overflow-y: auto; 
-            padding: 30px; 
-            line-height: 1.6;
-            color: #2c3e50;
-            font-size: 0.95rem;
-        }
-
+        /* --- PANELES --- */
+        #graph-panel { flex: 1; background: white; overflow: auto; padding: 25px; border-right: 1px solid var(--border-stone); }
+        #text-panel { width: 420px; background: white; overflow-y: auto; padding: 30px; border-left: 1px solid var(--border-stone); }
         .panel-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; color: var(--sidebar-bg); border-bottom: 2px solid var(--bg-main); padding-bottom: 10px; }
 
-        /* LEY HUMANA & HIGHLIGHT (Funcional) */
-        .art-block { 
-            margin-bottom: 20px; 
-            padding: 15px; 
-            border-radius: 6px; 
-            border: 1px solid var(--border-color); 
-            background: var(--bg-main);
-            transition: 0.3s;
-        }
-        .highlight-law { 
-            background: #eef7ff !important; 
-            border-color: var(--accent-blue) !important;
-            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.1);
-        }
-        .art-header { font-size: 0.75rem; font-weight: 800; color: var(--accent-blue); margin-bottom: 5px; text-transform: uppercase; }
+        /* LEY & HIGHLIGHT */
+        .art-block { margin-bottom: 20px; padding: 15px; border-radius: 6px; border: 1px solid var(--border-stone); background: var(--bg-main); transition: 0.3s; }
+        .highlight-law { background: #eef7ff !important; border-color: var(--accent-blue) !important; box-shadow: 0 4px 12px rgba(52, 152, 219, 0.1); }
 
-        /* AUTH (Limpio / Trabajo) */
-        #auth-container { 
-            position: fixed; top:0; left:0; width:100%; height:100%; 
-            background: #f0f2f5; z-index: 2000; 
-            display: flex; align-items: center; justify-content: center; 
-        }
-        .auth-box { 
-            background: white; padding: 40px; border-radius: 8px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 360px;
-        }
-        .auth-box h2 { font-weight: 700; margin-bottom: 25px; text-align: center; }
-        .auth-box input { 
-            width: 100%; padding: 12px; margin-bottom: 12px; 
-            border: 1px solid var(--border-color); border-radius: 4px; outline: none;
-        }
-        .auth-box button { 
-            width: 100%; padding: 12px; background: var(--accent-blue); 
-            color: white; border: none; border-radius: 4px; cursor: pointer; 
-            font-weight: 600;
-        }
-
-        /* Botón hamburguesa */
-        .toggle-btn { background: none; border: none; cursor: pointer; color: var(--text-dark); font-size: 1.2rem; margin-right: 15px; }
-
-        /* Mermaid Alertas Trabajo */
-        .node.critical rect { fill: #fdecea !important; stroke: var(--danger) !important; stroke-width: 2px; }
-        .node.warning rect { fill: #fef9e7 !important; stroke: var(--warning) !important; stroke-width: 2px; }
-        .node.safe rect { fill: #eafaf1 !important; stroke: var(--success) !important; stroke-width: 2px; }
+        /* AUTH */
+        #auth-container { position: fixed; top:0; left:0; width:100%; height:100%; background: #f0f2f5; z-index: 2000; display: flex; align-items: center; justify-content: center; }
+        .auth-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 360px; text-align: center; }
+        .auth-box h2 { font-family: 'Cinzel', serif; letter-spacing: 0.2em; margin-bottom: 20px; }
+        .auth-box input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid var(--border-stone); border-radius: 4px; }
+        .auth-box button { width: 100%; padding: 12px; background: var(--accent-blue); color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="auth-container">
     <div class="auth-box">
-        <div class="header-logo" style="justify-content:center; margin-bottom:15px; font-size:1.4rem;">
-            LEGAL <span> ATLAS</span>
-        </div>
+        <h2>LEGAL <span>ATLAS</span></h2>
         <input type="email" id="email" placeholder="Correo electrónico">
         <input type="password" id="password" placeholder="Contraseña">
         <button onclick="handleLogin()">INICIAR SESIÓN</button>
@@ -205,13 +119,19 @@ header {
     <header>
         <div class="header-left">
             <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-            <div class="header-logo">
-                LEGAL<span> ATLAS</span> <small style="font-size:0.7rem; opacity:0.6; font-weight:400; margin-left:5px;">PRO</small>
+            <div class="logo-brand">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z"/><path d="M2 17L12 22L22 17"/><path d="M2 12L12 17L22 12"/>
+                </svg>
+                <h1>LEGAL <span>ATLAS</span> <span class="pro-tag">PRO</span></h1>
             </div>
         </div>
         <div style="display: flex; align-items: center; gap: 15px;">
-            <span id="user-email" style="font-size: 0.8rem; color: var(--text-dark); font-weight:500;"></span>
-            <button onclick="handleLogout()" style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight:600;">Salir</button>
+            <div style="text-align: right;">
+                <div id="user-email" style="font-size: 10px; font-weight: 700; color: var(--sidebar-bg); letter-spacing: 0.05em;"></div>
+                <div style="font-size: 9px; color: var(--accent-blue); font-weight: 600; text-transform: uppercase;">Terminal de Trabajo</div>
+            </div>
+            <button onclick="handleLogout()" style="background: none; border: 1.5px solid #ff4d4d; color: #ff4d4d; padding: 6px 15px; border-radius: 6px; font-size: 10px; font-weight: 800; cursor: pointer;">SALIR</button>
         </div>
     </header>
 
@@ -219,9 +139,16 @@ header {
         <aside id="sidebar">
             <div class="sidebar-header">Jurisdicciones</div>
             <div class="search-area">
-                <input type="text" id="map-search" placeholder="🔍 Buscar materia o tema..." onkeyup="filterMenu()">
+                <input type="text" id="map-search" placeholder="🔍 Buscar tema..." onkeyup="filterMenu()" 
+                       style="width:100%; padding:10px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:white; border-radius:4px; outline:none;">
             </div>
             <div id="menu-content"></div>
+            
+            <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto;">
+                <button onclick="enviarFeedback()" style="width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;">
+                    📢 REPORTAR ERROR / SUGERENCIA
+                </button>
+            </div>
         </aside>
 
         <main id="graph-panel">
@@ -233,11 +160,6 @@ header {
             <div class="panel-title">Marco Normativo</div>
             <div id="legal-content-area"></div>
         </div>
-        <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto;">
-    <button onclick="enviarFeedback()" style="width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;">
-        📢 REPORTAR ERROR / SUGERENCIA
-    </button>
-</div>
     </div>
 </div>
 
@@ -260,34 +182,29 @@ header {
         const app = document.getElementById('main-app');
         if (session) {
             auth.style.display = 'none'; app.style.display = 'flex';
-            document.getElementById('user-email').innerText = session.user.email;
+            document.getElementById('user-email').innerText = session.user.email.toUpperCase();
             loadMenu();
         } else {
             auth.style.display = 'flex'; app.style.display = 'none';
         }
     });
 
-    // --- SIDEBAR UI ---
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
         sidebar.classList.toggle('closed');
         setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 310);
     }
 
-    // --- MENÚ DINÁMICO ---
     async function loadMenu() {
         const { data, error } = await sbClient.from('mapas_legales').select('id, pais, jurisdiccion, tema');
         if (error) return;
-
         const container = document.getElementById('menu-content');
         container.innerHTML = '';
-
         const paises = [...new Set(data.map(item => item.pais))];
         paises.forEach(pais => {
             const det = document.createElement('details');
             det.open = true;
-            det.innerHTML = `<summary>${pais} <span>▾</span></summary>`;
-            
+            det.innerHTML = `<summary>${pais.toUpperCase()}</summary>`;
             data.filter(i => i.pais === pais).forEach(item => {
                 const btn = document.createElement('div');
                 btn.className = 'menu-item';
@@ -303,19 +220,15 @@ header {
         });
     }
 
-    // --- RENDER MAPA ---
     async function initAtlas(id) {
         try {
             const { data, error } = await sbClient.from('mapas_legales').select('*').eq('id', id).single();
             if (error) throw error;
-
             document.getElementById('legal-content-area').innerHTML = data.ley_humana_html;
-            document.getElementById('titulo-capitulo').innerText = data.tema;
-
+            document.getElementById('titulo-capitulo').innerText = data.tema.toUpperCase();
             const container = document.getElementById('mermaid-container');
             container.removeAttribute('data-processed');
             container.innerHTML = data.mermaid_code || "graph TD; A[Mapa no disponible]";
-
             setTimeout(async () => {
                 mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose', fontFamily: 'Inter' });
                 await mermaid.run({ nodes: [container] });
@@ -332,35 +245,18 @@ header {
         }
     }
 
-    function filterMenu() {
-        const q = document.getElementById('map-search').value.toLowerCase();
-        document.querySelectorAll('.menu-item').forEach(i => {
-            i.style.display = i.innerText.toLowerCase().includes(q) ? 'block' : 'none';
-        });
-    }
     async function enviarFeedback() {
-    const comentario = prompt("¿Encontraste un error o tienes alguna sugerencia para este mapa?");
-    
-    if (!comentario) return;
-
-    // 1. Obtenemos el usuario actual de la sesión de Supabase
-    const { data: { user } } = await sbClient.auth.getUser();
-    
-    // 2. Obtenemos el título del mapa que está viendo ahorita
-    const temaActual = document.getElementById('titulo-capitulo').innerText;
-
-    // 3. Mandamos todo a la base de datos
-    const { error } = await sbClient.from('feedback_pro').insert([{
-        usuario_email: user.email,
-        mapa_tema: temaActual,
-        mensaje: comentario
-    }]);
-
-    if (!error) {
-        alert("¡Recibido! Gracias por ayudarnos a mejorar el Atlas.");
-    } else {
-        alert("Error al enviar: " + error.message);
-    }
+        const comentario = prompt("¿Encontraste un error o tienes alguna sugerencia para este mapa?");
+        if (!comentario) return;
+        const { data: { user } } = await sbClient.auth.getUser();
+        const temaActual = document.getElementById('titulo-capitulo').innerText;
+        const { error } = await sbClient.from('feedback_pro').insert([{
+            usuario_email: user.email,
+            mapa_tema: temaActual,
+            mensaje: comentario
+        }]);
+        if (!error) alert("¡Recibido! Gracias por ayudarnos.");
+        else alert("Error: " + error.message);
     }
 </script>
 </body>
