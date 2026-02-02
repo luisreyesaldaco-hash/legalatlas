@@ -123,7 +123,7 @@
 
     // --- LÓGICA DE DATOS ---
 
-    async function initAtlas() {
+async function initAtlas() {
         document.getElementById('loader').style.display = 'flex';
         try {
             const { data, error } = await sbClient
@@ -135,20 +135,34 @@
 
             if (error) throw error;
 
-            // Inyectar contenido
+            // 1. Inyectar Texto Legal
             document.getElementById('text-panel').innerHTML = data.ley_humana_html;
             document.getElementById('titulo-capitulo').innerText = data.titulo_capitulo;
             document.getElementById('label-jurisdiccion').innerText = `Legal Atlas PRO - ${data.jurisdiccion}`;
 
+            // 2. Preparar contenedor de Mermaid
             const container = document.getElementById('mermaid-container');
+            
+            // LIMPIEZA CRUCIAL: Eliminamos rastros de renderizados anteriores
+            container.removeAttribute('data-processed'); 
             container.innerHTML = data.grafo_json.diagrama;
             
-            // Renderizar Mermaid
-            mermaid.initialize({ startOnLoad: false, theme: 'default' });
-            await mermaid.run({ nodes: [container] });
+            // 3. Renderizado Forzado
+            // Esperamos un milisegundo para que el DOM se asiente
+            setTimeout(async () => {
+                mermaid.initialize({ 
+                    startOnLoad: false, 
+                    theme: 'default',
+                    securityLevel: 'loose' 
+                });
+                await mermaid.run({
+                    nodes: [container]
+                });
+            }, 100);
 
         } catch (err) {
-            console.error('Error:', err);
+            console.error('Error detallado:', err);
+            alert("Error al cargar datos: " + err.message);
         } finally {
             document.getElementById('loader').style.display = 'none';
         }
