@@ -253,7 +253,7 @@
             const container = document.getElementById('mermaid-container');
             container.removeAttribute('data-processed');
             
-            // IMPORTANTE: Ahora usamos 'mermaid_code', no el JSON antiguo
+            // IMPORTANTE: Ahora usamos el 'mermaid_code', no el JSON antiguo
             container.innerHTML = data.mermaid_code || data.grafo_json?.diagrama || "graph TD; A[Error de Datos] --> B[Revisar Admin]";
 
             setTimeout(async () => {
