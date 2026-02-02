@@ -155,25 +155,34 @@
     </header>
 
     <div class="dashboard-container">
-        <aside id="sidebar">
-            <div class="sidebar-header">Navegación</div>
-            <div class="search-area" style="padding: 0 15px 15px;">
-                <input type="text" id="map-search" placeholder="Buscar materia o tema..." onkeyup="filterMenu()" 
-                       style="width:100%; padding:10px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:white; border-radius:4px; outline:none; font-size: 0.8rem;">
-            </div>
-            <div id="menu-content"></div>
-        </aside>
-
-        <main id="graph-panel">
-            <div class="panel-title" id="titulo-capitulo">Visualizador de Procesos</div>
-            <div id="mermaid-container" class="mermaid"></div>
-        </main>
-
-        <div id="text-panel">
-            <div class="panel-title">Marco Normativo</div>
-            <div id="legal-content-area"></div>
+    <aside id="sidebar" style="display: flex; flex-direction: column; height: 100%;">
+        <div class="sidebar-header">Navegación</div>
+        
+        <div class="search-area" style="padding: 0 15px 15px;">
+            <input type="text" id="map-search" placeholder="Buscar materia o tema..." onkeyup="filterMenu()" 
+                   style="width:100%; padding:10px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:white; border-radius:4px; outline:none; font-size: 0.8rem;">
         </div>
+
+        <div id="menu-content" style="flex-grow: 1; overflow-y: auto;"></div>
+
+        <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: auto;">
+            <button onclick="enviarFeedback()" 
+                    style="width: 100%; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); padding: 10px; border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; transition: 0.3s; text-transform: uppercase;">
+                Reportar error o sugerencia
+            </button>
+        </div>
+    </aside>
+
+    <main id="graph-panel">
+        <div class="panel-title" id="titulo-capitulo">Visualizador de Procesos</div>
+        <div id="mermaid-container" class="mermaid"></div>
+    </main>
+
+    <div id="text-panel">
+        <div class="panel-title">Marco Normativo</div>
+        <div id="legal-content-area"></div>
     </div>
+</div>
 </div>
 
 <script>
