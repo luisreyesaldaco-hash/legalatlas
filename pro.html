@@ -30,20 +30,33 @@
         #main-app { display: none; height: 100vh; flex-direction: column; }
         
         .header-pro { background: var(--primary-color); color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; height: 45px; }
-
         .pro-dashboard { display: flex; height: calc(100vh - 45px); width: 100%; }
 
         /* Sidebar Navegación */
-        #sidebar { width: 300px; background: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0; }
+        #sidebar { width: 320px; background: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0; }
         .search-container { padding: 15px; border-bottom: 1px solid #eee; }
         #map-search { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
         #menu-content { overflow-y: auto; flex-grow: 1; padding: 10px; }
+
+        /* --- ESTILOS DEL ÁRBOL INTELIGENTE --- */
+        details { margin-bottom: 5px; }
+        summary { cursor: pointer; list-style: none; padding: 8px; font-weight: bold; color: #2c3e50; border-radius: 4px; display: flex; align-items: center; }
+        summary:hover { background: #e0e0e0; }
+        summary::-webkit-details-marker { display: none; } 
         
-        .menu-group { margin-bottom: 20px; }
-        .menu-label { font-weight: bold; font-size: 0.7rem; color: #7f8c8d; text-transform: uppercase; padding: 5px 0; border-bottom: 1px solid #eee; margin-bottom: 8px; }
-        .menu-item { padding: 10px 12px; cursor: pointer; border-radius: 4px; font-size: 0.85rem; transition: 0.2s; color: #2c3e50; margin-bottom: 2px; }
-        .menu-item:hover { background: #e9ecef; }
-        .menu-item.active { background: var(--accent-color); color: white; font-weight: bold; }
+        .menu-pais-label { font-size: 0.85rem; text-transform: uppercase; background: #ecf0f1; border-bottom: 1px solid #bdc3c7; }
+        .menu-estado-label { font-size: 0.85rem; color: #555; font-style: italic; margin-left: 5px; }
+
+        .menu-item { 
+            padding: 6px 10px 6px 20px; 
+            font-size: 0.85rem; 
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            margin-left: 5px;
+            color: #34495e;
+        }
+        .menu-item:hover { color: var(--accent-color); border-left-color: var(--accent-color); background: white; }
+        .menu-item.active { background: var(--accent-color) !important; color: white !important; font-weight: bold; border-left-color: #2980b9; }
 
         /* Paneles de Contenido */
         #graph-panel { flex: 1; background: white; border-right: 1px solid var(--border-color); overflow: auto; padding: 20px; }
@@ -137,71 +150,111 @@
         }
     });
 
-    // --- MENÚ DINÁMICO ---
+    // --- CEREBRO DEL MENÚ INTELIGENTE ---
     async function loadMenu() {
         const { data, error } = await sbClient
             .from('mapas_legales')
-            .select('id, jurisdiccion, materia, tema, titulo_capitulo')
+            .select('id, pais, alcance, jurisdiccion, materia, tema, titulo_capitulo')
+            .order('pais', { ascending: true })
             .order('jurisdiccion', { ascending: true });
 
-        if (error) return console.error(error);
+        if (error) return console.error("Error cargando menú:", error);
 
-        const menu = document.getElementById('menu-content');
-        menu.innerHTML = '';
+        const menuContainer = document.getElementById('menu-content');
+        menuContainer.innerHTML = ''; 
 
-        const groups = {};
+        // 1. Agrupar datos
+        const arbol = {};
         data.forEach(item => {
-            const key = `${item.jurisdiccion} | ${item.materia}`;
-            if (!groups[key]) groups[key] = [];
-            groups[key].push(item);
+            if (!arbol[item.pais]) arbol[item.pais] = {};
+            
+            // Lógica discriminadora: Si es Nacional, agrupar bajo "Leyes Nacionales"
+            let carpeta = item.alcance === 'Nacional' ? 'Leyes Nacionales' : item.jurisdiccion;
+            
+            if (!arbol[item.pais][carpeta]) arbol[item.pais][carpeta] = [];
+            arbol[item.pais][carpeta].push(item);
         });
 
-        for (const label in groups) {
-            const groupDiv = document.createElement('div');
-            groupDiv.className = 'menu-group';
-            groupDiv.innerHTML = `<div class="menu-label">${label}</div>`;
+        // 2. Renderizar Árbol
+        for (const pais in arbol) {
+            // Carpeta PAÍS
+            const paisDetails = document.createElement('details');
+            paisDetails.open = true; // Abrir por defecto los países
+            const paisSummary = document.createElement('summary');
+            paisSummary.className = 'menu-pais-label';
+            paisSummary.innerText = `🏳️ ${pais}`;
+            paisDetails.appendChild(paisSummary);
+
+            for (const juris in arbol[pais]) {
+                const mapas = arbol[pais][juris];
+
+                // Si es Nacional, NO crear sub-carpeta, pintar directo
+                if (juris === 'Leyes Nacionales') {
+                    mapas.forEach(mapa => crearBotonMapa(mapa, paisDetails, true));
+                } 
+                // Si es Estatal, crear sub-carpeta
+                else {
+                    const estadoDetails = document.createElement('details');
+                    estadoDetails.style.marginLeft = "10px";
+                    const estadoSummary = document.createElement('summary');
+                    estadoSummary.className = 'menu-estado-label';
+                    estadoSummary.innerText = `🏛️ ${juris}`;
+                    estadoDetails.appendChild(estadoSummary);
+
+                    mapas.forEach(mapa => crearBotonMapa(mapa, estadoDetails, false));
+                    paisDetails.appendChild(estadoDetails);
+                }
+            }
+            menuContainer.appendChild(paisDetails);
+        }
+    }
+
+    function crearBotonMapa(mapa, contenedor, esNacional) {
+        const btn = document.createElement('div');
+        btn.className = 'menu-item';
+        // Formato: Materia • Tema (Nacional) vs Tema: Título (Estatal)
+        btn.innerText = esNacional 
+            ? `${mapa.materia} • ${mapa.tema}` 
+            : `${mapa.tema}: ${mapa.titulo_capitulo}`;
             
-            groups[label].forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'menu-item';
-                div.innerText = `${item.tema}: ${item.titulo_capitulo}`;
-                div.onclick = () => {
-                    document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
-                    div.classList.add('active');
-                    initAtlas(item.id);
-                };
-                groupDiv.appendChild(div);
-            });
-            menu.appendChild(groupDiv);
-        }
-        if (data.length > 0) {
-            const firstItem = document.querySelector('.menu-item');
-            firstItem.classList.add('active');
-            initAtlas(data[0].id);
-        }
+        btn.onclick = () => {
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
+            initAtlas(mapa.id);
+        };
+        contenedor.appendChild(btn);
     }
 
     function filterMenu() {
         const query = document.getElementById('map-search').value.toLowerCase();
+        // Lógica simple: expande todo y oculta lo que no coincida
+        document.querySelectorAll('details').forEach(d => d.open = true);
         document.querySelectorAll('.menu-item').forEach(item => {
             item.style.display = item.innerText.toLowerCase().includes(query) ? 'block' : 'none';
         });
     }
 
-    // --- CARGAR MAPA ---
+    // --- CARGAR MAPA (Actualizado para el nuevo Schema) ---
     async function initAtlas(id) {
         document.getElementById('loader').style.display = 'flex';
         try {
-            const { data, error } = await sbClient.from('mapas_legales').select('*').eq('id', id).single();
+            const { data, error } = await sbClient
+                .from('mapas_legales')
+                .select('*')
+                .eq('id', id)
+                .single();
+
             if (error) throw error;
 
             document.getElementById('text-panel').innerHTML = data.ley_humana_html;
             document.getElementById('titulo-capitulo').innerText = `${data.tema}: ${data.titulo_capitulo}`;
-            document.getElementById('label-jurisdiccion').innerText = `Legal Atlas PRO - ${data.jurisdiccion}`;
+            document.getElementById('label-jurisdiccion').innerText = `Legal Atlas PRO - ${data.pais} (${data.jurisdiccion})`;
 
             const container = document.getElementById('mermaid-container');
             container.removeAttribute('data-processed');
-            container.innerHTML = data.grafo_json.diagrama;
+            
+            // IMPORTANTE: Ahora usamos 'mermaid_code', no el JSON antiguo
+            container.innerHTML = data.mermaid_code || data.grafo_json?.diagrama || "graph TD; A[Error de Datos] --> B[Revisar Admin]";
 
             setTimeout(async () => {
                 mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
