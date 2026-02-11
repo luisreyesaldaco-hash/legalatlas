@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Legal Atlas Global - V39 Iron Shield</title>
+    <title>Legal Atlas Global - V40 Titanium</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
@@ -55,7 +55,7 @@
 <div id="login-layer">
     <div class="login-card">
         <h2 class="logo-font mb-2">LEGAL ATLAS</h2>
-        <p class="text-white-50 small mb-4">ACCESO BLINDADO V39</p>
+        <p class="text-white-50 small mb-4">ACCESO V40 TITANIUM</p>
         <input type="email" id="user-email" class="inp-auth" placeholder="Correo Autorizado">
         <button class="btn-auth" onclick="iniciarSesion()">ENTRAR</button>
         <div id="login-msg" class="text-danger mt-3 small fw-bold"></div>
@@ -65,7 +65,7 @@
 <div id="app-layer">
     <div id="sidebar">
         <div class="brand-box">
-            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">V39</span></h4>
+            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">V40</span></h4>
             <div class="text-white-50 small mt-2" id="user-display">...</div>
         </div>
         <div class="nav-scroll" id="nav-menu">
@@ -101,9 +101,9 @@
     let MENU_INDEX = [];
     let panZoomInstance = null;
 
-    // ALGORITMO DE ORDENAMIENTO (Mantenemos el de la V37 que funcionaba)
+    // ALGORITMO DE ORDENAMIENTO
     const ORDEN_JERARQUICO = {
-        "PRIMERO": 1, "SEGUNDO": 2, "TERCERO": 3, "CUARTO": 4, "QUINTO": 5, "SEXTO": 6, "SEPTIMO": 7, "SÉPTIMO": 7, "OCTAVO": 8, "NOVENO": 9, "DECIMO": 10, "DÉCIMO": 10, "ONCE": 11, "DOCE": 12, "TRECE": 13, "CATORCE": 14, "QUINCE": 15, "DIECISEIS": 16,
+        "PRIMERO": 1, "SEGUNDO": 2, "TERCERO": 3, "CUARTO": 4, "QUINTO": 5, "SEXTO": 6, "SEPTIMO": 7, "SÉPTIMO": 7, "OCTAVO": 8, "NOVENO": 9, "DECIMO": 10, "DÉCIMO": 10, "ONCE": 11, "DOCE": 12, "TRECE": 13, "CATORCE": 14, "QUINCE": 15, "DECIMOSEXTO": 16,
         "I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10, "XI": 11, "XII": 12, "XIII": 13, "XIV": 14, "XV": 15
     };
     function calcularPeso(texto) {
@@ -192,7 +192,6 @@
             .single();
 
         document.getElementById('chapter-loader').style.display = 'none';
-
         if(error || !data) { alert("Error cargando capítulo."); return; }
         renderContent(data);
     }
@@ -231,7 +230,7 @@
         if(slides[0]) renderGraph(slides[0].mermaid_code);
     }
 
-    // 5. MOTOR GRÁFICO (V39 IRON SHIELD)
+    // 5. MOTOR GRÁFICO V40 (TITANIUM)
     async function renderGraph(code) {
         const area = document.getElementById('mermaid-render');
         if (panZoomInstance) { panZoomInstance.destroy(); panZoomInstance = null; }
@@ -242,39 +241,44 @@
             return;
         }
 
-        // --- 1. LIMPIEZA INICIAL ---
-        // Normalizar saltos de línea y quitar graph TD duplicado
         let clean = code.replace(/\\n/g, '\n').trim();
         clean = clean.replace(/^graph\s+TD;?/gim, '').trim(); 
         
-        // --- 2. EL SANITIZADOR (ESTO ARREGLA EL ERROR 'got PS') ---
-        const sanitizeMermaid = (str) => {
+        // --- LA LÓGICA TITANIUM ---
+        const sanitizeTitanium = (str) => {
             let lines = str.split('\n');
             let fixedLines = lines.map(line => {
-                // Eliminar puntos y comas al final de la línea (son veneno)
-                line = line.replace(/;+$/, '');
-                
-                // Procesar nodos
-                return line.replace(/([a-zA-Z0-9_]+)([\(\[\{])(.*?)([\)\]\}])/g, (match, id, open, content, close) => {
-                    // Protegemos el contenido:
-                    // 1. Reemplazar paréntesis internos ( ) por corchetes [ ]
-                    let safeContent = content.replace(/\(/g, '[').replace(/\)/g, ']');
-                    // 2. Escapar comillas dobles internas
-                    safeContent = safeContent.replace(/"/g, "'");
-                    
-                    // Reconstruir nodo con comillas seguras
-                    if (open === '(') return `${id}(["${safeContent.trim()}"])`;
-                    if (open === '[') return `${id}["${safeContent.trim()}"]`;
-                    if (open === '{') return `${id}{"${safeContent.trim()}"}`;
-                    return match;
+                line = line.replace(/;+$/, ''); // Matar puntos y coma finales
+
+                // 1. ELIMINAR HUÉRFANOS: (Art. X) que están fuera de nodos
+                // Busca un cierre de nodo ] o ) seguido de espacio y (Art...)
+                line = line.replace(/(?<=[\]\)\}])\s*\(Art\.\s*[^)]+\)/g, '');
+
+                // 2. REPARACIÓN ESPECÍFICA POR TIPO DE NODO
+                // Repara ID[Contenido]
+                line = line.replace(/([a-zA-Z0-9_]+)\[(.*?)\]/g, (match, id, content) => {
+                    let safe = content.replace(/"/g, "'").replace(/\(/g, '[').replace(/\)/g, ']');
+                    return `${id}["${safe.trim()}"]`;
                 });
+
+                // Repara ID(Contenido)
+                line = line.replace(/([a-zA-Z0-9_]+)\((.*?)\)/g, (match, id, content) => {
+                    let safe = content.replace(/"/g, "'").replace(/\(/g, '[').replace(/\)/g, ']');
+                    return `${id}(["${safe.trim()}"])`;
+                });
+
+                // Repara ID{Contenido}
+                line = line.replace(/([a-zA-Z0-9_]+)\{(.*?)\}/g, (match, id, content) => {
+                    let safe = content.replace(/"/g, "'").replace(/\(/g, '[').replace(/\)/g, ']');
+                    return `${id}{"${safe.trim()}"}`;
+                });
+
+                return line;
             });
             return fixedLines.join('\n');
         };
 
-        clean = sanitizeMermaid(clean);
-        
-        // --- 3. RECONSTRUCCIÓN ---
+        clean = sanitizeTitanium(clean);
         clean = 'graph TD\n' + clean;
         area.innerHTML = clean;
 
@@ -298,12 +302,8 @@
                 };
             });
         } catch(e) {
-            console.error("Mermaid Render Error:", e);
-            // Mostrar error útil en pantalla
-            area.innerHTML = `<div class='p-3 text-danger small'>
-                Error visualizando diagrama.<br>
-                <small>Intenta reportar este capítulo: ${e.message.substring(0, 50)}...</small>
-            </div>`;
+            console.error("Mermaid Error:", e);
+            area.innerHTML = `<div class='p-3 text-danger small'>Error visualizando.<br><small>${e.message.slice(0,50)}</small></div>`;
         }
     }
 </script>
