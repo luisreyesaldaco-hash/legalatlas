@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Legal Atlas Global - V33 Secure Cloud</title>
+    <title>Legal Atlas Global - V34 Ordered</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
@@ -23,8 +23,6 @@
         
         /* APP */
         #app-layer { display: none; width: 100vw; height: 100vh; display: flex; }
-        
-        /* SIDEBAR */
         #sidebar { width: 340px; background: var(--atlas-sidebar); border-right: 1px solid #333; display: flex; flex-direction: column; box-shadow: 5px 0 15px rgba(0,0,0,0.3); z-index: 10; }
         .brand-box { padding: 30px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); background: linear-gradient(180deg, var(--atlas-navy) 0%, var(--atlas-sidebar) 100%); }
         .logo-font { font-family: 'Cinzel', serif; color: var(--atlas-gold); letter-spacing: 2px; }
@@ -39,7 +37,6 @@
         .nav-btn:hover { color: white; background: rgba(255,255,255,0.08); padding-left: 20px; }
         .nav-btn.active { color: var(--atlas-gold); background: rgba(207,161,68,0.15); font-weight: bold; padding-left: 20px; border-left: 3px solid var(--atlas-gold); }
 
-        /* WORKSPACE */
         .viz-zone { width: 55%; display: flex; flex-direction: column; border-right: 1px solid #e0e0e0; background: white; position: relative; }
         .doc-zone { width: 45%; overflow-y: auto; padding: 60px; scroll-behavior: smooth; background: var(--atlas-paper); }
         .toolbar { height: 60px; background: #fff; border-bottom: 1px solid #eee; display: flex; align-items: center; padding: 0 20px; gap: 12px; z-index: 5; }
@@ -58,9 +55,9 @@
 <div id="login-layer">
     <div class="login-card">
         <h2 class="logo-font mb-2">LEGAL ATLAS</h2>
-        <p class="text-white-50 small mb-4">ACCESO RESTRINGIDO</p>
+        <p class="text-white-50 small mb-4">ACCESO NUBE SEGURO</p>
         <input type="email" id="user-email" class="inp-auth" placeholder="Correo Autorizado">
-        <button class="btn-auth" onclick="iniciarSesion()">VALIDAR CREDENCIALES</button>
+        <button class="btn-auth" onclick="iniciarSesion()">ENTRAR</button>
         <div id="login-msg" class="text-danger mt-3 small fw-bold"></div>
     </div>
 </div>
@@ -68,13 +65,13 @@
 <div id="app-layer">
     <div id="sidebar">
         <div class="brand-box">
-            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">CLOUD</span></h4>
+            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">V34</span></h4>
             <div class="text-white-50 small mt-2" id="user-display">...</div>
         </div>
         <div class="nav-scroll" id="nav-menu">
             <div class="loading-spinner">
                 <div class="spinner-border text-warning" role="status"></div>
-                <p class="mt-3 small">Sincronizando Bóveda Legal...</p>
+                <p class="mt-3 small">Organizando estructura legal...</p>
             </div>
         </div>
     </div>
@@ -84,7 +81,7 @@
             <div class="toolbar">
                 <i class="bi bi-diagram-3-fill text-secondary"></i>
                 <div id="slide-tabs" class="d-flex gap-2 ms-2" style="overflow-x:auto;"></div>
-                <button class="ms-auto btn btn-sm btn-outline-danger" onclick="alert('Reporte enviado a Ingeniería')"><i class="bi bi-bug-fill"></i></button>
+                <button class="ms-auto btn btn-sm btn-outline-danger" onclick="alert('Reporte enviado')"><i class="bi bi-bug-fill"></i></button>
             </div>
             <div id="mermaid-canvas"></div>
         </div>
@@ -97,9 +94,8 @@
 </div>
 
 <script>
-    // 1. CONFIGURACIÓN SUPABASE
     const SUPABASE_URL = 'https://nuzzmcxirsghykzqbmmn.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff'; // PÚBLICA
+    const SUPABASE_KEY = 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
@@ -107,58 +103,66 @@
     let panZoom = null;
     let currentUser = "";
 
-    // 2. SEGURIDAD ESTRICTA + CONEXIÓN CLOUD
+    // === ALGORITMO DE ORDENAMIENTO JURÍDICO ===
+    const MAPA_ORDEN = {
+        "PRIMERO": 1, "SEGUNDO": 2, "TERCERO": 3, "CUARTO": 4, "QUINTO": 5,
+        "SEXTO": 6, "SEPTIMO": 7, "SÉPTIMO": 7, "OCTAVO": 8, "NOVENO": 9, "DECIMO": 10, "DÉCIMO": 10,
+        "ONCEAVO": 11, "DOCEAVO": 12, "DECIMOTERCERO": 13, "DECIMOCUARTO": 14, "DECIMOQUINTO": 15, "DECIMOSEXTO": 16,
+        "I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10,
+        "XI": 11, "XII": 12, "XIII": 13, "XIV": 14, "XV": 15, "XVI": 16, "XVII": 17
+    };
+
+    function obtenerPeso(texto) {
+        if (!texto) return 999;
+        const upper = texto.toUpperCase();
+        
+        // 1. Buscar palabras clave (PRIMERO, SEGUNDO...)
+        for (const [key, val] of Object.entries(MAPA_ORDEN)) {
+            // Buscamos la palabra completa para evitar falsos positivos
+            const regex = new RegExp(`\\b${key}\\b`);
+            if (regex.test(upper)) return val;
+        }
+        // 2. Si no, intentar extraer número arábigo
+        const match = upper.match(/(\d+)/);
+        if (match) return parseInt(match[0]);
+        
+        return 999; // Al final si no se entiende
+    }
+
+    function ordenarLegal(a, b) {
+        return obtenerPeso(a) - obtenerPeso(b);
+    }
+
     async function iniciarSesion() {
         const email = document.getElementById('user-email').value.trim().toLowerCase();
-        
-        // --- WHITELIST DE ACCESO ---
-        const whitelist = [
-            "jaime.ulises292@gmail.com", 
-            "td_rogelio@hotmail.com", 
-            "luisreyesaldaco@gmail.com",
-            "admin"
-        ];
-
+        const whitelist = ["jaime.ulises292@gmail.com", "td_rogelio@hotmail.com", "luisreyesaldaco@gmail.com","admin"];
         if (whitelist.includes(email)) {
-            // Acceso Correcto
             currentUser = email;
             document.getElementById('user-display').innerText = email;
             document.getElementById('login-layer').style.display = 'none';
             document.getElementById('app-layer').style.display = 'flex';
-            
-            // Iniciar Descarga
             await descargarDatosNube();
         } else {
-            // Acceso Denegado
-            document.getElementById('login-msg').innerText = "⛔ ACCESO DENEGADO: Correo no registrado.";
-            document.getElementById('user-email').classList.add('is-invalid');
-            setTimeout(() => document.getElementById('user-email').classList.remove('is-invalid'), 2000);
+            document.getElementById('login-msg').innerText = "Usuario no autorizado.";
         }
     }
 
-    // 3. DESCARGA DESDE SUPABASE
     async function descargarDatosNube() {
         const { data, error } = await supabaseClient
             .from('mapas_universales')
             .select('*')
-            .eq('nombre_ley', 'Ley Federal del Trabajo')
-            .order('id', { ascending: true });
+            .eq('nombre_ley', 'Ley Federal del Trabajo');
 
         if (error) {
-            console.error("Error Supabase:", error);
-            document.getElementById('nav-menu').innerHTML = "<p class='text-danger text-center p-3'>Error de conexión con la bóveda.</p>";
+            console.error("Error:", error);
+            document.getElementById('nav-menu').innerHTML = "<p class='text-danger p-3'>Error de conexión.</p>";
             return;
         }
 
-        if (data && data.length > 0) {
-            STORE = data;
-            renderMenuUniversal();
-        } else {
-            document.getElementById('nav-menu').innerHTML = "<p class='text-center text-muted p-3'>Bóveda vacía.</p>";
-        }
+        STORE = data;
+        renderMenuUniversal();
     }
 
-    // 4. MENÚ UNIVERSAL
     function renderMenuUniversal() {
         const nav = document.getElementById('nav-menu');
         nav.innerHTML = "";
@@ -170,27 +174,33 @@
             groups[nivel1].push({ item, idx });
         });
 
-        for (const [titulo, capitulos] of Object.entries(groups)) {
+        // ORDENAR TÍTULOS (ORDEN 1)
+        const titulosOrdenados = Object.keys(groups).sort(ordenarLegal);
+
+        titulosOrdenados.forEach(titulo => {
             const header = document.createElement('div');
             header.className = "group-header";
             header.innerHTML = `<i class="bi bi-bookmark-fill"></i> ${titulo}`;
             nav.appendChild(header);
 
+            // ORDENAR CAPÍTULOS DENTRO DEL TÍTULO (ORDEN 2)
+            const capitulos = groups[titulo].sort((a, b) => {
+                const nombreA = a.item.orden_2 || a.item.sub_jerarquia || "";
+                const nombreB = b.item.orden_2 || b.item.sub_jerarquia || "";
+                return ordenarLegal(nombreA, nombreB);
+            });
+
             capitulos.forEach(c => {
                 const btn = document.createElement('button');
                 btn.className = "nav-btn";
-                // Limpieza nombre
                 let nombreRaw = c.item.orden_2 || c.item.sub_jerarquia || "Capítulo";
-                let label = nombreRaw.length > 3 ? nombreRaw : "Capítulo " + (c.idx + 1);
-                
-                btn.innerText = label;
+                btn.innerText = nombreRaw.length > 50 ? nombreRaw.substring(0,45)+"..." : nombreRaw;
                 btn.onclick = () => loadChapter(c.idx, btn);
                 nav.appendChild(btn);
             });
-        }
+        });
     }
 
-    // 5. CARGA DE CONTENIDO
     function loadChapter(idx, btn) {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -201,8 +211,18 @@
         const tabs = document.getElementById('slide-tabs');
         tabs.innerHTML = "";
         
-        const slides = data.slides || [];
-        if(slides.length === 0) {
+        // --- DECODIFICADOR HÍBRIDO (ARREGLA PROBLEMA 1 DE GRÁFICOS) ---
+        let slides = [];
+        if (data.slides) {
+            if (typeof data.slides === 'string') {
+                try { slides = JSON.parse(data.slides); } 
+                catch(e) { console.error("Error parseando slides:", e); }
+            } else {
+                slides = data.slides; // Ya es objeto
+            }
+        }
+
+        if(!slides || slides.length === 0) {
             tabs.innerHTML = "<span class='text-muted small ps-2'>Texto sustantivo (sin procesos).</span>";
             document.getElementById('mermaid-canvas').innerHTML = "";
             return;
@@ -222,7 +242,6 @@
         renderGraph(slides[0].mermaid_code);
     }
 
-    // 6. RENDERIZADO MERMAID
     async function renderGraph(code) {
         const area = document.getElementById('mermaid-canvas');
         if (panZoom) { panZoom.destroy(); panZoom = null; }
