@@ -2,314 +2,303 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Legal Atlas Global - V41 Resurrector</title>
+    <title>Legal Atlas V42 - The Golden Standard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel=\"stylesheet\">
 
     <style>
-        :root { --atlas-black: #050505; --atlas-gold: #cfa144; --atlas-paper: #fcfbf9; --atlas-navy: #0e1621; --atlas-sidebar: #151f2b; }
-        body, html { height: 100vh; margin: 0; font-family: 'Lato', sans-serif; overflow: hidden; background: var(--atlas-black); }
-
-        /* LOGIN */
+        /* ESTILOS ORIGINALES DE TU VERSIÓN 7B (CON AJUSTES PARA LA NUBE) */
+        :root { --beige: #fdfbf7; --azul: #0a1929; --dorado: #c5a059; --borde: #e8e4db; }
+        body, html { height: 100vh; margin: 0; overflow: hidden; background: var(--beige); font-family: 'Segoe UI', sans-serif; }
+        
+        /* LOGIN (CAPA DE SEGURIDAD) */
         #login-layer { position: fixed; inset: 0; background: radial-gradient(circle at center, #1a2530 0%, #000 100%); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .login-card { background: rgba(255,255,255,0.05); padding: 50px; border: 1px solid var(--atlas-gold); border-radius: 8px; width: 380px; text-align: center; backdrop-filter: blur(10px); }
-        .inp-auth { background: transparent; border: 1px solid #444; color: white; padding: 14px; width: 100%; margin-bottom: 20px; text-align: center; border-radius: 4px; }
-        .btn-auth { background: var(--atlas-gold); border: none; padding: 14px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 4px; }
+        .login-card { background: rgba(255,255,255,0.05); padding: 50px; border: 1px solid var(--dorado); border-radius: 8px; width: 380px; text-align: center; backdrop-filter: blur(10px); color: white; }
         
         /* APP LAYOUT */
         #app-layer { display: none; width: 100vw; height: 100vh; display: flex; }
-        #sidebar { width: 340px; background: var(--atlas-sidebar); border-right: 1px solid #333; display: flex; flex-direction: column; z-index: 10; box-shadow: 5px 0 15px rgba(0,0,0,0.3); }
-        .brand-box { padding: 30px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); background: linear-gradient(180deg, var(--atlas-navy) 0%, var(--atlas-sidebar) 100%); }
-        .logo-font { font-family: 'Cinzel', serif; color: var(--atlas-gold); letter-spacing: 2px; }
+        
+        #sidebar { width: 350px; background: var(--azul); color: white; display: flex; flex-direction: column; border-right: 1px solid var(--dorado); }
+        .brand { padding: 25px; font-family: 'Cinzel', serif; font-size: 1.2rem; border-bottom: 1px solid rgba(197, 160, 89, 0.3); text-align: center; letter-spacing: 2px; }
         
         .nav-scroll { flex: 1; overflow-y: auto; padding: 10px; }
-        .group-header { color: var(--atlas-gold); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin: 25px 0 8px 10px; border-bottom: 1px solid rgba(207,161,68,0.2); display: flex; align-items: center; gap: 8px; }
-        .nav-btn { display: block; width: 100%; text-align: left; padding: 10px 15px; color: #b0b0b0; background: none; border: none; font-size: 0.9rem; cursor: pointer; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .nav-btn:hover { color: white; background: rgba(255,255,255,0.08); padding-left: 20px; }
-        .nav-btn.active { color: var(--atlas-gold); background: rgba(207,161,68,0.15); font-weight: bold; padding-left: 20px; border-left: 3px solid var(--atlas-gold); }
-
-        /* WORKSPACE */
-        .viz-zone { width: 55%; display: flex; flex-direction: column; background: white; border-right: 1px solid #ddd; position: relative; }
-        .doc-zone { width: 45%; overflow-y: auto; padding: 60px; background: var(--atlas-paper); scroll-behavior: smooth; }
-        .toolbar { height: 60px; background: #fff; border-bottom: 1px solid #eee; display: flex; align-items: center; padding: 0 20px; gap: 12px; z-index: 5; }
+        .chapter-btn { display: block; width: 100%; text-align: left; padding: 12px 15px; color: rgba(255,255,255,0.7); background: none; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s; font-size: 0.9rem; }
+        .chapter-btn:hover { background: rgba(197, 160, 89, 0.1); color: var(--dorado); padding-left: 20px; }
+        .chapter-btn.active { background: rgba(197, 160, 89, 0.2); color: var(--dorado); border-left: 4px solid var(--dorado); font-weight: bold; }
         
-        #mermaid-render { flex: 1; overflow: hidden; position: relative; background: radial-gradient(#f8f9fa 1px, transparent 1px); background-size: 20px 20px; }
-        .legal-typo { font-family: 'Merriweather', serif; font-size: 1.1rem; line-height: 2; color: #2c3e50; text-align: justify; }
-        .btn-process { font-size: 0.75rem; padding: 6px 16px; border-radius: 20px; border: 1px solid #ddd; background: white; color: #555; cursor: pointer; transition: 0.2s; }
-        .btn-process:hover { background: #f0f0f0; }
-        .btn-process.active { background: var(--atlas-navy); color: var(--atlas-gold); border-color: var(--atlas-navy); box-shadow: 0 4px 10px rgba(14,22,33,0.2); }
-        .highlight { background: #fff3cd; animation: highlightFade 3s forwards; }
-        @keyframes highlightFade { 0% { background: #ffeeba; } 100% { background: transparent; } }
-
-        /* LOADING OVERLAY */
-        #chapter-loader { position: absolute; inset: 0; background: rgba(255,255,255,0.8); z-index: 20; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+        .main-content { flex: 1; display: flex; }
+        .viz-panel { width: 60%; background: white; border-right: 1px solid var(--borde); display: flex; flex-direction: column; position: relative; }
+        .doc-panel { width: 40%; background: var(--beige); padding: 50px; overflow-y: auto; font-family: 'Merriweather', serif; color: #333; line-height: 1.8; }
+        
+        .toolbar { height: 60px; border-bottom: 1px solid var(--borde); display: flex; align-items: center; padding: 0 20px; gap: 10px; background: white; }
+        .btn-slide { padding: 5px 15px; border: 1px solid var(--borde); border-radius: 20px; background: transparent; font-size: 0.8rem; cursor: pointer; }
+        .btn-slide.active { background: var(--azul); color: white; border-color: var(--azul); }
+        
+        #mermaid-container { flex: 1; overflow: hidden; background-image: radial-gradient(#e0e0e0 1px, transparent 1px); background-size: 20px 20px; }
+        
+        .highlight { background-color: #ffeeba; transition: background-color 2s ease-out; }
     </style>
 </head>
 <body>
 
 <div id="login-layer">
     <div class="login-card">
-        <h2 class="logo-font mb-2">LEGAL ATLAS</h2>
-        <p class="text-white-50 small mb-4">ACCESO REPARADO V41</p>
-        <input type="email" id="user-email" class="inp-auth" placeholder="Correo Autorizado">
-        <button class="btn-auth" onclick="iniciarSesion()">ENTRAR</button>
-        <div id="login-msg" class="text-danger mt-3 small fw-bold"></div>
+        <h3>LEGAL ATLAS</h3>
+        <p class="small text-white-50">GOLDEN STANDARD V42</p>
+        <input type="email" id="user-email" class="form-control bg-transparent text-white border-secondary mb-3 text-center" placeholder="Email Corporativo">
+        <button class="btn btn-warning w-100 fw-bold" onclick="iniciarSesion()">CONECTAR</button>
     </div>
 </div>
 
 <div id="app-layer">
-    <div id="sidebar">
-        <div class="brand-box">
-            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">V41</span></h4>
-            <div class="text-white-50 small mt-2" id="user-display">...</div>
+    <nav id="sidebar">
+        <div class="brand">LEGAL ATLAS <span style="font-size:0.6rem; border:1px solid var(--dorado); padding: 2px 5px; border-radius: 4px;">PRO</span></div>
+        <div id="menu-list" class="nav-scroll">
+            <p class="text-center mt-5 text-muted small">Cargando...</p>
         </div>
-        <div class="nav-scroll" id="nav-menu">
-            <p class="text-center mt-5 text-warning small">Esperando índice...</p>
-        </div>
-    </div>
+    </nav>
 
-    <div class="split-view" style="flex:1; display:flex; position:relative;">
-        <div id="chapter-loader"><div class="spinner-border text-primary" role="status"></div></div>
-        
-        <div class="viz-zone">
+    <div class="main-content">
+        <div class="viz-panel">
             <div class="toolbar">
-                <i class="bi bi-diagram-3-fill text-secondary"></i>
-                <div id="slide-tabs" class="d-flex gap-2 ms-2" style="overflow-x:auto;"></div>
+                <i class="bi bi-diagram-3-fill"></i>
+                <div id="tabs-container" style="display:flex; gap:5px; overflow-x:auto;"></div>
             </div>
-            <div id="mermaid-render"></div>
+            <div id="mermaid-container"></div>
         </div>
-        <div class="doc-zone">
-            <div id="doc-content" class="legal-typo">
-                <div class="text-center mt-5"><h3>Seleccione un Capítulo</h3><p class="text-muted">El contenido se descargará bajo demanda.</p></div>
+        <div class="doc-panel">
+            <div id="legal-text">
+                <h3 class="text-center mt-5">Seleccione un Capítulo</h3>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // 1. CONFIGURACIÓN
     const SUPABASE_URL = 'https://nuzzmcxirsghykzqbmmn.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff';
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'loose' });
-    let MENU_INDEX = [];
     let panZoomInstance = null;
+    let RAW_DATA = [];
 
-    // ALGORITMO DE ORDENAMIENTO
-    const ORDEN_JERARQUICO = {
-        "PRIMERO": 1, "SEGUNDO": 2, "TERCERO": 3, "CUARTO": 4, "QUINTO": 5, "SEXTO": 6, "SEPTIMO": 7, "SÉPTIMO": 7, "OCTAVO": 8, "NOVENO": 9, "DECIMO": 10, "DÉCIMO": 10, "ONCE": 11, "DOCE": 12, "TRECE": 13, "CATORCE": 14, "QUINCE": 15, "DECIMOSEXTO": 16,
-        "I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10, "XI": 11, "XII": 12, "XIII": 13, "XIV": 14, "XV": 15
-    };
-    function calcularPeso(texto) {
-        if (!texto) return 999;
-        const upper = texto.toUpperCase();
-        for (const [clave, valor] of Object.entries(ORDEN_JERARQUICO)) {
-            if (upper.includes(clave)) return valor;
-        }
-        return 999;
-    }
-
-    // 2. INICIO SESIÓN
+    // --- 1. LOGIN ---
     async function iniciarSesion() {
         const email = document.getElementById('user-email').value.trim().toLowerCase();
         const whitelist = ["jaime.ulises292@gmail.com", "td_rogelio@hotmail.com", "admin"];
+        
         if (whitelist.includes(email)) {
-            document.getElementById('user-display').innerText = email;
             document.getElementById('login-layer').style.display = 'none';
             document.getElementById('app-layer').style.display = 'flex';
-            await descargarIndice();
+            await descargarDatos();
         } else {
-            document.getElementById('login-msg').innerText = "Acceso denegado.";
+            alert("Acceso denegado");
         }
     }
 
-    // 3. DESCARGA ÍNDICE
-    async function descargarIndice() {
-        document.getElementById('nav-menu').innerHTML = "<p class='text-center mt-5 text-warning'>Cargando Índice...</p>";
-        const { data, error } = await supabaseClient
-            .from('mapas_universales')
-            .select('id, orden_1, orden_2') 
-            .eq('nombre_ley', 'Ley Federal del Trabajo');
+    // --- 2. DESCARGA MASIVA (SIMULANDO JSON LOCAL) ---
+    async function descargarDatos() {
+        const menu = document.getElementById('menu-list');
+        menu.innerHTML = "<p class='text-center mt-4 text-warning'>Sincronizando Bóveda...</p>";
 
-        if (error) { console.error(error); alert("Error de conexión"); return; }
+        // Pedimos TODO, igual que cuando leías el JSON local
+        const { data, error } = await sbClient
+            .from('mapas_universales')
+            .select('*')
+            .eq('nombre_ley', 'Ley Federal del Trabajo')
+            .order('id', { ascending: true });
+
+        if (error) { alert("Error de red"); return; }
         
-        MENU_INDEX = data;
+        // AQUÍ ESTÁ EL SECRETO: CONVERTIMOS LA NUBE EN LOCAL
+        RAW_DATA = data.map(item => normalizarDatos(item));
+        
         renderMenu();
     }
 
-    function renderMenu() {
-        const nav = document.getElementById('nav-menu');
-        nav.innerHTML = "";
-        const groups = {};
-        MENU_INDEX.forEach(item => {
-            const nivel1 = item.orden_1 || "GENERAL";
-            if(!groups[nivel1]) groups[nivel1] = [];
-            groups[nivel1].push(item);
-        });
-
-        const titulosOrdenados = Object.keys(groups).sort((a, b) => calcularPeso(a) - calcularPeso(b));
-
-        titulosOrdenados.forEach(titulo => {
-            const header = document.createElement('div');
-            header.className = "group-header";
-            header.innerHTML = `<i class="bi bi-bookmark-fill"></i> ${titulo}`;
-            nav.appendChild(header);
-
-            const capitulos = groups[titulo].sort((a, b) => {
-                const nA = a.orden_2 || "";
-                const nB = b.orden_2 || "";
-                return calcularPeso(nA) - calcularPeso(nB);
-            });
-
-            capitulos.forEach(c => {
-                const btn = document.createElement('button');
-                btn.className = "nav-btn";
-                let rawName = c.orden_2 || "Capítulo";
-                btn.innerText = rawName.length > 35 ? rawName.substring(0,32)+"..." : rawName;
-                btn.onclick = () => loadFullChapter(c.id, btn);
-                nav.appendChild(btn);
-            });
-        });
-    }
-
-    // 4. CARGA PROFUNDA
-    async function loadFullChapter(id, btn) {
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('chapter-loader').style.display = 'flex';
+    // --- 3. EL ADAPTADOR MAGICO (SOLUCIONA EL PROBLEMA "PS" Y "NEWLINE") ---
+    function normalizarDatos(item) {
+        let slidesLimpio = [];
         
-        const { data, error } = await supabaseClient
-            .from('mapas_universales')
-            .select('*') 
-            .eq('id', id)
-            .single();
+        // A. Manejo de Tipos (String vs Objeto)
+        try {
+            if (typeof item.slides === 'string') {
+                slidesLimpio = JSON.parse(item.slides);
+            } else if (Array.isArray(item.slides)) {
+                slidesLimpio = item.slides;
+            } else if (typeof item.slides === 'object') {
+                slidesLimpio = [item.slides];
+            }
+        } catch (e) { console.error("Error parseando slides", e); }
 
-        document.getElementById('chapter-loader').style.display = 'none';
-        if(error || !data) { alert("Error cargando capítulo."); return; }
-        renderContent(data);
+        // B. Limpieza Profunda de Strings (El problema de \n vs \\n)
+        if (slidesLimpio && slidesLimpio.length > 0) {
+            slidesLimpio = slidesLimpio.map(slide => {
+                let code = slide.mermaid_code || "";
+                
+                // 1. Convertir \\n (doble escape de la nube) a \n (salto real local)
+                code = code.replace(/\\n/g, '\n');
+                
+                // 2. Asegurar que graph TD tenga punto y coma o salto
+                if (!code.includes('graph TD;') && !code.includes('graph TD\n')) {
+                    code = code.replace('graph TD', 'graph TD\n');
+                }
+                
+                return { ...slide, mermaid_code: code };
+            });
+        }
+
+        return {
+            ...item,
+            slides: slidesLimpio
+        };
     }
 
-    function renderContent(data) {
-        document.getElementById('doc-content').innerHTML = data.contenido_html;
-        const tabs = document.getElementById('slide-tabs');
+    // --- 4. RENDERIZADO DEL MENÚ (IDÉNTICO A TU VISOR) ---
+    function renderMenu() {
+        const menu = document.getElementById('menu-list');
+        menu.innerHTML = "";
+        
+        // Agrupación simple (puedes mejorar el ordenamiento aquí si quieres)
+        const groups = {};
+        RAW_DATA.forEach((item, index) => {
+            const titulo = item.orden_1 || "General";
+            if (!groups[titulo]) groups[titulo] = [];
+            groups[titulo].push({ ...item, originalIndex: index });
+        });
+
+        for (const [titulo, capitulos] of Object.entries(groups)) {
+            const header = document.createElement('div');
+            header.style.padding = "15px 15px 5px";
+            header.style.color = "#c5a059";
+            header.style.fontSize = "0.7rem";
+            header.style.fontWeight = "bold";
+            header.style.textTransform = "uppercase";
+            header.innerText = titulo;
+            menu.appendChild(header);
+
+            capitulos.forEach(cap => {
+                const btn = document.createElement('button');
+                btn.className = "chapter-btn";
+                let nombre = cap.orden_2 || "Capítulo";
+                btn.innerText = nombre.length > 40 ? nombre.substring(0, 37) + "..." : nombre;
+                btn.onclick = () => cargarCapitulo(cap.originalIndex, btn);
+                menu.appendChild(btn);
+            });
+        }
+    }
+
+    // --- 5. CARGA DE CAPÍTULO ---
+    function cargarCapitulo(index, btn) {
+        document.querySelectorAll('.chapter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const data = RAW_DATA[index];
+        document.getElementById('legal-text').innerHTML = data.contenido_html;
+        
+        const tabs = document.getElementById('tabs-container');
         tabs.innerHTML = "";
-        const area = document.getElementById('mermaid-render');
 
-        let slides = [];
-        try {
-            if (typeof data.slides === 'string') slides = JSON.parse(data.slides);
-            else if (Array.isArray(data.slides)) slides = data.slides;
-            else if (typeof data.slides === 'object' && data.slides !== null) slides = [data.slides];
-        } catch(e) { console.error("Error parseando slides", e); }
-
-        if(!slides || slides.length === 0) {
-            tabs.innerHTML = "<span class='text-muted small ps-2'>Solo Texto.</span>";
-            area.innerHTML = "<div class='d-flex align-items-center justify-content-center h-100 text-muted'>Sin diagrama.</div>";
+        if (!data.slides || data.slides.length === 0) {
+            document.getElementById('mermaid-container').innerHTML = "<div class='d-flex align-items-center justify-content-center h-100 text-muted'>Solo Texto</div>";
             return;
         }
 
-        slides.forEach((s, i) => {
+        data.slides.forEach((slide, i) => {
             const b = document.createElement('button');
-            b.className = `btn-process ${i===0?'active':''}`;
-            b.innerText = s.titulo || `Proceso ${i+1}`;
+            b.className = `btn-slide ${i===0?'active':''}`;
+            b.innerText = slide.titulo || `Proceso ${i+1}`;
             b.onclick = () => {
-                document.querySelectorAll('.btn-process').forEach(x => x.classList.remove('active'));
+                document.querySelectorAll('.btn-slide').forEach(x => x.classList.remove('active'));
                 b.classList.add('active');
-                renderGraph(s.mermaid_code);
+                dibujarMermaid(slide.mermaid_code);
             };
             tabs.appendChild(b);
         });
 
-        if(slides[0]) renderGraph(slides[0].mermaid_code);
+        // Cargar el primero
+        if (data.slides[0]) dibujarMermaid(data.slides[0].mermaid_code);
     }
 
-    // 5. MOTOR GRÁFICO V41 (RESURRECTOR)
-    async function renderGraph(code) {
-        const area = document.getElementById('mermaid-render');
-        if (panZoomInstance) { panZoomInstance.destroy(); panZoomInstance = null; }
-        area.removeAttribute('data-processed');
-
-        if (!code) {
-            area.innerHTML = "<div class='p-3 text-warning'>Código vacío.</div>";
-            return;
-        }
-
-        let clean = code.replace(/\\n/g, '\n').trim();
-        clean = clean.replace(/^graph\s+TD;?/gim, '').trim(); 
+    // --- 6. EL MOTOR GRÁFICO "GOLDEN" (COPIADO EXACTO DE TU ARCHIVO 7B) ---
+    async function dibujarMermaid(code) {
+        const area = document.getElementById('mermaid-container');
         
-        const sanitizeResurrector = (str) => {
-            let lines = str.split('\n');
-            let fixedLines = lines.map(line => {
-                line = line.replace(/;+$/, ''); 
+        // Reset Zoom
+        if (panZoomInstance) { panZoomInstance.destroy(); panZoomInstance = null; }
+        area.removeAttribute('data-processed'); // Importante para re-render
 
-                // FASE 1: RESCATAR HUÉRFANOS "M (Art. 993)" -> "M" (Lamentablemente, si es un nodo simple, Mermaid no deja meter texto fácil sin cambiar la estructura, así que borramos para salvar el diagrama, pero...)
-                // MEJOR ESTRATEGIA: Si es huérfano después de corchete, LO METEMOS DENTRO.
-                
-                // Rescate 1: A[...] (Art. X) -> A[... Art. X]
-                line = line.replace(/([\]\)\}])\s*\(Art\.?\s*([^)]+)\)/g, ' [Art. $2]$1');
-
-                // Rescate 2: Arreglar flechas rotas "-->|Etiqueta|" (sin destino)
-                // Si la línea termina en | sin nada más, le agregamos un nodo fantasma
-                if (line.match(/-->\|[^|]+\|\s*$/)) {
-                    line += " NodoFin[.]";
-                }
-
-                // FASE 2: ELIMINAR CUALQUIER OTRO HUÉRFANO REBELDE (Para evitar error PS)
-                // Esto arregla el error "M (Art. 993)" borrando el (Art. 993) porque M es un nodo simple y no acepta texto interno fácilmente.
-                // Es un sacrificio necesario para que cargue.
-                line = line.replace(/\s\(Art\.\s*[^)]+\)(?!\w)/g, '');
-
-                // FASE 3: PROTECCIÓN DE CONTENIDO
-                return line.replace(/([a-zA-Z0-9_]+)([\(\[\{])(.*?)([\)\]\}])/g, (match, id, open, content, close) => {
-                    let safe = content.replace(/"/g, "'").replace(/\(/g, '[').replace(/\)/g, ']');
-                    if (open === '(') return `${id}(["${safe.trim()}"])`;
-                    if (open === '[') return `${id}["${safe.trim()}"]`;
-                    if (open === '{') return `${id}{"${safe.trim()}"}`;
-                    return match;
-                });
+        // PREPARACIÓN DEL CÓDIGO (Lógica original 7B)
+        let cleanCode = code.trim();
+        
+        // Regex mágica del 7B para arreglar nodos
+        // Esta es la clave: el 7B usaba una regex específica que funcionaba bien con tu JSON local.
+        const fixNodes = (line) => {
+            return line.replace(/([a-zA-Z0-9]+)([\(\[\{])(.*?)([\)\]\}])/g, (match, id, open, content, close) => {
+                // Aquí el 7B solo limpiaba paréntesis internos
+                let safeContent = content.replace(/[\(\)]/g, ' ').trim();
+                if (open === '(') return `${id}(["${safeContent}"])`;
+                if (open === '[') return `${id}["${safeContent}"]`;
+                if (open === '{') return `${id}{"${safeContent}"}`;
+                return match;
             });
-            return fixedLines.join('\n');
         };
 
-        clean = sanitizeResurrector(clean);
-        clean = 'graph TD\n' + clean;
-        area.innerHTML = clean;
+        // Procesar línea por línea como hacía el 7B
+        let lines = cleanCode.split('\n').map(l => {
+            if (l.includes('-->')) return l.split('-->').map(p => fixNodes(p.trim())).join(' --> ');
+            return fixNodes(l);
+        });
+        
+        // Reconstruir
+        cleanCode = lines.join('\n');
+        // Asegurar cabecera
+        if (!cleanCode.startsWith('graph')) cleanCode = 'graph TD\n' + cleanCode;
+
+        area.innerHTML = cleanCode;
 
         try {
             await mermaid.run({ nodes: [area] });
+
+            // --- NAVEGACIÓN PRO (PAN & ZOOM) ---
             const svg = area.querySelector('svg');
             if (svg) {
-                svg.style.width = '100%'; svg.style.height = '100%';
-                panZoomInstance = svgPanZoom(svg, { zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true, minZoom: 0.1 });
+                svg.style.width = '100%';
+                svg.style.height = '100%';
+                panZoomInstance = svgPanZoom(svg, {
+                    zoomEnabled: true,
+                    controlIconsEnabled: true,
+                    fit: true,
+                    center: true,
+                    minZoom: 0.1
+                });
             }
-            // FRANCOTIRADOR (Clic para resaltar)
+
+            // --- EL FRANCOTIRADOR (Clics) ---
             document.querySelectorAll('.node').forEach(node => {
                 node.style.cursor = "pointer";
                 node.onclick = () => {
-                    // Ahora buscamos cualquier número en el texto del nodo
                     const match = node.textContent.match(/\d+/);
                     if(match) {
                         const targetId = 'art_' + match[0];
                         const el = document.getElementById(targetId);
-                        if(el) { 
-                            el.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
-                            el.classList.add('highlight'); 
-                            setTimeout(() => el.classList.remove('highlight'), 3000); 
-                        } else {
-                            console.log("No se encontró art:", targetId);
+                        if(el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            el.classList.add('highlight');
+                            setTimeout(() => el.classList.remove('highlight'), 3000);
                         }
                     }
                 };
             });
-        } catch(e) {
-            console.error("Mermaid Render Error:", e);
-            area.innerHTML = `<div class='p-3 text-danger small'>Error visual.<br><small>${e.message.slice(0,50)}</small></div>`;
+
+        } catch (e) {
+            console.error("Mermaid Error:", e);
+            area.innerHTML = "<div class='p-3 text-danger'>Error renderizando gráfico.</div>";
         }
     }
 </script>
