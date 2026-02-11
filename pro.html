@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Legal Atlas Global - V40 Titanium</title>
+    <title>Legal Atlas Global - V41 Resurrector</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
@@ -55,7 +55,7 @@
 <div id="login-layer">
     <div class="login-card">
         <h2 class="logo-font mb-2">LEGAL ATLAS</h2>
-        <p class="text-white-50 small mb-4">ACCESO V40 TITANIUM</p>
+        <p class="text-white-50 small mb-4">ACCESO REPARADO V41</p>
         <input type="email" id="user-email" class="inp-auth" placeholder="Correo Autorizado">
         <button class="btn-auth" onclick="iniciarSesion()">ENTRAR</button>
         <div id="login-msg" class="text-danger mt-3 small fw-bold"></div>
@@ -65,7 +65,7 @@
 <div id="app-layer">
     <div id="sidebar">
         <div class="brand-box">
-            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">V40</span></h4>
+            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">V41</span></h4>
             <div class="text-white-50 small mt-2" id="user-display">...</div>
         </div>
         <div class="nav-scroll" id="nav-menu">
@@ -146,7 +146,6 @@
     function renderMenu() {
         const nav = document.getElementById('nav-menu');
         nav.innerHTML = "";
-        
         const groups = {};
         MENU_INDEX.forEach(item => {
             const nivel1 = item.orden_1 || "GENERAL";
@@ -230,7 +229,7 @@
         if(slides[0]) renderGraph(slides[0].mermaid_code);
     }
 
-    // 5. MOTOR GRÁFICO V40 (TITANIUM)
+    // 5. MOTOR GRÁFICO V41 (RESURRECTOR)
     async function renderGraph(code) {
         const area = document.getElementById('mermaid-render');
         if (panZoomInstance) { panZoomInstance.destroy(); panZoomInstance = null; }
@@ -244,41 +243,41 @@
         let clean = code.replace(/\\n/g, '\n').trim();
         clean = clean.replace(/^graph\s+TD;?/gim, '').trim(); 
         
-        // --- LA LÓGICA TITANIUM ---
-        const sanitizeTitanium = (str) => {
+        const sanitizeResurrector = (str) => {
             let lines = str.split('\n');
             let fixedLines = lines.map(line => {
-                line = line.replace(/;+$/, ''); // Matar puntos y coma finales
+                line = line.replace(/;+$/, ''); 
 
-                // 1. ELIMINAR HUÉRFANOS: (Art. X) que están fuera de nodos
-                // Busca un cierre de nodo ] o ) seguido de espacio y (Art...)
-                line = line.replace(/(?<=[\]\)\}])\s*\(Art\.\s*[^)]+\)/g, '');
+                // FASE 1: RESCATAR HUÉRFANOS "M (Art. 993)" -> "M" (Lamentablemente, si es un nodo simple, Mermaid no deja meter texto fácil sin cambiar la estructura, así que borramos para salvar el diagrama, pero...)
+                // MEJOR ESTRATEGIA: Si es huérfano después de corchete, LO METEMOS DENTRO.
+                
+                // Rescate 1: A[...] (Art. X) -> A[... Art. X]
+                line = line.replace(/([\]\)\}])\s*\(Art\.?\s*([^)]+)\)/g, ' [Art. $2]$1');
 
-                // 2. REPARACIÓN ESPECÍFICA POR TIPO DE NODO
-                // Repara ID[Contenido]
-                line = line.replace(/([a-zA-Z0-9_]+)\[(.*?)\]/g, (match, id, content) => {
+                // Rescate 2: Arreglar flechas rotas "-->|Etiqueta|" (sin destino)
+                // Si la línea termina en | sin nada más, le agregamos un nodo fantasma
+                if (line.match(/-->\|[^|]+\|\s*$/)) {
+                    line += " NodoFin[.]";
+                }
+
+                // FASE 2: ELIMINAR CUALQUIER OTRO HUÉRFANO REBELDE (Para evitar error PS)
+                // Esto arregla el error "M (Art. 993)" borrando el (Art. 993) porque M es un nodo simple y no acepta texto interno fácilmente.
+                // Es un sacrificio necesario para que cargue.
+                line = line.replace(/\s\(Art\.\s*[^)]+\)(?!\w)/g, '');
+
+                // FASE 3: PROTECCIÓN DE CONTENIDO
+                return line.replace(/([a-zA-Z0-9_]+)([\(\[\{])(.*?)([\)\]\}])/g, (match, id, open, content, close) => {
                     let safe = content.replace(/"/g, "'").replace(/\(/g, '[').replace(/\)/g, ']');
-                    return `${id}["${safe.trim()}"]`;
+                    if (open === '(') return `${id}(["${safe.trim()}"])`;
+                    if (open === '[') return `${id}["${safe.trim()}"]`;
+                    if (open === '{') return `${id}{"${safe.trim()}"}`;
+                    return match;
                 });
-
-                // Repara ID(Contenido)
-                line = line.replace(/([a-zA-Z0-9_]+)\((.*?)\)/g, (match, id, content) => {
-                    let safe = content.replace(/"/g, "'").replace(/\(/g, '[').replace(/\)/g, ']');
-                    return `${id}(["${safe.trim()}"])`;
-                });
-
-                // Repara ID{Contenido}
-                line = line.replace(/([a-zA-Z0-9_]+)\{(.*?)\}/g, (match, id, content) => {
-                    let safe = content.replace(/"/g, "'").replace(/\(/g, '[').replace(/\)/g, ']');
-                    return `${id}{"${safe.trim()}"}`;
-                });
-
-                return line;
             });
             return fixedLines.join('\n');
         };
 
-        clean = sanitizeTitanium(clean);
+        clean = sanitizeResurrector(clean);
         clean = 'graph TD\n' + clean;
         area.innerHTML = clean;
 
@@ -289,21 +288,28 @@
                 svg.style.width = '100%'; svg.style.height = '100%';
                 panZoomInstance = svgPanZoom(svg, { zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true, minZoom: 0.1 });
             }
-            // Francotirador
+            // FRANCOTIRADOR (Clic para resaltar)
             document.querySelectorAll('.node').forEach(node => {
                 node.style.cursor = "pointer";
                 node.onclick = () => {
+                    // Ahora buscamos cualquier número en el texto del nodo
                     const match = node.textContent.match(/\d+/);
                     if(match) {
                         const targetId = 'art_' + match[0];
                         const el = document.getElementById(targetId);
-                        if(el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('highlight'); setTimeout(() => el.classList.remove('highlight'), 3000); }
+                        if(el) { 
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
+                            el.classList.add('highlight'); 
+                            setTimeout(() => el.classList.remove('highlight'), 3000); 
+                        } else {
+                            console.log("No se encontró art:", targetId);
+                        }
                     }
                 };
             });
         } catch(e) {
-            console.error("Mermaid Error:", e);
-            area.innerHTML = `<div class='p-3 text-danger small'>Error visualizando.<br><small>${e.message.slice(0,50)}</small></div>`;
+            console.error("Mermaid Render Error:", e);
+            area.innerHTML = `<div class='p-3 text-danger small'>Error visual.<br><small>${e.message.slice(0,50)}</small></div>`;
         }
     }
 </script>
