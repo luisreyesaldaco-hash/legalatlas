@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Legal Atlas Global - V38 Surgical</title>
+    <title>Legal Atlas Global - V39 Iron Shield</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
@@ -55,7 +55,7 @@
 <div id="login-layer">
     <div class="login-card">
         <h2 class="logo-font mb-2">LEGAL ATLAS</h2>
-        <p class="text-white-50 small mb-4">ACCESO REPARADO V38</p>
+        <p class="text-white-50 small mb-4">ACCESO BLINDADO V39</p>
         <input type="email" id="user-email" class="inp-auth" placeholder="Correo Autorizado">
         <button class="btn-auth" onclick="iniciarSesion()">ENTRAR</button>
         <div id="login-msg" class="text-danger mt-3 small fw-bold"></div>
@@ -65,7 +65,7 @@
 <div id="app-layer">
     <div id="sidebar">
         <div class="brand-box">
-            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">V38</span></h4>
+            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">V39</span></h4>
             <div class="text-white-50 small mt-2" id="user-display">...</div>
         </div>
         <div class="nav-scroll" id="nav-menu">
@@ -97,11 +97,11 @@
     const SUPABASE_KEY = 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'loose' });
     let MENU_INDEX = [];
     let panZoomInstance = null;
 
-    // === ALGORITMO DE ORDENAMIENTO ===
+    // ALGORITMO DE ORDENAMIENTO (Mantenemos el de la V37 que funcionaba)
     const ORDEN_JERARQUICO = {
         "PRIMERO": 1, "SEGUNDO": 2, "TERCERO": 3, "CUARTO": 4, "QUINTO": 5, "SEXTO": 6, "SEPTIMO": 7, "SÉPTIMO": 7, "OCTAVO": 8, "NOVENO": 9, "DECIMO": 10, "DÉCIMO": 10, "ONCE": 11, "DOCE": 12, "TRECE": 13, "CATORCE": 14, "QUINCE": 15, "DIECISEIS": 16,
         "I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10, "XI": 11, "XII": 12, "XIII": 13, "XIV": 14, "XV": 15
@@ -118,7 +118,7 @@
     // 2. INICIO SESIÓN
     async function iniciarSesion() {
         const email = document.getElementById('user-email').value.trim().toLowerCase();
-        const whitelist = ["jaime.ulises292@gmail.com", "luisreyesaldaco@gmail.com", "td_rogelio@hotmail.com", "admin"];
+        const whitelist = ["jaime.ulises292@gmail.com", "td_rogelio@hotmail.com", "admin"];
         if (whitelist.includes(email)) {
             document.getElementById('user-display').innerText = email;
             document.getElementById('login-layer').style.display = 'none';
@@ -129,7 +129,7 @@
         }
     }
 
-    // 3. DESCARGA SOLO EL ÍNDICE (LIGERO)
+    // 3. DESCARGA ÍNDICE
     async function descargarIndice() {
         document.getElementById('nav-menu').innerHTML = "<p class='text-center mt-5 text-warning'>Cargando Índice...</p>";
         const { data, error } = await supabaseClient
@@ -154,7 +154,6 @@
             groups[nivel1].push(item);
         });
 
-        // Ordenar Títulos
         const titulosOrdenados = Object.keys(groups).sort((a, b) => calcularPeso(a) - calcularPeso(b));
 
         titulosOrdenados.forEach(titulo => {
@@ -163,7 +162,6 @@
             header.innerHTML = `<i class="bi bi-bookmark-fill"></i> ${titulo}`;
             nav.appendChild(header);
 
-            // Ordenar Capítulos
             const capitulos = groups[titulo].sort((a, b) => {
                 const nA = a.orden_2 || "";
                 const nB = b.orden_2 || "";
@@ -189,16 +187,13 @@
         
         const { data, error } = await supabaseClient
             .from('mapas_universales')
-            .select('*')
+            .select('*') 
             .eq('id', id)
             .single();
 
         document.getElementById('chapter-loader').style.display = 'none';
 
-        if(error || !data) {
-            alert("Error cargando capítulo.");
-            return;
-        }
+        if(error || !data) { alert("Error cargando capítulo."); return; }
         renderContent(data);
     }
 
@@ -236,44 +231,51 @@
         if(slides[0]) renderGraph(slides[0].mermaid_code);
     }
 
-    // 5. MOTOR GRÁFICO (REPARADO: ELIMINA DUPLICADOS)
+    // 5. MOTOR GRÁFICO (V39 IRON SHIELD)
     async function renderGraph(code) {
         const area = document.getElementById('mermaid-render');
         if (panZoomInstance) { panZoomInstance.destroy(); panZoomInstance = null; }
         area.removeAttribute('data-processed');
 
         if (!code) {
-            area.innerHTML = "<div class='p-3 text-warning'>Código Mermaid vacío.</div>";
+            area.innerHTML = "<div class='p-3 text-warning'>Código vacío.</div>";
             return;
         }
 
-        // --- CORRECCIÓN QUIRÚRGICA ---
-        // 1. Normalizamos saltos de línea
+        // --- 1. LIMPIEZA INICIAL ---
+        // Normalizar saltos de línea y quitar graph TD duplicado
         let clean = code.replace(/\\n/g, '\n').trim();
+        clean = clean.replace(/^graph\s+TD;?/gim, '').trim(); 
         
-        // 2. BORRAMOS CUALQUIER 'graph TD' EXISTENTE PARA NO DUPLICAR
-        // Esta Regex busca "graph TD" al inicio, ignorando mayúsculas y espacios
-        clean = clean.replace(/^graph\s+TD;?/im, '').trim();
-
-        // 3. Limpieza de Nodos (Parche V25)
-        const fixNodes = (line) => {
-            return line.replace(/([a-zA-Z0-9]+)([\(\[\{])(.*?)([\)\]\}])/g, (match, id, open, content, close) => {
-                let safe = content.replace(/[\(\)]/g, ' ').trim(); 
-                if (open === '(') return `${id}(["${safe}"])`;
-                if (open === '[') return `${id}["${safe}"]`;
-                if (open === '{') return `${id}{"${safe}"}`;
-                return match;
+        // --- 2. EL SANITIZADOR (ESTO ARREGLA EL ERROR 'got PS') ---
+        const sanitizeMermaid = (str) => {
+            let lines = str.split('\n');
+            let fixedLines = lines.map(line => {
+                // Eliminar puntos y comas al final de la línea (son veneno)
+                line = line.replace(/;+$/, '');
+                
+                // Procesar nodos
+                return line.replace(/([a-zA-Z0-9_]+)([\(\[\{])(.*?)([\)\]\}])/g, (match, id, open, content, close) => {
+                    // Protegemos el contenido:
+                    // 1. Reemplazar paréntesis internos ( ) por corchetes [ ]
+                    let safeContent = content.replace(/\(/g, '[').replace(/\)/g, ']');
+                    // 2. Escapar comillas dobles internas
+                    safeContent = safeContent.replace(/"/g, "'");
+                    
+                    // Reconstruir nodo con comillas seguras
+                    if (open === '(') return `${id}(["${safeContent.trim()}"])`;
+                    if (open === '[') return `${id}["${safeContent.trim()}"]`;
+                    if (open === '{') return `${id}{"${safeContent.trim()}"}`;
+                    return match;
+                });
             });
+            return fixedLines.join('\n');
         };
 
-        let lines = clean.split('\n').map(l => {
-            if (l.includes('-->')) return l.split('-->').map(p => fixNodes(p.trim())).join(' --> ');
-            return fixNodes(l);
-        });
+        clean = sanitizeMermaid(clean);
         
-        // 4. AÑADIMOS EL 'graph TD' UNA SOLA VEZ AL FINAL
-        clean = 'graph TD\n' + lines.join('\n');
-        
+        // --- 3. RECONSTRUCCIÓN ---
+        clean = 'graph TD\n' + clean;
         area.innerHTML = clean;
 
         try {
@@ -296,8 +298,12 @@
                 };
             });
         } catch(e) {
-            console.error(e);
-            area.innerHTML = "<div class='p-3 text-danger small'>Error de sintaxis.</div>";
+            console.error("Mermaid Render Error:", e);
+            // Mostrar error útil en pantalla
+            area.innerHTML = `<div class='p-3 text-danger small'>
+                Error visualizando diagrama.<br>
+                <small>Intenta reportar este capítulo: ${e.message.substring(0, 50)}...</small>
+            </div>`;
         }
     }
 </script>
