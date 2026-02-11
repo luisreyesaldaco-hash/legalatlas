@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Legal Atlas Global - V37 Lazy Load</title>
+    <title>Legal Atlas Global - V38 Surgical</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
@@ -55,9 +55,9 @@
 <div id="login-layer">
     <div class="login-card">
         <h2 class="logo-font mb-2">LEGAL ATLAS</h2>
-        <p class="text-white-50 small mb-4">ACCESO ALTO RENDIMIENTO</p>
+        <p class="text-white-50 small mb-4">ACCESO REPARADO V38</p>
         <input type="email" id="user-email" class="inp-auth" placeholder="Correo Autorizado">
-        <button class="btn-auth" onclick="iniciarSesion()">CONECTAR</button>
+        <button class="btn-auth" onclick="iniciarSesion()">ENTRAR</button>
         <div id="login-msg" class="text-danger mt-3 small fw-bold"></div>
     </div>
 </div>
@@ -65,7 +65,7 @@
 <div id="app-layer">
     <div id="sidebar">
         <div class="brand-box">
-            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">V37</span></h4>
+            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">V38</span></h4>
             <div class="text-white-50 small mt-2" id="user-display">...</div>
         </div>
         <div class="nav-scroll" id="nav-menu">
@@ -80,7 +80,6 @@
             <div class="toolbar">
                 <i class="bi bi-diagram-3-fill text-secondary"></i>
                 <div id="slide-tabs" class="d-flex gap-2 ms-2" style="overflow-x:auto;"></div>
-                <button class="ms-auto btn btn-sm btn-link text-muted" style="font-size:0.7rem" onclick="debugData()">Debug</button>
             </div>
             <div id="mermaid-render"></div>
         </div>
@@ -99,14 +98,13 @@
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
-    let MENU_INDEX = []; // Solo guarda IDs y Títulos
-    let CURRENT_DATA = null; // Guarda el capítulo actual completo
+    let MENU_INDEX = [];
     let panZoomInstance = null;
 
     // === ALGORITMO DE ORDENAMIENTO ===
     const ORDEN_JERARQUICO = {
-        "PRIMERO": 1, "SEGUNDO": 2, "TERCERO": 3, "CUARTO": 4, "QUINTO": 5, "SEXTO": 6, "SEPTIMO": 7, "SÉPTIMO": 7, "OCTAVO": 8, "NOVENO": 9, "DECIMO": 10, "DÉCIMO": 10, "ONCE": 11, "DOCE": 12, "TRECE": 13, "CATORCE": 14, "QUINCE": 15, "DIECISEIS": 16, "DECIMOSEPTIMO": 17,
-        "I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10, "XI": 11, "XII": 12, "XIII": 13, "XIV": 14, "XV": 15, "XVI": 16
+        "PRIMERO": 1, "SEGUNDO": 2, "TERCERO": 3, "CUARTO": 4, "QUINTO": 5, "SEXTO": 6, "SEPTIMO": 7, "SÉPTIMO": 7, "OCTAVO": 8, "NOVENO": 9, "DECIMO": 10, "DÉCIMO": 10, "ONCE": 11, "DOCE": 12, "TRECE": 13, "CATORCE": 14, "QUINCE": 15, "DIECISEIS": 16,
+        "I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10, "XI": 11, "XII": 12, "XIII": 13, "XIV": 14, "XV": 15
     };
     function calcularPeso(texto) {
         if (!texto) return 999;
@@ -134,8 +132,6 @@
     // 3. DESCARGA SOLO EL ÍNDICE (LIGERO)
     async function descargarIndice() {
         document.getElementById('nav-menu').innerHTML = "<p class='text-center mt-5 text-warning'>Cargando Índice...</p>";
-        
-        // SOLICITAMOS SOLO COLUMNAS CLAVE, NO EL CONTENIDO PESADO
         const { data, error } = await supabaseClient
             .from('mapas_universales')
             .select('id, orden_1, orden_2') 
@@ -179,36 +175,30 @@
                 btn.className = "nav-btn";
                 let rawName = c.orden_2 || "Capítulo";
                 btn.innerText = rawName.length > 35 ? rawName.substring(0,32)+"..." : rawName;
-                btn.title = rawName;
-                // AL CLIC, LLAMAMOS A LA CARGA PROFUNDA
                 btn.onclick = () => loadFullChapter(c.id, btn);
                 nav.appendChild(btn);
             });
         });
     }
 
-    // 4. CARGA PROFUNDA (BAJO DEMANDA)
+    // 4. CARGA PROFUNDA
     async function loadFullChapter(id, btn) {
-        // UI
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById('chapter-loader').style.display = 'flex';
         
-        // PETICIÓN PESADA SOLO PARA ESTE ID
         const { data, error } = await supabaseClient
             .from('mapas_universales')
-            .select('*') // Ahora sí traemos todo (slides, html)
+            .select('*')
             .eq('id', id)
             .single();
 
         document.getElementById('chapter-loader').style.display = 'none';
 
         if(error || !data) {
-            alert("Error cargando capítulo: " + (error?.message || "No data"));
+            alert("Error cargando capítulo.");
             return;
         }
-
-        CURRENT_DATA = data; // Guardamos para debug
         renderContent(data);
     }
 
@@ -218,17 +208,12 @@
         tabs.innerHTML = "";
         const area = document.getElementById('mermaid-render');
 
-        // === PARSEO ROBUSTO DE SLIDES ===
         let slides = [];
         try {
             if (typeof data.slides === 'string') slides = JSON.parse(data.slides);
             else if (Array.isArray(data.slides)) slides = data.slides;
             else if (typeof data.slides === 'object' && data.slides !== null) slides = [data.slides];
-        } catch(e) {
-            console.error("Error parseando slides", e);
-            area.innerHTML = "<div class='p-4 text-danger'>Error: Formato de gráficos inválido.</div>";
-            return;
-        }
+        } catch(e) { console.error("Error parseando slides", e); }
 
         if(!slides || slides.length === 0) {
             tabs.innerHTML = "<span class='text-muted small ps-2'>Solo Texto.</span>";
@@ -248,11 +233,10 @@
             tabs.appendChild(b);
         });
 
-        // Cargar primero
         if(slides[0]) renderGraph(slides[0].mermaid_code);
     }
 
-    // 5. MOTOR GRÁFICO (V25 BLINDADO)
+    // 5. MOTOR GRÁFICO (REPARADO: ELIMINA DUPLICADOS)
     async function renderGraph(code) {
         const area = document.getElementById('mermaid-render');
         if (panZoomInstance) { panZoomInstance.destroy(); panZoomInstance = null; }
@@ -263,9 +247,15 @@
             return;
         }
 
+        // --- CORRECCIÓN QUIRÚRGICA ---
+        // 1. Normalizamos saltos de línea
         let clean = code.replace(/\\n/g, '\n').trim();
-        clean = clean.replace(/graph\s+TD;/i, 'graph TD');
+        
+        // 2. BORRAMOS CUALQUIER 'graph TD' EXISTENTE PARA NO DUPLICAR
+        // Esta Regex busca "graph TD" al inicio, ignorando mayúsculas y espacios
+        clean = clean.replace(/^graph\s+TD;?/im, '').trim();
 
+        // 3. Limpieza de Nodos (Parche V25)
         const fixNodes = (line) => {
             return line.replace(/([a-zA-Z0-9]+)([\(\[\{])(.*?)([\)\]\}])/g, (match, id, open, content, close) => {
                 let safe = content.replace(/[\(\)]/g, ' ').trim(); 
@@ -280,6 +270,8 @@
             if (l.includes('-->')) return l.split('-->').map(p => fixNodes(p.trim())).join(' --> ');
             return fixNodes(l);
         });
+        
+        // 4. AÑADIMOS EL 'graph TD' UNA SOLA VEZ AL FINAL
         clean = 'graph TD\n' + lines.join('\n');
         
         area.innerHTML = clean;
@@ -305,15 +297,7 @@
             });
         } catch(e) {
             console.error(e);
-            area.innerHTML = "<div class='p-3 text-danger small'>Error de sintaxis en gráfico.</div>";
-        }
-    }
-
-    function debugData() {
-        if(!CURRENT_DATA) alert("Carga un capítulo primero.");
-        else {
-            console.log("DATOS CRUDOS:", CURRENT_DATA);
-            alert("Datos impresos en consola (F12). Tipo de slides: " + typeof CURRENT_DATA.slides);
+            area.innerHTML = "<div class='p-3 text-danger small'>Error de sintaxis.</div>";
         }
     }
 </script>
