@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Legal Atlas Global - V36 Rescue</title>
+    <title>Legal Atlas Global - V37 Lazy Load</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
@@ -23,27 +23,31 @@
         
         /* APP LAYOUT */
         #app-layer { display: none; width: 100vw; height: 100vh; display: flex; }
-        #sidebar { width: 340px; background: var(--atlas-sidebar); border-right: 1px solid #333; display: flex; flex-direction: column; z-index: 10; }
+        #sidebar { width: 340px; background: var(--atlas-sidebar); border-right: 1px solid #333; display: flex; flex-direction: column; z-index: 10; box-shadow: 5px 0 15px rgba(0,0,0,0.3); }
         .brand-box { padding: 30px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); background: linear-gradient(180deg, var(--atlas-navy) 0%, var(--atlas-sidebar) 100%); }
         .logo-font { font-family: 'Cinzel', serif; color: var(--atlas-gold); letter-spacing: 2px; }
         
         .nav-scroll { flex: 1; overflow-y: auto; padding: 10px; }
-        .group-header { color: var(--atlas-gold); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin: 25px 0 8px 10px; border-bottom: 1px solid rgba(207,161,68,0.2); }
+        .group-header { color: var(--atlas-gold); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin: 25px 0 8px 10px; border-bottom: 1px solid rgba(207,161,68,0.2); display: flex; align-items: center; gap: 8px; }
         .nav-btn { display: block; width: 100%; text-align: left; padding: 10px 15px; color: #b0b0b0; background: none; border: none; font-size: 0.9rem; cursor: pointer; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .nav-btn:hover { color: white; background: rgba(255,255,255,0.08); }
-        .nav-btn.active { color: var(--atlas-gold); background: rgba(207,161,68,0.15); font-weight: bold; border-left: 3px solid var(--atlas-gold); }
+        .nav-btn:hover { color: white; background: rgba(255,255,255,0.08); padding-left: 20px; }
+        .nav-btn.active { color: var(--atlas-gold); background: rgba(207,161,68,0.15); font-weight: bold; padding-left: 20px; border-left: 3px solid var(--atlas-gold); }
 
         /* WORKSPACE */
-        .viz-zone { width: 55%; display: flex; flex-direction: column; background: white; border-right: 1px solid #ddd; }
-        .doc-zone { width: 45%; overflow-y: auto; padding: 60px; background: var(--atlas-paper); }
-        .toolbar { height: 60px; background: #fff; border-bottom: 1px solid #eee; display: flex; align-items: center; padding: 0 20px; gap: 12px; }
+        .viz-zone { width: 55%; display: flex; flex-direction: column; background: white; border-right: 1px solid #ddd; position: relative; }
+        .doc-zone { width: 45%; overflow-y: auto; padding: 60px; background: var(--atlas-paper); scroll-behavior: smooth; }
+        .toolbar { height: 60px; background: #fff; border-bottom: 1px solid #eee; display: flex; align-items: center; padding: 0 20px; gap: 12px; z-index: 5; }
         
         #mermaid-render { flex: 1; overflow: hidden; position: relative; background: radial-gradient(#f8f9fa 1px, transparent 1px); background-size: 20px 20px; }
         .legal-typo { font-family: 'Merriweather', serif; font-size: 1.1rem; line-height: 2; color: #2c3e50; text-align: justify; }
-        .btn-process { font-size: 0.75rem; padding: 6px 16px; border-radius: 20px; border: 1px solid #ddd; background: white; color: #555; cursor: pointer; }
-        .btn-process.active { background: var(--atlas-navy); color: var(--atlas-gold); border-color: var(--atlas-navy); }
+        .btn-process { font-size: 0.75rem; padding: 6px 16px; border-radius: 20px; border: 1px solid #ddd; background: white; color: #555; cursor: pointer; transition: 0.2s; }
+        .btn-process:hover { background: #f0f0f0; }
+        .btn-process.active { background: var(--atlas-navy); color: var(--atlas-gold); border-color: var(--atlas-navy); box-shadow: 0 4px 10px rgba(14,22,33,0.2); }
         .highlight { background: #fff3cd; animation: highlightFade 3s forwards; }
         @keyframes highlightFade { 0% { background: #ffeeba; } 100% { background: transparent; } }
+
+        /* LOADING OVERLAY */
+        #chapter-loader { position: absolute; inset: 0; background: rgba(255,255,255,0.8); z-index: 20; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
     </style>
 </head>
 <body>
@@ -51,9 +55,9 @@
 <div id="login-layer">
     <div class="login-card">
         <h2 class="logo-font mb-2">LEGAL ATLAS</h2>
-        <p class="text-white-50 small mb-4">ACCESO RESTRINGIDO</p>
+        <p class="text-white-50 small mb-4">ACCESO ALTO RENDIMIENTO</p>
         <input type="email" id="user-email" class="inp-auth" placeholder="Correo Autorizado">
-        <button class="btn-auth" onclick="iniciarSesion()">CONECTAR BÓVEDA</button>
+        <button class="btn-auth" onclick="iniciarSesion()">CONECTAR</button>
         <div id="login-msg" class="text-danger mt-3 small fw-bold"></div>
     </div>
 </div>
@@ -61,98 +65,100 @@
 <div id="app-layer">
     <div id="sidebar">
         <div class="brand-box">
-            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">CLOUD</span></h4>
+            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">V37</span></h4>
             <div class="text-white-50 small mt-2" id="user-display">...</div>
         </div>
         <div class="nav-scroll" id="nav-menu">
-            <p class="text-center mt-5 text-warning small">Esperando conexión...</p>
+            <p class="text-center mt-5 text-warning small">Esperando índice...</p>
         </div>
     </div>
 
-    <div class="split-view" style="flex:1; display:flex;">
+    <div class="split-view" style="flex:1; display:flex; position:relative;">
+        <div id="chapter-loader"><div class="spinner-border text-primary" role="status"></div></div>
+        
         <div class="viz-zone">
             <div class="toolbar">
                 <i class="bi bi-diagram-3-fill text-secondary"></i>
                 <div id="slide-tabs" class="d-flex gap-2 ms-2" style="overflow-x:auto;"></div>
+                <button class="ms-auto btn btn-sm btn-link text-muted" style="font-size:0.7rem" onclick="debugData()">Debug</button>
             </div>
             <div id="mermaid-render"></div>
         </div>
         <div class="doc-zone">
             <div id="doc-content" class="legal-typo">
-                <div class="text-center mt-5"><h3>Seleccione un Título</h3></div>
+                <div class="text-center mt-5"><h3>Seleccione un Capítulo</h3><p class="text-muted">El contenido se descargará bajo demanda.</p></div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // 1. CONFIGURACIÓN SUPABASE
+    // 1. CONFIGURACIÓN
     const SUPABASE_URL = 'https://nuzzmcxirsghykzqbmmn.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
-    let STORE = [];
+    let MENU_INDEX = []; // Solo guarda IDs y Títulos
+    let CURRENT_DATA = null; // Guarda el capítulo actual completo
     let panZoomInstance = null;
 
-    // === EL "TRADUCTOR" DE ORDEN (SOLUCIÓN AL DESORDEN) ===
+    // === ALGORITMO DE ORDENAMIENTO ===
     const ORDEN_JERARQUICO = {
         "PRIMERO": 1, "SEGUNDO": 2, "TERCERO": 3, "CUARTO": 4, "QUINTO": 5, "SEXTO": 6, "SEPTIMO": 7, "SÉPTIMO": 7, "OCTAVO": 8, "NOVENO": 9, "DECIMO": 10, "DÉCIMO": 10, "ONCE": 11, "DOCE": 12, "TRECE": 13, "CATORCE": 14, "QUINCE": 15, "DIECISEIS": 16, "DECIMOSEPTIMO": 17,
         "I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9, "X": 10, "XI": 11, "XII": 12, "XIII": 13, "XIV": 14, "XV": 15, "XVI": 16
     };
-
     function calcularPeso(texto) {
         if (!texto) return 999;
         const upper = texto.toUpperCase();
         for (const [clave, valor] of Object.entries(ORDEN_JERARQUICO)) {
-            if (upper.includes(clave)) return valor; // Busca palabras clave
+            if (upper.includes(clave)) return valor;
         }
         return 999;
     }
 
-    // 2. INICIO DE SESIÓN
+    // 2. INICIO SESIÓN
     async function iniciarSesion() {
         const email = document.getElementById('user-email').value.trim().toLowerCase();
-        const whitelist = ["jaime.ulises292@gmail.com", "td_rogelio@hotmail.com", "luisreyesaldaco@gmail.com", "admin"];
-
+        const whitelist = ["jaime.ulises292@gmail.com", "luisreyesaldaco@gmail.com", "td_rogelio@hotmail.com", "admin"];
         if (whitelist.includes(email)) {
             document.getElementById('user-display').innerText = email;
             document.getElementById('login-layer').style.display = 'none';
             document.getElementById('app-layer').style.display = 'flex';
-            await descargarDatos();
+            await descargarIndice();
         } else {
             document.getElementById('login-msg').innerText = "Acceso denegado.";
         }
     }
 
-    // 3. DESCARGA Y LIMPIEZA
-    async function descargarDatos() {
-        document.getElementById('nav-menu').innerHTML = "<p class='text-center mt-5 text-warning'>Descargando...</p>";
+    // 3. DESCARGA SOLO EL ÍNDICE (LIGERO)
+    async function descargarIndice() {
+        document.getElementById('nav-menu').innerHTML = "<p class='text-center mt-5 text-warning'>Cargando Índice...</p>";
         
-        // Traemos todo de Supabase
+        // SOLICITAMOS SOLO COLUMNAS CLAVE, NO EL CONTENIDO PESADO
         const { data, error } = await supabaseClient
             .from('mapas_universales')
-            .select('*');
+            .select('id, orden_1, orden_2') 
+            .eq('nombre_ley', 'Ley Federal del Trabajo');
 
-        if (error) { console.error(error); alert("Error conectando a Supabase"); return; }
+        if (error) { console.error(error); alert("Error de conexión"); return; }
         
-        STORE = data;
-        renderMenuOrdenado(); // <--- Aquí usamos el nuevo renderizador ordenado
+        MENU_INDEX = data;
+        renderMenu();
     }
 
-    function renderMenuOrdenado() {
+    function renderMenu() {
         const nav = document.getElementById('nav-menu');
         nav.innerHTML = "";
         
-        // Agrupar
         const groups = {};
-        STORE.forEach((item, idx) => {
-            const nivel1 = item.orden_1 || item.jerarquia || "GENERAL";
+        MENU_INDEX.forEach(item => {
+            const nivel1 = item.orden_1 || "GENERAL";
             if(!groups[nivel1]) groups[nivel1] = [];
-            groups[nivel1].push({ item, idx });
+            groups[nivel1].push(item);
         });
 
-        // ORDENAR LOS TÍTULOS (ORDEN 1)
+        // Ordenar Títulos
         const titulosOrdenados = Object.keys(groups).sort((a, b) => calcularPeso(a) - calcularPeso(b));
 
         titulosOrdenados.forEach(titulo => {
@@ -161,51 +167,72 @@
             header.innerHTML = `<i class="bi bi-bookmark-fill"></i> ${titulo}`;
             nav.appendChild(header);
 
-            // ORDENAR LOS CAPÍTULOS DENTRO DEL TÍTULO (ORDEN 2)
+            // Ordenar Capítulos
             const capitulos = groups[titulo].sort((a, b) => {
-                const nA = a.item.orden_2 || a.item.sub_jerarquia || "";
-                const nB = b.item.orden_2 || b.item.sub_jerarquia || "";
+                const nA = a.orden_2 || "";
+                const nB = b.orden_2 || "";
                 return calcularPeso(nA) - calcularPeso(nB);
             });
 
             capitulos.forEach(c => {
                 const btn = document.createElement('button');
                 btn.className = "nav-btn";
-                let rawName = c.item.orden_2 || c.item.sub_jerarquia || "Capítulo";
-                let cleanName = rawName.length > 38 ? rawName.substring(0,36)+"..." : rawName;
-                btn.innerText = cleanName;
-                btn.onclick = () => loadChapter(c.idx, btn);
+                let rawName = c.orden_2 || "Capítulo";
+                btn.innerText = rawName.length > 35 ? rawName.substring(0,32)+"..." : rawName;
+                btn.title = rawName;
+                // AL CLIC, LLAMAMOS A LA CARGA PROFUNDA
+                btn.onclick = () => loadFullChapter(c.id, btn);
                 nav.appendChild(btn);
             });
         });
     }
 
-    function loadChapter(idx, btn) {
+    // 4. CARGA PROFUNDA (BAJO DEMANDA)
+    async function loadFullChapter(id, btn) {
+        // UI
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
-        const data = STORE[idx];
-        document.getElementById('doc-content').innerHTML = data.contenido_html;
+        document.getElementById('chapter-loader').style.display = 'flex';
         
+        // PETICIÓN PESADA SOLO PARA ESTE ID
+        const { data, error } = await supabaseClient
+            .from('mapas_universales')
+            .select('*') // Ahora sí traemos todo (slides, html)
+            .eq('id', id)
+            .single();
+
+        document.getElementById('chapter-loader').style.display = 'none';
+
+        if(error || !data) {
+            alert("Error cargando capítulo: " + (error?.message || "No data"));
+            return;
+        }
+
+        CURRENT_DATA = data; // Guardamos para debug
+        renderContent(data);
+    }
+
+    function renderContent(data) {
+        document.getElementById('doc-content').innerHTML = data.contenido_html;
         const tabs = document.getElementById('slide-tabs');
         tabs.innerHTML = "";
-        
-        // === FIX DE GRÁFICOS INVISIBLES ===
+        const area = document.getElementById('mermaid-render');
+
+        // === PARSEO ROBUSTO DE SLIDES ===
         let slides = [];
-        // Supabase puede devolver texto O objeto JSONB.
-        if (data.slides) {
-            if (typeof data.slides === 'string') {
-                try { slides = JSON.parse(data.slides); } catch(e) {}
-            } else if (Array.isArray(data.slides)) {
-                slides = data.slides;
-            } else if (typeof data.slides === 'object') {
-                slides = [data.slides]; // Envolver si es objeto único
-            }
+        try {
+            if (typeof data.slides === 'string') slides = JSON.parse(data.slides);
+            else if (Array.isArray(data.slides)) slides = data.slides;
+            else if (typeof data.slides === 'object' && data.slides !== null) slides = [data.slides];
+        } catch(e) {
+            console.error("Error parseando slides", e);
+            area.innerHTML = "<div class='p-4 text-danger'>Error: Formato de gráficos inválido.</div>";
+            return;
         }
 
         if(!slides || slides.length === 0) {
-            tabs.innerHTML = "<span class='text-muted small ps-2'>Sin procesos gráficos.</span>";
-            document.getElementById('mermaid-render').innerHTML = "";
+            tabs.innerHTML = "<span class='text-muted small ps-2'>Solo Texto.</span>";
+            area.innerHTML = "<div class='d-flex align-items-center justify-content-center h-100 text-muted'>Sin diagrama.</div>";
             return;
         }
 
@@ -216,67 +243,55 @@
             b.onclick = () => {
                 document.querySelectorAll('.btn-process').forEach(x => x.classList.remove('active'));
                 b.classList.add('active');
-                renderMermaid(s.mermaid_code); // Usamos la función blindada
+                renderGraph(s.mermaid_code);
             };
             tabs.appendChild(b);
         });
 
-        if(slides[0] && slides[0].mermaid_code) {
-            renderMermaid(slides[0].mermaid_code);
-        }
+        // Cargar primero
+        if(slides[0]) renderGraph(slides[0].mermaid_code);
     }
 
-    // === MOTOR GRÁFICO DEL ARCHIVO LOCAL (FUNCIONAL) ===
-    async function renderMermaid(code) {
+    // 5. MOTOR GRÁFICO (V25 BLINDADO)
+    async function renderGraph(code) {
         const area = document.getElementById('mermaid-render');
-        
-        // Destruir zoom previo
         if (panZoomInstance) { panZoomInstance.destroy(); panZoomInstance = null; }
-
         area.removeAttribute('data-processed');
-        
-        // Limpieza probada
+
+        if (!code) {
+            area.innerHTML = "<div class='p-3 text-warning'>Código Mermaid vacío.</div>";
+            return;
+        }
+
         let clean = code.replace(/\\n/g, '\n').trim();
         clean = clean.replace(/graph\s+TD;/i, 'graph TD');
 
         const fixNodes = (line) => {
             return line.replace(/([a-zA-Z0-9]+)([\(\[\{])(.*?)([\)\]\}])/g, (match, id, open, content, close) => {
-                let safeContent = content.replace(/[\(\)]/g, ' '); 
-                if (open === '(') return `${id}(["${safeContent.trim()}"])`;
-                if (open === '[') return `${id}["${safeContent.trim()}"]`;
-                if (open === '{') return `${id}{"${safeContent.trim()}"}`;
+                let safe = content.replace(/[\(\)]/g, ' ').trim(); 
+                if (open === '(') return `${id}(["${safe}"])`;
+                if (open === '[') return `${id}["${safe}"]`;
+                if (open === '{') return `${id}{"${safe}"}`;
                 return match;
             });
         };
 
-        let lines = clean.split('\n');
-        let fixedLines = lines.map(line => {
-            if (line.includes('-->')) {
-                let parts = line.split('-->');
-                return parts.map(p => fixNodes(p.trim())).join(' --> ');
-            }
-            return fixNodes(line);
+        let lines = clean.split('\n').map(l => {
+            if (l.includes('-->')) return l.split('-->').map(p => fixNodes(p.trim())).join(' --> ');
+            return fixNodes(l);
         });
-
-        clean = fixedLines.join('\n');
-        if(!clean.startsWith('graph')) clean = 'graph TD\n' + clean;
+        clean = 'graph TD\n' + lines.join('\n');
+        
         area.innerHTML = clean;
 
         try {
             await mermaid.run({ nodes: [area] });
-            
-            // ZOOM & PAN
             const svg = area.querySelector('svg');
             if (svg) {
-                svg.style.width = '100%';
-                svg.style.height = '100%';
-                panZoomInstance = svgPanZoom(svg, {
-                    zoomEnabled: true, controlIconsEnabled: true,
-                    fit: true, center: true, minZoom: 0.1, maxZoom: 10
-                });
+                svg.style.width = '100%'; svg.style.height = '100%';
+                panZoomInstance = svgPanZoom(svg, { zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true, minZoom: 0.1 });
             }
-
-            // FRANCOTIRADOR
+            // Francotirador
             document.querySelectorAll('.node').forEach(node => {
                 node.style.cursor = "pointer";
                 node.onclick = () => {
@@ -288,7 +303,18 @@
                     }
                 };
             });
-        } catch(e) { area.innerHTML = "<div class='p-3 text-danger small'>Error de dibujo. Intenta con otro slide.</div>"; }
+        } catch(e) {
+            console.error(e);
+            area.innerHTML = "<div class='p-3 text-danger small'>Error de sintaxis en gráfico.</div>";
+        }
+    }
+
+    function debugData() {
+        if(!CURRENT_DATA) alert("Carga un capítulo primero.");
+        else {
+            console.log("DATOS CRUDOS:", CURRENT_DATA);
+            alert("Datos impresos en consola (F12). Tipo de slides: " + typeof CURRENT_DATA.slides);
+        }
     }
 </script>
 </body>
