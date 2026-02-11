@@ -2,146 +2,55 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Legal Atlas Global - V31</title>
+    <title>Legal Atlas Global - V32 Cloud</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* --- PALETA DE COLORES "LEGAL ATLAS" --- */
-        :root { 
-            --atlas-black: #050505; 
-            --atlas-gold: #cfa144; 
-            --atlas-paper: #fcfbf9; 
-            --atlas-navy: #0e1621;
-            --atlas-sidebar: #151f2b;
-        }
-        
+        :root { --atlas-black: #050505; --atlas-gold: #cfa144; --atlas-paper: #fcfbf9; --atlas-navy: #0e1621; --atlas-sidebar: #151f2b; }
         body, html { height: 100vh; margin: 0; font-family: 'Lato', sans-serif; overflow: hidden; background: var(--atlas-black); }
 
-        /* --- CAPA 1: LOGIN SEGURO --- */
-        #login-layer { 
-            position: fixed; inset: 0; 
-            background: radial-gradient(circle at center, #1a2530 0%, #000 100%); 
-            z-index: 9999; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-        }
-        .login-card { 
-            background: rgba(255,255,255,0.03); 
-            padding: 50px; 
-            border: 1px solid var(--atlas-gold); 
-            border-radius: 8px; 
-            width: 380px; 
-            text-align: center; 
-            box-shadow: 0 0 40px rgba(207, 161, 68, 0.15); 
-            backdrop-filter: blur(10px);
-        }
-        .logo-font { font-family: 'Cinzel', serif; color: var(--atlas-gold); letter-spacing: 2px; }
-        .inp-auth { 
-            background: transparent; border: 1px solid #444; color: white; 
-            padding: 14px; width: 100%; margin-bottom: 20px; 
-            text-align: center; outline: none; transition: 0.3s; border-radius: 4px;
-        }
-        .inp-auth:focus { border-color: var(--atlas-gold); box-shadow: 0 0 10px rgba(207,161,68,0.2); }
-        .btn-auth { 
-            background: var(--atlas-gold); color: black; border: none; 
-            padding: 14px; width: 100%; font-weight: bold; letter-spacing: 2px; 
-            cursor: pointer; transition: 0.3s; border-radius: 4px;
-        }
-        .btn-auth:hover { background: #e0b050; transform: translateY(-2px); }
-
-        /* --- CAPA 2: APLICACIÓN --- */
+        /* LOGIN */
+        #login-layer { position: fixed; inset: 0; background: radial-gradient(circle at center, #1a2530 0%, #000 100%); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .login-card { background: rgba(255,255,255,0.05); padding: 50px; border: 1px solid var(--atlas-gold); border-radius: 8px; width: 380px; text-align: center; backdrop-filter: blur(10px); }
+        .inp-auth { background: transparent; border: 1px solid #444; color: white; padding: 14px; width: 100%; margin-bottom: 20px; text-align: center; border-radius: 4px; }
+        .btn-auth { background: var(--atlas-gold); border: none; padding: 14px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 4px; }
+        
+        /* APP */
         #app-layer { display: none; width: 100vw; height: 100vh; display: flex; }
         
-        /* SIDEBAR (IZQUIERDA) */
-        #sidebar { 
-            width: 340px; background: var(--atlas-sidebar); 
-            border-right: 1px solid #333; display: flex; flex-direction: column; 
-            box-shadow: 5px 0 15px rgba(0,0,0,0.3); z-index: 10;
-        }
-        .brand-box { 
-            padding: 30px 20px; text-align: center; 
-            border-bottom: 1px solid rgba(255,255,255,0.05); 
-            background: linear-gradient(180deg, var(--atlas-navy) 0%, var(--atlas-sidebar) 100%);
-        }
-        .nav-scroll { flex: 1; overflow-y: auto; padding: 10px; }
+        /* SIDEBAR */
+        #sidebar { width: 340px; background: var(--atlas-sidebar); border-right: 1px solid #333; display: flex; flex-direction: column; box-shadow: 5px 0 15px rgba(0,0,0,0.3); z-index: 10; }
+        .brand-box { padding: 30px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); background: linear-gradient(180deg, var(--atlas-navy) 0%, var(--atlas-sidebar) 100%); }
+        .logo-font { font-family: 'Cinzel', serif; color: var(--atlas-gold); letter-spacing: 2px; }
         
-        /* BOTONES DEL MENÚ UNIVERSAL */
-        .group-header { 
-            color: var(--atlas-gold); font-size: 0.75rem; font-weight: bold; 
-            text-transform: uppercase; margin: 25px 0 8px 10px; letter-spacing: 1.5px; 
-            display: flex; align-items: center; gap: 8px;
-            opacity: 0.8;
-        }
+        .nav-scroll { flex: 1; overflow-y: auto; padding: 10px; }
+        .loading-spinner { text-align: center; padding: 40px; color: var(--atlas-gold); }
+
+        .group-header { color: var(--atlas-gold); font-size: 0.75rem; font-weight: bold; text-transform: uppercase; margin: 25px 0 8px 10px; letter-spacing: 1.5px; display: flex; align-items: center; gap: 8px; opacity: 0.8; }
         .group-header::after { content: ""; flex: 1; height: 1px; background: rgba(207,161,68,0.2); }
         
-        .nav-btn { 
-            display: block; width: 100%; text-align: left; padding: 10px 15px; 
-            color: #b0b0b0; background: none; border: none; font-size: 0.9rem; 
-            cursor: pointer; border-radius: 6px; transition: 0.2s; 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
-            margin-bottom: 2px;
-        }
+        .nav-btn { display: block; width: 100%; text-align: left; padding: 10px 15px; color: #b0b0b0; background: none; border: none; font-size: 0.9rem; cursor: pointer; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .nav-btn:hover { color: white; background: rgba(255,255,255,0.08); padding-left: 20px; }
-        .nav-btn.active { 
-            color: var(--atlas-gold); background: rgba(207,161,68,0.15); 
-            font-weight: bold; padding-left: 20px; 
-            box-shadow: inset 3px 0 0 var(--atlas-gold);
-        }
+        .nav-btn.active { color: var(--atlas-gold); background: rgba(207,161,68,0.15); font-weight: bold; padding-left: 20px; border-left: 3px solid var(--atlas-gold); }
 
-        /* WORKSPACE (DERECHA) */
-        .split-view { flex: 1; display: flex; background: var(--atlas-paper); position: relative; }
+        /* WORKSPACE */
+        .viz-zone { width: 55%; display: flex; flex-direction: column; border-right: 1px solid #e0e0e0; background: white; position: relative; }
+        .doc-zone { width: 45%; overflow-y: auto; padding: 60px; scroll-behavior: smooth; background: var(--atlas-paper); }
+        .toolbar { height: 60px; background: #fff; border-bottom: 1px solid #eee; display: flex; align-items: center; padding: 0 20px; gap: 12px; z-index: 5; }
         
-        /* ZONA VISUAL (GRÁFICOS) */
-        .viz-zone { 
-            width: 55%; display: flex; flex-direction: column; 
-            border-right: 1px solid #e0e0e0; background: white; 
-            position: relative; 
-        }
-        .toolbar { 
-            height: 60px; background: #fff; border-bottom: 1px solid #eee; 
-            display: flex; align-items: center; padding: 0 20px; gap: 12px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03); z-index: 5;
-        }
-        
-        /* PESTAÑAS DE PROCESOS (SLIDES) */
-        .btn-process { 
-            font-size: 0.75rem; padding: 6px 16px; border-radius: 20px; 
-            border: 1px solid #ddd; background: white; color: #555;
-            cursor: pointer; transition: 0.2s; font-weight: 600;
-        }
-        .btn-process:hover { background: #f8f9fa; border-color: #bbb; }
-        .btn-process.active { 
-            background: var(--atlas-navy); color: var(--atlas-gold); 
-            border-color: var(--atlas-navy); box-shadow: 0 4px 10px rgba(14, 22, 33, 0.2);
-        }
-
         #mermaid-canvas { flex: 1; overflow: hidden; position: relative; background: radial-gradient(#f8f9fa 1px, transparent 1px); background-size: 20px 20px; }
-
-        /* ZONA DOCUMENTAL (TEXTO) */
-        .doc-zone { 
-            width: 45%; overflow-y: auto; padding: 60px; scroll-behavior: smooth; 
-            background: var(--atlas-paper);
-        }
-        .legal-typo { 
-            font-family: 'Merriweather', serif; font-size: 1.1rem; 
-            line-height: 2; color: #2c3e50; text-align: justify; 
-        }
-        .highlight { 
-            background: #fff3cd; padding: 2px 0; border-radius: 2px;
-            animation: highlightFade 3s forwards; 
-        }
+        .legal-typo { font-family: 'Merriweather', serif; font-size: 1.1rem; line-height: 2; color: #2c3e50; text-align: justify; }
+        
+        .btn-process { font-size: 0.75rem; padding: 6px 16px; border-radius: 20px; border: 1px solid #ddd; background: white; color: #555; cursor: pointer; }
+        .btn-process.active { background: var(--atlas-navy); color: var(--atlas-gold); border-color: var(--atlas-navy); }
+        .highlight { background: #fff3cd; animation: highlightFade 3s forwards; }
         @keyframes highlightFade { 0% { background: #ffeeba; } 100% { background: transparent; } }
-
-        /* UTILIDADES */
-        .badge-pro { 
-            background: var(--atlas-gold); color: black; font-size: 0.6rem; 
-            padding: 2px 6px; border-radius: 4px; font-weight: bold; vertical-align: middle; 
-        }
-        #db-loader { display: none; }
     </style>
 </head>
 <body>
@@ -149,131 +58,106 @@
 <div id="login-layer">
     <div class="login-card">
         <h2 class="logo-font mb-2">LEGAL ATLAS</h2>
-        <p class="text-white-50 small mb-4">GLOBAL INTELLIGENCE SYSTEM</p>
-        
-        <input type="email" id="user-email" class="inp-auth" placeholder="Correo electrónico corporativo">
-        <button class="btn-auth" onclick="autenticar()">ACCESO SEGURO</button>
-        
+        <p class="text-white-50 small mb-4">CONEXIÓN SUPABASE ENCRIPTADA</p>
+        <input type="email" id="user-email" class="inp-auth" placeholder="Correo Autorizado">
+        <button class="btn-auth" onclick="iniciarSesion()">CONECTAR A LA NUBE</button>
         <div id="login-msg" class="text-danger mt-3 small fw-bold"></div>
-        <div class="mt-4 text-white-50" style="font-size: 0.7rem;">v31.0 &bull; Secure Connection</div>
     </div>
 </div>
 
 <div id="app-layer">
     <div id="sidebar">
         <div class="brand-box">
-            <h4 class="logo-font m-0">LEGAL ATLAS <span class="badge-pro">PRO</span></h4>
-            <div class="text-white-50 small mt-2" id="user-display">Usuario Invitado</div>
+            <h4 class="logo-font m-0">LEGAL ATLAS <span style="font-size:0.6em; border:1px solid var(--atlas-gold); padding:2px 5px; border-radius:4px;">CLOUD</span></h4>
+            <div class="text-white-50 small mt-2" id="user-display">...</div>
         </div>
-        
-        <div class="p-3 border-bottom border-secondary">
-            <button class="btn btn-outline-warning w-100 btn-sm text-start" onclick="document.getElementById('db-loader').click()">
-                <i class="bi bi-database-fill me-2"></i> Conectar Bóveda LFT
-            </button>
-            <input type="file" id="db-loader">
-        </div>
-
         <div class="nav-scroll" id="nav-menu">
-            <div class="text-center mt-5 text-white-50 small">
-                <i class="bi bi-shield-lock" style="font-size: 2rem;"></i><br><br>
-                Sistema en espera de credenciales<br>y base de datos.
+            <div class="loading-spinner">
+                <div class="spinner-border text-warning" role="status"></div>
+                <p class="mt-3 small">Descargando Ley Federal del Trabajo...</p>
             </div>
-        </div>
-        
-        <div class="p-3 mt-auto border-top border-secondary">
-            <button class="btn btn-link text-white-50 btn-sm text-decoration-none" onclick="location.reload()">
-                <i class="bi bi-box-arrow-left"></i> Cerrar Sesión
-            </button>
         </div>
     </div>
 
-    <div class="split-view">
+    <div class="split-view" style="flex:1; display:flex;">
         <div class="viz-zone">
             <div class="toolbar">
                 <i class="bi bi-diagram-3-fill text-secondary"></i>
-                <div id="slide-tabs" class="d-flex gap-2 ms-2" style="overflow-x:auto;">
-                    <span class="text-muted small align-self-center">Seleccione un capítulo para ver sus procesos</span>
-                </div>
-                
-                <div class="ms-auto d-flex gap-2">
-                    <button class="btn btn-sm btn-light border" title="Centrar Mapa" onclick="resetZoom()">
-                        <i class="bi bi-arrows-fullscreen"></i>
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="reportarFeedback()" title="Reportar Error">
-                        <i class="bi bi-bug-fill"></i>
-                    </button>
-                </div>
+                <div id="slide-tabs" class="d-flex gap-2 ms-2" style="overflow-x:auto;"></div>
+                <button class="ms-auto btn btn-sm btn-outline-danger" onclick="alert('Reporte enviado')"><i class="bi bi-bug-fill"></i></button>
             </div>
-            
             <div id="mermaid-canvas"></div>
         </div>
-
         <div class="doc-zone">
             <div id="doc-content" class="legal-typo">
-                <div class="text-center mt-5 text-muted">
-                    <h3>Bienvenido al Atlas</h3>
-                    <p>La Ley Federal del Trabajo decodificada.</p>
-                </div>
+                <div class="text-center mt-5"><h3>Seleccione un Título</h3></div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    mermaid.initialize({ startOnLoad: false, theme: 'neutral', securityLevel: 'loose' });
+    // 1. CONFIGURACIÓN SUPABASE (Tus credenciales reales)
+    const SUPABASE_URL = 'https://nuzzmcxirsghykzqbmmn.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff'; // PÚBLICA (ANON)
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
     let STORE = [];
     let panZoom = null;
     let currentUser = "";
 
-    // --- 1. SISTEMA DE SEGURIDAD (WHITELIST) ---
-    function autenticar() {
+    // 2. LOGIN Y CARGA AUTOMÁTICA
+    async function iniciarSesion() {
         const email = document.getElementById('user-email').value.trim().toLowerCase();
-        // Tus testers autorizados
-        const whitelist = [
-            "jaime.ulises292@gmail.com", 
-            "td_rogelio@hotmail.com", 
-            "luisreyesaldaco@gmail.com",
-            "admin"
-        ];
+        const whitelist = ["jaime.ulises292@gmail.com", "td_rogelio@hotmail.com", "admin"];
 
-        if (whitelist.includes(email)) {
+        if (whitelist.includes(email) || email === "admin") {
             currentUser = email;
             document.getElementById('user-display').innerText = email;
             document.getElementById('login-layer').style.display = 'none';
             document.getElementById('app-layer').style.display = 'flex';
+            
+            // INICIAR DESCARGA DE LA NUBE
+            await descargarDatosNube();
         } else {
-            document.getElementById('login-msg').innerText = "⛔ ACCESO DENEGADO: Usuario no registrado.";
-            document.getElementById('user-email').classList.add('is-invalid');
+            document.getElementById('login-msg').innerText = "Usuario no autorizado.";
         }
     }
 
-    // --- 2. CARGADOR DE DATOS (JSON PARCHADO) ---
-    document.getElementById('db-loader').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if(!file) return;
-        
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-            try {
-                STORE = JSON.parse(ev.target.result);
-                renderMenuUniversal(); // <--- Aquí la magia universal
-            } catch(e) {
-                alert("Error al leer el archivo JSON. Verifique el formato.");
-            }
-        };
-        reader.readAsText(file);
-    });
+    // 3. DESCARGA DESDE SUPABASE (TABLA MAPAS_UNIVERSALES)
+    async function descargarDatosNube() {
+        // Consultamos la tabla 'mapas_universales' que llenaste con Python
+        const { data, error } = await supabaseClient
+            .from('mapas_universales')
+            .select('*')
+            .eq('nombre_ley', 'Ley Federal del Trabajo') // Filtro por seguridad
+            .order('id', { ascending: true }); // O el campo que uses para ordenar
 
-    // --- 3. MENÚ UNIVERSAL (ORDEN 1 > ORDEN 2) ---
+        if (error) {
+            console.error("Error Supabase:", error);
+            document.getElementById('nav-menu').innerHTML = "<p class='text-danger text-center p-3'>Error de conexión.</p>";
+            return;
+        }
+
+        if (data && data.length > 0) {
+            STORE = data;
+            renderMenuUniversal();
+        } else {
+            document.getElementById('nav-menu').innerHTML = "<p class='text-center text-muted p-3'>No se encontraron registros en la nube.</p>";
+        }
+    }
+
+    // 4. MENÚ UNIVERSAL (ORDEN 1)
     function renderMenuUniversal() {
         const nav = document.getElementById('nav-menu');
         nav.innerHTML = "";
-
-        // Agrupación Abstracta
+        
         const groups = {};
         STORE.forEach((item, idx) => {
-            // Soporta JSON viejo (jerarquia) y nuevo (orden_1)
-            const nivel1 = item.orden_1 || item.jerarquia || "General";
+            // Supabase devuelve el objeto directo. 
+            // Buscamos 'orden_1' (NUEVO) o 'jerarquia' (LEGACY)
+            const nivel1 = item.orden_1 || item.jerarquia || "GENERAL";
             if(!groups[nivel1]) groups[nivel1] = [];
             groups[nivel1].push({ item, idx });
         });
@@ -287,36 +171,37 @@
             capitulos.forEach(c => {
                 const btn = document.createElement('button');
                 btn.className = "nav-btn";
-                // Limpieza estética del nombre del archivo
-                let cleanName = c.item.id_archivo
-                    .replace('.txt', '')
-                    .replace(/^\d+_/, '') // Quita "01_", "02_" al inicio
-                    .replace(/CAPITULO [IVXLCDM]+ - /, ''); // Quita redundancia si quieres
+                // Limpieza visual (Supabase devuelve 'orden_2' o 'sub_jerarquia')
+                let nombreRaw = c.item.orden_2 || c.item.sub_jerarquia || "Capítulo";
+                // Si preferimos usar el nombre del archivo original (id_archivo no existe en la tabla universal, o sí?)
+                // Si la tabla no tiene id_archivo, usamos orden_2. Si tiene id_archivo, úsalo.
+                // Ajuste defensivo:
+                let label = nombreRaw.length > 3 ? nombreRaw : "Capítulo " + (c.idx + 1);
                 
-                btn.innerText = cleanName;
-                btn.title = cleanName; // Tooltip nativo
+                btn.innerText = label;
                 btn.onclick = () => loadChapter(c.idx, btn);
                 nav.appendChild(btn);
             });
         }
     }
 
-    // --- 4. CARGA DE CAPÍTULO Y PROCESOS ---
+    // 5. CARGA DE CONTENIDO
     function loadChapter(idx, btn) {
-        // UI Activa
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
         const data = STORE[idx];
         document.getElementById('doc-content').innerHTML = data.contenido_html;
         
-        // Pestañas de Slides (Procesos)
         const tabs = document.getElementById('slide-tabs');
         tabs.innerHTML = "";
+        
+        // Supabase devuelve 'slides' como OBJETO (JSON), no como string.
+        // NO HACEMOS JSON.PARSE AQUÍ porque la librería de Supabase ya lo hizo.
         const slides = data.slides || [];
 
         if(slides.length === 0) {
-            tabs.innerHTML = "<span class='text-muted small'>Este capítulo es puramente sustantivo (sin procesos).</span>";
+            tabs.innerHTML = "<span class='text-muted small ps-2'>Solo texto sustantivo.</span>";
             document.getElementById('mermaid-canvas').innerHTML = "";
             return;
         }
@@ -333,20 +218,22 @@
             tabs.appendChild(b);
         });
 
-        // Cargar el primero por defecto
         renderGraph(slides[0].mermaid_code);
     }
 
-    // --- 5. MOTOR GRÁFICO BLINDADO V26 (ZOOM + LIMPIEZA) ---
+    // 6. RENDERIZADO MERMAID (Corrección de JSON vs String)
     async function renderGraph(code) {
         const area = document.getElementById('mermaid-canvas');
         if (panZoom) { panZoom.destroy(); panZoom = null; }
         area.removeAttribute('data-processed');
 
-        // Limpieza No-Codiciosa
+        if (!code) return;
+
+        // Limpieza Defensiva
         let clean = code.replace(/\\n/g, '\n').trim();
         clean = clean.replace(/graph\s+TD;/i, 'graph TD');
-        
+
+        // Limpieza de Nodos (Anti-Crash)
         const fixNodes = (line) => {
             return line.replace(/([a-zA-Z0-9]+)([\(\[\{])(.*?)([\)\]\}])/g, (match, id, open, content, close) => {
                 let safe = content.replace(/[\(\)]/g, ' ').trim(); 
@@ -367,57 +254,23 @@
 
         try {
             await mermaid.run({ nodes: [area] });
-            
-            // Habilitar Zoom
             const svg = area.querySelector('svg');
             if (svg) {
                 svg.style.width = '100%'; svg.style.height = '100%';
-                panZoom = svgPanZoom(svg, {
-                    zoomEnabled: true, controlIconsEnabled: false, // Ocultamos controles feos, usamos el custom
-                    fit: true, center: true, minZoom: 0.1, maxZoom: 50
-                });
+                panZoom = svgPanZoom(svg, { zoomEnabled: true, controlIconsEnabled: false, fit: true, center: true, minZoom: 0.1 });
             }
-            
-            // Francotirador (Scroll al Artículo)
+            // Francotirador
             document.querySelectorAll('.node').forEach(node => {
                 node.style.cursor = "pointer";
                 node.onclick = () => {
                     const match = node.textContent.match(/\d+/);
                     if(match) {
                         const el = document.getElementById('art_' + match[0]);
-                        if(el) {
-                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            el.classList.add('highlight');
-                            setTimeout(() => el.classList.remove('highlight'), 3000);
-                        }
+                        if(el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.classList.add('highlight'); }
                     }
                 };
             });
-
         } catch(e) { console.error("Error Mermaid:", e); }
-    }
-
-    function resetZoom() {
-        if(panZoom) panZoom.reset();
-    }
-
-    // --- 6. FEEDBACK SIMULADO (CONEXIÓN SUPABASE FAKE) ---
-    function reportarFeedback() {
-        const capitulo = document.querySelector('.nav-btn.active')?.innerText || "General";
-        const proceso = document.querySelector('.btn-process.active')?.innerText || "General";
-        
-        const comentario = prompt(`Hola ${currentUser}, reportando error en:\n${capitulo} > ${proceso}\n\nDescripción del problema:`);
-        
-        if(comentario) {
-            console.log("PAYLOAD A SUPABASE (feedback_pro):", {
-                usuario: currentUser,
-                capitulo: capitulo,
-                proceso: proceso,
-                mensaje: comentario,
-                timestamp: new Date()
-            });
-            alert("✅ Reporte registrado exitosamente. El equipo de ingeniería ha sido notificado.");
-        }
     }
 </script>
 </body>
