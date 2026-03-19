@@ -4,28 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Legal Atlas — Motor Normativo APOLO</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --p0: #f7f0dc;
-  --p1: #f2ead8;
-  --p2: #e8dfc6;
-  --p3: #ddd0b0;
-  --p4: #cfc09a;
-  --tinta:      #1e1810;
-  --tinta-soft: #3d3426;
-  --tinta-muted:#7a6e58;
-  --sepia:      #7a5c10;
-  --sepia-md:   #9a7420;
-  --sepia-lt:   #c49a3c;
-  --borde:      #bfaa80;
-  --borde-dk:   #8a7850;
-  --stain1: rgba(139,100,20,0.07);
-  --stain2: rgba(100,70,10,0.05);
+  --p0: #f5edd8;
+  --p1: #efe4c8;
+  --p2: #e5d8b2;
+  --p3: #d8c99a;
+  --tinta:       #1e1508;
+  --tinta-soft:  #3a2e18;
+  --tinta-muted: #6e6048;
+  --sepia:       #7a5c10;
+  --sepia-md:    #9a7420;
+  --sepia-lt:    #c49a3c;
+  --borde:       #c4aa70;
+  --borde-dk:    #8a7040;
+  --gold-dim:    rgba(196,154,60,0.18);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 
 body {
@@ -34,120 +31,112 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
+  background: var(--p1);
 }
 
-/* ══════════════════════════════════════
-   FONDO: PERGAMINO ENVEJECIDO
-══════════════════════════════════════ */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0;
+/* ── MAPA TOPOGRÁFICO SVG COMO FONDO REAL ── */
+.mapa-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.mapa-fondo svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── PERGAMINO SOBRE EL MAPA ── */
+.pergamino-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
   background:
-    /* manchas de humedad */
-    radial-gradient(ellipse 60% 40% at 8% 15%,  rgba(160,110,20,0.09) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 50% at 92% 80%,  rgba(120,80,10,0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 30% 25% at 55% 5%,   rgba(180,130,40,0.05) 0%, transparent 70%),
-    radial-gradient(ellipse 20% 30% at 20% 90%,  rgba(100,70,0,0.06)  0%, transparent 60%),
-    /* oscurecimiento de bordes como libro antiguo */
-    radial-gradient(ellipse 100% 100% at center, var(--p1) 30%, var(--p2) 65%, var(--p3) 85%, var(--p4) 100%);
-}
-
-/* cuadrícula de mapa sutil */
-body::after {
-  content: '';
-  position: fixed; inset: 0; z-index: 0;
-  background-image:
-    repeating-linear-gradient(0deg,   transparent, transparent 36px, rgba(139,100,20,0.04) 36px, rgba(139,100,20,0.04) 37px),
-    repeating-linear-gradient(90deg,  transparent, transparent 36px, rgba(139,100,20,0.03) 36px, rgba(139,100,20,0.03) 37px);
+    radial-gradient(ellipse 70% 50% at 10% 10%, rgba(245,237,216,0.55) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 90% 85%, rgba(230,215,180,0.45) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(239,228,200,0.72) 20%, rgba(229,216,178,0.82) 60%, rgba(216,201,154,0.88) 100%);
   pointer-events: none;
 }
 
-/* ══════════════════════════════════════
-   MARCO CARTOGRÁFICO
-══════════════════════════════════════ */
+/* ── MARCO CARTOGRÁFICO ── */
 .map-frame {
-  position: fixed; inset: 14px; z-index: 1; pointer-events: none;
+  position: fixed; inset: 14px; z-index: 3; pointer-events: none;
 }
-
-/* borde exterior */
 .map-frame-outer {
   position: absolute; inset: 0;
   border: 1.5px solid var(--borde);
 }
-
-/* borde interior con separación */
 .map-frame-inner {
   position: absolute; inset: 7px;
   border: 0.5px solid var(--borde-dk);
-  opacity: 0.45;
+  opacity: 0.4;
 }
+.tick { position: absolute; background: var(--borde-dk); opacity: 0.6; }
+.tick-h  { width: 1px; height: 7px; top: 0; }
+.tick-hb { width: 1px; height: 7px; bottom: 0; }
+.tick-v  { width: 7px; height: 1px; left: 0; }
+.tick-vr { width: 7px; height: 1px; right: 0; }
 
-/* marcas de graduación como un mapa real */
-.tick {
-  position: absolute;
-  background: var(--borde-dk);
-}
-/* ticks horizontales - arriba */
-.tick-h { width: 1px; height: 6px; top: 0; }
-/* ticks horizontales - abajo */
-.tick-hb { width: 1px; height: 6px; bottom: 0; }
-/* ticks verticales - izquierda */
-.tick-v { width: 6px; height: 1px; left: 0; }
-/* ticks verticales - derecha */
-.tick-vr { width: 6px; height: 1px; right: 0; }
-
-/* ══════════════════════════════════════
-   ESQUINAS ORNAMENTALES — ORGÁNICAS
-══════════════════════════════════════ */
-.corner { position: fixed; z-index: 3; pointer-events: none; }
+/* ── ESQUINAS ── */
+.corner { position: fixed; z-index: 4; pointer-events: none; }
 .corner-tl { top: 10px;    left: 10px; }
 .corner-tr { top: 10px;    right: 10px;  transform: scaleX(-1); }
 .corner-bl { bottom: 10px; left: 10px;   transform: scaleY(-1); }
 .corner-br { bottom: 10px; right: 10px;  transform: scale(-1); }
 
-/* ══════════════════════════════════════
-   LAYOUT PRINCIPAL
-══════════════════════════════════════ */
+/* ── NOTAS AL MARGEN ── */
+.marginal {
+  position: fixed;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 10px;
+  color: var(--tinta-muted);
+  opacity: 0.45;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  z-index: 4;
+}
+.marginal-tl { top: 52px;    left: 36px;  writing-mode: vertical-rl; }
+.marginal-tr { top: 52px;    right: 36px; writing-mode: vertical-rl; transform: scaleX(-1); }
+.marginal-bl { bottom: 44px; left: 28px; }
+.marginal-br { bottom: 44px; right: 28px; }
+
+/* ── LAYOUT ── */
 .wrapper {
-  position: relative; z-index: 2;
+  position: relative; z-index: 5;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 72px 48px 56px;
-  gap: 0;
+  padding: 80px 48px 64px;
 }
 
-/* ══════════════════════════════════════
-   CABECERA
-══════════════════════════════════════ */
+/* ── HEADER ── */
 .header {
   text-align: center;
-  margin-bottom: 52px;
+  margin-bottom: 48px;
   animation: emerger 1s ease both;
 }
 
-/* Rosa de los vientos / sello */
 .compass-wrap {
-  margin: 0 auto 28px;
-  width: 110px; height: 110px;
-  position: relative;
+  margin: 0 auto 30px;
+  width: 96px; height: 96px;
 }
 
 .header-eyebrow {
   font-size: 10px;
-  letter-spacing: 0.55em;
+  letter-spacing: 0.6em;
   color: var(--sepia-md);
   text-transform: uppercase;
   margin-bottom: 14px;
   font-weight: 500;
-  font-style: normal;
 }
 
 .header-logo {
   font-family: 'Cinzel', serif;
-  font-size: clamp(34px, 5.5vw, 54px);
+  font-size: clamp(36px, 5.5vw, 56px);
   font-weight: 700;
   color: var(--tinta);
   letter-spacing: 0.1em;
@@ -162,82 +151,111 @@ body::after {
   gap: 14px;
   margin: 18px 0;
 }
-.orn-line {
-  height: 0.5px;
-  width: 80px;
-  background: linear-gradient(90deg, transparent, var(--borde-dk));
-}
+.orn-line { height: 0.5px; width: 80px; background: linear-gradient(90deg, transparent, var(--borde-dk)); }
 .orn-line.r { background: linear-gradient(90deg, var(--borde-dk), transparent); }
 .orn-diamond { width: 5px; height: 5px; background: var(--sepia); transform: rotate(45deg); flex-shrink: 0; }
 .orn-dot { width: 3px; height: 3px; background: var(--borde-dk); border-radius: 50%; flex-shrink: 0; }
 
 .header-tagline {
-  font-family: 'IM Fell English', serif;
-  font-style: italic;
-  font-size: clamp(17px, 2.2vw, 21px);
+  font-family: 'Cinzel', serif;
+  font-size: clamp(14px, 1.8vw, 17px);
   color: var(--tinta-soft);
-  line-height: 1.5;
+  line-height: 1.6;
+  letter-spacing: 0.06em;
+  font-weight: 400;
+}
+
+.header-sub {
+  margin-top: 8px;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--tinta-muted);
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* ── INTRODUCCIÓN ── */
+.intro {
+  max-width: 560px;
+  text-align: center;
+  margin-bottom: 48px;
+  animation: emerger 1s ease 0.15s both;
+  padding: 24px 32px;
+  border-top: 0.5px solid var(--borde);
+  border-bottom: 0.5px solid var(--borde);
+  position: relative;
+  background: rgba(245,237,216,0.5);
+}
+
+.intro::before, .intro::after {
+  content: '◆';
+  position: absolute;
+  color: var(--sepia-lt);
+  font-size: 8px;
+  opacity: 0.6;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.intro::before { top: -5px; }
+.intro::after  { bottom: -5px; }
+
+.intro-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: normal;
+  font-size: clamp(15px, 1.8vw, 17px);
+  color: var(--tinta-soft);
+  line-height: 1.85;
   letter-spacing: 0.01em;
 }
 
-.header-apolo {
-  margin-top: 8px;
-  font-size: 11px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--tinta-muted);
-  font-style: normal;
+.intro-text em {
+  font-style: italic;
+  color: var(--sepia);
 }
 
-/* ══════════════════════════════════════
-   PUERTAS — DISPOSICIÓN ORGÁNICA
-══════════════════════════════════════ */
+/* ── PUERTAS ── */
 .puertas-wrap {
   display: flex;
   align-items: flex-start;
   gap: 0;
   width: 100%;
   max-width: 860px;
-  animation: emerger 1s ease 0.25s both;
+  animation: emerger 1s ease 0.3s both;
 }
 
-/* separador central tipo meridiano */
 .meridiano {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 28px 20px 0;
+  padding: 32px 20px 0;
   flex-shrink: 0;
   gap: 10px;
-  color: var(--tinta-muted);
 }
-.meridiano-line { width: 0.5px; flex: 1; background: var(--borde); min-height: 60px; }
+.meridiano-line { width: 0.5px; flex: 1; background: var(--borde); min-height: 50px; }
 .meridiano-text {
   font-family: 'IM Fell English', serif;
   font-style: italic;
   font-size: 11px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.15em;
   writing-mode: vertical-rl;
   color: var(--tinta-muted);
-  padding: 8px 0;
-  opacity: 0.7;
+  padding: 10px 0;
+  opacity: 0.5;
 }
 
-/* tarjeta */
 .puerta {
   flex: 1;
   position: relative;
-  background: #fff9f0;
-  border: 1.5px solid var(--borde-dk);
-  padding: 36px 32px 32px;
+  background: rgba(245,237,216,0.88);
+  border: 1px solid var(--borde);
+  padding: 38px 34px 34px;
   text-decoration: none;
   color: var(--tinta);
-  transition: background 0.35s ease, border-color 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+  transition: all 0.35s ease;
   display: block;
   overflow: hidden;
 }
 
-/* marco interior sutil */
 .puerta::after {
   content: '';
   position: absolute;
@@ -249,24 +267,21 @@ body::after {
 }
 
 .puerta:hover {
-  background: var(--p2);
+  background: rgba(239,228,200,0.96);
   border-color: var(--sepia);
-  box-shadow: 4px 6px 24px rgba(60,40,0,0.1), -2px -2px 12px rgba(200,160,60,0.06);
+  transform: translateY(-4px);
+  box-shadow: 4px 8px 28px rgba(60,40,0,0.14);
 }
-.puerta:hover::after { opacity: 0.55; }
+.puerta:hover::after { opacity: 0.6; }
 
-/* la primera carta sube un poco, la segunda baja — asimetría orgánica */
-.puerta-i  { transform: translateY(0); }
-.puerta-ii { transform: translateY(14px); }
-.puerta-i:hover  { transform: translateY(-4px); }
-.puerta-ii:hover { transform: translateY(10px); }
+.puerta-ii { transform: translateY(16px); }
+.puerta-ii:hover { transform: translateY(12px); }
 
-/* número romano como filigrana */
 .puerta-num {
   position: absolute;
   bottom: 12px; right: 18px;
   font-family: 'Cinzel', serif;
-  font-size: 56px;
+  font-size: 60px;
   font-weight: 700;
   color: var(--sepia);
   opacity: 0.06;
@@ -275,31 +290,6 @@ body::after {
   pointer-events: none;
 }
 
-/* etiqueta como sello de archivo */
-.puerta-sello {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--sepia-md);
-  border: 0.5px solid var(--sepia-lt);
-  padding: 4px 10px 4px 8px;
-  margin-bottom: 22px;
-  font-family: 'Cormorant Garamond', serif;
-  position: relative;
-}
-.puerta-sello::before {
-  content: '';
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: var(--sepia-lt);
-  opacity: 0.6;
-}
-
-/* anotación lateral — como nota al margen del explorador */
 .puerta-nota {
   position: absolute;
   top: 18px; right: -1px;
@@ -307,18 +297,39 @@ body::after {
   font-style: italic;
   font-size: 9px;
   color: var(--tinta-muted);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   writing-mode: vertical-rl;
-  opacity: 0.5;
-  background: var(--p3);
+  opacity: 0.4;
+  background: var(--p2);
   border-left: 0.5px solid var(--borde);
   padding: 6px 3px;
-  line-height: 1;
+}
+
+.puerta-sello {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--sepia-md);
+  border: 0.5px solid var(--sepia-lt);
+  padding: 4px 12px 4px 10px;
+  margin-bottom: 22px;
+  font-family: 'Cormorant Garamond', serif;
+}
+.puerta-sello::before {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--sepia-lt);
+  opacity: 0.7;
 }
 
 .puerta-titulo {
   font-family: 'Cinzel', serif;
-  font-size: clamp(16px, 2.2vw, 20px);
+  font-size: clamp(17px, 2.2vw, 21px);
   font-weight: 600;
   color: var(--tinta);
   margin-bottom: 14px;
@@ -327,23 +338,21 @@ body::after {
 }
 
 .puerta-desc {
-  font-family: 'IM Fell English', serif;
-  font-style: italic;
-  font-size: 16px;
-  color: var(--tinta);
-  line-height: 1.7;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: normal;
+  font-size: 17px;
+  color: var(--tinta-soft);
+  line-height: 1.75;
   margin-bottom: 28px;
 }
 
-/* línea divisoria como en un manuscrito */
 .puerta-rule {
-  width: 40px;
-  height: 0.5px;
+  width: 36px; height: 0.5px;
   background: var(--borde-dk);
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   transition: width 0.35s ease;
 }
-.puerta:hover .puerta-rule { width: 60px; }
+.puerta:hover .puerta-rule { width: 56px; }
 
 .puerta-cta {
   display: flex;
@@ -351,16 +360,16 @@ body::after {
   gap: 12px;
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: var(--tinta-soft);
+  color: var(--tinta-muted);
   transition: color 0.25s;
   font-family: 'Cormorant Garamond', serif;
 }
 .puerta:hover .puerta-cta { color: var(--sepia); }
 
 .cta-arrow {
-  width: 24px; height: 0.5px;
+  width: 28px; height: 0.5px;
   background: currentColor;
   position: relative;
   transition: width 0.3s ease;
@@ -369,36 +378,15 @@ body::after {
 .cta-arrow::after {
   content: '';
   position: absolute;
-  right: 0; top: -2px;
+  right: 0; top: -2.5px;
   width: 5px; height: 5px;
   border-right: 0.5px solid currentColor;
   border-top: 0.5px solid currentColor;
   transform: rotate(45deg);
 }
-.puerta:hover .cta-arrow { width: 36px; }
+.puerta:hover .cta-arrow { width: 44px; }
 
-/* ══════════════════════════════════════
-   COORDENADAS / NOTAS AL MARGEN
-══════════════════════════════════════ */
-.marginal {
-  position: fixed;
-  font-family: 'IM Fell English', serif;
-  font-style: italic;
-  font-size: 10px;
-  color: var(--tinta-muted);
-  opacity: 0.4;
-  letter-spacing: 0.08em;
-  pointer-events: none;
-  z-index: 2;
-}
-.marginal-tl { top: 52px;   left: 36px;  writing-mode: vertical-rl; }
-.marginal-tr { top: 52px;   right: 36px; writing-mode: vertical-rl; transform: scaleX(-1); }
-.marginal-bl { bottom: 44px; left: 28px; }
-.marginal-br { bottom: 44px; right: 28px; }
-
-/* ══════════════════════════════════════
-   PIE DE PÁGINA
-══════════════════════════════════════ */
+/* ── FOOTER ── */
 .footer {
   margin-top: 52px;
   text-align: center;
@@ -415,45 +403,91 @@ body::after {
   letter-spacing: 0.32em;
   color: var(--borde-dk);
   text-transform: uppercase;
+  opacity: 0.6;
 }
 
-/* ══════════════════════════════════════
-   ANIMACIONES
-══════════════════════════════════════ */
+/* ── ANIMACIONES ── */
 @keyframes emerger {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-@keyframes girar-brujula {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
 
-/* ══════════════════════════════════════
-   RESPONSIVE
-══════════════════════════════════════ */
+/* ── MOBILE ── */
 @media (max-width: 680px) {
-  .wrapper { padding: 56px 20px 44px; }
-  .puertas-wrap { flex-direction: column; gap: 0; }
-  .meridiano { flex-direction: row; writing-mode: horizontal-tb; padding: 14px 0; }
-  .meridiano-line { width: 40px; height: 0.5px; min-height: 0; }
-  .meridiano-text { writing-mode: horizontal-tb; padding: 0 8px; }
-  .puerta-i, .puerta-ii,
-  .puerta-i:hover, .puerta-ii:hover { transform: none; }
+  .wrapper { padding: 60px 20px 48px; }
+  .puertas-wrap { flex-direction: column; }
+  .meridiano { flex-direction: row; padding: 14px 0; }
+  .meridiano-line { width: 40px; height: 0.5px; min-height: 0; flex: 0; }
+  .meridiano-text { writing-mode: horizontal-tb; padding: 0 10px; }
+  .puerta-ii, .puerta-ii:hover { transform: none; }
   .puerta:hover { transform: translateY(-2px); }
-  .puerta-nota { display: none; }
-  .marginal { display: none; }
+  .puerta-nota, .marginal { display: none; }
   .map-frame { inset: 8px; }
+  .intro { padding: 18px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ══ Marco cartográfico ══ -->
+<!-- MAPA TOPOGRÁFICO REAL COMO FONDO -->
+<div class="mapa-fondo">
+  <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,120 Q80,90 160,110 Q240,130 300,105 Q380,80 440,95 Q500,110 560,88 Q620,66 680,80 Q740,94 800,75" fill="none" stroke="#8a6820" stroke-width="0.7" opacity="0.18"/>
+    <path d="M0,145 Q90,112 180,135 Q260,155 330,128 Q410,101 470,118 Q535,136 600,112 Q665,88 730,105 Q795,122 860,98 Q920,74 980,90 Q1040,106 1100,85 Q1150,68 1200,78" fill="none" stroke="#8a6820" stroke-width="0.6" opacity="0.15"/>
+    <path d="M0,170 Q100,140 200,162 Q285,180 355,152 Q435,124 498,142 Q565,162 632,136 Q698,110 765,128 Q832,146 895,120 Q958,94 1020,112 Q1082,130 1140,108 Q1175,96 1200,102" fill="none" stroke="#8a6820" stroke-width="0.5" opacity="0.12"/>
+    <path d="M100,280 Q200,255 310,272 Q420,289 510,262 Q600,235 690,252 Q780,269 870,245 Q960,221 1050,238 Q1130,252 1200,240" fill="none" stroke="#8a6820" stroke-width="0.8" opacity="0.2"/>
+    <path d="M80,310 Q190,282 305,300 Q415,318 508,290 Q600,262 695,280 Q788,298 878,272 Q968,246 1058,264 Q1140,280 1200,268" fill="none" stroke="#8a6820" stroke-width="0.6" opacity="0.16"/>
+    <path d="M60,340 Q180,308 300,328 Q410,347 505,318 Q598,289 694,308 Q790,327 882,300 Q974,273 1062,292 Q1145,308 1200,296" fill="none" stroke="#7a5c10" stroke-width="0.5" opacity="0.13"/>
+    <path d="M40,368 Q165,334 288,355 Q405,374 502,344 Q596,314 694,334 Q792,354 884,326 Q976,298 1065,318 Q1148,336 1200,324" fill="none" stroke="#7a5c10" stroke-width="0.4" opacity="0.1"/>
+    <path d="M120,50 Q140,120 155,200 Q168,280 178,360 Q186,440 192,520 Q197,600 200,680 Q202,740 204,800" fill="none" stroke="#8a6820" stroke-width="0.7" opacity="0.16"/>
+    <path d="M155,40 Q178,115 195,195 Q210,275 222,355 Q232,435 240,515 Q246,595 250,675 Q253,738 255,800" fill="none" stroke="#8a6820" stroke-width="0.5" opacity="0.12"/>
+    <path d="M190,35 Q215,110 234,190 Q252,270 266,350 Q278,430 288,510 Q295,590 300,670 Q304,735 306,800" fill="none" stroke="#7a5c10" stroke-width="0.4" opacity="0.1"/>
+    <path d="M820,30 Q838,110 848,195 Q856,280 860,365 Q862,450 860,535 Q857,620 850,705 Q844,760 838,800" fill="none" stroke="#8a6820" stroke-width="0.7" opacity="0.16"/>
+    <path d="M855,25 Q875,105 887,190 Q897,275 902,360 Q905,445 903,530 Q900,615 893,700 Q886,758 878,800" fill="none" stroke="#8a6820" stroke-width="0.5" opacity="0.12"/>
+    <path d="M180,420 Q300,400 420,415 Q540,430 660,412 Q780,394 900,408 Q1020,422 1100,410" fill="none" stroke="#9a7420" stroke-width="0.9" opacity="0.22"/>
+    <path d="M160,448 Q285,426 410,442 Q535,458 658,440 Q780,422 900,437 Q1022,452 1105,440" fill="none" stroke="#8a6820" stroke-width="0.6" opacity="0.16"/>
+    <path d="M0,580 Q60,560 120,575 Q180,590 240,572 Q300,554 350,568 Q400,582 440,566" fill="none" stroke="#7a5c10" stroke-width="0.6" opacity="0.14"/>
+    <path d="M760,640 Q820,618 880,634 Q940,650 1000,632 Q1060,614 1120,628 Q1160,638 1200,630" fill="none" stroke="#7a5c10" stroke-width="0.6" opacity="0.14"/>
+    <line x1="0" y1="200" x2="1200" y2="200" stroke="#9a7420" stroke-width="0.3" opacity="0.08" stroke-dasharray="4 8"/>
+    <line x1="0" y1="400" x2="1200" y2="400" stroke="#9a7420" stroke-width="0.3" opacity="0.08" stroke-dasharray="4 8"/>
+    <line x1="0" y1="600" x2="1200" y2="600" stroke="#9a7420" stroke-width="0.3" opacity="0.08" stroke-dasharray="4 8"/>
+    <line x1="300" y1="0" x2="300" y2="800" stroke="#9a7420" stroke-width="0.3" opacity="0.08" stroke-dasharray="4 8"/>
+    <line x1="600" y1="0" x2="600" y2="800" stroke="#9a7420" stroke-width="0.3" opacity="0.08" stroke-dasharray="4 8"/>
+    <line x1="900" y1="0" x2="900" y2="800" stroke="#9a7420" stroke-width="0.3" opacity="0.08" stroke-dasharray="4 8"/>
+    <g transform="translate(960, 180)" opacity="0.06">
+      <circle cx="0" cy="0" r="90" stroke="#8a6820" stroke-width="0.8" fill="none"/>
+      <circle cx="0" cy="0" r="70" stroke="#8a6820" stroke-width="0.5" fill="none"/>
+      <circle cx="0" cy="0" r="40" stroke="#8a6820" stroke-width="0.4" stroke-dasharray="3 4" fill="none"/>
+      <polygon points="0,-90 5,-60 0,-65 -5,-60" fill="#8a6820"/>
+      <polygon points="0,90 5,60 0,65 -5,60" fill="#8a6820"/>
+      <polygon points="-90,0 -60,5 -65,0 -60,-5" fill="#8a6820"/>
+      <polygon points="90,0 60,5 65,0 60,-5" fill="#8a6820"/>
+      <line x1="-64" y1="-64" x2="-44" y2="-44" stroke="#8a6820" stroke-width="0.5"/>
+      <line x1="64" y1="-64" x2="44" y2="-44" stroke="#8a6820" stroke-width="0.5"/>
+      <line x1="-64" y1="64" x2="-44" y2="44" stroke="#8a6820" stroke-width="0.5"/>
+      <line x1="64" y1="64" x2="44" y2="44" stroke="#8a6820" stroke-width="0.5"/>
+    </g>
+    <g transform="translate(180, 620)" opacity="0.05">
+      <circle cx="0" cy="0" r="70" stroke="#8a6820" stroke-width="0.6" fill="none"/>
+      <circle cx="0" cy="0" r="50" stroke="#8a6820" stroke-width="0.4" fill="none"/>
+      <polygon points="0,-70 4,-45 0,-50 -4,-45" fill="#8a6820"/>
+      <polygon points="0,70 4,45 0,50 -4,45" fill="#8a6820"/>
+      <polygon points="-70,0 -45,4 -50,0 -45,-4" fill="#8a6820"/>
+      <polygon points="70,0 45,4 50,0 45,-4" fill="#8a6820"/>
+    </g>
+    <text x="420" y="380" font-family="IM Fell English, serif" font-style="italic" font-size="13" fill="#8a6820" opacity="0.1" transform="rotate(-5, 420, 380)">Mare Pacificum</text>
+    <text x="680" y="500" font-family="IM Fell English, serif" font-style="italic" font-size="11" fill="#8a6820" opacity="0.08" transform="rotate(3, 680, 500)">Terra Mexicana</text>
+    <text x="900" y="300" font-family="IM Fell English, serif" font-style="italic" font-size="10" fill="#8a6820" opacity="0.08">Sinus Mexicanus</text>
+  </svg>
+</div>
+
+<!-- Capa pergamino sobre el mapa -->
+<div class="pergamino-overlay"></div>
+
+<!-- Marco cartográfico -->
 <div class="map-frame">
   <div class="map-frame-outer"></div>
   <div class="map-frame-inner"></div>
-  <!-- ticks de graduación -->
   <div class="tick tick-h"  style="left:20%"></div>
   <div class="tick tick-h"  style="left:40%"></div>
   <div class="tick tick-h"  style="left:60%"></div>
@@ -470,83 +504,74 @@ body::after {
   <div class="tick tick-vr" style="top:75%"></div>
 </div>
 
-<!-- ══ Esquinas ornamentales ══ -->
+<!-- Esquinas -->
 <div class="corner corner-tl">
-  <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-    <path d="M2 50 L2 2 L50 2" stroke="#8a7850" stroke-width="1" fill="none"/>
-    <path d="M2 2 L14 14" stroke="#c49a3c" stroke-width="0.6" opacity="0.5"/>
-    <circle cx="2"  cy="2"  r="2.5" fill="#8a7850"/>
-    <circle cx="10" cy="2"  r="1.2" fill="#c49a3c" opacity="0.45"/>
-    <circle cx="2"  cy="10" r="1.2" fill="#c49a3c" opacity="0.45"/>
-    <circle cx="18" cy="2"  r="0.8" fill="#8a7850" opacity="0.3"/>
-    <circle cx="2"  cy="18" r="0.8" fill="#8a7850" opacity="0.3"/>
-    <line x1="2" y1="26" x2="8" y2="26" stroke="#8a7850" stroke-width="0.5" opacity="0.4"/>
-    <line x1="26" y1="2" x2="26" y2="8" stroke="#8a7850" stroke-width="0.5" opacity="0.4"/>
+  <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+    <path d="M2 52 L2 2 L52 2" stroke="#8a7040" stroke-width="1" fill="none"/>
+    <path d="M2 2 L16 16" stroke="#c49a3c" stroke-width="0.6" opacity="0.4"/>
+    <circle cx="2"  cy="2"  r="2.5" fill="#8a7040"/>
+    <circle cx="12" cy="2"  r="1.2" fill="#c49a3c" opacity="0.4"/>
+    <circle cx="2"  cy="12" r="1.2" fill="#c49a3c" opacity="0.4"/>
+    <circle cx="22" cy="2"  r="0.8" fill="#8a7040" opacity="0.25"/>
+    <circle cx="2"  cy="22" r="0.8" fill="#8a7040" opacity="0.25"/>
+    <line x1="2" y1="30" x2="9"  y2="30" stroke="#8a7040" stroke-width="0.5" opacity="0.3"/>
+    <line x1="30" y1="2" x2="30" y2="9"  stroke="#8a7040" stroke-width="0.5" opacity="0.3"/>
   </svg>
 </div>
 <div class="corner corner-tr">
-  <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-    <path d="M2 50 L2 2 L50 2" stroke="#8a7850" stroke-width="1" fill="none"/>
-    <path d="M2 2 L14 14" stroke="#c49a3c" stroke-width="0.6" opacity="0.5"/>
-    <circle cx="2"  cy="2"  r="2.5" fill="#8a7850"/>
-    <circle cx="10" cy="2"  r="1.2" fill="#c49a3c" opacity="0.45"/>
-    <circle cx="2"  cy="10" r="1.2" fill="#c49a3c" opacity="0.45"/>
+  <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+    <path d="M2 52 L2 2 L52 2" stroke="#8a7040" stroke-width="1" fill="none"/>
+    <path d="M2 2 L16 16" stroke="#c49a3c" stroke-width="0.6" opacity="0.4"/>
+    <circle cx="2" cy="2" r="2.5" fill="#8a7040"/>
+    <circle cx="12" cy="2" r="1.2" fill="#c49a3c" opacity="0.4"/>
+    <circle cx="2" cy="12" r="1.2" fill="#c49a3c" opacity="0.4"/>
   </svg>
 </div>
 <div class="corner corner-bl">
-  <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-    <path d="M2 50 L2 2 L50 2" stroke="#8a7850" stroke-width="1" fill="none"/>
-    <path d="M2 2 L14 14" stroke="#c49a3c" stroke-width="0.6" opacity="0.5"/>
-    <circle cx="2"  cy="2"  r="2.5" fill="#8a7850"/>
-    <circle cx="10" cy="2"  r="1.2" fill="#c49a3c" opacity="0.45"/>
-    <circle cx="2"  cy="10" r="1.2" fill="#c49a3c" opacity="0.45"/>
+  <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+    <path d="M2 52 L2 2 L52 2" stroke="#8a7040" stroke-width="1" fill="none"/>
+    <path d="M2 2 L16 16" stroke="#c49a3c" stroke-width="0.6" opacity="0.4"/>
+    <circle cx="2" cy="2" r="2.5" fill="#8a7040"/>
+    <circle cx="12" cy="2" r="1.2" fill="#c49a3c" opacity="0.4"/>
+    <circle cx="2" cy="12" r="1.2" fill="#c49a3c" opacity="0.4"/>
   </svg>
 </div>
 <div class="corner corner-br">
-  <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-    <path d="M2 50 L2 2 L50 2" stroke="#8a7850" stroke-width="1" fill="none"/>
-    <path d="M2 2 L14 14" stroke="#c49a3c" stroke-width="0.6" opacity="0.5"/>
-    <circle cx="2"  cy="2"  r="2.5" fill="#8a7850"/>
-    <circle cx="10" cy="2"  r="1.2" fill="#c49a3c" opacity="0.45"/>
-    <circle cx="2"  cy="10" r="1.2" fill="#c49a3c" opacity="0.45"/>
+  <svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+    <path d="M2 52 L2 2 L52 2" stroke="#8a7040" stroke-width="1" fill="none"/>
+    <path d="M2 2 L16 16" stroke="#c49a3c" stroke-width="0.6" opacity="0.4"/>
+    <circle cx="2" cy="2" r="2.5" fill="#8a7040"/>
+    <circle cx="12" cy="2" r="1.2" fill="#c49a3c" opacity="0.4"/>
+    <circle cx="2" cy="12" r="1.2" fill="#c49a3c" opacity="0.4"/>
   </svg>
 </div>
 
-<!-- ══ Notas al margen (como anotaciones del explorador) ══ -->
+<!-- Notas al margen -->
 <div class="marginal marginal-tl">Corpus Iuris · MMXXVI</div>
 <div class="marginal marginal-tr">Lex et Veritas</div>
-<div class="marginal marginal-bl">19°25'N · 99°08'O · México</div>
+<div class="marginal marginal-bl">19°25′N · 99°08′O · México</div>
 <div class="marginal marginal-br">Atlas Normativo · Vol. I</div>
 
-<!-- ══ CONTENIDO PRINCIPAL ══ -->
+<!-- CONTENIDO PRINCIPAL -->
 <div class="wrapper">
 
   <header class="header">
-
-    <!-- Rosa de los vientos / sello de APOLO -->
     <div class="compass-wrap">
-      <svg width="110" height="110" viewBox="0 0 80 80" fill="none">
-        <!-- círculo exterior -->
-        <circle cx="40" cy="40" r="37" stroke="#bfaa80" stroke-width="0.8" fill="none"/>
-        <!-- círculo interior -->
-        <circle cx="40" cy="40" r="30" stroke="#9a8a6a" stroke-width="0.5" fill="rgba(242,234,216,0.6)"/>
-        <!-- círculo punteado -->
-        <circle cx="40" cy="40" r="23" stroke="#9a8a6a" stroke-width="0.4" stroke-dasharray="2 3" fill="none" opacity="0.5"/>
-        <!-- puntos cardinales — rombos -->
-        <polygon points="40,6 42.5,14 40,12 37.5,14" fill="#7a5c10"/>
-        <polygon points="40,74 42.5,66 40,68 37.5,66" fill="#9a8a6a" opacity="0.5"/>
-        <polygon points="6,40 14,37.5 12,40 14,42.5" fill="#9a8a6a" opacity="0.5"/>
-        <polygon points="74,40 66,37.5 68,40 66,42.5" fill="#9a8a6a" opacity="0.5"/>
-        <!-- diagonales -->
-        <line x1="17" y1="17" x2="23" y2="23" stroke="#bfaa80" stroke-width="0.5" opacity="0.6"/>
-        <line x1="63" y1="17" x2="57" y2="23" stroke="#bfaa80" stroke-width="0.5" opacity="0.6"/>
-        <line x1="17" y1="63" x2="23" y2="57" stroke="#bfaa80" stroke-width="0.5" opacity="0.6"/>
-        <line x1="63" y1="63" x2="57" y2="57" stroke="#bfaa80" stroke-width="0.5" opacity="0.6"/>
-        <!-- letra A (APOLO) -->
-        <text x="40" y="45" font-family="Cinzel, serif" font-size="18" font-weight="700"
+      <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
+        <circle cx="48" cy="48" r="44" stroke="#bfaa70" stroke-width="0.8" fill="none"/>
+        <circle cx="48" cy="48" r="36" stroke="#9a8050" stroke-width="0.5" fill="rgba(239,228,200,0.7)"/>
+        <circle cx="48" cy="48" r="27" stroke="#9a8050" stroke-width="0.3" stroke-dasharray="2.5 3" fill="none" opacity="0.5"/>
+        <polygon points="48,8 51,22 48,19 45,22" fill="#7a5c10"/>
+        <polygon points="48,88 51,74 48,77 45,74" fill="#9a8050" opacity="0.45"/>
+        <polygon points="8,48 22,45 19,48 22,51"  fill="#9a8050" opacity="0.45"/>
+        <polygon points="88,48 74,45 77,48 74,51"  fill="#9a8050" opacity="0.45"/>
+        <line x1="20" y1="20" x2="29" y2="29" stroke="#bfaa70" stroke-width="0.5" opacity="0.5"/>
+        <line x1="76" y1="20" x2="67" y2="29" stroke="#bfaa70" stroke-width="0.5" opacity="0.5"/>
+        <line x1="20" y1="76" x2="29" y2="67" stroke="#bfaa70" stroke-width="0.5" opacity="0.5"/>
+        <line x1="76" y1="76" x2="67" y2="67" stroke="#bfaa70" stroke-width="0.5" opacity="0.5"/>
+        <text x="48" y="53" font-family="Cinzel, serif" font-size="20" font-weight="700"
               fill="#7a5c10" text-anchor="middle" dominant-baseline="middle">A</text>
-        <!-- punto central -->
-        <circle cx="40" cy="40" r="2" fill="#7a5c10" opacity="0.3"/>
+        <circle cx="48" cy="48" r="2" fill="#7a5c10" opacity="0.25"/>
       </svg>
     </div>
 
@@ -562,18 +587,25 @@ body::after {
     </div>
 
     <p class="header-tagline">La norma, exacta. Derecho real. Sin alucinar.</p>
-    <p class="header-apolo">Apolo cita el artículo · Tú navegas la ley</p>
-
+    <p class="header-sub">Apolo cita el artículo · Tú navegas la ley</p>
   </header>
 
-  <!-- ══ Puertas ══ -->
+  <!-- INTRODUCCIÓN -->
+  <div class="intro">
+    <p class="intro-text">
+      Como los primeros cartógrafos que trazaron el territorio desconocido,
+      <em>APOLO</em> mapea el corpus legal artículo por artículo.
+      Cada respuesta cita la fuente exacta de la ley vigente.
+      Sin rodeos, sin invención. Elige tu forma de explorar.
+    </p>
+  </div>
+
+  <!-- PUERTAS -->
   <div class="puertas-wrap">
 
-    <!-- I — Ciudadano -->
     <a href="ciudadano.html" class="puerta puerta-i">
       <span class="puerta-num">I</span>
       <div class="puerta-nota">Acceso Civil</div>
-
       <div class="puerta-sello">Ciudadano</div>
       <h2 class="puerta-titulo">Tengo una duda legal</h2>
       <p class="puerta-desc">
@@ -583,23 +615,20 @@ body::after {
       </p>
       <div class="puerta-rule"></div>
       <div class="puerta-cta">
-        <span>Comenzar consulta</span>
+        <span>Iniciar expedición</span>
         <div class="cta-arrow"></div>
       </div>
     </a>
 
-    <!-- Meridiano separador -->
     <div class="meridiano">
       <div class="meridiano-line"></div>
       <div class="meridiano-text">vel</div>
       <div class="meridiano-line"></div>
     </div>
 
-    <!-- II — Abogado -->
     <a href="abogado.html" class="puerta puerta-ii">
       <span class="puerta-num">II</span>
       <div class="puerta-nota">Acceso Pro</div>
-
       <div class="puerta-sello">Abogado · Pro</div>
       <h2 class="puerta-titulo">Soy profesional del derecho</h2>
       <p class="puerta-desc">
@@ -609,20 +638,18 @@ body::after {
       </p>
       <div class="puerta-rule"></div>
       <div class="puerta-cta">
-        <span>Acceso profesional</span>
+        <span>Trazar ruta normativa</span>
         <div class="cta-arrow"></div>
       </div>
     </a>
 
   </div>
 
-  <!-- ══ Pie de página ══ -->
   <footer class="footer">
     <p class="footer-coord">19°25′N &nbsp;·&nbsp; 99°08′O &nbsp;·&nbsp; República Mexicana &nbsp;·&nbsp; MMXXVI</p>
     <p class="footer-copy">Legal Atlas Engineering &copy; 2026</p>
   </footer>
 
 </div>
-
 </body>
 </html>
