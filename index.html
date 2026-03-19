@@ -1,450 +1,214 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-   <title>Legal Atlas | Motor APOLO</title>
-   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-   <style>
-    :root {
-        --white: #ffffff;
-        --stone-light: #f4f4f0;
-        --stone-dark: #1a1a1a;
-        --text-main: #1c1c1c;
-        --text-muted: #8a8a82;
-        --accent-gold: #b8973d;
-        --border-stone: #e5e5e0;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legal Atlas</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
     body {
-        background-color: var(--stone-light);
-        color: var(--text-main);
-        font-family: 'Inter', sans-serif;
-        height: 100vh;
-        display: flex;
-        overflow: hidden;
+      background: var(--bg-dark);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    /* --- SIDEBAR --- */
-    aside {
-        width: 320px;
-        background-color: var(--stone-dark);
-        color: var(--white);
-        padding: 40px 30px;
-        display: flex;
-        flex-direction: column;
-        border-right: 1px solid rgba(255,255,255,0.05);
+    /* ── Header ── */
+    .top-bar {
+      display: flex;
+      justify-content: center;
+      padding: 40px 24px 0;
     }
 
-    .logo-section { margin-bottom: 50px; }
-    .logo-section h1 {
-        font-family: 'Cinzel', serif;
-        font-size: 1.1rem;
-        letter-spacing: 0.3em;
-        color: var(--white);
-        font-weight: 700;
-    }
-    .logo-section h1 span { color: var(--text-muted); font-weight: 400; }
-    .logo-section .subtitle {
-        color: var(--accent-gold);
-        font-size: 0.6rem;
-        letter-spacing: 0.4em;
-        text-transform: uppercase;
-        display: block;
-        margin-top: 8px;
+    /* ── Hero ── */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px 24px;
+      text-align: center;
     }
 
-    /* --- BOTÓN PRO --- */
-    .btn-pro-access {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
-        border: 1px solid rgba(184, 151, 61, 0.3);
-        padding: 14px 18px;
-        border-radius: 12px;
-        margin-top: 25px;
-        text-decoration: none;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        position: relative;
-        overflow: hidden;
+    .hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      font-weight: 600;
     }
 
-    .btn-pro-access:hover {
-        transform: translateY(-2px);
-        border-color: var(--accent-gold);
-        box-shadow: 0 10px 20px rgba(184, 151, 61, 0.15);
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .hero-title span { color: var(--gold); }
+
+    .hero-sub {
+      font-size: 14px;
+      color: var(--text-light);
+      max-width: 420px;
+      line-height: 1.7;
+      margin-bottom: 56px;
     }
 
-    .pro-content { display: flex; align-items: center; gap: 12px; }
-    .pro-content i { color: var(--accent-gold); font-size: 14px; filter: drop-shadow(0 0 5px rgba(184, 151, 61, 0.4)); }
-    .pro-content span { color: var(--white); font-size: 11px; letter-spacing: 0.1em; font-weight: 500; }
-    .pro-content strong { color: var(--accent-gold); font-weight: 800; }
-    
-    .btn-pro-access .arrow { color: rgba(255,255,255,0.2); font-size: 10px; transition: transform 0.3s ease; }
-    .btn-pro-access:hover .arrow { transform: translateX(3px); color: var(--accent-gold); }
-
-    .btn-pro-access::after {
-        content: '';
-        position: absolute;
-        top: -50%; left: -50%;
-        width: 200%; height: 200%;
-        background: linear-gradient(45deg, transparent, rgba(184, 151, 61, 0.1), transparent);
-        transform: rotate(45deg);
-        transition: 0.6s;
-    }
-    .btn-pro-access:hover::after { left: 100%; }
-
-    /* --- NAVEGACIÓN Y CONFIG --- */
-    .nav-buttons { margin-bottom: 40px; }
-    .nav-btn-contact {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
-        color: var(--white);
-        padding: 12px 15px;
-        border-radius: 8px;
-        font-size: 10px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.2em;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        transition: all 0.3s ease;
-    }
-    .nav-btn-contact i { margin-right: 10px; color: var(--accent-gold); }
-    .nav-btn-contact:hover { background: rgba(255,255,255,0.1); }
-
-    .config-group { flex-grow: 1; }
-    label {
-        display: block;
-        font-size: 9px;
-        text-transform: uppercase;
-        letter-spacing: 0.2em;
-        color: var(--text-muted);
-        margin-bottom: 12px;
-        font-weight: 700;
+    /* ── Tarjetas de puerta ── */
+    .puertas {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
     }
 
-    select {
-        width: 100%;
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(255,255,255,0.1);
-        color: var(--white);
-        padding: 14px 40px 14px 16px;
-        border-radius: 10px;
-        margin-bottom: 18px;
-        font-size: 11px;
-        font-family: 'Inter', sans-serif;
-        outline: none;
-        cursor: pointer;
-        appearance: none;
-        background-image: linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.12) 50%), linear-gradient(135deg, rgba(255,255,255,0.12) 50%, transparent 50%);
-        background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px);
-        background-size: 6px 6px, 6px 6px;
-        background-repeat: no-repeat;
-    }
-    select option { color: #111111; background-color: #ffffff; }
-
-    .footer-tag {
-        margin-top: 28px;
-        font-size: 10px;
-        letter-spacing: 0.18em;
-        color: rgba(255,255,255,0.32);
-        text-align: center;
-        font-weight: 600;
+    @media (min-width: 600px) {
+      .puertas { grid-template-columns: 1fr 1fr; }
     }
 
-    /* --- ÁREA DE CHAT --- */
-    main { flex-grow: 1; display: flex; flex-direction: column; padding: 60px; }
-    #mensajes {
-        flex-grow: 1;
-        overflow-y: auto;
-        max-width: 900px;
-        margin: 0 auto;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 40px;
-    }
-    .mensaje { line-height: 1.8; font-size: 15px; max-width: 85%; padding: 15px; border-radius: 12px; }
-    .asistente { background: var(--white); align-self: flex-start; border: 1px solid var(--border-stone); }
-    .usuario { background: var(--stone-dark); color: var(--white); align-self: flex-end; }
-
-    .input-container { max-width: 900px; margin: 0 auto; width: 100%; padding-top: 40px; }
-    .input-wrapper {
-        background: var(--white);
-        border: 1px solid var(--border-stone);
-        padding: 8px;
-        border-radius: 20px;
-        display: flex;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-        margin-bottom: 25px;
-    }
-    input { flex-grow: 1; border: none; padding: 15px 25px; font-size: 16px; outline: none; background: transparent; }
-
-    button#enviar {
-        background-color: var(--stone-dark);
-        color: var(--white);
-        border: none; width: 55px; height: 55px;
-        border-radius: 15px; cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex; align-items: center; justify-content: center;
-    }
-    button#enviar:hover { background-color: var(--accent-gold); transform: scale(1.05); }
-
-    /* --- TARJETA DEL DIRECTORIO --- */
-    .directory-card {
-        background: var(--white);
-        border: 1px solid var(--border-stone);
-        border-radius: 16px;
-        padding: 25px;
-        display: flex;
-        gap: 20px;
-        align-items: flex-start;
-        margin-top: 40px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    .puerta {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      text-decoration: none;
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
     }
 
-    .directory-icon {
-        background: var(--stone-light);
-        color: var(--accent-gold);
-        width: 45px;
-        height: 45px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        flex-shrink: 0;
+    .puerta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-lg);
+      border: 1px solid transparent;
+      transition: border-color 0.3s;
     }
 
-    .directory-content h4 {
-        font-size: 14px;
-        font-weight: 700;
-        margin-bottom: 6px;
-        letter-spacing: -0.01em;
+    .puerta:hover { transform: translateY(-4px); box-shadow: var(--shadow-gold); }
+    .puerta:hover::before { border-color: var(--gold-border); }
+
+    .puerta-icono {
+      width: 48px; height: 48px;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+    }
+    .puerta-ciudadano .puerta-icono { background: rgba(196,154,60,0.12); color: var(--gold); }
+    .puerta-abogado  .puerta-icono { background: rgba(255,255,255,0.06); color: var(--white); }
+
+    .puerta-tag {
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
     }
 
-    .directory-content p {
-        font-size: 13px;
-        color: var(--text-muted);
-        margin-bottom: 18px;
-        line-height: 1.5;
+    .puerta h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      line-height: 1.3;
     }
 
-    .directory-link-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 20px;
-        border: 1.5px solid var(--stone-dark);
-        border-radius: 8px;
-        color: var(--stone-dark);
-        text-decoration: none;
-        font-size: 10px;
-        font-weight: 800;
-        letter-spacing: 0.1em;
-        transition: all 0.3s ease;
+    .puerta p {
+      font-size: 12px;
+      color: var(--text-light);
+      line-height: 1.6;
+      flex: 1;
     }
 
-    .directory-link-btn:hover {
-        background: var(--stone-dark);
-        color: var(--white);
-        transform: translateY(-2px);
+    .puerta-cta {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: gap 0.2s;
+    }
+    .puerta-ciudadano .puerta-cta { color: var(--gold); }
+    .puerta-abogado  .puerta-cta { color: rgba(255,255,255,0.5); }
+    .puerta:hover .puerta-cta { gap: 12px; }
+
+    .puerta-ciudadano {
+      border-color: var(--gold-border);
     }
 
-    .directory-link-btn i { font-size: 9px; transition: transform 0.3s ease; }
-    .directory-link-btn:hover i { transform: translateX(4px); }
-
-    /* --- RESPONSIVE --- */
-    @media (max-width: 768px) {
-        body { flex-direction: column; overflow-y: auto; height: auto; }
-        aside { width: 100%; padding: 30px; max-height: 45vh; overflow-y: auto; }
-        main { padding: 20px !important; height: auto; min-height: 55vh; }
-        #mensajes { min-height: 40vh; }
-        
-        /* Ajuste para la tarjeta en móvil */
-        .directory-card {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
+    /* ── Footer ── */
+    footer {
+      padding: 28px 24px;
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--text-dim);
+      font-weight: 600;
+      border-top: 1px solid var(--border-dark);
     }
-   </style>
+  </style>
 </head>
 <body>
-<aside>
-    <div class="logo-section">
-        <h1>LEGAL<span>ATLAS</span></h1>
-        <span class="subtitle">Motor Normativo APOLO</span>
 
-        <a href="/pro.html" class="btn-pro-access">
-            <div class="pro-content">
-                <i class="fas fa-crown"></i>
-                <span>LEGAL ATLAS <strong>PRO</strong></span>
-            </div>
-            <i class="fas fa-chevron-right arrow"></i>
-        </a>
-
+  <div class="top-bar">
+    <div>
+      <div class="logo-mark">LEGAL<span>ATLAS</span></div>
+      <span class="logo-sub">Motor Normativo APOLO</span>
     </div>
+  </div>
 
-    <div class="nav-buttons">
-        <a href="mailto:soporte@legalatlas.ai" class="nav-btn-contact">
-            <i class="fas fa-envelope"></i> Escríbenos
-        </a>
-    </div>
+  <section class="hero">
+    <p class="hero-eyebrow">Derecho real. Sin alucinar.</p>
+    <h1 class="hero-title">La norma,<br><span>exacta.</span></h1>
+    <p class="hero-sub">APOLO cita artículos reales con jerarquía normativa. No interpreta. No inventa. Consulta.</p>
 
-    <div class="consulta-config">
-        <div class="config-group">
-            <label for="pais">Jurisdicción</label>
-            <select id="pais">
-                <option value="">SELECCIONE PAÍS...</option>
-                <option value="mexico">MÉXICO</option>
-                <option value="usa">USA</option>
-                <option value="chequia">CHEQUIA</option>
-                <option value="uruguay">URUGUAY</option>
-                <option value="espana">ESPAÑA</option>
-            </select>
+    <div class="puertas">
+
+      <!-- Puerta ciudadano -->
+      <a href="ciudadano.html" class="puerta puerta-ciudadano">
+        <div class="puerta-icono"><i class="fas fa-user"></i></div>
+        <span class="puerta-tag">Ciudadano</span>
+        <h2>Tengo una duda legal</h2>
+        <p>Pregunta en tus propias palabras. APOLO te explica qué dice la ley y cita el artículo exacto.</p>
+        <div class="puerta-cta">
+          Comenzar consulta <i class="fas fa-arrow-right"></i>
         </div>
+      </a>
 
-        <div class="config-group" id="group-estado" style="display: none;">
-            <label for="estado">Estado / Provincia</label>
-            <select id="estado"></select>
-    </div>
-
-        <div class="config-group">
-            <label for="tema">Materia</label>
-            <select id="tema">
-                <option value="">SELECCIONE TEMA...</option>
-                <option value="arrendamiento">Arrendamiento</option>
-                <option value="despido">Despido</option>
-                <option value="civil">Civil</option>
-            </select>
+      <!-- Puerta abogado -->
+      <a href="abogado.html" class="puerta puerta-abogado">
+        <div class="puerta-icono"><i class="fas fa-balance-scale"></i></div>
+        <span class="puerta-tag">Abogado</span>
+        <h2>Soy profesional del derecho</h2>
+        <p>Búsqueda directa por artículo, materia y jurisdicción. Múltiples estados en paralelo.</p>
+        <div class="puerta-cta">
+          Acceso profesional <i class="fas fa-arrow-right"></i>
         </div>
+      </a>
+
     </div>
+  </section>
 
-    <div class="footer-tag">
-        LEGAL ATLAS ENGINEERING © 2026
-    </div>
-</aside>
-
-<main>
-    <div id="mensajes">
-        <div class="mensaje asistente">
-            <strong>Sistemas operativos. Soy APOLO.</strong><br>
-            Analizo la norma con rigor y consistencia continental. Por favor, describa su consulta para iniciar el procesamiento jurídico.
-        </div>
-    </div>
-
-    <div class="input-container">
-        <div id="fuente-oficial-display" style="display: none; font-size: 10px; color: var(--accent-gold); letter-spacing: 0.1em; margin-bottom: 12px; font-weight: 700; text-transform: uppercase;">
-            <i class="fas fa-book"></i> Cargando base legal...
-        </div>
-
-        <div class="input-wrapper">
-            <input type="text" id="pregunta" placeholder="Consulte la norma..." autocomplete="off">
-            <button id="enviar">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </div>
-
-        <div class="directory-card">
-    <div class="directory-icon">
-        <i class="fas fa-balance-scale"></i>
-    </div>
-    <div class="directory-content">
-        <h4>¿Necesitas representación legal?</h4>
-        <p>Si buscas que un abogado lleve tu caso, consulta nuestra red de especialistas certificados.</p>
-        <a href="directorio.html" class="directory-link-btn">
-            EXPLORAR DIRECTORIO <i class="fas fa-arrow-right"></i>
-        </a>
-    </div>
-</div>
-</main>
-
- 
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const selectPais = document.getElementById('pais');
-  const selectEstado = document.getElementById('estado');
-  const groupEstado = document.getElementById('group-estado');
-
-  // Fallback mínimo para mostrar estados si no hay JSON cargado
-  const FALLBACK_ESTADOS = {
-    mexico: [
-      { val: 'cdmx', nom: 'Ciudad de México' },
-      { val: 'guanajuato', nom: 'Guanajuato' },
-      { val: 'queretaro', nom: 'Querétaro' },
-      // puedes añadir más aquí
-    ],
-    usa: [
-      { val: 'ca', nom: 'California' },
-      { val: 'ny', nom: 'New York' },
-      { val: 'tx', nom: 'Texas' },
-      // ejemplo; añade los que necesites
-    ]
-  };
-
-  // Comprueba si la configuración global existe (tu app.js la carga en DATA_JURISDICCIONES)
-  function getConfigForPais(pais) {
-    try {
-      if (window.DATA_JURISDICCIONES && window.DATA_JURISDICCIONES[pais]) {
-        return window.DATA_JURISDICCIONES[pais];
-      }
-    } catch (e) { /* ignore */ }
-    return null;
-  }
-
-  function mostrarEstadosParaPais(pais) {
-    const config = getConfigForPais(pais);
-    let estados = [];
-
-    if (config && config.esFederal && Array.isArray(config.estados) && config.estados.length) {
-      estados = config.estados.map(e => ({ val: e.val, nom: e.nom }));
-    } else if (FALLBACK_ESTADOS[pais]) {
-      estados = FALLBACK_ESTADOS[pais];
-    }
-
-    if (estados.length) {
-      // poblar select
-      selectEstado.innerHTML = '<option value="">SELECCIONE...</option>';
-      estados.forEach(e => {
-        const opt = document.createElement('option');
-        opt.value = e.val;
-        opt.textContent = e.nom;
-        selectEstado.appendChild(opt);
-      });
-      groupEstado.style.display = 'block';
-      // ajustar color si usas el script de estilos
-      selectEstado.style.color = !selectEstado.value ? 'rgba(255,255,255,0.5)' : '#ffffff';
-    } else {
-      // ocultar si no hay estados
-      selectEstado.innerHTML = '';
-      groupEstado.style.display = 'none';
-    }
-  }
-
-  // Evento al cambiar país
-  selectPais.addEventListener('change', () => {
-    const pais = selectPais.value;
-    mostrarEstadosParaPais(pais);
-  });
-
-  // Si ya hay un país seleccionado al cargar la página, mostrar estados
-  if (selectPais.value) {
-    mostrarEstadosParaPais(selectPais.value);
-  }
-});
-
-</script>
-
-<!-- AQUÍ, FUERA del script inline -->
-<script type="module" src="./src/app.js"></script>
+  <footer>LEGAL ATLAS ENGINEERING © 2026</footer>
 
 </body>
 </html>
