@@ -5,7 +5,7 @@ const supabase = createClient(
   process.env.SUPABASE_KEY
 )
 
-export async function buscarArticulos(pregunta, estado, ley = 'Código Civil', limite = 5) {
+export async function buscarArticulos(pregunta, estado, ley = 'Código Civil', limite = 10) {
   // 1. Vectorizar la pregunta con gemini-embedding-001
   const embedRes = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${process.env.GOOGLE_API_KEY}`,
