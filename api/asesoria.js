@@ -66,28 +66,30 @@ INSTRUCCIONES:
     }
 
     const geminiJson = await geminiRes.json()
-    const raw = geminiJson.candidates[0].content.parts[0].text
-    let parsed = JSON.parse(raw)
+    const raw = geminiJson.candidates?.[0]?.content?.parts?.[0]?.text
+    if (!raw) throw new Error('Gemini no devolvió contenido')
+    let parsed
+    try { parsed = JSON.parse(raw) }
+    catch { throw new Error('Gemini devolvió JSON inválido: ' + raw.slice(0, 120)) }
 
     // 4. Verificación cruzada — solo artículos que realmente vienen del contexto
     const articulosValidos = []
     const fuentesValidas   = []
+    const articulosBrutos  = Array.isArray(parsed.articulos) ? parsed.articulos : []
 
-    if (parsed.articulos && Array.isArray(parsed.articulos)) {
-      parsed.articulos.forEach(num => {
-        const numLimpio = normalizarNum(String(num))
-        const coincide  = contextoNorm.find(a => a.numeroLimpio === numLimpio)
-        if (coincide) {
-          articulosValidos.push(numLimpio)
-          fuentesValidas.push(`${fuente} Art. ${numLimpio}`)
-        }
-      })
-    }
+    articulosBrutos.forEach(num => {
+      const numLimpio = normalizarNum(String(num))
+      const coincide  = contextoNorm.find(a => a.numeroLimpio === numLimpio)
+      if (coincide) {
+        articulosValidos.push(numLimpio)
+        fuentesValidas.push(`${fuente} Art. ${numLimpio}`)
+      }
+    })
 
     // 5. Ajuste de confianza final
     let confianzaFinal = 'Alta'
     if (articulosValidos.length === 0) confianzaFinal = 'Baja'
-    else if (articulosValidos.length < parsed.articulos.length) confianzaFinal = 'Media'
+    else if (articulosValidos.length < articulosBrutos.length) confianzaFinal = 'Media'
 
     parsed.confianza = confianzaFinal
     parsed.articulos = articulosValidos
