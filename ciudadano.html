@@ -626,6 +626,18 @@
        JAVASCRIPT
   ════════════════════════════════ */
   <script>
+  // Captura errores JS globales y los muestra en el chat
+  window.onerror = function(msg, src, line) {
+    const wrap = document.getElementById('mensajes');
+    if (wrap) {
+      const d = document.createElement('div');
+      d.style.cssText = 'background:#fee;border:1px solid red;padding:12px;margin:8px;font-size:12px;color:#900;';
+      d.textContent = '⚠ Error JS: ' + msg + ' (línea ' + line + ')';
+      wrap.appendChild(d);
+    }
+    return false;
+  };
+
   (function () {
     console.log('[APOLO] script iniciado');
 
@@ -889,8 +901,8 @@
 
       } catch (err) {
         quitarTyping();
-        agregarMensaje('apolo', 'Hubo un error al consultar la base normativa. Intenta de nuevo.');
-        console.error(err);
+        agregarMensaje('apolo', `Error al conectar con el motor: <code style="font-size:11px;background:#eee;padding:2px 6px;">${err.message}</code><br><small>Revisa la consola (F12) para más detalles.</small>`);
+        console.error('[APOLO] fetch error:', err);
       }
 
       consultandose = false;
