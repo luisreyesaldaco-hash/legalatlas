@@ -15,12 +15,20 @@ export default async function handler(req, res) {
       apiVersion: "2024-08-01-preview"
     });
 
-    // 2. Convertimos artículos del motor (Asegúrate de usar .texto y .numero)
-const leyesTexto = contextoLegal?.length
-  ? contextoLegal
-      .map(r => `ARTÍCULO ${r.numero}: ${r.texto || "Contenido no disponible"}`)
-      .join("\n\n")
-  : "No se encontraron artículos específicos.";
+    // 2. Normalizar número de artículo a solo dígitos para que GPT pueda citarlo limpio
+    // r.numero viene como "ART. 2273.-" → extraemos "2273"
+    const normalizarNum = (n) => (n || '').replace(/\D/g, '') || n
+
+    const contextoNorm = (contextoLegal || []).map(r => ({
+      ...r,
+      numeroLimpio: normalizarNum(r.numero)
+    }))
+
+    const leyesTexto = contextoNorm.length
+      ? contextoNorm
+          .map(r => `Artículo ${r.numeroLimpio}: ${r.texto || "Contenido no disponible"}`)
+          .join("\n\n")
+      : "No se encontraron artículos específicos.";
 
 
     // 3. Prompt optimizado para APOLO
@@ -69,13 +77,13 @@ INSTRUCCIONES:
 
     if (parsed.articulos && Array.isArray(parsed.articulos)) {
       parsed.articulos.forEach(num => {
-        // Buscamos en el contexto legal que vino del motor
-        const coincide = contextoLegal.find(a => a.numero == num);
+        const numLimpio = normalizarNum(String(num))
+        const coincide = contextoNorm.find(a => a.numeroLimpio === numLimpio)
         if (coincide) {
-          articulosValidos.push(num);
-          fuentesValidas.push(`${fuente} Art. ${num}`);
+          articulosValidos.push(numLimpio)
+          fuentesValidas.push(`${fuente} Art. ${numLimpio}`)
         }
-      });
+      })
     }
 
     // 6. Ajuste de confianza final
