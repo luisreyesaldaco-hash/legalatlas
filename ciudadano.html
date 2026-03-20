@@ -601,6 +601,10 @@
           <strong>APOLO</strong>
           <span>Motor normativo en línea</span>
         </div>
+        <div id="territorio-activo" style="margin-left:auto; font-size:9px; font-family:'Cinzel',serif; letter-spacing:0.15em; text-transform:uppercase; color:var(--tinta-muted); display:flex; align-items:center; gap:6px;">
+          <i class="fas fa-map-marker-alt" style="color:var(--dorado); font-size:8px;"></i>
+          <span id="territorio-texto">Puebla · México</span>
+        </div>
       </div>
 
       <div id="mensajes">
@@ -853,7 +857,10 @@
       try {
         const paisVal   = document.getElementById('pais').value || 'mexico';
         const estadoEl  = document.getElementById('estado-chat');
-        const estadoNombre = estadoEl.selectedOptions[0]?.text?.trim() || 'Puebla';
+        const estadoVal = estadoEl.value; // e.g. 'puebla'
+        const estadoNombre = estadoVal && estadoEl.selectedOptions[0]
+          ? estadoEl.selectedOptions[0].text.trim()
+          : 'Puebla';
         const tema      = document.getElementById('tema').value || 'civil';
 
         const res = await fetch('/api/asesoria', {
@@ -954,20 +961,49 @@
 
     document.getElementById('estado-chat').addEventListener('change', function () {
       this.classList.toggle('vacio', !this.value);
+      const nombre = this.selectedOptions[0]?.text || '';
+      const pais   = document.getElementById('pais').value || 'méxico';
+      const el     = document.getElementById('territorio-texto');
+      if (el && nombre && nombre !== 'Selecciona estado...') {
+        el.textContent = nombre + ' · ' + pais.charAt(0).toUpperCase() + pais.slice(1);
+      }
     });
 
     document.getElementById('tema').addEventListener('change', function () {
       this.classList.toggle('vacio', !this.value);
     });
 
+    // ── Auto-seleccionar México / Puebla (único territorio disponible) ──
+    (function preseleccionarTerritorio() {
+      const paisSel  = document.getElementById('pais');
+      const estadoGr = document.getElementById('group-estado-chat');
+      const estadoSel = document.getElementById('estado-chat');
+      const temaSel  = document.getElementById('tema');
+
+      // Poblar y seleccionar país
+      paisSel.value = 'mexico';
+      paisSel.classList.remove('vacio');
+
+      // Poblar estados de México
+      estadoSel.innerHTML = '<option value="">Selecciona estado...</option>' +
+        ESTADOS_MX.map(e => `<option value="${e.v}">${e.n}</option>`).join('');
+      estadoGr.classList.remove('hidden');
+
+      // Seleccionar Puebla (único estado con datos en Supabase)
+      estadoSel.value = 'puebla';
+      estadoSel.classList.remove('vacio');
+
+      // Materia por defecto
+      temaSel.value = 'civil';
+      temaSel.classList.remove('vacio');
+    })();
+
     // ── Arranque ──────────────────────────────
     const perfil = getPerfil();
 
     if (perfil) {
-      // Usuario con perfil guardado → directo al chat
       irAlChat(perfil);
     } else {
-      // Usuario nuevo → pantalla de bienvenida
       mostrarScreen('screen-bienvenida');
       setTimeout(typeWriter, 600);
     }
