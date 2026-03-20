@@ -4,29 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Legal Atlas — Motor Normativo APOLO</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --p0: #f5edd8;
-  --p1: #efe4c8;
-  --p2: #e5d8b2;
-  --p3: #d8c99a;
-  --tinta:       #1e1508;
-  --tinta-soft:  #3a2e18;
-  --tinta-muted: #6e6048;
-  --sepia:       #7a5c10;
-  --sepia-md:    #9a7420;
-  --sepia-lt:    #c49a3c;
-  --borde:       #c4aa70;
-  --borde-dk:    #8a7040;
-  --gold-dim:    rgba(196,154,60,0.18);
+  --p0: #1a1a16;
+  --p1: #1a1a16;
+  --p2: #242420;
+  --p3: #2e2e28;
+  --tinta:       rgba(245,237,216,0.88);
+  --tinta-soft:  rgba(245,237,216,0.70);
+  --tinta-muted: rgba(245,237,216,0.38);
+  --sepia:       #c49a3c;
+  --sepia-md:    #d4aa4c;
+  --sepia-lt:    #e8c878;
+  --borde:       rgba(196,154,60,0.22);
+  --borde-dk:    rgba(196,154,60,0.35);
+  --gold-dim:    rgba(196,154,60,0.10);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 
 body {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: 'Lora', Georgia, serif;
   color: var(--tinta);
   min-height: 100vh;
   overflow-x: hidden;
@@ -47,15 +47,13 @@ body {
   height: 100%;
 }
 
-/* ── PERGAMINO SOBRE EL MAPA ── */
+/* ── VELO OSCURO SOBRE EL MAPA ── */
 .pergamino-overlay {
   position: fixed;
   inset: 0;
   z-index: 1;
   background:
-    radial-gradient(ellipse 70% 50% at 10% 10%, rgba(245,237,216,0.55) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 60% at 90% 85%, rgba(230,215,180,0.45) 0%, transparent 60%),
-    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(239,228,200,0.72) 20%, rgba(229,216,178,0.82) 60%, rgba(216,201,154,0.88) 100%);
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(26,26,22,0.72) 0%, rgba(26,26,22,0.92) 100%);
   pointer-events: none;
 }
 
@@ -184,7 +182,7 @@ body {
   border-top: 0.5px solid var(--borde);
   border-bottom: 0.5px solid var(--borde);
   position: relative;
-  background: rgba(245,237,216,0.5);
+  background: rgba(196,154,60,0.04);
 }
 
 .intro::before, .intro::after {
@@ -200,7 +198,7 @@ body {
 .intro::after  { bottom: -5px; }
 
 .intro-text {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Lora', serif;
   font-style: normal;
   font-size: clamp(15px, 1.8vw, 17px);
   color: var(--tinta-soft);
@@ -246,7 +244,7 @@ body {
 .puerta {
   flex: 1;
   position: relative;
-  background: rgba(245,237,216,0.88);
+  background: rgba(26,26,22,0.82);
   border: 1px solid var(--borde);
   padding: 38px 34px 34px;
   text-decoration: none;
@@ -254,6 +252,7 @@ body {
   transition: all 0.35s ease;
   display: block;
   overflow: hidden;
+  backdrop-filter: blur(4px);
 }
 
 .puerta::after {
@@ -267,12 +266,12 @@ body {
 }
 
 .puerta:hover {
-  background: rgba(239,228,200,0.96);
+  background: rgba(36,36,32,0.95);
   border-color: var(--sepia);
   transform: translateY(-4px);
-  box-shadow: 4px 8px 28px rgba(60,40,0,0.14);
+  box-shadow: 4px 8px 40px rgba(196,154,60,0.12);
 }
-.puerta:hover::after { opacity: 0.6; }
+.puerta:hover::after { opacity: 0.8; }
 
 .puerta-ii { transform: translateY(16px); }
 .puerta-ii:hover { transform: translateY(12px); }
@@ -299,7 +298,7 @@ body {
   color: var(--tinta-muted);
   letter-spacing: 0.1em;
   writing-mode: vertical-rl;
-  opacity: 0.4;
+  opacity: 0.5;
   background: var(--p2);
   border-left: 0.5px solid var(--borde);
   padding: 6px 3px;
@@ -338,11 +337,11 @@ body {
 }
 
 .puerta-desc {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Lora', serif;
   font-style: normal;
-  font-size: 17px;
+  font-size: 15px;
   color: var(--tinta-soft);
-  line-height: 1.75;
+  line-height: 1.8;
   margin-bottom: 28px;
 }
 
