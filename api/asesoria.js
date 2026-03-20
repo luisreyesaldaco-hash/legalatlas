@@ -1,8 +1,10 @@
 import { AzureOpenAI } from "openai";
+import { buscarArticulos } from "./buscar.js";
 
 export default async function handler(req, res) {
   try {
-    const { pais, estado, tema, pregunta, contextoLegal, fuente, modo } = req.body;
+    const { pais, estado, tema, pregunta, fuente, modo } = req.body;
+    const contextoLegal = await buscarArticulos(pregunta, estado);
 
     // 1. Cliente Azure (Uso de variables de entorno para evitar bloqueos de GitHub)
     // NOTA: Configura estas variables en tu panel de Vercel/Hosting

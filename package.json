@@ -1,6 +1,8 @@
 {
   "type": "module",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@supabase/supabase-js": "^2.99.3",
     "openai": "^4.0.0"
   }
 }
