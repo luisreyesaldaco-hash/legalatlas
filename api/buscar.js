@@ -6,12 +6,11 @@ const supabase = createClient(
 )
 
 export async function buscarArticulos(pregunta, estado, ley = 'Código Civil', limite = 5) {
-  const { data, error } = await supabase
-    .from('articulos')
-    .select('id_unico, numero_articulo, texto_original, libro, titulo, capitulo')
-    .eq('estado', estado)
-    .textSearch('texto_para_embedding', pregunta, { type: 'plain', config: 'spanish' })
-    .limit(limite)
+  const { data, error } = await supabase.rpc('buscar_texto', {
+    filtro_estado: estado,
+    pregunta,
+    limite
+  })
 
   if (error) throw new Error(`Supabase error: ${error.message}`)
 
