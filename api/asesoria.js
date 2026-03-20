@@ -1,4 +1,3 @@
-import { AzureOpenAI } from "openai";
 import { buscarArticulos } from "./buscar.js";
 
 export default async function handler(req, res) {
@@ -6,17 +5,7 @@ export default async function handler(req, res) {
     const { pais, estado, tema, pregunta, fuente, modo } = req.body;
     const contextoLegal = await buscarArticulos(pregunta, estado);
 
-    // 1. Cliente Azure (Uso de variables de entorno para evitar bloqueos de GitHub)
-    // NOTA: Configura estas variables en tu panel de Vercel/Hosting
-    const client = new AzureOpenAI({
-      endpoint: process.env.AZURE_OPENAI_ENDPOINT,
-      apiKey: process.env.AZURE_OPENAI_API_KEY,
-      deployment: process.env.AZURE_OPENAI_DEPLOYMENT || "gpt-4o-mini",
-      apiVersion: "2024-08-01-preview"
-    });
-
-    // 2. Normalizar número de artículo a solo dígitos para que GPT pueda citarlo limpio
-    // r.numero viene como "ART. 2273.-" → extraemos "2273"
+    // 1. Normalizar número de artículo a solo dígitos ("ART. 2273.-" → "2273")
     const normalizarNum = (n) => (n || '').replace(/\D/g, '') || n
 
     const contextoNorm = (contextoLegal || []).map(r => ({
@@ -30,55 +19,64 @@ export default async function handler(req, res) {
           .join("\n\n")
       : "No se encontraron artículos específicos.";
 
+    // 2. System prompt de Apolo
+    const systemPrompt = `Eres APOLO, un asistente legal experto para la jurisdicción de ${estado.toUpperCase()}, ${pais.toUpperCase()}.
+Tu objetivo es orientar a ciudadanos sobre sus derechos de forma clara, formal y tranquilizante.
 
-    // 3. Prompt optimizado para APOLO
-    const systemMessage = `
-Eres APOLO, un asistente legal experto para la jurisdicción de ${estado.toUpperCase()}, ${pais.toUpperCase()}.
-Tu objetivo es analizar casos y redactar documentos basados estrictamente en la ley proporcionada.
-
-MODO ACTUAL: ${modo}
 FUENTE: ${fuente}
 
 CONTEXTO LEGAL RECUPERADO:
 ${leyesTexto}
 
 INSTRUCCIONES:
-1. Si el usuario pregunta (Modo Consulta), explica de forma clara usando los artículos citados.
-2. Si el usuario pide redactar (Modo Redactar), genera un documento legal formal.
-3. Debes responder EXCLUSIVAMENTE en formato JSON con esta estructura:
+1. Explica de forma clara usando los artículos del contexto.
+2. Cita siempre el número de artículo exacto cuando lo uses.
+3. Si la información necesaria no está en los artículos proporcionados, dilo con claridad.
+4. Nunca inventes leyes, artículos ni interpretaciones.
+5. Responde EXCLUSIVAMENTE en formato JSON con esta estructura:
 {
-  "draftHtml": "Contenido principal o borrador en HTML",
+  "draftHtml": "Respuesta en HTML con párrafos y listas si aplica",
   "resumen": "Explicación breve de 2 líneas",
-  "articulos": ["1911", "1899"],
+  "articulos": ["2273", "2325"],
   "confianza": "Alta | Media | Baja",
-  "fuentes": ["Código Civil Art. 1911"]
-}
-4. No menciones artículos que no estén en el CONTEXTO LEGAL arriba.
-5. Si no hay artículos en el CONTEXTO LEGAL, responde con tus conocimientos generales pero marca confianza 'Baja'.
-`;
+  "fuentes": ["Código Civil Art. 2273"]
+}`;
 
-    // 4. Llamada al modelo
-    const completion = await client.chat.completions.create({
-      messages: [
-        { role: "system", content: systemMessage },
-        { role: "user", content: pregunta }
-      ],
-      max_tokens: 1500,
-      temperature: 0.1, // Baja temperatura para mayor precisión legal
-      response_format: { type: "json_object" } // Fuerza la salida JSON
-    });
+    // 3. Llamada a Gemini Flash
+    const geminiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GOOGLE_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: systemPrompt }] },
+          contents: [{ role: 'user', parts: [{ text: pregunta }] }],
+          generationConfig: {
+            responseMimeType: 'application/json',
+            temperature: 0.1,
+            maxOutputTokens: 1500
+          }
+        })
+      }
+    )
 
-    let raw = completion.choices[0].message.content;
-    let parsed = JSON.parse(raw);
+    if (!geminiRes.ok) {
+      const err = await geminiRes.text()
+      throw new Error(`Gemini error: ${geminiRes.status} — ${err}`)
+    }
 
-    // 5. Verificación cruzada de seguridad (Artículos reales vs inventados)
-    const articulosValidos = [];
-    const fuentesValidas = [];
+    const geminiJson = await geminiRes.json()
+    const raw = geminiJson.candidates[0].content.parts[0].text
+    let parsed = JSON.parse(raw)
+
+    // 4. Verificación cruzada — solo artículos que realmente vienen del contexto
+    const articulosValidos = []
+    const fuentesValidas   = []
 
     if (parsed.articulos && Array.isArray(parsed.articulos)) {
       parsed.articulos.forEach(num => {
         const numLimpio = normalizarNum(String(num))
-        const coincide = contextoNorm.find(a => a.numeroLimpio === numLimpio)
+        const coincide  = contextoNorm.find(a => a.numeroLimpio === numLimpio)
         if (coincide) {
           articulosValidos.push(numLimpio)
           fuentesValidas.push(`${fuente} Art. ${numLimpio}`)
@@ -86,29 +84,29 @@ INSTRUCCIONES:
       })
     }
 
-    // 6. Ajuste de confianza final
-    let confianzaFinal = "Alta";
-    if (articulosValidos.length === 0) confianzaFinal = "Baja";
-    else if (articulosValidos.length < parsed.articulos.length) confianzaFinal = "Media";
+    // 5. Ajuste de confianza final
+    let confianzaFinal = 'Alta'
+    if (articulosValidos.length === 0) confianzaFinal = 'Baja'
+    else if (articulosValidos.length < parsed.articulos.length) confianzaFinal = 'Media'
 
-    parsed.confianza = confianzaFinal;
-    parsed.articulos = articulosValidos;
-    parsed.fuentes = fuentesValidas;
+    parsed.confianza = confianzaFinal
+    parsed.articulos = articulosValidos
+    parsed.fuentes   = fuentesValidas
 
-    // 7. Respuesta al frontend
+    // 6. Respuesta al frontend
     res.status(200).json({
       respuesta: parsed,
       meta: {
         articulos_procesados: contextoLegal?.length || 0,
         modo_aplicado: modo
       }
-    });
+    })
 
   } catch (error) {
-    console.error("Error en asesoria.js:", error);
-    res.status(500).json({ 
-      error: "Error interno en el motor de IA", 
-      details: error.message 
-    });
+    console.error("Error en asesoria.js:", error)
+    res.status(500).json({
+      error: "Error interno en el motor de IA",
+      details: error.message
+    })
   }
 }
