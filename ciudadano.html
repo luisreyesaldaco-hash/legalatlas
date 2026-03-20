@@ -3,954 +3,306 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Legal Atlas — Consulta</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <title>Legal Atlas — Apolo</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── Utilidad crítica (no depende de styles.css) ── */
-    .hidden { display: none !important; }
-    .screen { min-height: 100vh; }
-
-    /* ════════════════════════════════
-       PANTALLA 1 — BIENVENIDA
-    ════════════════════════════════ */
-    #screen-bienvenida {
-      background: var(--negro);
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: #1a1a16;
+      color: rgba(245,237,216,0.88);
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 48px 24px;
-      text-align: center;
-      position: relative;
+      overflow: hidden;
     }
 
-    /* Cuadrícula topográfica de fondo */
-    #screen-bienvenida::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(196,154,60,0.04) 60px, rgba(196,154,60,0.04) 61px),
-        repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(196,154,60,0.04) 60px, rgba(196,154,60,0.04) 61px);
-      pointer-events: none;
-    }
-
-    .bienvenida-logo { margin-bottom: 36px; position: relative; }
-
-    .bienvenida-avatar {
-      width: 80px; height: 80px;
-      background: var(--dorado-dim);
-      border: 1px solid var(--dorado-borde);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.8rem;
-      color: var(--dorado);
-      margin: 0 auto 24px;
-      position: relative;
-    }
-
-    .bienvenida-titulo {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(1.6rem, 5vw, 2.6rem);
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      margin-bottom: 14px;
-      color: var(--oro-texto);
-    }
-    .bienvenida-titulo span { color: var(--dorado); }
-
-    .bienvenida-desc {
-      font-size: 15px;
-      color: var(--oro-muted);
-      max-width: 380px;
-      line-height: 1.85;
-      margin: 0 auto 36px;
-      font-style: italic;
-    }
-
-    .ejemplo-box {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--dorado-borde);
-      padding: 18px 22px;
-      max-width: 440px;
-      width: 100%;
-      margin: 0 auto 36px;
-      text-align: left;
-      min-height: 60px;
+    /* ── Topbar ── */
+    .topbar {
       display: flex;
       align-items: center;
       gap: 14px;
-    }
-    .ejemplo-box i { color: var(--dorado); font-size: 0.85rem; flex-shrink: 0; opacity: 0.7; }
-    #texto-ejemplo {
-      font-size: 14px;
-      color: var(--oro-texto);
-      line-height: 1.6;
-      font-style: italic;
-    }
-    .cursor-blink {
-      display: inline-block;
-      width: 1px; height: 14px;
-      background: var(--dorado);
-      margin-left: 2px;
-      vertical-align: middle;
-      animation: parpadeo 0.8s infinite;
-    }
-    @keyframes parpadeo { 0%,100%{opacity:1} 50%{opacity:0} }
-
-    .bienvenida-acciones {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      width: 100%;
-      max-width: 300px;
-      margin: 0 auto;
-    }
-
-    .link-tengo-cuenta {
-      font-size: 10px;
-      color: var(--oro-muted);
-      text-decoration: none;
-      letter-spacing: 0.1em;
-      margin-top: 8px;
-      font-family: 'Cinzel', serif;
-      text-transform: uppercase;
-    }
-    .link-tengo-cuenta:hover { color: var(--dorado); }
-
-    /* ════════════════════════════════
-       MODAL — REGISTRO
-    ════════════════════════════════ */
-    .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.82);
-      backdrop-filter: blur(6px);
-      z-index: 100;
-      display: flex; align-items: center; justify-content: center;
-      padding: 24px;
-    }
-
-    .modal-card {
-      background: var(--negro-soft);
-      border: 1px solid var(--dorado-borde);
-      padding: 40px 36px;
-      width: 100%;
-      max-width: 400px;
-      position: relative;
-    }
-
-    .modal-close {
-      position: absolute; top: 16px; right: 16px;
-      background: none; border: none;
-      color: var(--oro-muted); font-size: 1rem;
-      cursor: pointer; padding: 4px;
-      transition: color 0.2s;
-    }
-    .modal-close:hover { color: var(--oro-texto); }
-
-    .modal-icon {
-      width: 52px; height: 52px;
-      background: var(--dorado-dim);
-      border: 1px solid var(--dorado-borde);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--dorado); font-size: 1.2rem;
-      margin: 0 auto 20px;
-    }
-
-    .modal-titulo {
-      font-family: 'Cinzel', serif;
-      font-size: 1rem;
-      text-align: center;
-      margin-bottom: 8px;
-      letter-spacing: 0.08em;
-      color: var(--oro-texto);
-    }
-    .modal-sub {
-      font-size: 13px;
-      color: var(--oro-muted);
-      text-align: center;
-      line-height: 1.7;
-      margin-bottom: 28px;
-      font-style: italic;
-    }
-
-    .form-field { margin-bottom: 16px; }
-    .form-field label {
-      display: block; font-size: 9px; letter-spacing: 0.25em;
-      text-transform: uppercase; color: var(--dorado);
-      font-weight: 700; margin-bottom: 8px; font-family: 'Cinzel', serif;
-    }
-
-    .modal-skip {
-      display: block;
-      text-align: center;
-      font-size: 10px;
-      color: var(--oro-muted);
-      text-decoration: none;
-      margin-top: 16px;
-      cursor: pointer;
-      transition: color 0.2s;
-      font-family: 'Cinzel', serif;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-    .modal-skip:hover { color: var(--dorado); }
-
-    /* ════════════════════════════════
-       PANTALLA 2 — CHAT
-    ════════════════════════════════ */
-    #screen-chat {
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-      background: var(--negro);
-    }
-
-    /* Sidebar */
-    .sidebar { height: 100vh; overflow-y: auto; }
-
-    .sidebar-back {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--oro-muted); text-decoration: none;
-      margin-bottom: 28px;
-      transition: color 0.2s;
-      font-family: 'Cinzel', serif;
-    }
-    .sidebar-back:hover { color: var(--dorado); }
-
-    .sidebar-perfil {
-      background: var(--oro-dim);
-      border: 1px solid var(--borde-oscuro);
-      padding: 14px;
-      margin-bottom: 24px;
-      display: flex; align-items: center; gap: 12px;
-    }
-    .perfil-avatar {
-      width: 34px; height: 34px;
-      background: var(--dorado-dim);
-      border: 1px solid var(--dorado-borde);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--dorado); font-size: 0.8rem;
+      padding: 16px 28px;
+      border-bottom: 1px solid rgba(196,154,60,0.22);
+      background: #111110;
       flex-shrink: 0;
     }
-    .perfil-nombre {
-      font-size: 12px; font-weight: 600;
-      color: var(--oro-texto); font-family: 'Cinzel', serif; letter-spacing: 0.05em;
-    }
-    .perfil-estado { font-size: 10px; color: var(--oro-muted); }
-    .perfil-guest  { font-size: 11px; color: var(--oro-muted); }
-
-    .btn-registrarse-sidebar {
-      display: block;
-      background: none;
-      border: 1px solid var(--dorado-borde);
-      color: var(--dorado);
-      padding: 10px 14px;
-      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700;
-      text-align: center;
-      cursor: pointer;
-      margin-bottom: 24px;
-      transition: all 0.2s;
-      width: 100%;
+    .topbar-logo {
       font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      color: rgba(245,237,216,0.88);
     }
-    .btn-registrarse-sidebar:hover { background: var(--dorado-dim); }
-
-    /* Chat main */
-    .chat-main {
-      flex: 1;
+    .topbar-logo span { color: #c49a3c; font-weight: 400; }
+    .apolo-badge {
       display: flex;
-      flex-direction: column;
-      background: var(--pergamino);
-      overflow: hidden;
-    }
-
-    .chat-topbar {
-      padding: 18px 32px;
-      border-bottom: 1px solid var(--borde-pergamino);
-      display: flex; align-items: center; gap: 14px;
-      background: #ffffff;
-      flex-shrink: 0;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(245,237,216,0.4);
     }
     .apolo-dot {
-      width: 7px; height: 7px;
+      width: 6px; height: 6px;
       border-radius: 50%;
-      background: var(--dorado);
-      box-shadow: 0 0 8px rgba(196,154,60,0.5);
+      background: #c49a3c;
+      box-shadow: 0 0 6px rgba(196,154,60,0.6);
     }
-    .chat-topbar-info strong {
-      font-size: 12px; font-family: 'Cinzel', serif;
-      letter-spacing: 0.08em; color: var(--tinta);
+    .territorio {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: rgba(196,154,60,0.7);
+      text-transform: uppercase;
+      border: 1px solid rgba(196,154,60,0.2);
+      padding: 4px 10px;
     }
-    .chat-topbar-info span {
-      font-size: 11px; color: var(--tinta-muted);
-      display: block; font-style: italic;
+    .topbar-back {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: rgba(245,237,216,0.35);
+      text-decoration: none;
+      text-transform: uppercase;
     }
+    .topbar-back:hover { color: #c49a3c; }
 
+    /* ── Mensajes ── */
     #mensajes {
       flex: 1;
       overflow-y: auto;
-      padding: 32px;
+      padding: 32px 28px;
       display: flex;
       flex-direction: column;
       gap: 20px;
-      max-width: 820px;
-      width: 100%;
-      margin: 0 auto;
-      align-self: center;
+      background: #f5f3ee;
     }
 
-    .msg-memoria {
-      background: rgba(196,154,60,0.06);
-      border: 1px solid var(--dorado-borde);
-      padding: 14px 18px;
-      font-size: 13px;
-      color: var(--tinta);
-      display: flex; align-items: flex-start; gap: 12px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .msg-memoria:hover { background: rgba(196,154,60,0.10); }
-    .msg-memoria i { color: var(--dorado); margin-top: 2px; flex-shrink: 0; }
-    .msg-memoria strong {
-      display: block; margin-bottom: 2px;
-      font-size: 10px; letter-spacing: 0.12em; font-family: 'Cinzel', serif;
-    }
-
-    /* Input area */
-    .chat-input-area {
-      padding: 20px 32px;
-      background: #ffffff;
-      border-top: 1px solid var(--borde-pergamino);
-      flex-shrink: 0;
-    }
-
-    #fuente-display {
-      font-size: 9px;
-      color: var(--dorado);
-      letter-spacing: 0.18em;
-      font-weight: 700;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      font-family: 'Cinzel', serif;
-    }
-    #fuente-display i { margin-right: 6px; }
-
-    .input-wrapper-chat {
-      display: flex;
-      background: var(--pergamino);
-      border: 1px solid var(--borde-pergamino);
-      padding: 5px;
-      max-width: 780px;
-      margin: 0 auto;
-    }
-    .input-wrapper-chat input {
-      flex: 1;
-      border: none;
-      background: transparent;
-      padding: 12px 18px;
-      font-size: 15px;
+    .msg {
+      max-width: 75%;
+      font-size: 14px;
+      line-height: 1.8;
       font-family: 'Lora', serif;
-      outline: none;
-      color: #1c1c18 !important;
-      -webkit-text-fill-color: #1c1c18;
     }
-    .input-wrapper-chat input::placeholder { color: #6e6860; font-style: italic; }
-
-    .btn-enviar {
-      width: 46px; height: 46px;
-      background: var(--negro);
-      color: var(--dorado);
-      border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.85rem;
-      transition: all 0.25s ease;
-      flex-shrink: 0;
+    .msg-sender {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
     }
-    .btn-enviar:hover { background: var(--dorado); color: var(--negro); }
-
-    .dir-card-chat { margin-top: 8px; max-width: 820px; width: 100%; margin-left: auto; margin-right: auto; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 720px) {
-      #screen-chat {
-        flex-direction: column;
-        height: auto;
-        min-height: 100vh;
-        overflow-y: auto;
-      }
-      .sidebar {
-        width: 100%; min-width: 0;
-        height: auto;
-        padding: 24px 20px;
-        overflow-y: visible;
-      }
-      .chat-main { overflow: visible; height: auto; }
-      #mensajes { padding: 20px; max-width: 100%; }
-      .chat-input-area { padding: 16px 20px; position: sticky; bottom: 0; z-index: 10; }
-      .chat-topbar { padding: 14px 20px; }
+    .msg-apolo {
+      background: #ffffff;
+      border: 1px solid #ddd8ce;
+      border-radius: 2px 8px 8px 8px;
+      padding: 16px 20px;
+      align-self: flex-start;
+      color: #1c1c18;
     }
+    .msg-apolo .msg-sender { color: #c49a3c; }
+    .msg-usuario {
+      background: #242420;
+      color: rgba(245,237,216,0.88);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px 2px 8px 8px;
+      padding: 14px 18px;
+      align-self: flex-end;
+    }
+    .msg-usuario .msg-sender { color: rgba(245,237,216,0.4); }
 
-    select.vacio { color: var(--oro-muted); }
-
-    /* ════════════════════════════════
-       BURBUJA DE METADATA
-    ════════════════════════════════ */
-    .meta-burbuja {
+    /* Artículos citados */
+    .articulos-citados {
+      align-self: flex-start;
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      align-self: flex-start;
       margin-top: -10px;
       padding-left: 4px;
     }
-    .meta-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 9px;
+    .art-tag {
       font-family: 'Cinzel', serif;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border: 1px solid var(--borde-pergamino);
-      background: var(--pergamino-dk);
-      color: var(--tinta-muted);
-      white-space: nowrap;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+      border: 1px solid rgba(196,154,60,0.3);
+      background: rgba(196,154,60,0.06);
+      color: #c49a3c;
     }
-    .meta-tag i { font-size: 8px; opacity: 0.7; }
-    .meta-tag.tag-fuente {
-      color: var(--dorado);
-      border-color: var(--dorado-borde);
-      background: rgba(196,154,60,0.05);
+
+    /* Typing dots */
+    .typing-dots { display: flex; gap: 5px; align-items: center; padding: 4px 0; }
+    .typing-dots span {
+      width: 5px; height: 5px;
+      background: #c49a3c;
+      border-radius: 50%;
+      opacity: 0.5;
+      animation: bounce 1.2s infinite;
     }
-    .meta-tag.tag-alta { color: #4a7c59; border-color: rgba(74,124,89,0.3); background: rgba(74,124,89,0.05); }
-    .meta-tag.tag-media { color: #8a7020; border-color: rgba(138,112,32,0.3); background: rgba(138,112,32,0.05); }
-    .meta-tag.tag-baja  { color: #8a3020; border-color: rgba(138,48,32,0.3); background: rgba(138,48,32,0.05); }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30%            { transform: translateY(-5px); opacity: 1; }
+    }
+
+    /* ── Input ── */
+    .input-area {
+      flex-shrink: 0;
+      padding: 18px 28px;
+      background: #ffffff;
+      border-top: 1px solid #ddd8ce;
+    }
+    .input-row {
+      display: flex;
+      max-width: 760px;
+      margin: 0 auto;
+      background: #f5f3ee;
+      border: 1px solid #ddd8ce;
+      padding: 4px;
+    }
+    .input-row input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-family: 'Lora', serif;
+      color: #1c1c18;
+      outline: none;
+    }
+    .input-row input::placeholder { color: #6e6860; font-style: italic; }
+    .btn-enviar {
+      width: 46px; height: 46px;
+      background: #1a1a16;
+      color: #c49a3c;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .btn-enviar:hover { background: #c49a3c; color: #1a1a16; }
+    .btn-enviar:disabled { opacity: 0.4; cursor: not-allowed; }
   </style>
 </head>
 <body>
 
-  <!-- ════════════════════════════════
-       PANTALLA 1 — BIENVENIDA
-  ════════════════════════════════ -->
-  <div id="screen-bienvenida" class="screen hidden">
-
-    <div class="bienvenida-logo">
-      <div class="logo-mark">LEGAL<span>ATLAS</span></div>
+  <div class="topbar">
+    <div class="topbar-logo">LEGAL<span>ATLAS</span></div>
+    <div class="apolo-badge">
+      <div class="apolo-dot"></div>
+      APOLO · Motor normativo
     </div>
-
-    <div class="bienvenida-avatar">
-      <i class="fas fa-balance-scale"></i>
-    </div>
-
-    <h1 class="bienvenida-titulo">Soy <span>APOLO</span></h1>
-    <p class="bienvenida-desc">
-      Consulto la norma y te cito el artículo exacto. Sin inventar. Sin alucinar.<br>
-      Solo derecho real.
-    </p>
-
-    <div class="ejemplo-box">
-      <i class="fas fa-quote-left"></i>
-      <span id="texto-ejemplo"><span class="cursor-blink"></span></span>
-    </div>
-
-    <div class="bienvenida-acciones">
-      <button class="btn btn-gold" id="btn-primera-consulta" style="width:100%; font-size:12px;">
-        <i class="fas fa-arrow-right"></i> Haz tu primera consulta
-      </button>
-      <button class="btn btn-outline" id="btn-registrarse-bienvenida" style="width:100%; font-size:12px;">
-        <i class="fas fa-user-plus"></i> Registrarme
-      </button>
-      <a href="index.html" class="link-tengo-cuenta">← Volver al inicio</a>
-    </div>
-
+    <div class="territorio">📍 Puebla · México</div>
+    <a href="index.html" class="topbar-back">← Inicio</a>
   </div>
 
-  <!-- ════════════════════════════════
-       MODAL — REGISTRO
-  ════════════════════════════════ -->
-  <div id="modal-registro" class="modal-overlay hidden">
-    <div class="modal-card">
-      <button class="modal-close" id="btn-cerrar-modal"><i class="fas fa-times"></i></button>
-      <div class="modal-icon"><i class="fas fa-user-circle"></i></div>
-      <h2 class="modal-titulo">Crea tu perfil</h2>
-      <p class="modal-sub">APOLO te saludará por nombre y recordará tus consultas anteriores.</p>
+  <div id="mensajes"></div>
 
-      <form id="form-registro">
-        <div class="form-field">
-          <label for="reg-nombre">Tu nombre</label>
-          <input id="reg-nombre" type="text" class="input-dark" placeholder="Ej. María" autocomplete="given-name">
-        </div>
-        <div class="form-field">
-          <label for="reg-correo">Correo electrónico</label>
-          <input id="reg-correo" type="email" class="input-dark" placeholder="correo@ejemplo.com" autocomplete="email">
-        </div>
-        <div class="form-field">
-          <label for="reg-estado">Estado de la república</label>
-          <select id="reg-estado" class="input-dark">
-            <option value="">Selecciona tu estado...</option>
-            <option value="Aguascalientes">Aguascalientes</option>
-            <option value="Baja California">Baja California</option>
-            <option value="Baja California Sur">Baja California Sur</option>
-            <option value="Campeche">Campeche</option>
-            <option value="Chiapas">Chiapas</option>
-            <option value="Chihuahua">Chihuahua</option>
-            <option value="Ciudad de México">Ciudad de México</option>
-            <option value="Coahuila">Coahuila</option>
-            <option value="Colima">Colima</option>
-            <option value="Durango">Durango</option>
-            <option value="Guanajuato">Guanajuato</option>
-            <option value="Guerrero">Guerrero</option>
-            <option value="Hidalgo">Hidalgo</option>
-            <option value="Jalisco">Jalisco</option>
-            <option value="Estado de México">Estado de México</option>
-            <option value="Michoacán">Michoacán</option>
-            <option value="Morelos">Morelos</option>
-            <option value="Nayarit">Nayarit</option>
-            <option value="Nuevo León">Nuevo León</option>
-            <option value="Oaxaca">Oaxaca</option>
-            <option value="Puebla">Puebla</option>
-            <option value="Querétaro">Querétaro</option>
-            <option value="Quintana Roo">Quintana Roo</option>
-            <option value="San Luis Potosí">San Luis Potosí</option>
-            <option value="Sinaloa">Sinaloa</option>
-            <option value="Sonora">Sonora</option>
-            <option value="Tabasco">Tabasco</option>
-            <option value="Tamaulipas">Tamaulipas</option>
-            <option value="Tlaxcala">Tlaxcala</option>
-            <option value="Veracruz">Veracruz</option>
-            <option value="Yucatán">Yucatán</option>
-            <option value="Zacatecas">Zacatecas</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-gold" style="width:100%; margin-top:8px;">
-          Guardar perfil
-        </button>
-      </form>
-
-      <span class="modal-skip" id="btn-skip-registro">
-        Continuar sin registrarme →
-      </span>
+  <div class="input-area">
+    <div class="input-row">
+      <input type="text" id="pregunta" placeholder="Escribe tu consulta legal…" autocomplete="off">
+      <button class="btn-enviar" id="enviar" title="Enviar">&#9658;</button>
     </div>
   </div>
 
-  <!-- ════════════════════════════════
-       PANTALLA 2 — CHAT
-  ════════════════════════════════ -->
-  <div id="screen-chat" class="screen">
-
-    <aside class="sidebar">
-
-      <a href="index.html" class="sidebar-back">
-        <i class="fas fa-chevron-left"></i> Inicio
-      </a>
-
-      <div class="sidebar-logo">
-        <div class="logo-mark">LEGAL<span>ATLAS</span></div>
-        <span class="logo-sub">Motor Normativo APOLO</span>
-      </div>
-
-      <!-- Perfil (se rellena por JS) -->
-      <div id="sidebar-perfil"></div>
-
-      <!-- Jurisdicción fija — solo Puebla tiene datos en Supabase -->
-      <div class="sidebar-group">
-        <span class="sidebar-label">Jurisdicción</span>
-        <div style="
-          background: rgba(196,154,60,0.06);
-          border: 1px solid var(--dorado-borde);
-          padding: 10px 14px;
-          font-size: 12px;
-          color: var(--oro-texto);
-          font-family: 'Lora', serif;
-          display: flex; align-items: center; gap: 10px;
-        ">
-          <i class="fas fa-map-marker-alt" style="color:var(--dorado); font-size:10px;"></i>
-          <span>Puebla · México</span>
-        </div>
-        <span style="font-size:9px; color:var(--oro-muted); margin-top:6px; display:block; font-family:'Cinzel',serif; letter-spacing:0.1em;">
-          Más estados próximamente
-        </span>
-        <!-- Inputs ocultos para el JS -->
-        <input type="hidden" id="pais" value="mexico">
-        <input type="hidden" id="estado-chat" value="Puebla">
-      </div>
-
-      <input type="hidden" id="tema" value="civil">
-
-      <div class="sidebar-footer">
-        LEGAL ATLAS ENGINEERING © 2026
-      </div>
-
-    </aside>
-
-    <div class="chat-main">
-
-      <div class="chat-topbar">
-        <div class="apolo-dot"></div>
-        <div class="chat-topbar-info">
-          <strong>APOLO</strong>
-          <span>Motor normativo en línea</span>
-        </div>
-        <div id="territorio-activo" style="margin-left:auto; font-size:9px; font-family:'Cinzel',serif; letter-spacing:0.15em; text-transform:uppercase; color:var(--tinta-muted); display:flex; align-items:center; gap:6px;">
-          <i class="fas fa-map-marker-alt" style="color:var(--dorado); font-size:8px;"></i>
-          <span id="territorio-texto">Puebla · México</span>
-        </div>
-      </div>
-
-      <div id="mensajes">
-        <!-- Los mensajes se insertan aquí -->
-      </div>
-
-      <div class="chat-input-area">
-        <div id="fuente-display" class="hidden">
-          <i class="fas fa-book"></i> <span id="fuente-texto">Cargando base legal...</span>
-        </div>
-        <div class="input-wrapper-chat">
-          <input type="text" id="pregunta" placeholder="Consulte la norma..." autocomplete="off">
-          <button class="btn-enviar" id="enviar">
-            <i class="fas fa-paper-plane"></i>
-          </button>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- ════════════════════════════════
-       JAVASCRIPT
-  ════════════════════════════════ */
   <script>
-  // Captura errores JS globales y los muestra en el chat
-  window.onerror = function(msg, src, line) {
-    const wrap = document.getElementById('mensajes');
-    if (wrap) {
-      const d = document.createElement('div');
-      d.style.cssText = 'background:#fee;border:1px solid red;padding:12px;margin:8px;font-size:12px;color:#900;';
-      d.textContent = '⚠ Error JS: ' + msg + ' (línea ' + line + ')';
-      wrap.appendChild(d);
-    }
-    return false;
-  };
+    const mensajesEl = document.getElementById('mensajes');
+    const inputEl    = document.getElementById('pregunta');
+    const btnEnviar  = document.getElementById('enviar');
 
-  (function () {
-    console.log('[APOLO] script iniciado');
-
-    const STORAGE_KEY = 'la_perfil';
-
-    // ── Utilidades de estado ──────────────────
-    function getPerfil() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
-    }
-    function setPerfil(p) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
-    }
-
-    function mostrarScreen(id) {
-      ['screen-bienvenida', 'screen-chat'].forEach(s => {
-        document.getElementById(s).classList.add('hidden');
-      });
-      document.getElementById(id).classList.remove('hidden');
-    }
-
-    // ── Typewriter en pantalla de bienvenida ──
-    const EJEMPLOS = [
-      '¿Qué pasa si no me pagan el finiquito?',
-      'Me quieren desalojar, ¿qué puedo hacer?',
-      '¿Cuánto tiempo tengo para demandar?',
-      '¿Me pueden cobrar renta durante obras?',
-    ];
-
-    let ejIdx = 0, ejChar = 0, ejBorrando = false;
-    const textoEl = document.getElementById('texto-ejemplo');
-
-    function typeWriter() {
-      const txt = EJEMPLOS[ejIdx];
-      if (!ejBorrando) {
-        ejChar++;
-        textoEl.innerHTML = txt.slice(0, ejChar) + '<span class="cursor-blink"></span>';
-        if (ejChar === txt.length) {
-          ejBorrando = true;
-          setTimeout(typeWriter, 2200);
-          return;
-        }
-        setTimeout(typeWriter, 50);
-      } else {
-        ejChar--;
-        textoEl.innerHTML = txt.slice(0, ejChar) + '<span class="cursor-blink"></span>';
-        if (ejChar === 0) {
-          ejBorrando = false;
-          ejIdx = (ejIdx + 1) % EJEMPLOS.length;
-          setTimeout(typeWriter, 400);
-          return;
-        }
-        setTimeout(typeWriter, 25);
-      }
-    }
-
-    // ── Modal de registro ─────────────────────
-    function abrirModal() {
-      document.getElementById('modal-registro').classList.remove('hidden');
-    }
-    function cerrarModal() {
-      document.getElementById('modal-registro').classList.add('hidden');
-    }
-
-    document.getElementById('btn-cerrar-modal').addEventListener('click', cerrarModal);
-    document.getElementById('btn-skip-registro').addEventListener('click', () => {
-      cerrarModal();
-      irAlChat(null);
-    });
-
-    document.getElementById('form-registro').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const nombre = document.getElementById('reg-nombre').value.trim();
-      const correo = document.getElementById('reg-correo').value.trim();
-      const estado = document.getElementById('reg-estado').value;
-      if (!nombre) { document.getElementById('reg-nombre').focus(); return; }
-      const perfil = { nombre, correo, estado, consultasAnteriores: [], fechaRegistro: new Date().toISOString() };
-      setPerfil(perfil);
-      cerrarModal();
-      irAlChat(perfil);
-    });
-
-    // ── Botones de bienvenida ─────────────────
-    document.getElementById('btn-primera-consulta').addEventListener('click', () => {
-      irAlChat(getPerfil()); // null si no hay perfil
-    });
-    document.getElementById('btn-registrarse-bienvenida').addEventListener('click', () => {
-      abrirModal();
-    });
-
-    // ── Sidebar perfil ────────────────────────
-    function renderSidebarPerfil(perfil) {
-      const el = document.getElementById('sidebar-perfil');
-      if (perfil) {
-        el.innerHTML = `
-          <div class="sidebar-perfil">
-            <div class="perfil-avatar"><i class="fas fa-user"></i></div>
-            <div>
-              <div class="perfil-nombre">${perfil.nombre}</div>
-              <div class="perfil-estado">${perfil.estado || 'México'}</div>
-            </div>
-          </div>`;
-      } else {
-        el.innerHTML = `
-          <button class="btn-registrarse-sidebar" id="btn-reg-sidebar">
-            <i class="fas fa-user-plus"></i> Registrarme
-          </button>`;
-        document.getElementById('btn-reg-sidebar').addEventListener('click', abrirModal);
-      }
-    }
-
-    // ── Mensajes en el chat ───────────────────
-    function agregarMensaje(tipo, htmlContent) {
-      const wrap = document.getElementById('mensajes');
+    function agregarMensaje(tipo, html) {
       const div = document.createElement('div');
-      div.className = `msg ${tipo === 'apolo' ? 'msg-apolo' : 'msg-usuario'}`;
+      div.className = 'msg msg-' + tipo;
       const sender = tipo === 'apolo' ? 'APOLO' : 'TÚ';
-      div.innerHTML = `<div class="msg-sender">${sender}</div>${htmlContent}`;
-      wrap.appendChild(div);
-      wrap.scrollTop = wrap.scrollHeight;
-      return div;
+      div.innerHTML = '<div class="msg-sender">' + sender + '</div>' + html;
+      mensajesEl.appendChild(div);
+      mensajesEl.scrollTop = mensajesEl.scrollHeight;
+    }
+
+    function mostrarArticulos(articulos, fuentes) {
+      if (!articulos || !articulos.length) return;
+      const div = document.createElement('div');
+      div.className = 'articulos-citados';
+      div.innerHTML = articulos.map(n =>
+        '<span class="art-tag">Art. ' + n + '</span>'
+      ).join('');
+      mensajesEl.appendChild(div);
+      mensajesEl.scrollTop = mensajesEl.scrollHeight;
     }
 
     function agregarTyping() {
-      const wrap = document.getElementById('mensajes');
       const div = document.createElement('div');
+      div.id = 'typing';
       div.className = 'msg msg-apolo';
-      div.id = 'typing-indicator';
-      div.innerHTML = `<div class="msg-sender">APOLO</div><div class="typing-dots"><span></span><span></span><span></span></div>`;
-      wrap.appendChild(div);
-      wrap.scrollTop = wrap.scrollHeight;
-      return div;
+      div.innerHTML = '<div class="msg-sender">APOLO</div><div class="typing-dots"><span></span><span></span><span></span></div>';
+      mensajesEl.appendChild(div);
+      mensajesEl.scrollTop = mensajesEl.scrollHeight;
     }
 
     function quitarTyping() {
-      const t = document.getElementById('typing-indicator');
+      const t = document.getElementById('typing');
       if (t) t.remove();
     }
 
-    // ── Tarjeta de directorio ─────────────────
-    function mostrarTarjetaDirectorio() {
-      const wrap = document.getElementById('mensajes');
-      if (wrap.querySelector('.dir-card')) return; // ya está
-      const div = document.createElement('div');
-      div.className = 'dir-card dir-card-chat';
-      div.innerHTML = `
-        <div class="dir-icon"><i class="fas fa-balance-scale"></i></div>
-        <div class="dir-content">
-          <h4>¿Necesitas representación legal?</h4>
-          <p>Si buscas que un abogado lleve tu caso, consulta nuestra red de especialistas certificados.</p>
-          <a href="directorio.html" class="btn btn-ghost" style="font-size:10px; padding:10px 18px;">
-            EXPLORAR DIRECTORIO <i class="fas fa-arrow-right" style="font-size:9px;"></i>
-          </a>
-        </div>`;
-      wrap.appendChild(div);
-      wrap.scrollTop = wrap.scrollHeight;
-    }
-
-    // ── Sugerencia de consulta previa ─────────
-    function mostrarMemoria(perfil) {
-      const ult = perfil && perfil.consultasAnteriores && perfil.consultasAnteriores[perfil.consultasAnteriores.length - 1];
-      if (!ult) return;
-      const wrap = document.getElementById('mensajes');
-      const div = document.createElement('div');
-      div.className = 'msg-memoria';
-      div.innerHTML = `
-        <i class="fas fa-clock-rotate-left"></i>
-        <div>
-          <strong>Consulta reciente</strong>
-          La última vez preguntaste sobre: <em>"${ult}"</em> — ¿hubo novedades?
-        </div>`;
-      div.addEventListener('click', () => {
-        document.getElementById('pregunta').value = ult;
-        document.getElementById('pregunta').focus();
-        div.remove();
-      });
-      wrap.appendChild(div);
-    }
-
-    // ── Flujo principal ───────────────────────
-    function irAlChat(perfil) {
-      renderSidebarPerfil(perfil);
-      mostrarScreen('screen-chat');
-
-      const mensajes = document.getElementById('mensajes');
-      mensajes.innerHTML = '';
-
-      if (perfil && perfil.nombre) {
-        // Usuario registrado
-        const esSegundaVisita = perfil.consultasAnteriores && perfil.consultasAnteriores.length > 0;
-        if (esSegundaVisita) {
-          agregarMensaje('apolo', `Hola de nuevo, <strong>${perfil.nombre}</strong>. Listo para tu consulta.`);
-          mostrarMemoria(perfil);
-        } else {
-          agregarMensaje('apolo', `Hola, <strong>${perfil.nombre}</strong>. Soy APOLO.<br>Cuéntame tu duda legal en tus propias palabras y te cito la norma exacta.`);
-        }
-      } else {
-        // Sin perfil
-        agregarMensaje('apolo', '<strong>Sistemas operativos. Soy APOLO.</strong><br>Analizo la norma con rigor. Cuéntame tu duda legal.');
-      }
-    }
-
-    // ── Envío de consulta ─────────────────────
-    let consultandose = false;
-
-    async function enviarConsulta() {
-      if (consultandose) return;
-      const input = document.getElementById('pregunta');
-      const texto = input.value.trim();
+    async function enviar() {
+      const texto = inputEl.value.trim();
       if (!texto) return;
 
-      input.value = '';
+      inputEl.value = '';
+      btnEnviar.disabled = true;
       agregarMensaje('usuario', texto);
-      consultandose = true;
-      const typing = agregarTyping();
-
-      // Guardar en consultas anteriores
-      const perfil = getPerfil();
-      if (perfil) {
-        if (!perfil.consultasAnteriores) perfil.consultasAnteriores = [];
-        perfil.consultasAnteriores.push(texto);
-        if (perfil.consultasAnteriores.length > 5) perfil.consultasAnteriores.shift();
-        setPerfil(perfil);
-      }
+      agregarTyping();
 
       try {
-        const paisVal      = document.getElementById('pais').value || 'mexico';
-        const estadoNombre = document.getElementById('estado-chat').value || 'Puebla';
-        const tema         = document.getElementById('tema').value || 'civil';
-
         const res = await fetch('/api/asesoria', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            pais: paisVal,
-            estado: estadoNombre,
-            tema,
             pregunta: texto,
-            fuente: 'Código Civil',
-            modo: 'consulta'
+            estado:   'Puebla',
+            pais:     'mexico',
+            tema:     'civil',
+            fuente:   'Código Civil',
+            modo:     'consulta'
           })
         });
 
         quitarTyping();
 
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
 
         const data = await res.json();
-        const r    = data.respuesta;
+        const r = data.respuesta;
 
-        agregarMensaje('apolo', r.draftHtml || r.resumen || 'Consulta procesada.');
-        agregarMetadata({ estado: estadoNombre, pais: paisVal, articulos: r.articulos || [], fuentes: r.fuentes || [], confianza: r.confianza });
-
-        const riesgoAlto = /desaloj|desahucio|lanzamiento|despid|finiquito/i.test(texto);
-        if (riesgoAlto || r.confianza === 'Baja') {
-          setTimeout(mostrarTarjetaDirectorio, 600);
-        }
-
-        if (!getPerfil() && !document.querySelector('.btn-registrarse-sidebar')) {
-          setTimeout(abrirModal, 2000);
-        }
+        agregarMensaje('apolo', r.draftHtml || r.resumen || 'Sin respuesta.');
+        mostrarArticulos(r.articulos, r.fuentes);
 
       } catch (err) {
         quitarTyping();
-        agregarMensaje('apolo', `Error al conectar con el motor: <code style="font-size:11px;background:#eee;padding:2px 6px;">${err.message}</code><br><small>Revisa la consola (F12) para más detalles.</small>`);
-        console.error('[APOLO] fetch error:', err);
+        agregarMensaje('apolo', 'Error al conectar con el motor: ' + err.message);
       }
 
-      consultandose = false;
+      btnEnviar.disabled = false;
+      inputEl.focus();
     }
 
-    // ── Burbuja de metadata ───────────────────
-    function agregarMetadata({ estado, pais, articulos, fuentes, confianza }) {
-      if (!articulos.length && !fuentes.length) return;
-      const wrap = document.getElementById('mensajes');
-      const div  = document.createElement('div');
-      div.className = 'meta-burbuja';
-
-      const confClass = confianza === 'Alta' ? 'tag-alta' : confianza === 'Media' ? 'tag-media' : 'tag-baja';
-      const lugar = estado && estado !== 'undefined' ? estado : pais;
-
-      div.innerHTML = `
-        <span class="meta-tag"><i class="fas fa-map-marker-alt"></i>${lugar}</span>
-        ${fuentes.length ? `<span class="meta-tag tag-fuente"><i class="fas fa-book-open"></i>${fuentes[0].replace(/ Art\. .+/, '')}</span>` : ''}
-        ${articulos.length ? `<span class="meta-tag"><i class="fas fa-gavel"></i>Arts. ${articulos.join(', ')}</span>` : ''}
-        <span class="meta-tag ${confClass}"><i class="fas fa-circle" style="font-size:6px;"></i>${confianza}</span>
-      `;
-      wrap.appendChild(div);
-      wrap.scrollTop = wrap.scrollHeight;
-    }
-
-    // ── Eventos de envío ──────────────────────
-    document.getElementById('enviar').addEventListener('click', () => {
-      const v = document.getElementById('pregunta').value;
-      console.log('[APOLO] click enviar, valor input:', JSON.stringify(v));
-      enviarConsulta();
-    });
-    document.getElementById('pregunta').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarConsulta(); }
-    });
-    document.getElementById('pregunta').addEventListener('input', (e) => {
-      console.log('[APOLO] input event, valor:', JSON.stringify(e.target.value));
+    btnEnviar.addEventListener('click', enviar);
+    inputEl.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); }
     });
 
-    // (jurisdicción fija vía hidden inputs — sin listeners necesarios)
-
-    // ── Arranque — ir directo al chat ─────────
-    const perfil = getPerfil();
-    irAlChat(perfil); // siempre al chat; bienvenida solo si regresa con botón
-
-  })();
+    // Saludo inicial
+    agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Consulto el Código Civil de Puebla y te cito el artículo exacto. ¿Cuál es tu duda?');
   </script>
-
-  <!-- app.js desactivado — motor RAG conectado via /api/asesoria -->
 
 </body>
 </html>
