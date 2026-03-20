@@ -557,32 +557,36 @@
       <!-- Perfil (se rellena por JS) -->
       <div id="sidebar-perfil"></div>
 
-      <!-- Configuración de jurisdicción -->
+      <!-- Jurisdicción fija — solo Puebla tiene datos en Supabase -->
       <div class="sidebar-group">
         <span class="sidebar-label">Jurisdicción</span>
-        <select id="pais" class="input-dark vacio" style="margin-bottom:14px;">
-          <option value="">Selecciona país...</option>
-          <option value="mexico">México</option>
-          <option value="usa">USA</option>
-          <option value="chequia">Chequia</option>
-          <option value="uruguay">Uruguay</option>
-          <option value="espana">España</option>
-        </select>
-      </div>
-
-      <div class="sidebar-group hidden" id="group-estado-chat">
-        <span class="sidebar-label">Estado / Provincia</span>
-        <select id="estado-chat" class="input-dark vacio"></select>
+        <div style="
+          background: rgba(196,154,60,0.06);
+          border: 1px solid var(--dorado-borde);
+          padding: 10px 14px;
+          font-size: 12px;
+          color: var(--oro-texto);
+          font-family: 'Lora', serif;
+          display: flex; align-items: center; gap: 10px;
+        ">
+          <i class="fas fa-map-marker-alt" style="color:var(--dorado); font-size:10px;"></i>
+          <span>Puebla · México</span>
+        </div>
+        <span style="font-size:9px; color:var(--oro-muted); margin-top:6px; display:block; font-family:'Cinzel',serif; letter-spacing:0.1em;">
+          Más estados próximamente
+        </span>
+        <!-- Inputs ocultos para el JS -->
+        <input type="hidden" id="pais" value="mexico">
+        <input type="hidden" id="estado-chat" value="Puebla">
       </div>
 
       <div class="sidebar-group">
         <span class="sidebar-label">Materia</span>
-        <select id="tema" class="input-dark vacio">
-          <option value="">Selecciona tema...</option>
-          <option value="arrendamiento">Arrendamiento</option>
-          <option value="despido">Despido</option>
-          <option value="civil">Civil</option>
+        <select id="tema" class="input-dark">
+          <option value="civil" selected>Civil</option>
           <option value="familiar">Familiar</option>
+          <option value="arrendamiento">Arrendamiento</option>
+          <option value="despido">Despido / Laboral</option>
           <option value="penal">Penal</option>
         </select>
       </div>
@@ -856,13 +860,9 @@
       }
 
       try {
-        const paisVal   = document.getElementById('pais').value || 'mexico';
-        const estadoEl  = document.getElementById('estado-chat');
-        const estadoVal = estadoEl.value; // e.g. 'puebla'
-        const estadoNombre = estadoVal && estadoEl.selectedOptions[0]
-          ? estadoEl.selectedOptions[0].text.trim()
-          : 'Puebla';
-        const tema      = document.getElementById('tema').value || 'civil';
+        const paisVal      = document.getElementById('pais').value || 'mexico';
+        const estadoNombre = document.getElementById('estado-chat').value || 'Puebla';
+        const tema         = document.getElementById('tema').value || 'civil';
 
         const res = await fetch('/api/asesoria', {
           method: 'POST',
@@ -938,73 +938,7 @@
       console.log('[APOLO] input event, valor:', JSON.stringify(e.target.value));
     });
 
-    // ── Selects de jurisdicción ───────────────
-    const ESTADOS_MX = [
-      {v:'cdmx',n:'Ciudad de México'},{v:'guanajuato',n:'Guanajuato'},
-      {v:'queretaro',n:'Querétaro'},{v:'jalisco',n:'Jalisco'},
-      {v:'nuevoleon',n:'Nuevo León'},{v:'puebla',n:'Puebla'},
-    ];
-    const ESTADOS_USA = [
-      {v:'ca',n:'California'},{v:'ny',n:'New York'},{v:'tx',n:'Texas'},
-    ];
-
-    document.getElementById('pais').addEventListener('change', function () {
-      const g = document.getElementById('group-estado-chat');
-      const s = document.getElementById('estado-chat');
-      const mapa = { mexico: ESTADOS_MX, usa: ESTADOS_USA };
-      const lista = mapa[this.value];
-
-      this.classList.toggle('vacio', !this.value);
-
-      if (lista) {
-        s.innerHTML = '<option value="">Selecciona estado...</option>' +
-          lista.map(e => `<option value="${e.v}">${e.n}</option>`).join('');
-        g.classList.remove('hidden');
-        s.classList.add('vacio');
-      } else {
-        g.classList.add('hidden');
-        s.innerHTML = '';
-      }
-    });
-
-    document.getElementById('estado-chat').addEventListener('change', function () {
-      this.classList.toggle('vacio', !this.value);
-      const nombre = this.selectedOptions[0]?.text || '';
-      const pais   = document.getElementById('pais').value || 'méxico';
-      const el     = document.getElementById('territorio-texto');
-      if (el && nombre && nombre !== 'Selecciona estado...') {
-        el.textContent = nombre + ' · ' + pais.charAt(0).toUpperCase() + pais.slice(1);
-      }
-    });
-
-    document.getElementById('tema').addEventListener('change', function () {
-      this.classList.toggle('vacio', !this.value);
-    });
-
-    // ── Auto-seleccionar México / Puebla (único territorio disponible) ──
-    (function preseleccionarTerritorio() {
-      const paisSel  = document.getElementById('pais');
-      const estadoGr = document.getElementById('group-estado-chat');
-      const estadoSel = document.getElementById('estado-chat');
-      const temaSel  = document.getElementById('tema');
-
-      // Poblar y seleccionar país
-      paisSel.value = 'mexico';
-      paisSel.classList.remove('vacio');
-
-      // Poblar estados de México
-      estadoSel.innerHTML = '<option value="">Selecciona estado...</option>' +
-        ESTADOS_MX.map(e => `<option value="${e.v}">${e.n}</option>`).join('');
-      estadoGr.classList.remove('hidden');
-
-      // Seleccionar Puebla (único estado con datos en Supabase)
-      estadoSel.value = 'puebla';
-      estadoSel.classList.remove('vacio');
-
-      // Materia por defecto
-      temaSel.value = 'civil';
-      temaSel.classList.remove('vacio');
-    })();
+    // (jurisdicción fija vía hidden inputs — sin listeners necesarios)
 
     // ── Arranque — ir directo al chat ─────────
     const perfil = getPerfil();
