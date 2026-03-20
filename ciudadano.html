@@ -437,7 +437,7 @@
   <!-- ════════════════════════════════
        PANTALLA 1 — BIENVENIDA
   ════════════════════════════════ -->
-  <div id="screen-bienvenida" class="screen">
+  <div id="screen-bienvenida" class="screen hidden">
 
     <div class="bienvenida-logo">
       <div class="logo-mark">LEGAL<span>ATLAS</span></div>
@@ -541,7 +541,7 @@
   <!-- ════════════════════════════════
        PANTALLA 2 — CHAT
   ════════════════════════════════ -->
-  <div id="screen-chat" class="screen hidden">
+  <div id="screen-chat" class="screen">
 
     <aside class="sidebar">
 
@@ -998,15 +998,9 @@
       temaSel.classList.remove('vacio');
     })();
 
-    // ── Arranque ──────────────────────────────
+    // ── Arranque — ir directo al chat ─────────
     const perfil = getPerfil();
-
-    if (perfil) {
-      irAlChat(perfil);
-    } else {
-      mostrarScreen('screen-bienvenida');
-      setTimeout(typeWriter, 600);
-    }
+    irAlChat(perfil); // siempre al chat; bienvenida solo si regresa con botón
 
   })();
   </script>
