@@ -9,9 +9,9 @@ export default async function handler(req, res) {
     // 1. Cliente Azure (Uso de variables de entorno para evitar bloqueos de GitHub)
     // NOTA: Configura estas variables en tu panel de Vercel/Hosting
     const client = new AzureOpenAI({
-      endpoint: process.env.AZURE_OPENAI_ENDPOINT || "https://legalatlas-openai-sweden.openai.azure.com/",
-      apiKey: process.env.AZURE_OPENAI_API_KEY, 
-      deployment: "gpt-4o-mini",
+      endpoint: process.env.AZURE_OPENAI_ENDPOINT,
+      apiKey: process.env.AZURE_OPENAI_API_KEY,
+      deployment: process.env.AZURE_OPENAI_DEPLOYMENT || "gpt-4o-mini",
       apiVersion: "2024-08-01-preview"
     });
 

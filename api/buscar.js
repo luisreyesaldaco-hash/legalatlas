@@ -24,10 +24,13 @@ export async function buscarArticulos(pregunta, estado, ley = 'Código Civil', l
     filtro_ley:      ley,
     match_count:     limite
   })
-  if (error) throw new Error(`Supabase error: ${error.message}`)
+  if (error) {
+    console.error('Supabase RPC error:', error)
+    return [] // degradar a confianza Baja en vez de bloquear toda la respuesta
+  }
 
   // 3. Formatear compatible con asesoria.js (r.numero y r.texto)
-  return data.map(art => ({
+  return (data || []).map(art => ({
     numero:    art.numero_articulo,
     texto:     art.texto_original,
     jerarquia: [art.libro, art.titulo, art.capitulo].filter(Boolean).join(' > '),
