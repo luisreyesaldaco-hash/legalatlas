@@ -391,6 +391,41 @@
     }
 
     select.vacio { color: var(--oro-muted); }
+
+    /* ════════════════════════════════
+       BURBUJA DE METADATA
+    ════════════════════════════════ */
+    .meta-burbuja {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-self: flex-start;
+      margin-top: -10px;
+      padding-left: 4px;
+    }
+    .meta-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 9px;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid var(--borde-pergamino);
+      background: var(--pergamino-dk);
+      color: var(--tinta-muted);
+      white-space: nowrap;
+    }
+    .meta-tag i { font-size: 8px; opacity: 0.7; }
+    .meta-tag.tag-fuente {
+      color: var(--dorado);
+      border-color: var(--dorado-borde);
+      background: rgba(196,154,60,0.05);
+    }
+    .meta-tag.tag-alta { color: #4a7c59; border-color: rgba(74,124,89,0.3); background: rgba(74,124,89,0.05); }
+    .meta-tag.tag-media { color: #8a7020; border-color: rgba(138,112,32,0.3); background: rgba(138,112,32,0.05); }
+    .meta-tag.tag-baja  { color: #8a3020; border-color: rgba(138,48,32,0.3); background: rgba(138,48,32,0.05); }
   </style>
 </head>
 <body>
@@ -812,21 +847,39 @@
       }
 
       try {
-        // Aquí se conectará con src/app.js / Azure OpenAI
-        // Por ahora simulamos respuesta con formato de cita
-        await new Promise(r => setTimeout(r, 1400));
+        const paisVal   = document.getElementById('pais').value || 'mexico';
+        const estadoEl  = document.getElementById('estado-chat');
+        const estadoNombre = estadoEl.selectedOptions[0]?.text?.trim() || 'Puebla';
+        const tema      = document.getElementById('tema').value || 'civil';
+
+        const res = await fetch('/api/asesoria', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            pais: paisVal,
+            estado: estadoNombre,
+            tema,
+            pregunta: texto,
+            fuente: 'Código Civil',
+            modo: 'consulta'
+          })
+        });
+
         quitarTyping();
 
-        const pais = document.getElementById('pais').value;
-        const tema = document.getElementById('tema').value;
-        const respuesta = generarRespuestaEjemplo(texto, pais, tema);
-        agregarMensaje('apolo', respuesta.html);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        if (respuesta.riesgoAlto) {
+        const data = await res.json();
+        const r    = data.respuesta;
+
+        agregarMensaje('apolo', r.draftHtml || r.resumen || 'Consulta procesada.');
+        agregarMetadata({ estado: estadoNombre, pais: paisVal, articulos: r.articulos || [], fuentes: r.fuentes || [], confianza: r.confianza });
+
+        const riesgoAlto = /desaloj|desahucio|lanzamiento|despid|finiquito/i.test(texto);
+        if (riesgoAlto || r.confianza === 'Baja') {
           setTimeout(mostrarTarjetaDirectorio, 600);
         }
 
-        // Sugerir registro si es usuario sin perfil tras primera consulta
         if (!getPerfil() && !document.querySelector('.btn-registrarse-sidebar')) {
           setTimeout(abrirModal, 2000);
         }
@@ -834,24 +887,30 @@
       } catch (err) {
         quitarTyping();
         agregarMensaje('apolo', 'Hubo un error al consultar la base normativa. Intenta de nuevo.');
+        console.error(err);
       }
 
       consultandose = false;
     }
 
-    // Respuesta de ejemplo con formato de cita
-    function generarRespuestaEjemplo(pregunta, pais, tema) {
-      const riesgoAlto = /desaloj|desahucio|lanzamiento|despid|finiquito/i.test(pregunta);
-      let html = `He procesado tu consulta.`;
+    // ── Burbuja de metadata ───────────────────
+    function agregarMetadata({ estado, pais, articulos, fuentes, confianza }) {
+      if (!articulos.length && !fuentes.length) return;
+      const wrap = document.getElementById('mensajes');
+      const div  = document.createElement('div');
+      div.className = 'meta-burbuja';
 
-      html = `Según la normativa aplicable, tu situación está regulada por los siguientes artículos:
-        <div class="cita-articulo">
-          <div class="art-ref"><i class="fas fa-gavel" style="margin-right:6px;font-size:9px;"></i>Artículo 2398 — Código Civil Federal (México)</div>
-          <div class="art-texto">El arrendamiento es un contrato mediante el cual las partes contratantes se obligan recíprocamente, una a conceder el uso o goce temporal de una cosa, y la otra a pagar por ese uso o goce un precio cierto.</div>
-        </div>
-        <br>Si tu situación implica ${riesgoAlto ? 'un riesgo legal inminente' : 'una duda específica'}, te recomiendo precisar la jurisdicción para obtener el artículo exacto de tu estado.`;
+      const confClass = confianza === 'Alta' ? 'tag-alta' : confianza === 'Media' ? 'tag-media' : 'tag-baja';
+      const lugar = estado && estado !== 'undefined' ? estado : pais;
 
-      return { html, riesgoAlto };
+      div.innerHTML = `
+        <span class="meta-tag"><i class="fas fa-map-marker-alt"></i>${lugar}</span>
+        ${fuentes.length ? `<span class="meta-tag tag-fuente"><i class="fas fa-book-open"></i>${fuentes[0].replace(/ Art\. .+/, '')}</span>` : ''}
+        ${articulos.length ? `<span class="meta-tag"><i class="fas fa-gavel"></i>Arts. ${articulos.join(', ')}</span>` : ''}
+        <span class="meta-tag ${confClass}"><i class="fas fa-circle" style="font-size:6px;"></i>${confianza}</span>
+      `;
+      wrap.appendChild(div);
+      wrap.scrollTop = wrap.scrollHeight;
     }
 
     // ── Eventos de envío ──────────────────────
@@ -912,8 +971,7 @@
   })();
   </script>
 
-  <!-- Motor real (se conecta cuando esté configurado) -->
-  <script type="module" src="./src/app.js" onerror="console.warn('Motor no cargado')"></script>
+  <!-- app.js desactivado — motor RAG conectado via /api/asesoria -->
 
 </body>
 </html>
