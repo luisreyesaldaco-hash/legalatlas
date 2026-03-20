@@ -632,6 +632,7 @@
   ════════════════════════════════ */
   <script>
   (function () {
+    console.log('[APOLO] script iniciado');
 
     const STORAGE_KEY = 'la_perfil';
 
@@ -925,9 +926,16 @@
     }
 
     // ── Eventos de envío ──────────────────────
-    document.getElementById('enviar').addEventListener('click', enviarConsulta);
+    document.getElementById('enviar').addEventListener('click', () => {
+      const v = document.getElementById('pregunta').value;
+      console.log('[APOLO] click enviar, valor input:', JSON.stringify(v));
+      enviarConsulta();
+    });
     document.getElementById('pregunta').addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarConsulta(); }
+    });
+    document.getElementById('pregunta').addEventListener('input', (e) => {
+      console.log('[APOLO] input event, valor:', JSON.stringify(e.target.value));
     });
 
     // ── Selects de jurisdicción ───────────────
