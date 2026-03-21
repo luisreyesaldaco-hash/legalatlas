@@ -3,7 +3,7 @@ import { buscarArticulos } from "./buscar.js";
 export default async function handler(req, res) {
   try {
     const { pais, estado, tema, pregunta, fuente, modo } = req.body;
-    const contextoLegal = await buscarArticulos(pregunta, estado);
+    const contextoLegal = await buscarArticulos(pregunta, estado, fuente || 'Código Civil');
 
     // 1. Normalizar número de artículo a solo dígitos ("ART. 2273.-" → "2273")
     const normalizarNum = (n) => (n || '').replace(/\D/g, '') || n

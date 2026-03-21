@@ -61,6 +61,17 @@
       text-transform: uppercase;
       border: 1px solid rgba(196,154,60,0.2);
       padding: 4px 10px;
+      background: transparent;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .territorio option {
+      background: #111110;
+      color: rgba(245,237,216,0.88);
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
     }
     .topbar-back {
       font-family: 'Cinzel', serif;
@@ -201,7 +212,40 @@
       <div class="apolo-dot"></div>
       APOLO · Motor normativo
     </div>
-    <div class="territorio">📍 Puebla · México</div>
+    <select class="territorio" id="selector-ley">
+      <optgroup label="── FEDERAL ──">
+        <option value="CPEUM" data-estado="" data-ley="Constitución Política de los Estados Unidos Mexicanos">📜 Constitución · México</option>
+      </optgroup>
+      <optgroup label="── CÓDIGOS CIVILES ──">
+        <option value="Aguascalientes"   data-estado="Aguascalientes"   data-ley="Código Civil">📍 Aguascalientes · México</option>
+        <option value="Baja California"  data-estado="Baja California"  data-ley="Código Civil">📍 Baja California · México</option>
+        <option value="Baja California Sur" data-estado="Baja California Sur" data-ley="Código Civil">📍 Baja California Sur · México</option>
+        <option value="Campeche"         data-estado="Campeche"         data-ley="Código Civil">📍 Campeche · México</option>
+        <option value="Chiapas"          data-estado="Chiapas"          data-ley="Código Civil">📍 Chiapas · México</option>
+        <option value="Chihuahua"        data-estado="Chihuahua"        data-ley="Código Civil">📍 Chihuahua · México</option>
+        <option value="Ciudad de México" data-estado="Ciudad de México" data-ley="Código Civil">📍 Ciudad de México · México</option>
+        <option value="Coahuila"         data-estado="Coahuila"         data-ley="Código Civil">📍 Coahuila · México</option>
+        <option value="Colima"           data-estado="Colima"           data-ley="Código Civil">📍 Colima · México</option>
+        <option value="Durango"          data-estado="Durango"          data-ley="Código Civil">📍 Durango · México</option>
+        <option value="Guanajuato"       data-estado="Guanajuato"       data-ley="Código Civil">📍 Guanajuato · México</option>
+        <option value="Guerrero"         data-estado="Guerrero"         data-ley="Código Civil">📍 Guerrero · México</option>
+        <option value="Hidalgo"          data-estado="Hidalgo"          data-ley="Código Civil">📍 Hidalgo · México</option>
+        <option value="Jalisco"          data-estado="Jalisco"          data-ley="Código Civil">📍 Jalisco · México</option>
+        <option value="Michoacán"        data-estado="Michoacán"        data-ley="Código Civil">📍 Michoacán · México</option>
+        <option value="Nayarit"          data-estado="Nayarit"          data-ley="Código Civil">📍 Nayarit · México</option>
+        <option value="Nuevo León"       data-estado="Nuevo León"       data-ley="Código Civil">📍 Nuevo León · México</option>
+        <option value="Oaxaca"           data-estado="Oaxaca"           data-ley="Código Civil">📍 Oaxaca · México</option>
+        <option value="Puebla"           data-estado="Puebla"           data-ley="Código Civil" selected>📍 Puebla · México</option>
+        <option value="Querétaro"        data-estado="Querétaro"        data-ley="Código Civil">📍 Querétaro · México</option>
+        <option value="San Luis Potosí"  data-estado="San Luis Potosí"  data-ley="Código Civil">📍 San Luis Potosí · México</option>
+        <option value="Sinaloa"          data-estado="Sinaloa"          data-ley="Código Civil">📍 Sinaloa · México</option>
+        <option value="Sonora"           data-estado="Sonora"           data-ley="Código Civil">📍 Sonora · México</option>
+        <option value="Tamaulipas"       data-estado="Tamaulipas"       data-ley="Código Civil">📍 Tamaulipas · México</option>
+        <option value="Veracruz"         data-estado="Veracruz"         data-ley="Código Civil">📍 Veracruz · México</option>
+        <option value="Yucatán"          data-estado="Yucatán"          data-ley="Código Civil">📍 Yucatán · México</option>
+        <option value="Zacatecas"        data-estado="Zacatecas"        data-ley="Código Civil">📍 Zacatecas · México</option>
+      </optgroup>
+    </select>
     <a href="index.html" class="topbar-back">← Inicio</a>
   </div>
 
@@ -215,9 +259,19 @@
   </div>
 
   <script>
-    const mensajesEl = document.getElementById('mensajes');
-    const inputEl    = document.getElementById('pregunta');
-    const btnEnviar  = document.getElementById('enviar');
+    const mensajesEl  = document.getElementById('mensajes');
+    const inputEl     = document.getElementById('pregunta');
+    const btnEnviar   = document.getElementById('enviar');
+    const selectorLey = document.getElementById('selector-ley');
+
+    function getSeleccion() {
+      const opt = selectorLey.options[selectorLey.selectedIndex];
+      return {
+        estado: opt.dataset.estado || '',
+        ley:    opt.dataset.ley    || 'Código Civil',
+        label:  opt.textContent.trim()
+      };
+    }
 
     function agregarMensaje(tipo, html) {
       const div = document.createElement('div');
@@ -263,15 +317,16 @@
       agregarTyping();
 
       try {
+        const sel = getSeleccion();
         const res = await fetch('/api/asesoria', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             pregunta: texto,
-            estado:   'Puebla',
-            pais:     'mexico',
+            estado:   sel.estado,
+            pais:     'México',
             tema:     'civil',
-            fuente:   'Código Civil',
+            fuente:   sel.ley,
             modo:     'consulta'
           })
         });
@@ -300,8 +355,17 @@
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); }
     });
 
-    // Saludo inicial
-    agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Consulto el Código Civil de Puebla y te cito el artículo exacto. ¿Cuál es tu duda?');
+    function saludoInicial() {
+      const sel = getSeleccion();
+      const fuente = sel.estado
+        ? `el Código Civil de <strong>${sel.estado}</strong>`
+        : `la <strong>Constitución Política de los Estados Unidos Mexicanos</strong>`;
+      mensajesEl.innerHTML = '';
+      agregarMensaje('apolo', `Soy <strong>Apolo</strong>, tu asistente legal.<br>Consulto ${fuente} y te cito el artículo exacto. ¿Cuál es tu duda?`);
+    }
+
+    selectorLey.addEventListener('change', saludoInicial);
+    saludoInicial();
   </script>
 
 </body>
