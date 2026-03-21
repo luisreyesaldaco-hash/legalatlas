@@ -273,6 +273,13 @@
         <span style="font-family:'Cinzel',serif;font-size:9px;color:rgba(196,154,60,0.4);letter-spacing:0.1em;">Cargando...</span>
       </div>
     </div>
+    <div class="sel-group" id="grupo-pais" style="display:none">
+      <span class="sel-label">País</span>
+      <select id="selector-pais" class="selector-estado">
+        <option value="">Selecciona un país...</option>
+        <option value="México">México</option>
+      </select>
+    </div>
     <div class="sel-group" id="grupo-estado" style="display:none">
       <span class="sel-label">Estado</span>
       <select id="selector-estado" class="selector-estado">
@@ -295,10 +302,12 @@
     const inputEl      = document.getElementById('pregunta');
     const btnEnviar    = document.getElementById('enviar');
     const burbujaWrap  = document.getElementById('burbujas-wrap');
+    const grupoPais    = document.getElementById('grupo-pais');
+    const selectorPais = document.getElementById('selector-pais');
     const grupoEstado  = document.getElementById('grupo-estado');
     const selectorEst  = document.getElementById('selector-estado');
 
-    let sel = { materia: null, ley: null, estado: null, requiereEstado: true };
+    let sel = { materia: null, ley: null, pais: null, estado: null, requiereEstado: true };
 
     // ── Helpers de mensajes ──────────────────────────────────────────────────
     function agregarMensaje(tipo, html) {
@@ -334,21 +343,31 @@
     }
 
     // ── Saludo dinámico ──────────────────────────────────────────────────────
+    function verificarListo() {
+      const listo = sel.materia && sel.pais && (!sel.requiereEstado || sel.estado);
+      inputEl.disabled   = !listo;
+      btnEnviar.disabled = !listo;
+      if (listo) inputEl.placeholder = 'Escribe tu consulta legal…';
+    }
+
     function saludoInicial() {
       mensajesEl.innerHTML = '';
       if (!sel.materia) {
-        agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Selecciona el <strong>área legal</strong> y tu <strong>estado</strong> para comenzar.');
+        agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Selecciona el <strong>área legal</strong> para comenzar.');
+        return;
+      }
+      if (!sel.pais) {
+        agregarMensaje('apolo', 'Área: <strong>' + sel.materia + '</strong>.<br>Ahora selecciona el <strong>país</strong>.');
         return;
       }
       if (sel.requiereEstado && !sel.estado) {
-        agregarMensaje('apolo', 'Área: <strong>' + sel.materia + '</strong>.<br>Ahora selecciona tu <strong>estado</strong>.');
+        agregarMensaje('apolo', 'País: <strong>' + sel.pais + '</strong>.<br>Ahora selecciona tu <strong>estado</strong>.');
         return;
       }
       const jurisdiccion = sel.estado
         ? 'el <strong>' + sel.ley + ' de ' + sel.estado + '</strong> + la Constitución'
         : 'la <strong>Constitución Política de los Estados Unidos Mexicanos</strong>';
       agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Consulto ' + jurisdiccion + ' y te cito el artículo exacto. ¿Cuál es tu duda?');
-      inputEl.placeholder = 'Escribe tu consulta legal…';
     }
 
     // ── Carga dinámica de materias ───────────────────────────────────────────
@@ -375,46 +394,51 @@
     }
 
     function seleccionarMateria(m) {
-      // Marcar burbuja activa
       document.querySelectorAll('.burbuja').forEach(b => b.classList.remove('activa'));
       burbujaWrap.querySelector('[data-materia="' + m.materia + '"]').classList.add('activa');
 
-      sel.materia = m.materia;
-      sel.ley     = m.ley;
-      sel.estado  = null;
+      sel.materia        = m.materia;
+      sel.ley            = m.ley;
+      sel.pais           = null;
+      sel.estado         = null;
       sel.requiereEstado = m.requiere_estado;
+      sel._estados       = m.estados || [];
 
-      if (!m.requiere_estado) {
-        // Constitucional — no necesita estado
-        grupoEstado.style.display = 'none';
-        inputEl.disabled  = false;
-        btnEnviar.disabled = false;
-        saludoInicial();
-      } else {
-        // Mostrar dropdown de estados
+      // Resetear pasos siguientes
+      selectorPais.value = '';
+      selectorEst.value  = '';
+      grupoEstado.style.display = 'none';
+      grupoPais.style.display   = 'flex';
+
+      verificarListo();
+      saludoInicial();
+    }
+
+    selectorPais.addEventListener('change', function () {
+      sel.pais   = this.value;
+      sel.estado = null;
+      selectorEst.value = '';
+
+      if (this.value && sel.requiereEstado) {
+        // Poblar estados y mostrar dropdown
         selectorEst.innerHTML = '<option value="">Selecciona tu estado...</option>';
-        (m.estados || []).forEach(e => {
+        sel._estados.forEach(e => {
           const opt = document.createElement('option');
-          opt.value = e;
-          opt.textContent = e;
+          opt.value = e; opt.textContent = e;
           selectorEst.appendChild(opt);
         });
         grupoEstado.style.display = 'flex';
-        inputEl.disabled   = true;
-        btnEnviar.disabled = true;
-        saludoInicial();
+      } else {
+        grupoEstado.style.display = 'none';
       }
-    }
+
+      verificarListo();
+      saludoInicial();
+    });
 
     selectorEst.addEventListener('change', function () {
       sel.estado = this.value;
-      if (this.value) {
-        inputEl.disabled   = false;
-        btnEnviar.disabled = false;
-      } else {
-        inputEl.disabled   = true;
-        btnEnviar.disabled = true;
-      }
+      verificarListo();
       saludoInicial();
     });
 
