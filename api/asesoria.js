@@ -1,8 +1,12 @@
 import { buscarArticulos } from "./buscar.js";
 
+export const config = { api: { bodyParser: true } };
+
 export default async function handler(req, res) {
   try {
-    const { pais, estado, tema, pregunta, fuente, modo } = req.body;
+    // Vercel a veces entrega el body como string — parseamos defensivamente
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+    const { pais, estado, tema, pregunta, fuente, modo } = body;
     const contextoLegal = await buscarArticulos(pregunta, estado, fuente || 'Código Civil');
 
     // 1. Normalizar número de artículo a solo dígitos ("ART. 2273.-" → "2273")
