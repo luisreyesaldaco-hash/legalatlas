@@ -2,12 +2,24 @@ import { buscarArticulos } from "./buscar.js";
 
 export const config = { api: { bodyParser: true } };
 
+const CPEUM_LEY = 'Constitución Política de los Estados Unidos Mexicanos';
+
 export default async function handler(req, res) {
   try {
-    // Vercel a veces entrega el body como string — parseamos defensivamente
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
     const { pais, estado, tema, pregunta, fuente, modo } = body;
-    const contextoLegal = await buscarArticulos(pregunta, estado, fuente || 'Código Civil');
+
+    // Búsqueda paralela: ley del estado (7) + CPEUM (3) — o solo CPEUM si es constitucional
+    let contextoLegal;
+    if (estado) {
+      const [ccResults, cpuemResults] = await Promise.all([
+        buscarArticulos(pregunta, estado, fuente || 'Código Civil', 7),
+        buscarArticulos(pregunta, '', CPEUM_LEY, 3)
+      ]);
+      contextoLegal = [...ccResults, ...cpuemResults];
+    } else {
+      contextoLegal = await buscarArticulos(pregunta, '', CPEUM_LEY, 10);
+    }
 
     // 1. Normalizar número de artículo a solo dígitos ("ART. 2273.-" → "2273")
     const normalizarNum = (n) => (n || '').replace(/\D/g, '') || n
@@ -23,18 +35,23 @@ export default async function handler(req, res) {
           .join("\n\n")
       : "No se encontraron artículos específicos.";
 
+    const fuentesActivas = estado
+      ? `${fuente || 'Código Civil'} de ${estado} y ${CPEUM_LEY}`
+      : CPEUM_LEY;
+
     // 2. System prompt de Apolo
-    const systemPrompt = `Eres APOLO, un asistente legal experto para la jurisdicción de ${estado.toUpperCase()}, ${pais.toUpperCase()}.
+    const jurisdiccion = estado ? `${estado}, ${pais || 'México'}` : 'México (Federal)';
+    const systemPrompt = `Eres APOLO, un asistente legal experto para la jurisdicción de ${jurisdiccion.toUpperCase()}.
 Tu objetivo es orientar a ciudadanos sobre sus derechos de forma clara, formal y tranquilizante.
 
-FUENTE: ${fuente}
+FUENTES CONSULTADAS: ${fuentesActivas}
 
 CONTEXTO LEGAL RECUPERADO:
 ${leyesTexto}
 
 INSTRUCCIONES:
 1. Explica de forma clara usando los artículos del contexto.
-2. Cita siempre el número de artículo exacto cuando lo uses.
+2. Cita siempre el número de artículo exacto y la ley de donde proviene.
 3. Si la información necesaria no está en los artículos proporcionados, dilo con claridad.
 4. Nunca inventes leyes, artículos ni interpretaciones.
 5. Responde EXCLUSIVAMENTE en formato JSON con esta estructura:
@@ -43,7 +60,7 @@ INSTRUCCIONES:
   "resumen": "Explicación breve de 2 líneas",
   "articulos": ["2273", "2325"],
   "confianza": "Alta | Media | Baja",
-  "fuentes": ["Código Civil Art. 2273"]
+  "fuentes": ["Código Civil Art. 2273", "CPEUM Art. 1"]
 }`;
 
     // 3. Llamada a Gemini Flash
@@ -86,7 +103,7 @@ INSTRUCCIONES:
       const coincide  = contextoNorm.find(a => a.numeroLimpio === numLimpio)
       if (coincide) {
         articulosValidos.push(numLimpio)
-        fuentesValidas.push(`${fuente} Art. ${numLimpio}`)
+        fuentesValidas.push(`${fuente || 'Ley'} Art. ${numLimpio}`)
       }
     })
 

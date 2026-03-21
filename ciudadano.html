@@ -53,26 +53,6 @@
       background: #c49a3c;
       box-shadow: 0 0 6px rgba(196,154,60,0.6);
     }
-    .territorio {
-      font-family: 'Cinzel', serif;
-      font-size: 9px;
-      letter-spacing: 0.15em;
-      color: rgba(196,154,60,0.7);
-      text-transform: uppercase;
-      border: 1px solid rgba(196,154,60,0.2);
-      padding: 4px 10px;
-      background: transparent;
-      cursor: pointer;
-      outline: none;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-    .territorio option {
-      background: #111110;
-      color: rgba(245,237,216,0.88);
-      font-family: 'Cinzel', serif;
-      font-size: 11px;
-    }
     .topbar-back {
       font-family: 'Cinzel', serif;
       font-size: 9px;
@@ -82,6 +62,76 @@
       text-transform: uppercase;
     }
     .topbar-back:hover { color: #c49a3c; }
+
+    /* ── Selection bar ── */
+    .selection-bar {
+      flex-shrink: 0;
+      background: #111110;
+      border-bottom: 1px solid rgba(196,154,60,0.12);
+      padding: 10px 28px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .sel-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sel-label {
+      font-family: 'Cinzel', serif;
+      font-size: 8px;
+      letter-spacing: 0.25em;
+      color: rgba(196,154,60,0.45);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .burbujas-wrap {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .burbuja {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border: 1px solid rgba(196,154,60,0.3);
+      background: transparent;
+      color: rgba(196,154,60,0.7);
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .burbuja:hover {
+      border-color: #c49a3c;
+      color: #c49a3c;
+      background: rgba(196,154,60,0.06);
+    }
+    .burbuja.activa {
+      background: #c49a3c;
+      color: #111110;
+      border-color: #c49a3c;
+    }
+    .selector-estado {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      color: rgba(196,154,60,0.7);
+      background: transparent;
+      border: 1px solid rgba(196,154,60,0.3);
+      padding: 5px 12px;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .selector-estado:focus { border-color: #c49a3c; }
+    .selector-estado option {
+      background: #111110;
+      color: rgba(245,237,216,0.88);
+    }
 
     /* ── Mensajes ── */
     #mensajes {
@@ -188,6 +238,7 @@
       outline: none;
     }
     .input-row input::placeholder { color: #6e6860; font-style: italic; }
+    .input-row input:disabled::placeholder { color: #b0a898; }
     .btn-enviar {
       width: 46px; height: 46px;
       background: #1a1a16;
@@ -212,67 +263,44 @@
       <div class="apolo-dot"></div>
       APOLO · Motor normativo
     </div>
-    <select class="territorio" id="selector-ley">
-      <optgroup label="── FEDERAL ──">
-        <option value="CPEUM" data-estado="" data-ley="Constitución Política de los Estados Unidos Mexicanos">📜 Constitución · México</option>
-      </optgroup>
-      <optgroup label="── CÓDIGOS CIVILES ──">
-        <option value="Aguascalientes"   data-estado="Aguascalientes"   data-ley="Código Civil">📍 Aguascalientes · México</option>
-        <option value="Baja California"  data-estado="Baja California"  data-ley="Código Civil">📍 Baja California · México</option>
-        <option value="Baja California Sur" data-estado="Baja California Sur" data-ley="Código Civil">📍 Baja California Sur · México</option>
-        <option value="Campeche"         data-estado="Campeche"         data-ley="Código Civil">📍 Campeche · México</option>
-        <option value="Chiapas"          data-estado="Chiapas"          data-ley="Código Civil">📍 Chiapas · México</option>
-        <option value="Chihuahua"        data-estado="Chihuahua"        data-ley="Código Civil">📍 Chihuahua · México</option>
-        <option value="Ciudad de México" data-estado="Ciudad de México" data-ley="Código Civil">📍 Ciudad de México · México</option>
-        <option value="Coahuila"         data-estado="Coahuila"         data-ley="Código Civil">📍 Coahuila · México</option>
-        <option value="Colima"           data-estado="Colima"           data-ley="Código Civil">📍 Colima · México</option>
-        <option value="Durango"          data-estado="Durango"          data-ley="Código Civil">📍 Durango · México</option>
-        <option value="Guanajuato"       data-estado="Guanajuato"       data-ley="Código Civil">📍 Guanajuato · México</option>
-        <option value="Guerrero"         data-estado="Guerrero"         data-ley="Código Civil">📍 Guerrero · México</option>
-        <option value="Hidalgo"          data-estado="Hidalgo"          data-ley="Código Civil">📍 Hidalgo · México</option>
-        <option value="Jalisco"          data-estado="Jalisco"          data-ley="Código Civil">📍 Jalisco · México</option>
-        <option value="Michoacán"        data-estado="Michoacán"        data-ley="Código Civil">📍 Michoacán · México</option>
-        <option value="Nayarit"          data-estado="Nayarit"          data-ley="Código Civil">📍 Nayarit · México</option>
-        <option value="Nuevo León"       data-estado="Nuevo León"       data-ley="Código Civil">📍 Nuevo León · México</option>
-        <option value="Oaxaca"           data-estado="Oaxaca"           data-ley="Código Civil">📍 Oaxaca · México</option>
-        <option value="Puebla"           data-estado="Puebla"           data-ley="Código Civil" selected>📍 Puebla · México</option>
-        <option value="Querétaro"        data-estado="Querétaro"        data-ley="Código Civil">📍 Querétaro · México</option>
-        <option value="San Luis Potosí"  data-estado="San Luis Potosí"  data-ley="Código Civil">📍 San Luis Potosí · México</option>
-        <option value="Sinaloa"          data-estado="Sinaloa"          data-ley="Código Civil">📍 Sinaloa · México</option>
-        <option value="Sonora"           data-estado="Sonora"           data-ley="Código Civil">📍 Sonora · México</option>
-        <option value="Tamaulipas"       data-estado="Tamaulipas"       data-ley="Código Civil">📍 Tamaulipas · México</option>
-        <option value="Veracruz"         data-estado="Veracruz"         data-ley="Código Civil">📍 Veracruz · México</option>
-        <option value="Yucatán"          data-estado="Yucatán"          data-ley="Código Civil">📍 Yucatán · México</option>
-        <option value="Zacatecas"        data-estado="Zacatecas"        data-ley="Código Civil">📍 Zacatecas · México</option>
-      </optgroup>
-    </select>
     <a href="index.html" class="topbar-back">← Inicio</a>
+  </div>
+
+  <div class="selection-bar">
+    <div class="sel-group">
+      <span class="sel-label">Área legal</span>
+      <div class="burbujas-wrap" id="burbujas-wrap">
+        <span style="font-family:'Cinzel',serif;font-size:9px;color:rgba(196,154,60,0.4);letter-spacing:0.1em;">Cargando...</span>
+      </div>
+    </div>
+    <div class="sel-group" id="grupo-estado" style="display:none">
+      <span class="sel-label">Estado</span>
+      <select id="selector-estado" class="selector-estado">
+        <option value="">Selecciona tu estado...</option>
+      </select>
+    </div>
   </div>
 
   <div id="mensajes"></div>
 
   <div class="input-area">
     <div class="input-row">
-      <input type="text" id="pregunta" placeholder="Escribe tu consulta legal…" autocomplete="off">
-      <button class="btn-enviar" id="enviar" title="Enviar">&#9658;</button>
+      <input type="text" id="pregunta" placeholder="Primero selecciona un área legal arriba…" autocomplete="off" disabled>
+      <button class="btn-enviar" id="enviar" disabled title="Enviar">&#9658;</button>
     </div>
   </div>
 
   <script>
-    const mensajesEl  = document.getElementById('mensajes');
-    const inputEl     = document.getElementById('pregunta');
-    const btnEnviar   = document.getElementById('enviar');
-    const selectorLey = document.getElementById('selector-ley');
+    const mensajesEl   = document.getElementById('mensajes');
+    const inputEl      = document.getElementById('pregunta');
+    const btnEnviar    = document.getElementById('enviar');
+    const burbujaWrap  = document.getElementById('burbujas-wrap');
+    const grupoEstado  = document.getElementById('grupo-estado');
+    const selectorEst  = document.getElementById('selector-estado');
 
-    function getSeleccion() {
-      const opt = selectorLey.options[selectorLey.selectedIndex];
-      return {
-        estado: opt.dataset.estado || '',
-        ley:    opt.dataset.ley    || 'Código Civil',
-        label:  opt.textContent.trim()
-      };
-    }
+    let sel = { materia: null, ley: null, estado: null, requiereEstado: true };
 
+    // ── Helpers de mensajes ──────────────────────────────────────────────────
     function agregarMensaje(tipo, html) {
       const div = document.createElement('div');
       div.className = 'msg msg-' + tipo;
@@ -282,13 +310,11 @@
       mensajesEl.scrollTop = mensajesEl.scrollHeight;
     }
 
-    function mostrarArticulos(articulos, fuentes) {
+    function mostrarArticulos(articulos) {
       if (!articulos || !articulos.length) return;
       const div = document.createElement('div');
       div.className = 'articulos-citados';
-      div.innerHTML = articulos.map(n =>
-        '<span class="art-tag">Art. ' + n + '</span>'
-      ).join('');
+      div.innerHTML = articulos.map(n => '<span class="art-tag">Art. ' + n + '</span>').join('');
       mensajesEl.appendChild(div);
       mensajesEl.scrollTop = mensajesEl.scrollHeight;
     }
@@ -307,6 +333,92 @@
       if (t) t.remove();
     }
 
+    // ── Saludo dinámico ──────────────────────────────────────────────────────
+    function saludoInicial() {
+      mensajesEl.innerHTML = '';
+      if (!sel.materia) {
+        agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Selecciona el <strong>área legal</strong> y tu <strong>estado</strong> para comenzar.');
+        return;
+      }
+      if (sel.requiereEstado && !sel.estado) {
+        agregarMensaje('apolo', 'Área: <strong>' + sel.materia + '</strong>.<br>Ahora selecciona tu <strong>estado</strong>.');
+        return;
+      }
+      const jurisdiccion = sel.estado
+        ? 'el <strong>' + sel.ley + ' de ' + sel.estado + '</strong> + la Constitución'
+        : 'la <strong>Constitución Política de los Estados Unidos Mexicanos</strong>';
+      agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Consulto ' + jurisdiccion + ' y te cito el artículo exacto. ¿Cuál es tu duda?');
+      inputEl.placeholder = 'Escribe tu consulta legal…';
+    }
+
+    // ── Carga dinámica de materias ───────────────────────────────────────────
+    async function cargarMaterias() {
+      try {
+        const res = await fetch('/api/materias');
+        const materias = await res.json();
+        renderBurbujas(materias);
+      } catch (e) {
+        burbujaWrap.innerHTML = '<span style="font-family:Cinzel,serif;font-size:9px;color:rgba(196,154,60,0.4);">Error cargando áreas</span>';
+      }
+    }
+
+    function renderBurbujas(materias) {
+      burbujaWrap.innerHTML = '';
+      materias.forEach(m => {
+        const btn = document.createElement('button');
+        btn.className = 'burbuja';
+        btn.textContent = m.materia;
+        btn.dataset.materia = m.materia;
+        btn.addEventListener('click', () => seleccionarMateria(m));
+        burbujaWrap.appendChild(btn);
+      });
+    }
+
+    function seleccionarMateria(m) {
+      // Marcar burbuja activa
+      document.querySelectorAll('.burbuja').forEach(b => b.classList.remove('activa'));
+      burbujaWrap.querySelector('[data-materia="' + m.materia + '"]').classList.add('activa');
+
+      sel.materia = m.materia;
+      sel.ley     = m.ley;
+      sel.estado  = null;
+      sel.requiereEstado = m.requiere_estado;
+
+      if (!m.requiere_estado) {
+        // Constitucional — no necesita estado
+        grupoEstado.style.display = 'none';
+        inputEl.disabled  = false;
+        btnEnviar.disabled = false;
+        saludoInicial();
+      } else {
+        // Mostrar dropdown de estados
+        selectorEst.innerHTML = '<option value="">Selecciona tu estado...</option>';
+        (m.estados || []).forEach(e => {
+          const opt = document.createElement('option');
+          opt.value = e;
+          opt.textContent = e;
+          selectorEst.appendChild(opt);
+        });
+        grupoEstado.style.display = 'flex';
+        inputEl.disabled   = true;
+        btnEnviar.disabled = true;
+        saludoInicial();
+      }
+    }
+
+    selectorEst.addEventListener('change', function () {
+      sel.estado = this.value;
+      if (this.value) {
+        inputEl.disabled   = false;
+        btnEnviar.disabled = false;
+      } else {
+        inputEl.disabled   = true;
+        btnEnviar.disabled = true;
+      }
+      saludoInicial();
+    });
+
+    // ── Envío de consulta ────────────────────────────────────────────────────
     async function enviar() {
       const texto = inputEl.value.trim();
       if (!texto) return;
@@ -317,29 +429,26 @@
       agregarTyping();
 
       try {
-        const sel = getSeleccion();
         const res = await fetch('/api/asesoria', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             pregunta: texto,
-            estado:   sel.estado,
+            estado:   sel.estado || '',
             pais:     'México',
-            tema:     'civil',
-            fuente:   sel.ley,
+            tema:     sel.materia || 'civil',
+            fuente:   sel.ley    || '',
             modo:     'consulta'
           })
         });
 
         quitarTyping();
-
         if (!res.ok) throw new Error('HTTP ' + res.status);
 
         const data = await res.json();
         const r = data.respuesta;
-
         agregarMensaje('apolo', r.draftHtml || r.resumen || 'Sin respuesta.');
-        mostrarArticulos(r.articulos, r.fuentes);
+        mostrarArticulos(r.articulos);
 
       } catch (err) {
         quitarTyping();
@@ -351,21 +460,13 @@
     }
 
     btnEnviar.addEventListener('click', enviar);
-    inputEl.addEventListener('keydown', function(e) {
+    inputEl.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); }
     });
 
-    function saludoInicial() {
-      const sel = getSeleccion();
-      const fuente = sel.estado
-        ? `el Código Civil de <strong>${sel.estado}</strong>`
-        : `la <strong>Constitución Política de los Estados Unidos Mexicanos</strong>`;
-      mensajesEl.innerHTML = '';
-      agregarMensaje('apolo', `Soy <strong>Apolo</strong>, tu asistente legal.<br>Consulto ${fuente} y te cito el artículo exacto. ¿Cuál es tu duda?`);
-    }
-
-    selectorLey.addEventListener('change', saludoInicial);
+    // ── Init ─────────────────────────────────────────────────────────────────
     saludoInicial();
+    cargarMaterias();
   </script>
 
 </body>
