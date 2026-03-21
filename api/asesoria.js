@@ -12,11 +12,14 @@ export default async function handler(req, res) {
     // Búsqueda paralela: ley del estado (7) + CPEUM (3) — o solo CPEUM si es constitucional
     let contextoLegal;
     if (estado) {
-      const [ccResults, cpuemResults] = await Promise.all([
+      const [ccResults, cpuemResults] = await Promise.allSettled([
         buscarArticulos(pregunta, estado, fuente || 'Código Civil', 7),
         buscarArticulos(pregunta, '', CPEUM_LEY, 3)
       ]);
-      contextoLegal = [...ccResults, ...cpuemResults];
+      contextoLegal = [
+        ...(ccResults.status   === 'fulfilled' ? ccResults.value   : []),
+        ...(cpuemResults.status === 'fulfilled' ? cpuemResults.value : [])
+      ];
     } else {
       contextoLegal = await buscarArticulos(pregunta, '', CPEUM_LEY, 10);
     }
