@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { buscarArticulos } from "./buscar.js";
 import fs from "fs";
 import path from "path";
 
@@ -57,11 +58,26 @@ export default async function handler(req, res) {
 
     const receta = leerReceta(tipo);
 
-    // Interpolar datos en el system prompt
+    // ── RAG: buscar artículos relevantes en Supabase ──────────────────────
+    const queryRAG = [datos.concepto, datos.peticion, datos.tipo_documento]
+      .filter(Boolean).join(' ') || tipo.replace(/_/g, ' ');
+    let contextoLegal = [];
+    try {
+      contextoLegal = await buscarArticulos(queryRAG, datos.estado || '', receta.fuente_ley || 'Código Civil', 5);
+    } catch (e) {
+      console.warn('RAG falló en redactar:', e.message);
+    }
+    const contexto_legal_texto = contextoLegal.length
+      ? contextoLegal.map(r => `Art. ${r.numero}: ${r.texto}`).join('\n\n')
+      : '[SIN CONTEXTO LEGAL — REVISAR]';
+    console.log(`RAG redactar: ${contextoLegal.length} artículos para "${queryRAG}"`);
+
+    // Interpolar datos + contexto_legal en el system prompt
     let systemPrompt = receta.system_prompt;
     Object.entries(datos).forEach(([k, v]) => {
       systemPrompt = systemPrompt.replace(new RegExp(`\\{${k}\\}`, 'g'), v);
     });
+    systemPrompt = systemPrompt.replace('{contexto_legal}', contexto_legal_texto);
 
     // Construir mensaje con todos los datos recopilados
     const requeridos = (receta.datos_requeridos || [])
