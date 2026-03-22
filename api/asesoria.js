@@ -88,7 +88,7 @@ INSTRUCCIONES:
         systemInstruction: systemPrompt,
         responseMimeType:  'application/json',
         temperature:       0.1,
-        maxOutputTokens:   1500
+        maxOutputTokens:   2500
       }
     })
 
