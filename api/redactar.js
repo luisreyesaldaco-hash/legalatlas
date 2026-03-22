@@ -59,8 +59,9 @@ export default async function handler(req, res) {
     const receta = leerReceta(tipo);
 
     // ── RAG: buscar artículos relevantes en Supabase ──────────────────────
-    const queryRAG = [datos.concepto, datos.peticion, datos.tipo_documento]
-      .filter(Boolean).join(' ') || tipo.replace(/_/g, ' ');
+    const queryRAG = receta.query_rag
+      ? `${receta.query_rag} ${datos.concepto || ''}`.trim()
+      : [datos.concepto, datos.peticion].filter(Boolean).join(' ') || tipo.replace(/_/g, ' ');
     let contextoLegal = [];
     try {
       contextoLegal = await buscarArticulos(queryRAG, datos.estado || '', receta.fuente_ley || 'Código Civil', 5);
