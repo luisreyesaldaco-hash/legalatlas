@@ -58,6 +58,11 @@ export default async function handler(req, res) {
 
     const receta = leerReceta(tipo);
 
+    // Inyectar fecha actual y estado si no vienen del cliente
+    if (!datos.fecha_actual) {
+      datos.fecha_actual = new Date().toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
     // ── RAG: buscar artículos relevantes en Supabase ──────────────────────
     const CPEUM_LEY = 'Constitución Política de los Estados Unidos Mexicanos';
     const queryRAG  = receta.query_rag
@@ -83,8 +88,14 @@ export default async function handler(req, res) {
     } catch (e) {
       console.warn('RAG falló en redactar:', e.message);
     }
-    const contexto_legal_texto = contextoLegal.length
-      ? contextoLegal.map(r => `Art. ${r.numero}: ${r.texto}`).join('\n\n')
+    // Deduplicar por número de artículo
+    const vistos = new Set();
+    const contextoUnico = contextoLegal.filter(r => {
+      if (vistos.has(r.numero)) return false;
+      vistos.add(r.numero); return true;
+    });
+    const contexto_legal_texto = contextoUnico.length
+      ? contextoUnico.map(r => `Art. ${r.numero}: ${r.texto}`).join('\n\n')
       : '[SIN CONTEXTO LEGAL — REVISAR]';
     console.log(`RAG redactar: ${contextoLegal.length} artículos para "${queryRAG}"`);
 

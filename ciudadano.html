@@ -651,7 +651,10 @@
       try {
         const res = await fetch('/api/redactar?tipo=' + tipo);
         recetaActiva = await res.json();
-        datosRedaccion = {}; preguntaIdxActual = 0;
+        // Pre-llenar datos conocidos del contexto actual
+        datosRedaccion = {};
+        if (sel.estado) datosRedaccion['estado'] = sel.estado;
+        preguntaIdxActual = 0;
         todasLasPreguntas = [
           ...(recetaActiva.datos_requeridos     || []),
           ...(recetaActiva.preguntas_profundidad || [])
@@ -667,6 +670,11 @@
     }
 
     function preguntarSiguiente() {
+      // Saltar preguntas ya pre-llenadas
+      while (preguntaIdxActual < todasLasPreguntas.length &&
+             datosRedaccion[todasLasPreguntas[preguntaIdxActual].campo] !== undefined) {
+        preguntaIdxActual++;
+      }
       if (preguntaIdxActual >= todasLasPreguntas.length) {
         mostrarBotonGenerar();
         return;
