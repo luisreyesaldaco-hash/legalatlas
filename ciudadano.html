@@ -341,17 +341,14 @@
 
   <div class="selection-bar">
     <div class="sel-group">
-      <span class="sel-label">Área legal</span>
-      <div class="burbujas-wrap" id="burbujas-wrap">
+      <span class="sel-label">Selecciona un país</span>
+      <div class="burbujas-wrap" id="paises-wrap">
         <span style="font-family:'Cinzel',serif;font-size:9px;color:rgba(196,154,60,0.4);letter-spacing:0.1em;">Cargando...</span>
       </div>
     </div>
-    <div class="sel-group" id="grupo-pais" style="display:none">
-      <span class="sel-label">País</span>
-      <select id="selector-pais" class="selector-estado">
-        <option value="">Selecciona un país...</option>
-        <option value="México">México</option>
-      </select>
+    <div class="sel-group" id="grupo-materia" style="display:none">
+      <span class="sel-label">Área legal →</span>
+      <div class="burbujas-wrap" id="burbujas-wrap"></div>
     </div>
     <div class="sel-group" id="grupo-estado" style="display:none">
       <span class="sel-label">Estado</span>
@@ -380,13 +377,20 @@
     const mensajesEl   = document.getElementById('mensajes');
     const inputEl      = document.getElementById('pregunta');
     const btnEnviar    = document.getElementById('enviar');
+    const paisesWrap   = document.getElementById('paises-wrap');
+    const grupoMateria = document.getElementById('grupo-materia');
     const burbujaWrap  = document.getElementById('burbujas-wrap');
-    const grupoPais    = document.getElementById('grupo-pais');
-    const selectorPais = document.getElementById('selector-pais');
     const grupoEstado  = document.getElementById('grupo-estado');
     const selectorEst  = document.getElementById('selector-estado');
 
-    let sel = { materia: null, ley: null, pais: null, estado: null, requiereEstado: true };
+    let sel = { materia: null, ley: null, pais: null, estado: null, requiereEstado: false };
+    let todasLasMaterias = [];
+
+    // Country display names (browser-native i18n)
+    const displayNames = new Intl.DisplayNames(['es'], { type: 'region' });
+    function nombrePais(iso) {
+      try { return displayNames.of(iso); } catch { return iso; }
+    }
 
     // ── Helpers de mensajes ──────────────────────────────────────────────────
     function agregarMensaje(tipo, html) {
@@ -423,46 +427,67 @@
 
     // ── Saludo dinámico ──────────────────────────────────────────────────────
     function verificarListo() {
-      const listo = sel.materia && sel.pais && (!sel.requiereEstado || sel.estado);
+      const listo = sel.pais && sel.materia && (!sel.requiereEstado || sel.estado);
       inputEl.disabled   = !listo;
       btnEnviar.disabled = !listo;
-      if (listo) inputEl.placeholder = 'Escribe tu consulta legal…';
+      inputEl.placeholder = listo ? 'Escribe tu consulta legal…' : 'Selecciona país y área legal arriba…';
     }
 
     function saludoInicial() {
       mensajesEl.innerHTML = '';
-      if (!sel.materia) {
-        agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Selecciona el <strong>área legal</strong> para comenzar.');
+      if (!sel.pais) {
+        agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Selecciona el <strong>país</strong> para comenzar.');
         return;
       }
-      if (!sel.pais) {
-        agregarMensaje('apolo', 'Área: <strong>' + sel.materia + '</strong>.<br>Ahora selecciona el <strong>país</strong>.');
+      if (!sel.materia) {
+        agregarMensaje('apolo', 'País: <strong>' + nombrePais(sel.pais) + '</strong>.<br>Ahora selecciona el <strong>área legal</strong>.');
         return;
       }
       if (sel.requiereEstado && !sel.estado) {
-        agregarMensaje('apolo', 'País: <strong>' + sel.pais + '</strong>.<br>Ahora selecciona tu <strong>estado</strong>.');
+        agregarMensaje('apolo', 'Área: <strong>' + sel.materia + '</strong>.<br>Ahora selecciona tu <strong>estado</strong>.');
         return;
       }
       const jurisdiccion = sel.estado
-        ? 'el <strong>' + sel.ley + ' de ' + sel.estado + '</strong> + la Constitución'
-        : 'la <strong>Constitución Política de los Estados Unidos Mexicanos</strong>';
+        ? 'el <strong>' + sel.ley + ' de ' + sel.estado + '</strong>'
+        : '<strong>' + sel.ley + '</strong> (' + nombrePais(sel.pais) + ')';
       agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Consulto ' + jurisdiccion + ' y te cito el artículo exacto. ¿Cuál es tu duda?');
     }
 
-    // ── Carga dinámica de materias ───────────────────────────────────────────
-    async function cargarMaterias() {
+    // ── Carga dinámica de países y materias ─────────────────────────────────
+    async function cargarPaises() {
       try {
         const res = await fetch('/api/materias');
-        const materias = await res.json();
-        renderBurbujas(materias);
+        todasLasMaterias = await res.json();
+        const paisesUnicos = [...new Set(todasLasMaterias.map(m => m.pais))].filter(Boolean);
+        paisesWrap.innerHTML = '';
+        paisesUnicos.forEach(iso => {
+          const btn = document.createElement('button');
+          btn.className = 'burbuja';
+          btn.textContent = nombrePais(iso);
+          btn.dataset.pais = iso;
+          btn.addEventListener('click', () => seleccionarPais(iso));
+          paisesWrap.appendChild(btn);
+        });
       } catch (e) {
-        burbujaWrap.innerHTML = '<span style="font-family:Cinzel,serif;font-size:9px;color:rgba(196,154,60,0.4);">Error cargando áreas</span>';
+        paisesWrap.innerHTML = '<span style="font-family:Cinzel,serif;font-size:9px;color:rgba(196,154,60,0.4);">Error cargando países</span>';
       }
     }
 
-    function renderBurbujas(materias) {
+    function seleccionarPais(iso) {
+      document.querySelectorAll('#paises-wrap .burbuja').forEach(b => b.classList.remove('activa'));
+      paisesWrap.querySelector('[data-pais="' + iso + '"]').classList.add('activa');
+
+      sel.pais    = iso;
+      sel.materia = null;
+      sel.ley     = null;
+      sel.estado  = null;
+
+      grupoEstado.style.display = 'none';
+      selectorEst.value = '';
+
+      const materiasDelPais = todasLasMaterias.filter(m => m.pais === iso);
       burbujaWrap.innerHTML = '';
-      materias.forEach(m => {
+      materiasDelPais.forEach(m => {
         const btn = document.createElement('button');
         btn.className = 'burbuja';
         btn.textContent = m.materia;
@@ -470,36 +495,24 @@
         btn.addEventListener('click', () => seleccionarMateria(m));
         burbujaWrap.appendChild(btn);
       });
-    }
-
-    function seleccionarMateria(m) {
-      document.querySelectorAll('.burbuja').forEach(b => b.classList.remove('activa'));
-      burbujaWrap.querySelector('[data-materia="' + m.materia + '"]').classList.add('activa');
-
-      sel.materia        = m.materia;
-      sel.ley            = m.ley;
-      sel.pais           = null;
-      sel.estado         = null;
-      sel.requiereEstado = m.requiere_estado;
-      sel._estados       = m.estados || [];
-
-      // Resetear pasos siguientes
-      selectorPais.value = '';
-      selectorEst.value  = '';
-      grupoEstado.style.display = 'none';
-      grupoPais.style.display   = 'flex';
+      grupoMateria.style.display = 'flex';
 
       verificarListo();
       saludoInicial();
     }
 
-    selectorPais.addEventListener('change', function () {
-      sel.pais   = this.value;
-      sel.estado = null;
-      selectorEst.value = '';
+    function seleccionarMateria(m) {
+      document.querySelectorAll('#burbujas-wrap .burbuja').forEach(b => b.classList.remove('activa'));
+      burbujaWrap.querySelector('[data-materia="' + m.materia + '"]').classList.add('activa');
 
-      if (this.value && sel.requiereEstado) {
-        // Poblar estados y mostrar dropdown
+      sel.materia        = m.materia;
+      sel.ley            = m.ley;
+      sel.estado         = null;
+      sel.requiereEstado = m.requiere_estado;
+      sel._estados       = m.estados || [];
+
+      selectorEst.value = '';
+      if (m.requiere_estado && sel._estados.length) {
         selectorEst.innerHTML = '<option value="">Selecciona tu estado...</option>';
         sel._estados.forEach(e => {
           const opt = document.createElement('option');
@@ -513,7 +526,7 @@
 
       verificarListo();
       saludoInicial();
-    });
+    }
 
     selectorEst.addEventListener('change', function () {
       sel.estado = this.value;
@@ -553,7 +566,7 @@
           body: JSON.stringify({
             pregunta: texto,
             estado:   sel.estado || '',
-            pais:     'México',
+            pais:     sel.pais   || '',
             tema:     sel.materia || 'civil',
             fuente:   sel.ley    || '',
             modo:     'consulta'
@@ -738,7 +751,7 @@
 
     // ── Init ─────────────────────────────────────────────────────────────────
     saludoInicial();
-    cargarMaterias();
+    cargarPaises();
   </script>
 
 </body>

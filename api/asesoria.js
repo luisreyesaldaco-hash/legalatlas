@@ -7,14 +7,20 @@ const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
 
 const CPEUM_LEY = 'Constitución Política de los Estados Unidos Mexicanos';
 
+// ISO alpha-2 → display name (add more as needed)
+const PAIS_NOMBRES = { MX: 'México', CZ: 'República Checa', CO: 'Colombia', PA: 'Panamá', FR: 'Francia', DE: 'Alemania' };
+function nombrePais(iso) { return PAIS_NOMBRES[iso] || iso; }
+
 export default async function handler(req, res) {
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
     const { pais, estado, tema, pregunta, fuente, modo } = body;
 
-    // Búsqueda paralela: ley del estado (7) + CPEUM (3) — o solo CPEUM si es constitucional
+    // Búsqueda de contexto legal
     let contextoLegal;
+    const esMexico = !pais || pais === 'MX';
     if (estado) {
+      // México con estado: ley estatal (7) + CPEUM (3) en paralelo
       const [ccResults, cpuemResults] = await Promise.allSettled([
         buscarArticulos(pregunta, estado, fuente || 'Código Civil', 7),
         buscarArticulos(pregunta, '', CPEUM_LEY, 3)
@@ -23,8 +29,12 @@ export default async function handler(req, res) {
         ...(ccResults.status   === 'fulfilled' ? ccResults.value   : []),
         ...(cpuemResults.status === 'fulfilled' ? cpuemResults.value : [])
       ];
-    } else {
+    } else if (esMexico) {
+      // México federal: solo CPEUM
       contextoLegal = await buscarArticulos(pregunta, '', CPEUM_LEY, 10);
+    } else {
+      // Otro país: buscar por nombre de ley (fuente)
+      contextoLegal = await buscarArticulos(pregunta, '', fuente || '', 10);
     }
 
     // 1. Normalizar número de artículo a solo dígitos ("ART. 2273.-" → "2273")
@@ -43,10 +53,11 @@ export default async function handler(req, res) {
 
     const fuentesActivas = estado
       ? `${fuente || 'Código Civil'} de ${estado} y ${CPEUM_LEY}`
-      : CPEUM_LEY;
+      : esMexico ? CPEUM_LEY : (fuente || 'Ley seleccionada');
 
     // 2. System prompt de Apolo
-    const jurisdiccion = estado ? `${estado}, ${pais || 'México'}` : 'México (Federal)';
+    const paisDisplay  = nombrePais(pais || 'MX');
+    const jurisdiccion = estado ? `${estado}, ${paisDisplay}` : `${paisDisplay} (Federal)`;
     const systemPrompt = `Eres APOLO, un asistente legal experto para la jurisdicción de ${jurisdiccion.toUpperCase()}.
 Tu objetivo es orientar a ciudadanos sobre sus derechos de forma clara, formal y tranquilizante.
 
