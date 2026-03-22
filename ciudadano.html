@@ -485,9 +485,16 @@
       grupoEstado.style.display = 'none';
       selectorEst.value = '';
 
+      // Agrupar por materia (puede haber varias leyes por materia)
       const materiasDelPais = todasLasMaterias.filter(m => m.pais === iso);
-      burbujaWrap.innerHTML = '';
+      const agrupadas = {};
       materiasDelPais.forEach(m => {
+        if (!agrupadas[m.materia]) agrupadas[m.materia] = { ...m, leyes: [m.ley] };
+        else agrupadas[m.materia].leyes.push(m.ley);
+      });
+
+      burbujaWrap.innerHTML = '';
+      Object.values(agrupadas).forEach(m => {
         const btn = document.createElement('button');
         btn.className = 'burbuja';
         btn.textContent = m.materia;
@@ -506,7 +513,8 @@
       burbujaWrap.querySelector('[data-materia="' + m.materia + '"]').classList.add('activa');
 
       sel.materia        = m.materia;
-      sel.ley            = m.ley;
+      sel.ley            = m.leyes ? m.leyes[0] : m.ley;
+      sel.leyes          = m.leyes || [m.ley];
       sel.estado         = null;
       sel.requiereEstado = m.requiere_estado;
       sel._estados       = m.estados || [];
