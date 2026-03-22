@@ -254,27 +254,13 @@
     }
     .btn-enviar:hover { background: #c49a3c; color: #1a1a16; }
     .btn-enviar:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-redactar-inline {
+      border-left: 1px solid rgba(196,154,60,0.2);
+      font-size: 14px;
+    }
+    .btn-redactar-inline.activo { background: #c49a3c; color: #1a1a16; }
 
     /* ── Modo Redacción ── */
-    .btn-modo {
-      font-family: 'Cinzel', serif;
-      font-size: 9px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 6px 14px;
-      border: 1px solid rgba(196,154,60,0.4);
-      background: transparent;
-      color: rgba(196,154,60,0.7);
-      cursor: pointer;
-      transition: all 0.18s;
-      margin-left: 12px;
-      flex-shrink: 0;
-    }
-    .btn-modo:hover, .btn-modo.activo {
-      background: #c49a3c;
-      color: #111110;
-      border-color: #c49a3c;
-    }
     .recetas-wrap { display: flex; gap: 6px; flex-wrap: wrap; }
     .btn-generar {
       font-family: 'Cinzel', serif;
@@ -336,7 +322,6 @@
       APOLO · Motor normativo
     </div>
     <a href="index.html" class="topbar-back">← Inicio</a>
-    <button class="btn-modo" id="btn-modo-redaccion">✍ Redacción</button>
   </div>
 
   <div class="selection-bar">
@@ -370,6 +355,7 @@
     <div class="input-row">
       <input type="text" id="pregunta" placeholder="Primero selecciona un área legal arriba…" autocomplete="off" disabled>
       <button class="btn-enviar" id="enviar" disabled title="Enviar">&#9658;</button>
+      <button class="btn-enviar btn-redactar-inline" id="btn-modo-redaccion" title="Modo Redacción — redacta un documento con precisión jurídica">✍</button>
     </div>
   </div>
 
@@ -622,6 +608,7 @@
     function activarModoRedaccion() {
       modoActual = 'redaccion';
       btnModoRed.classList.add('activo');
+      btnModoRed.title = 'Volver al modo consulta';
       grupoRecetas.style.display = 'flex';
       recetaActiva = null; datosRedaccion = {}; preguntaIdxActual = 0;
       inputEl.disabled = true; btnEnviar.disabled = true;
@@ -633,6 +620,7 @@
     function activarModoConsulta() {
       modoActual = 'consulta';
       btnModoRed.classList.remove('activo');
+      btnModoRed.title = 'Modo Redacción — redacta un documento con precisión jurídica';
       grupoRecetas.style.display = 'none';
       recetaActiva = null; datosRedaccion = {};
       saludoInicial();
