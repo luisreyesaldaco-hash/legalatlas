@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     // Búsqueda de contexto legal
     let contextoLegal;
     const esMexico = !pais || pais === 'MX';
-    if (estado) {
+    if (estado && esMexico) {
       // México con estado: ley estatal (7) + CPEUM (3) en paralelo
       const [ccResults, cpuemResults] = await Promise.allSettled([
         buscarArticulos(pregunta, estado, fuente || 'Código Civil', 7),
