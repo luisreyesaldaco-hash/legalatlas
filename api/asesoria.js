@@ -88,7 +88,7 @@ INSTRUCCIONES:
         systemInstruction: systemPrompt,
         responseMimeType:  'application/json',
         temperature:       0.1,
-        maxOutputTokens:   2500
+        maxOutputTokens:   4000
       }
     })
 
@@ -96,7 +96,19 @@ INSTRUCCIONES:
     if (!raw) throw new Error('Gemini no devolvió contenido')
     let parsed
     try { parsed = JSON.parse(raw) }
-    catch { throw new Error('Gemini devolvió JSON inválido: ' + raw.slice(0, 120)) }
+    catch {
+      // Respuesta cortada: devolver el texto parcial en lugar de 500
+      return res.status(200).json({
+        respuesta: {
+          draftHtml: raw.replace(/^[\s\S]*?"draftHtml"\s*:\s*"/, '').replace(/"[\s\S]*$/, '').replace(/\\n/g, '<br>') || raw,
+          resumen:   'Respuesta generada (puede estar incompleta).',
+          articulos: [],
+          confianza: 'Baja',
+          fuentes:   []
+        },
+        meta: { articulos_procesados: contextoLegal?.length || 0, modo_aplicado: modo, advertencia: 'JSON truncado' }
+      })
+    }
 
     // 4. Verificación cruzada — solo artículos que realmente vienen del contexto
     const articulosValidos = []
