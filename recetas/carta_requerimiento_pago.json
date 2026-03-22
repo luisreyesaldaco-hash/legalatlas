@@ -1,0 +1,62 @@
+{
+  "tipo": "carta_requerimiento_pago",
+  "titulo": "Carta de Requerimiento de Pago",
+  "descripcion": "Carta formal para exigir el pago de una deuda pendiente",
+  "triggers": ["requerimiento de pago", "cobrar deuda", "carta de cobro", "requerir pago", "exigir pago"],
+  "datos_requeridos": [
+    {
+      "campo": "nombre_acreedor",
+      "pregunta": "¿Cuál es tu nombre completo? (quien exige el pago)",
+      "ejemplo": "Juan Pérez González"
+    },
+    {
+      "campo": "nombre_deudor",
+      "pregunta": "¿Cuál es el nombre completo del deudor?",
+      "ejemplo": "Roberto Sánchez López"
+    },
+    {
+      "campo": "monto",
+      "pregunta": "¿Cuál es el monto adeudado?",
+      "ejemplo": "$15,000 MXN"
+    },
+    {
+      "campo": "concepto",
+      "pregunta": "¿Por qué concepto se originó la deuda?",
+      "ejemplo": "depósito de arrendamiento del inmueble en Calle Reforma 45"
+    },
+    {
+      "campo": "estado",
+      "pregunta": "¿En qué estado de la República ocurrió el acuerdo o la deuda?",
+      "ejemplo": "Puebla"
+    },
+    {
+      "campo": "fecha_limite",
+      "pregunta": "¿Cuántos días le otorgas al deudor para pagar? (o una fecha límite específica)",
+      "ejemplo": "15 días hábiles a partir de recibida esta carta"
+    }
+  ],
+  "preguntas_profundidad": [
+    {
+      "campo": "domicilio_deudor",
+      "pregunta": "¿Conoces el domicilio del deudor donde se enviará la carta? (escribe 'no' para omitir)",
+      "ejemplo": "Av. Juárez 123, Col. Centro, Puebla, C.P. 72000",
+      "opcional": true
+    },
+    {
+      "campo": "fecha_origen",
+      "pregunta": "¿En qué fecha se originó el acuerdo o préstamo? (escribe 'no' para omitir)",
+      "ejemplo": "15 de enero de 2025",
+      "opcional": true
+    }
+  ],
+  "estructura": [
+    { "seccion": "encabezado", "descripcion": "Lugar, fecha y datos del acreedor" },
+    { "seccion": "destinatario", "descripcion": "Nombre y domicilio del deudor" },
+    { "seccion": "antecedentes", "descripcion": "Origen y descripción de la deuda" },
+    { "seccion": "requerimiento", "descripcion": "Exigencia formal de pago con plazo perentorio" },
+    { "seccion": "apercibimiento", "descripcion": "Consecuencias legales del incumplimiento" },
+    { "seccion": "cierre", "descripcion": "Firma y datos del acreedor" }
+  ],
+  "system_prompt": "Eres un abogado redactor mexicano experto en derecho civil y cartas formales de requerimiento de pago para la jurisdicción de {estado}, México. Redacta una carta formal, clara y con lenguaje jurídico apropiado. La carta debe ser firme y profesional, mencionando las consecuencias legales del incumplimiento (vía judicial, daños y perjuicios). Usa artículos del Código Civil de {estado} cuando aplique (especialmente sobre obligaciones, deuda vencida y mora). La carta debe tener la estructura: encabezado con lugar y fecha, destinatario, cuerpo con antecedentes y requerimiento formal, apercibimiento legal, y cierre con firma. Responde EXCLUSIVAMENTE con HTML bien estructurado usando <p>, <strong>, <br>, <div> — NO uses etiquetas <html>, <body>, <head>, <style> ni markdown. Solo HTML directo listo para insertar en un documento.",
+  "nota_al_usuario": "Esta carta tiene valor orientativo. Para mayor efectividad legal, te recomendamos enviarla por correo certificado o mediante fedatario público."
+}

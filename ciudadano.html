@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Legal Atlas — Apolo</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -253,6 +254,77 @@
     }
     .btn-enviar:hover { background: #c49a3c; color: #1a1a16; }
     .btn-enviar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── Modo Redacción ── */
+    .btn-modo {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border: 1px solid rgba(196,154,60,0.4);
+      background: transparent;
+      color: rgba(196,154,60,0.7);
+      cursor: pointer;
+      transition: all 0.18s;
+      margin-left: 12px;
+      flex-shrink: 0;
+    }
+    .btn-modo:hover, .btn-modo.activo {
+      background: #c49a3c;
+      color: #111110;
+      border-color: #c49a3c;
+    }
+    .recetas-wrap { display: flex; gap: 6px; flex-wrap: wrap; }
+    .btn-generar {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      background: #c49a3c;
+      color: #111110;
+      border: none;
+      cursor: pointer;
+      transition: background 0.18s;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    .btn-generar:hover:not(:disabled) { background: #d4ad50; }
+    .btn-generar:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-pdf {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      background: #1a1a16;
+      color: #c49a3c;
+      border: 1px solid #c49a3c;
+      cursor: pointer;
+      transition: all 0.18s;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    .btn-pdf:hover { background: #c49a3c; color: #1a1a16; }
+    .doc-container {
+      background: #ffffff;
+      border: 1px solid #ddd8ce;
+      padding: 28px 32px;
+      color: #1c1c18;
+      font-family: 'Lora', serif;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .nota-legal {
+      font-size: 11px;
+      font-style: italic;
+      color: #7a7060;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-left: 2px solid rgba(196,154,60,0.4);
+      background: rgba(196,154,60,0.04);
+    }
   </style>
 </head>
 <body>
@@ -264,6 +336,7 @@
       APOLO · Motor normativo
     </div>
     <a href="index.html" class="topbar-back">← Inicio</a>
+    <button class="btn-modo" id="btn-modo-redaccion">✍ Redacción</button>
   </div>
 
   <div class="selection-bar">
@@ -285,6 +358,12 @@
       <select id="selector-estado" class="selector-estado">
         <option value="">Selecciona tu estado...</option>
       </select>
+    </div>
+    <div class="sel-group" id="grupo-recetas" style="display:none">
+      <span class="sel-label">Documento</span>
+      <div class="recetas-wrap" id="recetas-wrap">
+        <span style="font-family:'Cinzel',serif;font-size:9px;color:rgba(196,154,60,0.4);letter-spacing:0.1em;">Cargando...</span>
+      </div>
     </div>
   </div>
 
@@ -444,6 +523,21 @@
 
     // ── Envío de consulta ────────────────────────────────────────────────────
     async function enviar() {
+      // En modo redacción, capturar respuesta para la pregunta actual
+      if (modoActual === 'redaccion' && recetaActiva && preguntaIdxActual < todasLasPreguntas.length) {
+        const texto = inputEl.value.trim();
+        if (!texto) return;
+        inputEl.value   = '';
+        inputEl.disabled   = true;
+        btnEnviar.disabled = true;
+        agregarMensaje('usuario', texto);
+        const pregunta = todasLasPreguntas[preguntaIdxActual];
+        datosRedaccion[pregunta.campo] = texto;
+        preguntaIdxActual++;
+        setTimeout(preguntarSiguiente, 300);
+        return;
+      }
+
       const texto = inputEl.value.trim();
       if (!texto) return;
 
@@ -487,6 +581,160 @@
     inputEl.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); }
     });
+
+    // ── Modo Redacción ────────────────────────────────────────────────────────
+    let modoActual        = 'consulta';
+    let recetaActiva      = null;
+    let datosRedaccion    = {};
+    let preguntaIdxActual = 0;
+    let todasLasPreguntas = [];
+
+    const btnModoRed  = document.getElementById('btn-modo-redaccion');
+    const grupoRecetas = document.getElementById('grupo-recetas');
+    const recetasWrap  = document.getElementById('recetas-wrap');
+
+    btnModoRed.addEventListener('click', function () {
+      if (modoActual === 'consulta') activarModoRedaccion();
+      else activarModoConsulta();
+    });
+
+    function activarModoRedaccion() {
+      modoActual = 'redaccion';
+      btnModoRed.classList.add('activo');
+      grupoRecetas.style.display = 'flex';
+      recetaActiva = null; datosRedaccion = {}; preguntaIdxActual = 0;
+      inputEl.disabled = true; btnEnviar.disabled = true;
+      mensajesEl.innerHTML = '';
+      agregarMensaje('apolo', 'Modo Redacción activado. Selecciona el tipo de documento que necesitas generar.');
+      cargarRecetas();
+    }
+
+    function activarModoConsulta() {
+      modoActual = 'consulta';
+      btnModoRed.classList.remove('activo');
+      grupoRecetas.style.display = 'none';
+      recetaActiva = null; datosRedaccion = {};
+      saludoInicial();
+      verificarListo();
+    }
+
+    async function cargarRecetas() {
+      try {
+        const res  = await fetch('/api/redactar');
+        const lista = await res.json();
+        recetasWrap.innerHTML = '';
+        lista.forEach(r => {
+          const btn = document.createElement('button');
+          btn.className = 'burbuja';
+          btn.textContent = r.titulo;
+          btn.dataset.tipo = r.tipo;
+          btn.addEventListener('click', () => seleccionarReceta(r.tipo));
+          recetasWrap.appendChild(btn);
+        });
+      } catch (e) {
+        recetasWrap.innerHTML = '<span style="font-family:Cinzel,serif;font-size:9px;color:rgba(196,154,60,0.4);">Error cargando documentos</span>';
+      }
+    }
+
+    async function seleccionarReceta(tipo) {
+      recetasWrap.querySelectorAll('.burbuja').forEach(b => b.classList.remove('activa'));
+      recetasWrap.querySelector(`[data-tipo="${tipo}"]`)?.classList.add('activa');
+      try {
+        const res = await fetch('/api/redactar?tipo=' + tipo);
+        recetaActiva = await res.json();
+        datosRedaccion = {}; preguntaIdxActual = 0;
+        todasLasPreguntas = [
+          ...(recetaActiva.datos_requeridos     || []),
+          ...(recetaActiva.preguntas_profundidad || [])
+        ];
+        agregarMensaje('apolo',
+          'Perfecto. Voy a redactar una <strong>' + recetaActiva.titulo + '</strong>.<br>' +
+          'Necesito algunos datos. Responde las siguientes preguntas y al final generamos el documento.'
+        );
+        setTimeout(preguntarSiguiente, 400);
+      } catch (e) {
+        agregarMensaje('apolo', 'Error cargando el documento: ' + e.message);
+      }
+    }
+
+    function preguntarSiguiente() {
+      if (preguntaIdxActual >= todasLasPreguntas.length) {
+        mostrarBotonGenerar();
+        return;
+      }
+      const p = todasLasPreguntas[preguntaIdxActual];
+      const esOp = p.opcional
+        ? '<br><em style="opacity:0.45;font-size:12px;">(opcional — escribe "no" para omitir)</em>'
+        : '';
+      agregarMensaje('apolo',
+        '<strong>' + p.pregunta + '</strong>' + esOp +
+        '<br><em style="opacity:0.4;font-size:12px;">Ej: ' + (p.ejemplo || '...') + '</em>'
+      );
+      inputEl.disabled   = false;
+      btnEnviar.disabled = false;
+      inputEl.placeholder = 'Escribe tu respuesta…';
+      inputEl.focus();
+    }
+
+    function mostrarBotonGenerar() {
+      const div = document.createElement('div');
+      div.className = 'msg msg-apolo';
+      div.innerHTML =
+        '<div class="msg-sender">APOLO</div>' +
+        '<p>Tengo todos los datos. Haz clic para generar tu documento.</p>' +
+        '<button class="btn-generar" id="btn-generar">Generar documento</button>';
+      mensajesEl.appendChild(div);
+      mensajesEl.scrollTop = mensajesEl.scrollHeight;
+      inputEl.disabled   = true;
+      btnEnviar.disabled = true;
+      document.getElementById('btn-generar').addEventListener('click', generarDocumento);
+    }
+
+    async function generarDocumento() {
+      const btnGen = document.getElementById('btn-generar');
+      if (btnGen) { btnGen.disabled = true; btnGen.textContent = 'Generando…'; }
+      agregarTyping();
+      try {
+        const res = await fetch('/api/redactar', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ tipo: recetaActiva.tipo, datos: datosRedaccion })
+        });
+        quitarTyping();
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+
+        const div = document.createElement('div');
+        div.className = 'msg msg-apolo';
+        div.style.maxWidth = '720px';
+        div.innerHTML =
+          '<div class="msg-sender">APOLO — DOCUMENTO GENERADO</div>' +
+          '<div class="doc-container" id="doc-generado">' + data.html + '</div>' +
+          (data.nota ? '<div class="nota-legal">' + data.nota + '</div>' : '') +
+          '<button class="btn-pdf" id="btn-pdf">⬇ Descargar PDF</button>';
+        mensajesEl.appendChild(div);
+        mensajesEl.scrollTop = mensajesEl.scrollHeight;
+        document.getElementById('btn-pdf').addEventListener('click', descargarPDF);
+      } catch (err) {
+        quitarTyping();
+        agregarMensaje('apolo', 'Error generando el documento: ' + err.message);
+        if (btnGen) { btnGen.disabled = false; btnGen.textContent = 'Reintentar'; }
+      }
+    }
+
+    function descargarPDF() {
+      const docEl = document.getElementById('doc-generado');
+      if (!docEl) { alert('Primero genera el documento.'); return; }
+      const titulo = (recetaActiva?.titulo || 'documento').replace(/\s+/g, '_');
+      const opt = {
+        margin:     15,
+        filename:   titulo + '.pdf',
+        image:      { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF:      { unit: 'mm', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(docEl).save();
+    }
 
     // ── Init ─────────────────────────────────────────────────────────────────
     saludoInicial();
