@@ -59,12 +59,27 @@ export default async function handler(req, res) {
     const receta = leerReceta(tipo);
 
     // ── RAG: buscar artículos relevantes en Supabase ──────────────────────
-    const queryRAG = receta.query_rag
+    const CPEUM_LEY = 'Constitución Política de los Estados Unidos Mexicanos';
+    const queryRAG  = receta.query_rag
       ? `${receta.query_rag} ${datos.concepto || ''}`.trim()
       : [datos.concepto, datos.peticion].filter(Boolean).join(' ') || tipo.replace(/_/g, ' ');
+    const esMexico  = !receta.pais || receta.pais === 'MX';
+
     let contextoLegal = [];
     try {
-      contextoLegal = await buscarArticulos(queryRAG, datos.estado || '', receta.fuente_ley || 'Código Civil', 5);
+      if (esMexico && datos.estado) {
+        // Búsqueda paralela: ley estatal (4 arts) + CPEUM (2 arts)
+        const [leyResults, cpuemResults] = await Promise.allSettled([
+          buscarArticulos(queryRAG, datos.estado, receta.fuente_ley || 'Código Civil', 4),
+          buscarArticulos('acceso justicia petición derecho acudir tribunales garantías', '', CPEUM_LEY, 2)
+        ]);
+        contextoLegal = [
+          ...(leyResults.status   === 'fulfilled' ? leyResults.value   : []),
+          ...(cpuemResults.status === 'fulfilled' ? cpuemResults.value : [])
+        ];
+      } else {
+        contextoLegal = await buscarArticulos(queryRAG, datos.estado || '', receta.fuente_ley || 'Código Civil', 5);
+      }
     } catch (e) {
       console.warn('RAG falló en redactar:', e.message);
     }
