@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Legal Atlas — Apolo</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -292,7 +292,7 @@
     }
     .btn-generar:hover:not(:disabled) { background: #d4ad50; }
     .btn-generar:disabled { opacity: 0.55; cursor: not-allowed; }
-    .btn-pdf {
+    .btn-docx {
       font-family: 'Cinzel', serif;
       font-size: 10px;
       letter-spacing: 0.15em;
@@ -306,7 +306,7 @@
       margin-top: 10px;
       display: inline-block;
     }
-    .btn-pdf:hover { background: #c49a3c; color: #1a1a16; }
+    .btn-docx:hover { background: #c49a3c; color: #1a1a16; }
     .doc-container {
       background: #ffffff;
       border: 1px solid #ddd8ce;
@@ -732,10 +732,10 @@
           '<div class="msg-sender">APOLO — DOCUMENTO GENERADO</div>' +
           '<div class="doc-container" id="doc-generado">' + data.html + '</div>' +
           (data.nota ? '<div class="nota-legal">' + data.nota + '</div>' : '') +
-          '<button class="btn-pdf" id="btn-pdf">⬇ Descargar PDF</button>';
+          '<button class="btn-docx" id="btn-docx">⬇ Descargar DOCX</button>';
         mensajesEl.appendChild(div);
         mensajesEl.scrollTop = mensajesEl.scrollHeight;
-        document.getElementById('btn-pdf').addEventListener('click', descargarPDF);
+        document.getElementById('btn-docx').addEventListener('click', descargarDOCX);
       } catch (err) {
         quitarTyping();
         agregarMensaje('apolo', 'Error generando el documento: ' + err.message);
@@ -743,18 +743,18 @@
       }
     }
 
-    function descargarPDF() {
+    function descargarDOCX() {
       const docEl = document.getElementById('doc-generado');
       if (!docEl) { alert('Primero genera el documento.'); return; }
       const titulo = (recetaActiva?.titulo || 'documento').replace(/\s+/g, '_');
-      const opt = {
-        margin:     15,
-        filename:   titulo + '.pdf',
-        image:      { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF:      { unit: 'mm', format: 'letter', orientation: 'portrait' }
-      };
-      html2pdf().set(opt).from(docEl).save();
+      const content = '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>' + docEl.innerHTML + '</body></html>';
+      const blob = htmlDocx.asBlob(content);
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = titulo + '.docx';
+      a.click();
+      URL.revokeObjectURL(url);
     }
 
     // ── Init ─────────────────────────────────────────────────────────────────

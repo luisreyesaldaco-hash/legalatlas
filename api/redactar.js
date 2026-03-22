@@ -48,6 +48,7 @@ export default async function handler(req, res) {
   // ── POST: generar el documento ───────────────────────────────────────────
   try {
     const body  = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+    console.log("datos recibidos:", JSON.stringify(body, null, 2));
     const { tipo, datos } = body;
 
     if (!tipo || !datos) {
