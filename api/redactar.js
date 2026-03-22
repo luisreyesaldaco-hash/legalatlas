@@ -1,15 +1,10 @@
-import { AzureOpenAI } from "openai";
+import { GoogleGenAI } from "@google/genai";
 import fs from "fs";
 import path from "path";
 
 export const config = { api: { bodyParser: true } };
 
-const client = new AzureOpenAI({
-  endpoint: process.env.AZURE_OPENAI_ENDPOINT,
-  apiKey:   process.env.AZURE_OPENAI_KEY,
-  apiVersion: "2024-12-01-preview",
-  deployment: "gpt-4o-mini"
-});
+const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
 
 function leerReceta(tipo) {
   const ruta = path.join(process.cwd(), "recetas", `${tipo}.json`);
@@ -23,7 +18,6 @@ export default async function handler(req, res) {
     const { tipo } = req.query;
 
     if (!tipo) {
-      // Listar todas las recetas disponibles
       try {
         const carpeta  = path.join(process.cwd(), "recetas");
         const archivos = fs.readdirSync(carpeta).filter(f => f.endsWith('.json'));
@@ -37,15 +31,14 @@ export default async function handler(req, res) {
       }
     }
 
-    // Devolver metadatos de una receta específica (preguntas, sin system_prompt)
     try {
       const r = leerReceta(tipo);
       return res.status(200).json({
-        tipo:                 r.tipo,
-        titulo:               r.titulo,
-        datos_requeridos:     r.datos_requeridos,
+        tipo:                  r.tipo,
+        titulo:                r.titulo,
+        datos_requeridos:      r.datos_requeridos,
         preguntas_profundidad: r.preguntas_profundidad,
-        nota_al_usuario:      r.nota_al_usuario
+        nota_al_usuario:       r.nota_al_usuario
       });
     } catch (e) {
       return res.status(404).json({ error: `Receta '${tipo}' no encontrada` });
@@ -83,17 +76,18 @@ export default async function handler(req, res) {
       `Redacta la carta con los siguientes datos:\n${requeridos}` +
       (opcionales ? `\n${opcionales}` : '');
 
-    const completion = await client.chat.completions.create({
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user",   content: mensajeUsuario }
-      ],
-      max_tokens: 2500,
-      temperature: 0.1
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: mensajeUsuario,
+      config: {
+        systemInstruction: systemPrompt,
+        temperature:       0.1,
+        maxOutputTokens:   4000
+      }
     });
 
-    const html = completion.choices[0]?.message?.content;
-    if (!html) throw new Error("Azure no devolvió contenido");
+    const html = response.text;
+    if (!html) throw new Error("Gemini no devolvió contenido");
 
     res.status(200).json({
       html,

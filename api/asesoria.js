@@ -1,6 +1,9 @@
+import { GoogleGenAI } from "@google/genai";
 import { buscarArticulos } from "./buscar.js";
 
 export const config = { api: { bodyParser: true } };
+
+const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
 
 const CPEUM_LEY = 'Constitución Política de los Estados Unidos Mexicanos';
 
@@ -67,30 +70,18 @@ INSTRUCCIONES:
 }`;
 
     // 3. Llamada a Gemini Flash
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GOOGLE_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: systemPrompt }] },
-          contents: [{ role: 'user', parts: [{ text: pregunta }] }],
-          generationConfig: {
-            responseMimeType: 'application/json',
-            temperature: 0.1,
-            maxOutputTokens: 1500
-          }
-        })
+    const geminiResponse = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: pregunta,
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType:  'application/json',
+        temperature:       0.1,
+        maxOutputTokens:   1500
       }
-    )
+    })
 
-    if (!geminiRes.ok) {
-      const err = await geminiRes.text()
-      throw new Error(`Gemini error: ${geminiRes.status} — ${err}`)
-    }
-
-    const geminiJson = await geminiRes.json()
-    const raw = geminiJson.candidates?.[0]?.content?.parts?.[0]?.text
+    const raw = geminiResponse.text
     if (!raw) throw new Error('Gemini no devolvió contenido')
     let parsed
     try { parsed = JSON.parse(raw) }
