@@ -762,6 +762,22 @@
       margin: 8px 0;
     }
 
+    /* Optgroup styling */
+    .nav-select optgroup {
+      font-family: 'Cinzel', serif;
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(196,154,60,0.5);
+      background: #0d0d0f;
+    }
+    .nav-select option {
+      font-family: 'Lora', serif;
+      font-size: 12px;
+      background: #0d0d0f;
+      color: rgba(245,237,216,0.88);
+    }
+
     /* Bookmarks */
     .bookmarks-section {
       padding: 10px 14px 4px;
@@ -1053,12 +1069,29 @@
         const res  = await fetch(`/api/abogado?action=leyes&pais=${enc(paisActivo)}`);
         const json = await res.json();
         const leyes = json.leyes || [];
+
         selLey.innerHTML = '<option value="">— Selecciona ley —</option>';
-        leyes.forEach(l => {
-          const opt = document.createElement('option');
-          opt.value = l; opt.textContent = l;
-          selLey.appendChild(opt);
-        });
+
+        const federales = leyes.filter(l => l.tipo === 'federal');
+        const estatales = leyes.filter(l => l.tipo === 'estatal');
+
+        function agregarGrupo(label, lista) {
+          if (!lista.length) return;
+          const grp = document.createElement('optgroup');
+          grp.label = label;
+          lista.forEach(l => {
+            const opt = document.createElement('option');
+            opt.value = l.ley;
+            opt.textContent = l.ley;
+            opt.dataset.tipo = l.tipo;
+            grp.appendChild(opt);
+          });
+          selLey.appendChild(grp);
+        }
+
+        agregarGrupo('Leyes Federales', federales);
+        agregarGrupo('Leyes Estatales', estatales);
+
         selLey.disabled = false;
       } catch (err) {
         selLey.innerHTML = '<option value="">Error al cargar</option>';
@@ -1084,23 +1117,29 @@
 
       if (!leyActiva) return;
 
-      // Check if this ley has estados
-      try {
-        const res  = await fetch(`/api/abogado?action=estados_por_ley&pais=${enc(paisActivo)}&ley=${enc(leyActiva)}`);
-        const json = await res.json();
-        const estados = json.estados || [];
-        if (estados.length > 0) {
-          selEstado.innerHTML = '<option value="">Todos los estados…</option>';
-          estados.forEach(e => {
-            const opt = document.createElement('option');
-            opt.value = e; opt.textContent = e;
-            selEstado.appendChild(opt);
-          });
-          grupoEst.style.display = 'block';
-          selEstado.onchange = onEstadoChange;
+      // Detectar tipo desde el option seleccionado (data-tipo)
+      const selLeyEl    = document.getElementById('sel-ley');
+      const optSelected = selLeyEl.options[selLeyEl.selectedIndex];
+      const tipoLey     = optSelected?.dataset?.tipo || 'federal';
+
+      if (tipoLey === 'estatal') {
+        try {
+          const res  = await fetch(`/api/abogado?action=estados_por_ley&pais=${enc(paisActivo)}&ley=${enc(leyActiva)}`);
+          const json = await res.json();
+          const estados = json.estados || [];
+          if (estados.length > 0) {
+            selEstado.innerHTML = '<option value="">Todos los estados…</option>';
+            estados.forEach(e => {
+              const opt = document.createElement('option');
+              opt.value = e; opt.textContent = e;
+              selEstado.appendChild(opt);
+            });
+            grupoEst.style.display = 'block';
+            selEstado.onchange = onEstadoChange;
+          }
+        } catch (err) {
+          console.warn('[onLeyChange] estados_por_ley falló:', err);
         }
-      } catch (err) {
-        console.warn('[onLeyChange] estados_por_ley falló:', err);
       }
 
       await cargarNivelesPrimarios();

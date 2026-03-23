@@ -36,17 +36,24 @@ export default async function handler(req, res) {
       return res.status(200).json({ paises: unique });
     }
 
-    // ── leyes (por pais) ─────────────────────────────────────────────────────
+    // ── leyes (por pais) — clasifica federal vs estatal ─────────────────────
     if (action === 'leyes') {
       if (!pais) return res.status(400).json({ error: 'Parámetro pais requerido' });
       const { data, error } = await supabase
         .from('articulos')
-        .select('ley')
+        .select('ley, estado')
         .eq('pais', pais)
         .not('ley', 'is', null);
       if (error) throw error;
-      const unique = [...new Set((data || []).map(r => r.ley).filter(Boolean))].sort();
-      return res.status(200).json({ leyes: unique });
+      // Una ley es 'estatal' si al menos un artículo tiene estado no vacío
+      const mapa = {};
+      (data || []).forEach(r => {
+        if (!r.ley) return;
+        if (!mapa[r.ley]) mapa[r.ley] = { ley: r.ley, tipo: 'federal' };
+        if (r.estado && r.estado.trim()) mapa[r.ley].tipo = 'estatal';
+      });
+      const leyes = Object.values(mapa).sort((a, b) => a.ley.localeCompare(b.ley));
+      return res.status(200).json({ leyes });
     }
 
     // ── estados_por_ley ──────────────────────────────────────────────────────
