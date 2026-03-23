@@ -1,0 +1,56 @@
+{
+  "tipo": "contrato_prestamo_dinero",
+  "titulo": "Contrato de Préstamo de Dinero",
+  "descripcion": "Contrato de mutuo entre particulares para préstamo de dinero",
+  "precio_mxn": 149,
+  "fuente_ley": "Código Civil",
+  "query_rag": "mutuo préstamo dinero obligaciones restitución intereses mora vencimiento deudor acreedor",
+  "datos_requeridos": [
+    {
+      "campo": "nombre_prestamista",
+      "pregunta": "¿Cuál es el nombre completo del prestamista? (quien presta el dinero)",
+      "ejemplo": "Luis Alfonso Reyes Aldaco"
+    },
+    {
+      "campo": "nombre_deudor",
+      "pregunta": "¿Cuál es el nombre completo del deudor? (quien recibe el préstamo)",
+      "ejemplo": "Roberto Martínez Pérez"
+    },
+    {
+      "campo": "monto",
+      "pregunta": "¿Cuál es el monto del préstamo? (número y letra)",
+      "ejemplo": "$10,000 (DIEZ MIL PESOS 00/100 M.N.)"
+    },
+    {
+      "campo": "fecha_entrega",
+      "pregunta": "¿En qué fecha se entrega el dinero?",
+      "ejemplo": "20 de mayo de 2025"
+    },
+    {
+      "campo": "fecha_devolucion",
+      "pregunta": "¿En qué fecha debe devolverse el dinero?",
+      "ejemplo": "20 de agosto de 2025"
+    },
+    {
+      "campo": "genera_intereses",
+      "pregunta": "¿El préstamo genera intereses? (sí / no)",
+      "ejemplo": "no"
+    }
+  ],
+  "preguntas_profundidad": [
+    {
+      "campo": "tasa_interes",
+      "pregunta": "Si genera intereses, ¿a qué tasa mensual? (escribe 'no' si no aplica)",
+      "ejemplo": "1.5% mensual sobre saldo insoluto",
+      "opcional": true
+    },
+    {
+      "campo": "forma_devolucion",
+      "pregunta": "¿Cómo se devolverá el dinero? (escribe 'no' para pago único al vencimiento)",
+      "ejemplo": "pagos mensuales de $3,333",
+      "opcional": true
+    }
+  ],
+  "system_prompt": "Eres APOLO, redactor legal mexicano experto en contratos de mutuo para la jurisdicción de {estado}, México. Genera un CONTRATO DE PRÉSTAMO DE DINERO (MUTUO) completo y válido.\n\nFecha: {fecha_actual}\n\nCONTEXTO LEGAL RECUPERADO DE SUPABASE:\n{contexto_legal}\n\nEL CONTRATO DEBE INCLUIR ESTAS SECCIONES:\n\nSECCIÓN 1 — PARTES: Prestamista: {nombre_prestamista}. Deudor: {nombre_deudor}. Jurisdicción: {estado}.\n\nSECCIÓN 2 — OBJETO: El prestamista entrega al deudor la cantidad de {monto} con fecha {fecha_entrega}. El deudor declara recibirla a su entera satisfacción.\n\nSECCIÓN 3 — PLAZO DE DEVOLUCIÓN: El deudor se obliga a devolver la totalidad a más tardar el {fecha_devolucion}. Forma de devolución: {forma_devolucion}.\n\nSECCIÓN 4 — INTERESES: {genera_intereses}. Tasa pactada: {tasa_interes}. En caso de mora, se generarán intereses moratorios adicionales conforme a la ley.\n\nSECCIÓN 5 — INCUMPLIMIENTO: En caso de no pago en la fecha pactada, el prestamista podrá exigir el pago inmediato del total adeudado más intereses, o iniciar las acciones legales civiles correspondientes ante los tribunales de {estado}.\n\nSECCIÓN 6 — FUNDAMENTO LEGAL: Cita MÍNIMO 2 artículos DIFERENTES del contexto legal (preferentemente artículos sobre mutuo, obligaciones y mora). NO repitas el mismo número.\n\nSECCIÓN 7 — FIRMAS: Prestamista, deudor y un testigo. {estado}, {fecha_actual}.\n\nREGLAS ABSOLUTAS:\n- 7 secciones completas\n- Solo artículos del contexto legal\n- HTML con <p>, <strong>, <br>, <h3> — sin etiquetas de documento",
+  "nota_al_usuario": "Este contrato es válido entre particulares. Para mayor seguridad considere acompañarlo de un pagaré firmado por el deudor como título ejecutivo."
+}

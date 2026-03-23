@@ -1,0 +1,67 @@
+{
+  "tipo": "contrato_arrendamiento",
+  "titulo": "Contrato de Arrendamiento",
+  "descripcion": "Contrato de renta de casa habitación entre particulares",
+  "precio_mxn": 299,
+  "fuente_ley": "Código Civil",
+  "query_rag": "arrendamiento contrato renta inmueble habitación depósito garantía obligaciones arrendador arrendatario",
+  "datos_requeridos": [
+    {
+      "campo": "nombre_arrendador",
+      "pregunta": "¿Cuál es el nombre completo del arrendador? (propietario — quien renta)",
+      "ejemplo": "Carlos Mendoza Ríos"
+    },
+    {
+      "campo": "nombre_arrendatario",
+      "pregunta": "¿Cuál es el nombre completo del arrendatario? (inquilino — quien ocupa)",
+      "ejemplo": "Ana Solis Vega"
+    },
+    {
+      "campo": "domicilio_inmueble",
+      "pregunta": "¿Cuál es la dirección completa del inmueble a rentar?",
+      "ejemplo": "Calle Reforma 45, Col. Centro, Puebla, C.P. 72000"
+    },
+    {
+      "campo": "monto_renta",
+      "pregunta": "¿Cuál es el monto de la renta mensual?",
+      "ejemplo": "$8,000 MXN mensuales"
+    },
+    {
+      "campo": "monto_deposito",
+      "pregunta": "¿Cuál es el monto del depósito en garantía?",
+      "ejemplo": "$16,000 MXN (dos meses de renta)"
+    },
+    {
+      "campo": "fecha_inicio",
+      "pregunta": "¿Cuál es la fecha de inicio del contrato?",
+      "ejemplo": "1 de julio de 2025"
+    },
+    {
+      "campo": "duracion_meses",
+      "pregunta": "¿Cuál es la duración del contrato?",
+      "ejemplo": "12 meses"
+    }
+  ],
+  "preguntas_profundidad": [
+    {
+      "campo": "servicios_incluidos",
+      "pregunta": "¿Qué servicios incluye la renta? (agua, luz, gas, internet — escribe 'no' si ninguno)",
+      "ejemplo": "agua y gas incluidos",
+      "opcional": true
+    },
+    {
+      "campo": "permite_subarrendar",
+      "pregunta": "¿Se permite subarrendar el inmueble? (sí / no)",
+      "ejemplo": "no",
+      "opcional": true
+    },
+    {
+      "campo": "inventario",
+      "pregunta": "¿Hay inventario de muebles o enseres incluidos? Descríbelos brevemente (escribe 'no' si no aplica)",
+      "ejemplo": "refrigerador, lavadora, estufa",
+      "opcional": true
+    }
+  ],
+  "system_prompt": "Eres APOLO, redactor legal mexicano experto en arrendamiento para la jurisdicción de {estado}, México. Genera un CONTRATO DE ARRENDAMIENTO DE CASA HABITACIÓN completo y válido. NO omitas ninguna sección.\n\nFecha del contrato: {fecha_actual}\n\nCONTEXTO LEGAL RECUPERADO DE SUPABASE:\n{contexto_legal}\n\nEL CONTRATO DEBE INCLUIR EXACTAMENTE ESTAS 10 SECCIONES:\n\nSECCIÓN 1 — DECLARACIONES: Datos completos del arrendador ({nombre_arrendador}) y arrendatario ({nombre_arrendatario}), incluyendo que el arrendador declara ser propietario o tener facultades para rentar.\n\nSECCIÓN 2 — OBJETO: Descripción del inmueble: {domicilio_inmueble}. Uso exclusivo para casa habitación.\n\nSECCIÓN 3 — VIGENCIA: Inicio {fecha_inicio}, duración {duracion_meses}. Al vencimiento se requiere aviso con 30 días de anticipación.\n\nSECCIÓN 4 — RENTA Y FORMA DE PAGO: Renta mensual de {monto_renta}. Pagadera los primeros 5 días de cada mes. Servicios: {servicios_incluidos}.\n\nSECCIÓN 5 — DEPÓSITO EN GARANTÍA: Monto {monto_deposito}. Condiciones de devolución al término del contrato.\n\nSECCIÓN 6 — OBLIGACIONES DEL ARRENDADOR: Entregar el inmueble en buen estado, realizar reparaciones mayores, no perturbar el uso pacífico.\n\nSECCIÓN 7 — OBLIGACIONES DEL ARRENDATARIO: Pagar renta en tiempo, conservar el inmueble, no modificarlo sin autorización, subarrendamiento: {permite_subarrendar}. Inventario: {inventario}.\n\nSECCIÓN 8 — CAUSAS DE RESCISIÓN: Falta de pago de dos mensualidades, uso distinto al pactado, daños al inmueble, subarrendamiento no autorizado.\n\nSECCIÓN 9 — FUNDAMENTO LEGAL: Cita MÍNIMO 3 artículos DIFERENTES del contexto legal proporcionado. NO repitas el mismo artículo.\n\nSECCIÓN 10 — FIRMAS: Espacio para firma del arrendador, arrendatario y dos testigos con nombre y firma. Lugar y fecha: {estado}, {fecha_actual}.\n\nREGLAS ABSOLUTAS:\n- Genera las 10 secciones completas\n- Usa SOLO artículos del contexto legal\n- Responde EXCLUSIVAMENTE con HTML usando <p>, <strong>, <br>, <h3> — sin <html>, <body>, <head>, <style> ni markdown",
+  "nota_al_usuario": "Este contrato es orientativo. Para mayor seguridad jurídica se recomienda firmar ante notario o con ratificación de firmas."
+}

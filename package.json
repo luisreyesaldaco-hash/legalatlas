@@ -2,6 +2,7 @@
   "type": "module",
   "dependencies": {
     "@google/genai": "^1.46.0",
-    "@supabase/supabase-js": "^2.99.3"
+    "@supabase/supabase-js": "^2.99.3",
+    "stripe": "^17.0.0"
   }
 }

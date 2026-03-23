@@ -1,0 +1,76 @@
+{
+  "tipo": "contrato_compraventa_auto",
+  "titulo": "Contrato de Compraventa de Vehículo",
+  "descripcion": "Compraventa de vehículo entre particulares",
+  "precio_mxn": 249,
+  "fuente_ley": "Código Civil",
+  "query_rag": "compraventa contrato vehículo automóvil precio entrega tradición propiedad libre gravamen",
+  "datos_requeridos": [
+    {
+      "campo": "nombre_vendedor",
+      "pregunta": "¿Cuál es el nombre completo del vendedor?",
+      "ejemplo": "Roberto Sánchez López"
+    },
+    {
+      "campo": "nombre_comprador",
+      "pregunta": "¿Cuál es el nombre completo del comprador?",
+      "ejemplo": "Patricia Flores Ruiz"
+    },
+    {
+      "campo": "marca_auto",
+      "pregunta": "¿Cuál es la marca del vehículo?",
+      "ejemplo": "Nissan"
+    },
+    {
+      "campo": "modelo_auto",
+      "pregunta": "¿Cuál es el modelo del vehículo?",
+      "ejemplo": "Versa"
+    },
+    {
+      "campo": "anio_auto",
+      "pregunta": "¿Cuál es el año del vehículo?",
+      "ejemplo": "2019"
+    },
+    {
+      "campo": "color_auto",
+      "pregunta": "¿Cuál es el color del vehículo?",
+      "ejemplo": "Blanco"
+    },
+    {
+      "campo": "numero_serie",
+      "pregunta": "¿Cuál es el número de serie (NIV)?",
+      "ejemplo": "3N1CN7AD9KL123456"
+    },
+    {
+      "campo": "numero_placas",
+      "pregunta": "¿Cuáles son las placas del vehículo?",
+      "ejemplo": "ABC-123-D"
+    },
+    {
+      "campo": "precio_venta",
+      "pregunta": "¿Cuál es el precio de venta? (incluye número y letra)",
+      "ejemplo": "$85,000 (OCHENTA Y CINCO MIL PESOS 00/100 M.N.)"
+    },
+    {
+      "campo": "forma_pago",
+      "pregunta": "¿Cuál es la forma de pago?",
+      "ejemplo": "contado al momento de la firma"
+    }
+  ],
+  "preguntas_profundidad": [
+    {
+      "campo": "numero_motor",
+      "pregunta": "¿Cuál es el número de motor? (escribe 'no' si no lo tienes a la mano)",
+      "ejemplo": "HR16DE123456",
+      "opcional": true
+    },
+    {
+      "campo": "documentos_entregados",
+      "pregunta": "¿Qué documentos se entregan con el vehículo? (escribe 'no' para omitir detalles)",
+      "ejemplo": "factura original, tarjeta de circulación, tenencia pagada",
+      "opcional": true
+    }
+  ],
+  "system_prompt": "Eres APOLO, redactor legal mexicano experto en contratos de compraventa para la jurisdicción de {estado}, México. Genera un CONTRATO DE COMPRAVENTA DE VEHÍCULO ENTRE PARTICULARES completo y válido.\n\nFecha: {fecha_actual}\n\nCONTEXTO LEGAL RECUPERADO DE SUPABASE:\n{contexto_legal}\n\nEL CONTRATO DEBE INCLUIR ESTAS 8 SECCIONES:\n\nSECCIÓN 1 — DATOS DE LAS PARTES: Vendedor: {nombre_vendedor}. Comprador: {nombre_comprador}. Estado: {estado}.\n\nSECCIÓN 2 — DESCRIPCIÓN DEL VEHÍCULO: Marca: {marca_auto}, Modelo: {modelo_auto}, Año: {anio_auto}, Color: {color_auto}, NIV: {numero_serie}, Placas: {numero_placas}, Motor: {numero_motor}.\n\nSECCIÓN 3 — PRECIO Y FORMA DE PAGO: Precio: {precio_venta}. Forma de pago: {forma_pago}.\n\nSECCIÓN 4 — DECLARACIÓN DE PROPIEDAD: El vendedor declara ser propietario legítimo, que el vehículo está libre de gravámenes, adeudos, robo reportado y no tiene limitaciones de dominio.\n\nSECCIÓN 5 — ENTREGA DEL VEHÍCULO: Entrega física y documentación: {documentos_entregados}. Fecha y lugar de entrega.\n\nSECCIÓN 6 — RESPONSABILIDADES POST-VENTA: El comprador acepta el vehículo en las condiciones descritas. Responsabilidad de multas e infracciones a partir de la entrega.\n\nSECCIÓN 7 — FUNDAMENTO LEGAL: Cita MÍNIMO 2 artículos DIFERENTES del contexto legal. NO repitas el mismo número.\n\nSECCIÓN 8 — FIRMAS: Nombre y firma del vendedor, comprador y dos testigos. {estado}, {fecha_actual}.\n\nREGLAS ABSOLUTAS:\n- 8 secciones completas sin excepción\n- Solo artículos del contexto legal\n- HTML con <p>, <strong>, <br>, <h3> — sin etiquetas de documento",
+  "nota_al_usuario": "Este contrato es válido entre particulares. Recuerde realizar el cambio de propietario ante la Secretaría de Finanzas de su estado y actualizar el seguro del vehículo."
+}

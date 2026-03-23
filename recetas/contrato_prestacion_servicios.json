@@ -1,0 +1,67 @@
+{
+  "tipo": "contrato_prestacion_servicios",
+  "titulo": "Contrato de Prestación de Servicios",
+  "descripcion": "Contrato de servicios profesionales o freelance",
+  "precio_mxn": 199,
+  "fuente_ley": "Código Civil",
+  "query_rag": "prestación servicios profesionales honorarios obligaciones contrato independiente remuneración entregables",
+  "datos_requeridos": [
+    {
+      "campo": "nombre_prestador",
+      "pregunta": "¿Cuál es el nombre completo del prestador de servicios? (quien da el servicio)",
+      "ejemplo": "Sofía Ramírez Torres"
+    },
+    {
+      "campo": "nombre_cliente",
+      "pregunta": "¿Cuál es el nombre completo del cliente? (quien recibe el servicio)",
+      "ejemplo": "Empresa XYZ S.A. de C.V."
+    },
+    {
+      "campo": "descripcion_servicio",
+      "pregunta": "¿En qué consiste el servicio a prestar?",
+      "ejemplo": "diseño de logotipo e identidad de marca"
+    },
+    {
+      "campo": "monto_honorarios",
+      "pregunta": "¿Cuál es el monto de los honorarios?",
+      "ejemplo": "$15,000 MXN"
+    },
+    {
+      "campo": "forma_pago",
+      "pregunta": "¿Cuál es la forma de pago?",
+      "ejemplo": "50% al inicio y 50% a la entrega"
+    },
+    {
+      "campo": "fecha_inicio",
+      "pregunta": "¿Cuándo inicia el servicio?",
+      "ejemplo": "1 de junio de 2025"
+    },
+    {
+      "campo": "fecha_fin",
+      "pregunta": "¿Cuándo termina el servicio o cuál es la duración?",
+      "ejemplo": "30 de junio de 2025"
+    }
+  ],
+  "preguntas_profundidad": [
+    {
+      "campo": "clausula_confidencialidad",
+      "pregunta": "¿Se requiere cláusula de confidencialidad? (sí / no)",
+      "ejemplo": "sí",
+      "opcional": true
+    },
+    {
+      "campo": "derechos_autor",
+      "pregunta": "¿Los entregables transferirán derechos de autor al cliente? (sí / no / escribe 'no' para omitir)",
+      "ejemplo": "sí, todos los derechos se transfieren al cliente",
+      "opcional": true
+    },
+    {
+      "campo": "penalizacion_cancelacion",
+      "pregunta": "¿Hay penalización por cancelación anticipada? (describe o escribe 'no')",
+      "ejemplo": "50% del monto total si se cancela después de iniciado",
+      "opcional": true
+    }
+  ],
+  "system_prompt": "Eres APOLO, redactor legal mexicano experto en contratos de servicios profesionales para la jurisdicción de {estado}, México. Genera un CONTRATO DE PRESTACIÓN DE SERVICIOS PROFESIONALES completo y válido.\n\nFecha: {fecha_actual}\n\nCONTEXTO LEGAL RECUPERADO DE SUPABASE:\n{contexto_legal}\n\nEL CONTRATO DEBE INCLUIR ESTAS SECCIONES:\n\nSECCIÓN 1 — PARTES: Prestador: {nombre_prestador}. Cliente: {nombre_cliente}. Jurisdicción: {estado}.\n\nSECCIÓN 2 — OBJETO Y ALCANCE: Descripción detallada del servicio: {descripcion_servicio}. Entregables específicos acordados.\n\nSECCIÓN 3 — VIGENCIA: Inicio {fecha_inicio}. Término {fecha_fin}.\n\nSECCIÓN 4 — HONORARIOS Y FORMA DE PAGO: Monto: {monto_honorarios}. Forma de pago: {forma_pago}. Los honorarios no generan relación laboral.\n\nSECCIÓN 5 — OBLIGACIONES DEL PRESTADOR: Ejecutar el servicio con diligencia profesional, entregar en los plazos pactados, mantener comunicación con el cliente.\n\nSECCIÓN 6 — OBLIGACIONES DEL CLIENTE: Pagar en los términos pactados, proporcionar información necesaria, revisar y aprobar entregables en un plazo razonable.\n\nSECCIÓN 7 — CONFIDENCIALIDAD: {clausula_confidencialidad}\n\nSECCIÓN 8 — PROPIEDAD INTELECTUAL: {derechos_autor}\n\nSECCIÓN 9 — CANCELACIÓN: {penalizacion_cancelacion}\n\nSECCIÓN 10 — FUNDAMENTO LEGAL: Cita MÍNIMO 2 artículos DIFERENTES del contexto legal. No repitas el mismo número.\n\nSECCIÓN 11 — FIRMAS: Prestador, cliente, {estado}, {fecha_actual}.\n\nREGLAS ABSOLUTAS:\n- Secciones completas sin excepción\n- Solo artículos del contexto legal\n- HTML con <p>, <strong>, <br>, <h3> — sin etiquetas de documento",
+  "nota_al_usuario": "Este contrato establece una relación civil de servicios, no laboral. Si el servicio es continuo y subordinado, podría considerarse una relación laboral sujeta a la Ley Federal del Trabajo."
+}

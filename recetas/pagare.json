@@ -1,0 +1,61 @@
+{
+  "tipo": "pagare",
+  "titulo": "Pagaré",
+  "descripcion": "Título de crédito ejecutivo para documentar una deuda",
+  "precio_mxn": 199,
+  "fuente_ley": "Código Civil",
+  "query_rag": "pagaré título crédito promesa pago deuda vencimiento obligación",
+  "datos_requeridos": [
+    {
+      "campo": "nombre_suscriptor",
+      "pregunta": "¿Cuál es el nombre completo del suscriptor? (quien debe — el deudor)",
+      "ejemplo": "Juan Pérez González"
+    },
+    {
+      "campo": "nombre_beneficiario",
+      "pregunta": "¿Cuál es el nombre completo del beneficiario? (quien cobra — el acreedor)",
+      "ejemplo": "María García López"
+    },
+    {
+      "campo": "monto_numero",
+      "pregunta": "¿Cuál es el monto en número?",
+      "ejemplo": "15000"
+    },
+    {
+      "campo": "monto_letra",
+      "pregunta": "¿Cuál es el monto en letra? (en mayúsculas)",
+      "ejemplo": "QUINCE MIL PESOS 00/100 M.N."
+    },
+    {
+      "campo": "fecha_vencimiento",
+      "pregunta": "¿Cuál es la fecha de vencimiento? (o escribe 'a la vista')",
+      "ejemplo": "15 de junio de 2025"
+    },
+    {
+      "campo": "lugar_suscripcion",
+      "pregunta": "¿En qué ciudad se suscribe el pagaré?",
+      "ejemplo": "Puebla, Pue."
+    },
+    {
+      "campo": "lugar_pago",
+      "pregunta": "¿En qué lugar deberá realizarse el pago?",
+      "ejemplo": "Puebla, Pue."
+    }
+  ],
+  "preguntas_profundidad": [
+    {
+      "campo": "tasa_intereses",
+      "pregunta": "¿Se pactaron intereses moratorios? Si sí, ¿a qué tasa mensual? (escribe 'no' para omitir)",
+      "ejemplo": "2% mensual",
+      "opcional": true
+    },
+    {
+      "campo": "no_negociable",
+      "pregunta": "¿El pagaré es 'no negociable' (no puede cederse a terceros)? (sí / no)",
+      "ejemplo": "no",
+      "opcional": true
+    }
+  ],
+  "system_prompt": "Eres APOLO, redactor legal mexicano. Debes generar un PAGARÉ válido conforme a la Ley General de Títulos y Operaciones de Crédito (LGTOC) federal. Es un título ejecutivo — NO es una carta, es un formulario legal formal y centrado.\n\nFecha de emisión: {fecha_actual}\n\nEL PAGARÉ DEBE CONTENER OBLIGATORIAMENTE:\n1. La palabra 'PAGARÉ' visible y destacada al inicio\n2. Lugar y fecha de suscripción: {lugar_suscripcion}, {fecha_actual}\n3. Promesa INCONDICIONAL de pagar (no condicional)\n4. Monto en número: ${monto_numero} y en letra: {monto_letra}\n5. Fecha de vencimiento: {fecha_vencimiento}\n6. Beneficiario: {nombre_beneficiario}\n7. Lugar de pago: {lugar_pago}\n8. Nombre del suscriptor: {nombre_suscriptor} con espacio para firma\n\nSi hay intereses: {tasa_intereses}\nSi es no negociable: {no_negociable}\n\nFORMATO: Genera el pagaré centrado y formal, con el título 'PAGARÉ' en la parte superior. Usa HTML con <div style='text-align:center'>, <p>, <strong>, <br>. Sin <html>, <body>, <head>, <style> ni markdown. El documento debe verse como un instrumento mercantil formal, no como una carta.",
+  "nota_al_usuario": "Este pagaré es un título ejecutivo. Para mayor validez, se recomienda firmarlo ante dos testigos o con firma certificada. Conserve una copia."
+}

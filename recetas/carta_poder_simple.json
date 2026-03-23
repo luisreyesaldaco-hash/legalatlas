@@ -1,0 +1,40 @@
+{
+  "tipo": "carta_poder_simple",
+  "titulo": "Carta Poder Simple",
+  "descripcion": "Carta poder para trámites administrativos (no equivale a poder notarial)",
+  "precio_mxn": 99,
+  "fuente_ley": "Código Civil",
+  "query_rag": "mandato poder representación facultades apoderado poderdante actos jurídicos",
+  "datos_requeridos": [
+    {
+      "campo": "nombre_poderdante",
+      "pregunta": "¿Cuál es el nombre completo de quien otorga el poder? (el poderdante)",
+      "ejemplo": "Luis Alfonso Reyes Aldaco"
+    },
+    {
+      "campo": "nombre_apoderado",
+      "pregunta": "¿Cuál es el nombre completo de quien recibe el poder? (el apoderado)",
+      "ejemplo": "Carmen Reyes Torres"
+    },
+    {
+      "campo": "descripcion_facultades",
+      "pregunta": "¿Para qué trámites o actos específicos se otorga el poder?",
+      "ejemplo": "recoger documentos oficiales, firmar acuses de recibo y realizar trámites ante el SAT"
+    },
+    {
+      "campo": "vigencia",
+      "pregunta": "¿Hasta cuándo tiene vigencia el poder?",
+      "ejemplo": "31 de diciembre de 2025"
+    }
+  ],
+  "preguntas_profundidad": [
+    {
+      "campo": "tramite_especifico",
+      "pregunta": "¿Ante qué institución específica se utilizará? (SAT, banco, IMSS, etc. — escribe 'no' si es general)",
+      "ejemplo": "SAT y Secretaría de Finanzas",
+      "opcional": true
+    }
+  ],
+  "system_prompt": "Eres APOLO, redactor legal mexicano. Genera una CARTA PODER SIMPLE para trámites administrativos. Es un documento conciso, formal y directo.\n\nFecha de expedición: {fecha_actual}\n\nCONTEXTO LEGAL RECUPERADO DE SUPABASE:\n{contexto_legal}\n\nLA CARTA PODER DEBE CONTENER:\n\nSECCIÓN 1 — ENCABEZADO: Título 'CARTA PODER SIMPLE'. Lugar y fecha: {estado}, {fecha_actual}.\n\nSECCIÓN 2 — OTORGAMIENTO: Yo, {nombre_poderdante}, otorgo poder amplio y suficiente a {nombre_apoderado} para: {descripcion_facultades}. Institución: {tramite_especifico}.\n\nSECCIÓN 3 — VIGENCIA: El presente poder tendrá vigencia hasta {vigencia} o hasta su revocación expresa.\n\nSECCIÓN 4 — FUNDAMENTO LEGAL: Cita 1-2 artículos del contexto legal sobre mandato o representación.\n\nSECCIÓN 5 — ADVERTENCIA LEGAL: Incluye obligatoriamente este texto: 'NOTA IMPORTANTE: Esta carta poder es válida para trámites administrativos. Para actos jurídicos formales como compraventa de inmuebles o representación judicial se requiere poder notarial.'\n\nSECCIÓN 6 — FIRMAS: Nombre y firma del poderdante ({nombre_poderdante}), nombre y firma del apoderado en señal de aceptación, y espacio para un testigo. {estado}, {fecha_actual}.\n\nREGLAS: Documento conciso (no más de una página). HTML con <p>, <strong>, <br>, <h3> — sin etiquetas de documento.",
+  "nota_al_usuario": "Esta carta poder es válida para trámites administrativos. Para actos ante notario, compraventa de inmuebles o representación en juicio, se requiere poder notarial."
+}
