@@ -118,7 +118,7 @@ export default async function handler(req, res) {
         .eq('pais', pais).eq('ley', ley)
         .eq('titulo', nivel_secundario);
       if (capFiltro) q = q.eq('capitulo', capFiltro);
-      q = q.order('numero_articulo', { ascending: true });
+      q = q.order('id', { ascending: true });
       q = conEstado(q, estado);
       const { data, error } = await q;
       if (error) throw error;
