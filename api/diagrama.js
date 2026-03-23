@@ -34,8 +34,8 @@ export default async function handler(req, res) {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
     const { nivel_secundario, estado, ley } = body;
 
-    if (!nivel_secundario || !estado || !ley) {
-      return res.status(400).json({ error: 'Parámetros requeridos: nivel_secundario, estado, ley' });
+    if (!nivel_secundario || !ley) {
+      return res.status(400).json({ error: 'Parámetros requeridos: nivel_secundario, ley' });
     }
 
     // ── 1. Intentar cache en tabla diagramas ─────────────────────────────────
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       const { data: cached, error: cacheErr } = await supabase
         .from('diagramas')
         .select('svg_content')
-        .eq('estado', estado)
+        .eq('estado', estado || '')
         .eq('ley', ley)
         .eq('nivel_secundario', nivel_secundario)
         .single();
@@ -56,14 +56,15 @@ export default async function handler(req, res) {
     }
 
     // ── 2. Obtener artículos del capítulo ─────────────────────────────────────
-    const { data: articulos, error: artErr } = await supabase
+    let artQ = supabase
       .from('articulos')
       .select('numero_articulo, texto_original')
-      .eq('estado', estado)
       .eq('ley', ley)
-      .eq('nivel_secundario', nivel_secundario)
-      .order('numero_articulo', { ascending: true })
+      .eq('titulo', nivel_secundario)
+      .order('id', { ascending: true })
       .limit(20);
+    if (estado) artQ = artQ.eq('estado', estado);
+    const { data: articulos, error: artErr } = await artQ;
 
     if (artErr) throw artErr;
 
