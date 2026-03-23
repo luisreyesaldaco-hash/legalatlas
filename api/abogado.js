@@ -26,14 +26,9 @@ export default async function handler(req, res) {
 
     // ── paises ───────────────────────────────────────────────────────────────
     if (action === 'paises') {
-      const { data, error } = await supabase
-        .from('articulos')
-        .select('pais')
-        .not('pais', 'is', null)
-        .neq('pais', '');
+      const { data, error } = await supabase.rpc('obtener_paises');
       if (error) throw error;
-      const unique = [...new Set((data || []).map(r => r.pais).filter(Boolean))].sort();
-      return res.status(200).json({ paises: unique });
+      return res.status(200).json({ paises: (data || []).map(r => r.pais) });
     }
 
     // ── leyes (por pais) — usa RPC server-side para clasificar federal/estatal ─
