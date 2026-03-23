@@ -1376,7 +1376,11 @@
         const seccionNombre = capitulo || titulo;
         const btnExplicar = document.createElement('div');
         btnExplicar.className = 'seccion-acciones';
-        btnExplicar.innerHTML = `<button class="btn-accion primary" onclick="explicarSeccion('${seccionNombre.replace(/'/g,"\\'")}','${(capitulo||'').replace(/'/g,"\\'")}','${titulo.replace(/'/g,"\\'")}')">✦ Explícame esta sección</button>`;
+        const btnEl = document.createElement('button');
+        btnEl.className = 'btn-accion primary';
+        btnEl.textContent = '✦ Explícame esta sección';
+        btnEl.addEventListener('click', () => explicarSeccion(seccionNombre, capitulo, titulo));
+        btnExplicar.appendChild(btnEl);
         contenedor.appendChild(btnExplicar);
 
         arts.forEach(a => {
