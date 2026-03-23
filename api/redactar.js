@@ -7,8 +7,8 @@ export const config = { api: { bodyParser: true } };
 
 const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
 
-function leerReceta(tipo) {
-  const ruta = path.join(process.cwd(), "recetas", `${tipo}.json`);
+function leerReceta(pais, tipo) {
+  const ruta = path.join(process.cwd(), "recetas", pais, `${tipo}.json`);
   return JSON.parse(fs.readFileSync(ruta, "utf8"));
 }
 
@@ -16,15 +16,23 @@ export default async function handler(req, res) {
 
   // ── GET: metadatos de receta(s) ──────────────────────────────────────────
   if (req.method === 'GET') {
-    const { tipo } = req.query;
+    const { tipo, pais } = req.query;
 
     if (!tipo) {
+      // Listar recetas del país solicitado (o todas si no se especifica)
       try {
-        const carpeta  = path.join(process.cwd(), "recetas");
-        const archivos = fs.readdirSync(carpeta).filter(f => f.endsWith('.json'));
-        const lista    = archivos.map(f => {
-          const r = JSON.parse(fs.readFileSync(path.join(carpeta, f), "utf8"));
-          return { tipo: r.tipo, titulo: r.titulo, descripcion: r.descripcion };
+        const raiz = path.join(process.cwd(), "recetas");
+        const paises = pais
+          ? [pais]
+          : fs.readdirSync(raiz).filter(d => fs.statSync(path.join(raiz, d)).isDirectory());
+        const lista = paises.flatMap(p => {
+          const dir = path.join(raiz, p);
+          try {
+            return fs.readdirSync(dir).filter(f => f.endsWith('.json')).map(f => {
+              const r = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8"));
+              return { tipo: r.tipo, titulo: r.titulo, descripcion: r.descripcion, pais: p };
+            });
+          } catch { return []; }
         });
         return res.status(200).json(lista);
       } catch (e) {
@@ -33,17 +41,19 @@ export default async function handler(req, res) {
     }
 
     try {
-      const r = leerReceta(tipo);
+      const paisBuscar = pais || 'MX';
+      const r = leerReceta(paisBuscar, tipo);
       return res.status(200).json({
         tipo:                  r.tipo,
         titulo:                r.titulo,
         precio_mxn:            r.precio_mxn,
+        pais:                  paisBuscar,
         datos_requeridos:      r.datos_requeridos,
         preguntas_profundidad: r.preguntas_profundidad,
         nota_al_usuario:       r.nota_al_usuario
       });
     } catch (e) {
-      return res.status(404).json({ error: `Receta '${tipo}' no encontrada` });
+      return res.status(404).json({ error: `Receta '${tipo}' no encontrada para país '${pais}'` });
     }
   }
 
@@ -51,13 +61,13 @@ export default async function handler(req, res) {
   try {
     const body  = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
     console.log("datos recibidos:", JSON.stringify(body, null, 2));
-    const { tipo, datos } = body;
+    const { tipo, datos, pais } = body;
 
     if (!tipo || !datos) {
       return res.status(400).json({ error: "Se requiere tipo y datos" });
     }
 
-    const receta = leerReceta(tipo);
+    const receta = leerReceta(pais || 'MX', tipo);
 
     // Inyectar fecha actual y estado si no vienen del cliente
     if (!datos.fecha_actual) {

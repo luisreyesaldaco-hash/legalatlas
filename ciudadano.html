@@ -629,7 +629,8 @@
 
     async function cargarRecetas() {
       try {
-        const res  = await fetch('/api/redactar');
+        const pais = sel.pais || 'MX';
+        const res  = await fetch('/api/redactar?pais=' + pais);
         const lista = await res.json();
         recetasWrap.innerHTML = '';
         lista.forEach(r => {
@@ -649,7 +650,8 @@
       recetasWrap.querySelectorAll('.burbuja').forEach(b => b.classList.remove('activa'));
       recetasWrap.querySelector(`[data-tipo="${tipo}"]`)?.classList.add('activa');
       try {
-        const res = await fetch('/api/redactar?tipo=' + tipo);
+        const pais = sel.pais || 'MX';
+        const res = await fetch('/api/redactar?tipo=' + tipo + '&pais=' + pais);
         recetaActiva = await res.json();
         // Pre-llenar datos conocidos del contexto actual
         datosRedaccion = {};
@@ -729,7 +731,8 @@
         // Guardar datos en sessionStorage antes de redirigir
         sessionStorage.setItem('redaccion_pendiente', JSON.stringify({
           tipo:  recetaActiva.tipo,
-          datos: datosRedaccion
+          datos: datosRedaccion,
+          pais:  sel.pais || 'MX'
         }));
         window.location.href = url;
       } catch (err) {
@@ -744,7 +747,7 @@
         const res = await fetch('/api/redactar', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ tipo, datos })
+          body:    JSON.stringify({ tipo, datos, pais: sel.pais || 'MX' })
         });
         quitarTyping();
         if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -780,7 +783,8 @@
         const pendiente = sessionStorage.getItem('redaccion_pendiente');
         sessionStorage.removeItem('redaccion_pendiente');
         if (pendiente) {
-          const { tipo, datos } = JSON.parse(pendiente);
+          const { tipo, datos, pais } = JSON.parse(pendiente);
+          sel.pais = pais || 'MX';
           activarModoRedaccion();
           agregarMensaje('apolo', '✅ <strong>Pago confirmado.</strong> Generando tu documento…');
           generarDocumento(tipo, datos);
