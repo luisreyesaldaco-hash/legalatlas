@@ -259,30 +259,11 @@ body {
 .chat-input:focus { outline: none; }
 .chat-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding-top: 16px;
   border-top: 1px solid var(--border);
 }
-.chat-tools { display: flex; gap: 8px; }
-.tool-btn {
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.tool-btn svg {
-  width: 18px; height: 18px;
-  stroke: var(--text-muted);
-  transition: stroke 0.3s ease;
-}
-.tool-btn:hover { border-color: var(--border-hover); background: rgba(196,154,60,0.08); }
-.tool-btn:hover svg { stroke: var(--gold); }
 .chat-submit {
   display: flex;
   align-items: center;
@@ -619,18 +600,6 @@ body {
         </div>
 
         <div class="chat-actions">
-          <div class="chat-tools">
-            <button type="button" class="tool-btn" title="Adjuntar archivo">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
-              </svg>
-            </button>
-            <button type="button" class="tool-btn" title="Comandos">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 3a3 3 0 00-3 3v12a3 3 0 003 3 3 3 0 003-3 3 3 0 00-3-3H6a3 3 0 00-3 3 3 3 0 003 3 3 3 0 003-3V6a3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3h12a3 3 0 003-3 3 3 0 00-3-3z"/>
-              </svg>
-            </button>
-          </div>
           <button type="button" class="chat-submit" id="chatSubmit">
             <span>Iniciar expedición</span>
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
