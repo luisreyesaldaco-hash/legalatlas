@@ -698,6 +698,95 @@ body {
 .cap-icon { font-size: 20px; opacity: 0.8; }
 .cap-titulo { font-size: 11px; }
 .cap-desc { font-size: 13px; line-height: 1.78; }
+
+/* ── BÚSQUEDA RÁPIDA ── */
+.busqueda-rapida {
+  width: 100%;
+  max-width: 680px;
+  margin-bottom: 48px;
+  animation: emerger 1s ease 0.22s both;
+}
+.busqueda-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.45em;
+  color: var(--tinta-muted);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.busqueda-label::before, .busqueda-label::after {
+  content: '';
+  width: 40px; height: 0.5px;
+  background: var(--borde);
+}
+.busqueda-filtros {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.busqueda-select {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgba(196,154,60,0.7);
+  background: rgba(15,15,12,0.9);
+  border: 1px solid rgba(196,154,60,0.25);
+  padding: 8px 14px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 1;
+  min-width: 120px;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s;
+}
+.busqueda-select:focus { border-color: #c49a3c; }
+.busqueda-select:disabled { opacity: 0.35; cursor: default; }
+.busqueda-select option { background: #111110; color: rgba(245,237,216,0.88); }
+.busqueda-row {
+  display: flex;
+  background: rgba(15,15,12,0.9);
+  border: 1px solid rgba(196,154,60,0.25);
+  backdrop-filter: blur(10px);
+  transition: border-color 0.2s;
+}
+.busqueda-row:focus-within { border-color: rgba(196,154,60,0.55); }
+.busqueda-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 14px 18px;
+  font-size: 14px;
+  font-family: 'Lora', serif;
+  color: var(--tinta);
+  outline: none;
+}
+.busqueda-input::placeholder { color: rgba(245,237,216,0.22); font-style: italic; }
+.busqueda-btn {
+  width: 50px;
+  background: #c49a3c;
+  color: #111110;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.busqueda-btn:hover { background: #d4ad50; }
+@media (max-width: 680px) {
+  .busqueda-filtros { gap: 6px; }
+  .busqueda-select  { min-width: 100%; flex: none; }
+}
 </style>
 </head>
 <body>
@@ -889,6 +978,26 @@ body {
     </p>
   </div>
 
+  <!-- BÚSQUEDA RÁPIDA -->
+  <div class="busqueda-rapida">
+    <div class="busqueda-label">Consulta directa</div>
+    <div class="busqueda-filtros">
+      <select class="busqueda-select" id="b-pais">
+        <option value="">País…</option>
+      </select>
+      <select class="busqueda-select" id="b-materia" disabled>
+        <option value="">Área legal…</option>
+      </select>
+      <select class="busqueda-select" id="b-estado" style="display:none">
+        <option value="">Estado…</option>
+      </select>
+    </div>
+    <div class="busqueda-row">
+      <input type="text" class="busqueda-input" id="b-pregunta" placeholder="¿Cuál es tu duda legal?">
+      <button class="busqueda-btn" id="b-enviar" title="Consultar">&#9658;</button>
+    </div>
+  </div>
+
   <!-- PUERTAS -->
   <div class="puertas-wrap">
 
@@ -987,5 +1096,86 @@ body {
   </footer>
 
 </div>
+
+<script>
+// ── Búsqueda rápida (homepage → ciudadano.html) ───────────────────────────
+(async function () {
+  const bPais    = document.getElementById('b-pais');
+  const bMateria = document.getElementById('b-materia');
+  const bEstado  = document.getElementById('b-estado');
+  const bInput   = document.getElementById('b-pregunta');
+  const bEnviar  = document.getElementById('b-enviar');
+
+  const displayNames = new Intl.DisplayNames(['es'], { type: 'region' });
+  function nombrePais(iso) { try { return displayNames.of(iso); } catch { return iso; } }
+
+  let todasMaterias = [];
+  let agrupadas     = {};
+
+  try {
+    const res = await fetch('/api/materias');
+    todasMaterias = await res.json();
+    const paisesUnicos = [...new Set(todasMaterias.map(m => m.pais))].filter(Boolean);
+    paisesUnicos.forEach(iso => {
+      const opt = document.createElement('option');
+      opt.value = iso;
+      opt.textContent = nombrePais(iso);
+      bPais.appendChild(opt);
+    });
+  } catch (e) { console.warn('Error cargando países:', e); }
+
+  bPais.addEventListener('change', function () {
+    const iso = this.value;
+    bMateria.innerHTML = '<option value="">Área legal…</option>';
+    bMateria.disabled  = !iso;
+    bEstado.style.display = 'none';
+    bEstado.innerHTML  = '<option value="">Estado…</option>';
+    agrupadas = {};
+    if (!iso) return;
+    todasMaterias.filter(m => m.pais === iso).forEach(m => {
+      if (!agrupadas[m.materia]) agrupadas[m.materia] = { ...m, leyes: [m.ley] };
+      else agrupadas[m.materia].leyes.push(m.ley);
+    });
+    Object.values(agrupadas).forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m.materia;
+      opt.textContent = m.materia;
+      bMateria.appendChild(opt);
+    });
+  });
+
+  bMateria.addEventListener('change', function () {
+    const materia = this.value;
+    bEstado.style.display = 'none';
+    bEstado.innerHTML = '<option value="">Estado…</option>';
+    if (!materia) return;
+    const m = agrupadas[materia];
+    if (m?.requiere_estado && m.estados?.length) {
+      m.estados.forEach(e => {
+        const opt = document.createElement('option');
+        opt.value = e; opt.textContent = e;
+        bEstado.appendChild(opt);
+      });
+      bEstado.style.display = '';
+    }
+  });
+
+  function irACiudadano() {
+    const pais    = bPais.value;
+    const materia = bMateria.value;
+    const estado  = bEstado.value;
+    const q       = bInput.value.trim();
+    const params  = new URLSearchParams();
+    if (pais)    params.set('pais',    pais);
+    if (materia) params.set('materia', materia);
+    if (estado)  params.set('estado',  estado);
+    if (q)       params.set('q',       q);
+    window.location.href = 'ciudadano.html' + (params.toString() ? '?' + params.toString() : '');
+  }
+
+  bEnviar.addEventListener('click', irACiudadano);
+  bInput.addEventListener('keydown', e => { if (e.key === 'Enter') irACiudadano(); });
+})();
+</script>
 </body>
 </html>

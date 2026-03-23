@@ -812,9 +812,51 @@
       URL.revokeObjectURL(url);
     }
 
+    // ── URL params: pre-selección desde homepage ─────────────────────────────
+    function aplicarURLParams() {
+      const params  = new URLSearchParams(window.location.search);
+      const pais    = params.get('pais');
+      const materia = params.get('materia');
+      const estado  = params.get('estado');
+      const q       = params.get('q');
+
+      if (!pais) return;
+
+      // Seleccionar país (carga burbujas de materia)
+      const btnPais = paisesWrap.querySelector('[data-pais="' + pais + '"]');
+      if (!btnPais) return;
+      seleccionarPais(pais);
+
+      if (!materia) return;
+
+      // Reconstruir agrupadas para encontrar el objeto de materia
+      const agrupadas = {};
+      todasLasMaterias.filter(m => m.pais === pais).forEach(m => {
+        if (!agrupadas[m.materia]) agrupadas[m.materia] = { ...m, leyes: [m.ley] };
+        else agrupadas[m.materia].leyes.push(m.ley);
+      });
+      const mObj = agrupadas[materia];
+      if (!mObj) return;
+      seleccionarMateria(mObj);
+
+      if (estado && mObj.requiere_estado) {
+        selectorEst.value = estado;
+        sel.estado = estado;
+        verificarListo();
+        saludoInicial();
+      }
+
+      if (q) {
+        inputEl.value = q;
+        // Limpiar URL para que los refrescos no re-envíen
+        window.history.replaceState({}, '', window.location.pathname);
+        setTimeout(() => { if (!inputEl.disabled) enviar(); }, 150);
+      }
+    }
+
     // ── Init ─────────────────────────────────────────────────────────────────
     saludoInicial();
-    cargarPaises();
+    cargarPaises().then(() => aplicarURLParams());
   </script>
 
 </body>
