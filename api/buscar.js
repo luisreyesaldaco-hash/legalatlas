@@ -30,7 +30,7 @@ export async function buscarArticulos(pregunta, estado, ley = 'Código Civil', l
   // 2. Buscar en Supabase por similitud semántica (pgvector)
   const { data, error } = await supabase.rpc('buscar_articulos', {
     query_embedding: queryVector,
-    filtro_estado:   estado,
+    filtro_estado:   estado || 'Federal',
     filtro_ley:      ley,
     match_count:     limite
   })
