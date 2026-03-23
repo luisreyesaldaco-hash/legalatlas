@@ -1331,7 +1331,7 @@
         resultados.forEach(r => {
           const item = document.createElement('div');
           item.className = 'search-result-item';
-          item.innerHTML = `${r.numero_articulo}<div class="search-result-sub">${r.nivel_secundario || r.nivel_primario || ''}</div>`;
+          item.innerHTML = `${r.numero_articulo}<div class="search-result-sub">${r.titulo || r.libro || ''}</div>`;
           item.addEventListener('click', () => {
             document.querySelectorAll('.art-link.activo').forEach(el => el.classList.remove('activo'));
             loadArticulo(r.id_unico);
@@ -1365,9 +1365,9 @@
         articuloActivo = art;
 
         // Load sibling articles for context
-        if (art.nivel_secundario) {
+        if (art.titulo) {
           try {
-            const res2  = await fetch(`/api/abogado?action=articulos_capitulo&pais=${enc(art.pais||paisActivo)}&ley=${enc(art.ley)}&estado=${enc(art.estado||'')}&nivel_secundario=${enc(art.nivel_secundario)}`);
+            const res2  = await fetch(`/api/abogado?action=articulos_capitulo&pais=${enc(art.pais||paisActivo)}&ley=${enc(art.ley)}&estado=${enc(art.estado||'')}&nivel_secundario=${enc(art.titulo)}`);
             const json2 = await res2.json();
             capituloArticulos = json2.articulos || [];
           } catch (_) {
@@ -1399,7 +1399,7 @@
     }
 
     function buildBreadcrumb(art) {
-      const partes = [art.nivel_primario, art.nivel_secundario].filter(Boolean);
+      const partes = [art.libro, art.titulo].filter(Boolean);
       if (partes.length === 0) return art.ley || '';
       return partes.map((p, i) => {
         const cls = i === partes.length - 1 ? '<span>' : '<span class="breadcrumb-sep" style="color:var(--text-muted)">';
@@ -1415,15 +1415,15 @@
     async function explicarCapitulo() {
       if (!articuloActivo) return;
 
-      const { nivel_secundario, estado, ley } = articuloActivo;
-      if (!nivel_secundario) {
+      const { titulo, estado, ley } = articuloActivo;
+      if (!titulo) {
         agregarMensaje('apolo', 'Este artículo no tiene capítulo asignado para generar un diagrama.');
         return;
       }
 
       // Show whiteboard with loading
       mostrarWhiteboard();
-      document.getElementById('wb-titulo').textContent = nivel_secundario;
+      document.getElementById('wb-titulo').textContent = titulo;
       document.getElementById('wb-frame').innerHTML = `
         <div class="wb-loading">
           <div class="wb-spinner"></div>
@@ -1436,7 +1436,7 @@
         const res  = await fetch('/api/diagrama', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nivel_secundario, estado, ley })
+          body: JSON.stringify({ nivel_secundario: titulo, estado, ley })
         });
         const json = await res.json();
 
@@ -1501,7 +1501,7 @@
           estado:   estadoActivo || articuloActivo?.estado || '',
           pais:     paisActivo  || articuloActivo?.pais   || 'MX',
           fuente:   leyActiva   || articuloActivo?.ley    || '',
-          tema:     articuloActivo?.nivel_secundario       || '',
+          tema:     articuloActivo?.titulo                 || '',
           modo:     'abogado'
         };
 

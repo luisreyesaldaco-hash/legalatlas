@@ -59,29 +59,29 @@ export default async function handler(req, res) {
       return res.status(200).json({ estados: unique });
     }
 
-    // ── niveles_primarios ────────────────────────────────────────────────────
+    // ── niveles_primarios (libro) ─────────────────────────────────────────────
     if (action === 'niveles_primarios') {
       if (!pais || !ley) return res.status(400).json({ error: 'Parámetros pais y ley requeridos' });
-      let q = supabase.from('articulos').select('nivel_primario')
-        .eq('pais', pais).eq('ley', ley).not('nivel_primario', 'is', null);
+      let q = supabase.from('articulos').select('libro')
+        .eq('pais', pais).eq('ley', ley).not('libro', 'is', null).neq('libro', '');
       q = conEstado(q, estado);
       const { data, error } = await q;
       if (error) throw error;
-      const unique = [...new Set((data || []).map(r => r.nivel_primario).filter(Boolean))];
+      const unique = [...new Set((data || []).map(r => r.libro).filter(Boolean))];
       return res.status(200).json({ niveles_primarios: unique });
     }
 
-    // ── niveles_secundarios ──────────────────────────────────────────────────
+    // ── niveles_secundarios (titulo) ──────────────────────────────────────────
     if (action === 'niveles_secundarios') {
       if (!pais || !ley || !nivel_primario) return res.status(400).json({ error: 'Parámetros pais, ley y nivel_primario requeridos' });
-      let q = supabase.from('articulos').select('nivel_secundario')
+      let q = supabase.from('articulos').select('titulo')
         .eq('pais', pais).eq('ley', ley)
-        .eq('nivel_primario', nivel_primario)
-        .not('nivel_secundario', 'is', null);
+        .eq('libro', nivel_primario)
+        .not('titulo', 'is', null).neq('titulo', '');
       q = conEstado(q, estado);
       const { data, error } = await q;
       if (error) throw error;
-      const unique = [...new Set((data || []).map(r => r.nivel_secundario).filter(Boolean))];
+      const unique = [...new Set((data || []).map(r => r.titulo).filter(Boolean))];
       return res.status(200).json({ niveles_secundarios: unique });
     }
 
@@ -90,7 +90,7 @@ export default async function handler(req, res) {
       if (!pais || !ley || !nivel_secundario) return res.status(400).json({ error: 'Parámetros pais, ley y nivel_secundario requeridos' });
       let q = supabase.from('articulos').select('id_unico, numero_articulo')
         .eq('pais', pais).eq('ley', ley)
-        .eq('nivel_secundario', nivel_secundario)
+        .eq('titulo', nivel_secundario)
         .order('numero_articulo', { ascending: true });
       q = conEstado(q, estado);
       const { data, error } = await q;
@@ -114,7 +114,7 @@ export default async function handler(req, res) {
     if (action === 'buscar') {
       if (!pais || !ley || !numero) return res.status(400).json({ error: 'Parámetros pais, ley y numero requeridos' });
       let q = supabase.from('articulos')
-        .select('id_unico, numero_articulo, nivel_primario, nivel_secundario')
+        .select('id_unico, numero_articulo, libro, titulo')
         .eq('pais', pais).eq('ley', ley)
         .ilike('numero_articulo', `%${numero}%`)
         .limit(10);
