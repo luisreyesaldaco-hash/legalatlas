@@ -385,10 +385,9 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      background: #0d0d0f;
-      background: var(--bg-deep);
+      background: #f5edd8;
       overflow: hidden;
-      border-right: 1px solid var(--border);
+      border-right: 1px solid rgba(138,104,32,0.2);
     }
 
     .centro-scroll {
@@ -411,22 +410,22 @@
     .vacio-symbol {
       width: 80px;
       height: 80px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(138,104,32,0.3);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: 'Cinzel', serif;
       font-size: 28px;
-      color: rgba(196,154,60,0.3);
-      background: var(--bg-card);
+      color: rgba(138,104,32,0.4);
+      background: rgba(138,104,32,0.06);
     }
     .vacio-title {
       font-family: 'Cinzel', serif;
       font-size: 11px;
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: rgba(26,21,8,0.4);
     }
 
     /* Article view */
@@ -438,21 +437,21 @@
       font-size: 9px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: rgba(26,21,8,0.4);
       margin-bottom: 20px;
       display: flex;
       align-items: center;
       gap: 6px;
       flex-wrap: wrap;
     }
-    .breadcrumb-sep { color: rgba(196,154,60,0.3); }
-    .breadcrumb span:last-child { color: rgba(196,154,60,0.6); }
+    .breadcrumb-sep { color: rgba(138,104,32,0.35); }
+    .breadcrumb span:last-child { color: #8a6820; }
 
     .art-numero {
       font-family: 'Cinzel', serif;
       font-size: 52px;
       font-weight: 700;
-      color: var(--gold);
+      color: #8a6820;
       line-height: 1;
       margin-bottom: 8px;
       letter-spacing: -0.01em;
@@ -462,17 +461,17 @@
       font-size: 9px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: rgba(26,21,8,0.4);
       margin-bottom: 28px;
     }
     .art-texto {
       font-family: 'Lora', Georgia, serif;
       font-size: 15px;
       line-height: 1.9;
-      color: var(--text);
+      color: #1a1508;
       max-width: 640px;
       margin-bottom: 36px;
-      border-left: 2px solid rgba(196,154,60,0.2);
+      border-left: 2px solid rgba(138,104,32,0.25);
       padding-left: 20px;
     }
 
@@ -504,9 +503,9 @@
       color: var(--gold-light);
     }
     .btn-accion.primary {
-      background: var(--gold);
-      color: #08080a;
-      border-color: var(--gold);
+      background: #8a6820;
+      color: #f5edd8;
+      border-color: #8a6820;
     }
     .btn-accion.primary:hover {
       background: var(--gold-light);
@@ -520,24 +519,24 @@
     }
     .seccion-header {
       font-family: 'Cinzel', serif;
-      color: var(--gold);
+      color: #8a6820;
       font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.04em;
       margin-bottom: 20px;
       padding-bottom: 12px;
-      border-bottom: 1px solid rgba(196,154,60,0.2);
+      border-bottom: 1px solid rgba(138,104,32,0.2);
     }
     .art-card {
       padding: 18px 0;
-      border-bottom: 1px solid rgba(196,154,60,0.08);
+      border-bottom: 1px solid rgba(138,104,32,0.12);
       cursor: pointer;
       transition: opacity 0.15s;
     }
-    .art-card:hover { opacity: 0.75; }
+    .art-card:hover { opacity: 0.65; }
     .art-card-numero {
       font-family: 'Cinzel', serif;
-      color: var(--gold);
+      color: #8a6820;
       font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.06em;
@@ -545,14 +544,14 @@
     }
     .art-card-preview {
       font-family: 'Lora', Georgia, serif;
-      color: var(--text);
+      color: #1a1508;
       font-size: 14px;
       line-height: 1.75;
     }
     .seccion-acciones {
       margin-top: 28px;
       padding-top: 20px;
-      border-top: 1px solid rgba(196,154,60,0.15);
+      border-top: 1px solid rgba(138,104,32,0.15);
     }
 
     /* Whiteboard */
