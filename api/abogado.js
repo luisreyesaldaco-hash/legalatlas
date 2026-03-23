@@ -54,41 +54,24 @@ export default async function handler(req, res) {
       return res.status(200).json({ estados: unique });
     }
 
-    // ── niveles_primarios (libro) — ordenados por id mínimo (orden de lectura) ─
+    // ── niveles_primarios — RPC server-side ──────────────────────────────────
     if (action === 'niveles_primarios') {
       if (!pais || !ley) return res.status(400).json({ error: 'Parámetros pais y ley requeridos' });
-      let q = supabase.from('articulos').select('libro, id')
-        .eq('pais', pais).eq('ley', ley).not('libro', 'is', null).neq('libro', '');
-      q = conEstado(q, estado);
-      const { data, error } = await q;
-      if (error) throw error;
-      // Agrupar por libro y ordenar por el id mínimo de sus artículos
-      const mapa = {};
-      (data || []).forEach(r => {
-        if (!r.libro) return;
-        if (!mapa[r.libro] || r.id < mapa[r.libro]) mapa[r.libro] = r.id;
+      const { data, error } = await supabase.rpc('obtener_niveles_primarios', {
+        p_pais: pais, p_ley: ley, p_estado: estado || ''
       });
-      const unique = Object.entries(mapa).sort((a, b) => a[1] - b[1]).map(e => e[0]);
-      return res.status(200).json({ niveles_primarios: unique });
+      if (error) throw error;
+      return res.status(200).json({ niveles_primarios: (data || []).map(r => r.libro) });
     }
 
-    // ── niveles_secundarios (titulo) — ordenados por id mínimo ───────────────
+    // ── niveles_secundarios — RPC server-side ─────────────────────────────────
     if (action === 'niveles_secundarios') {
       if (!pais || !ley || !nivel_primario) return res.status(400).json({ error: 'Parámetros pais, ley y nivel_primario requeridos' });
-      let q = supabase.from('articulos').select('titulo, id')
-        .eq('pais', pais).eq('ley', ley)
-        .eq('libro', nivel_primario)
-        .not('titulo', 'is', null).neq('titulo', '');
-      q = conEstado(q, estado);
-      const { data, error } = await q;
-      if (error) throw error;
-      const mapa = {};
-      (data || []).forEach(r => {
-        if (!r.titulo) return;
-        if (!mapa[r.titulo] || r.id < mapa[r.titulo]) mapa[r.titulo] = r.id;
+      const { data, error } = await supabase.rpc('obtener_niveles_secundarios', {
+        p_pais: pais, p_ley: ley, p_estado: estado || '', p_libro: nivel_primario
       });
-      const unique = Object.entries(mapa).sort((a, b) => a[1] - b[1]).map(e => e[0]);
-      return res.status(200).json({ niveles_secundarios: unique });
+      if (error) throw error;
+      return res.status(200).json({ niveles_secundarios: (data || []).map(r => r.titulo) });
     }
 
     // ── capitulos — niveles terciarios bajo un titulo ────────────────────────
