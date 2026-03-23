@@ -37,6 +37,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         tipo:                  r.tipo,
         titulo:                r.titulo,
+        precio_mxn:            r.precio_mxn,
         datos_requeridos:      r.datos_requeridos,
         preguntas_profundidad: r.preguntas_profundidad,
         nota_al_usuario:       r.nota_al_usuario
