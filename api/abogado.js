@@ -91,13 +91,34 @@ export default async function handler(req, res) {
       return res.status(200).json({ niveles_secundarios: unique });
     }
 
+    // ── capitulos — niveles terciarios bajo un titulo ────────────────────────
+    if (action === 'capitulos') {
+      if (!pais || !ley || !nivel_secundario) return res.status(400).json({ error: 'Parámetros pais, ley y nivel_secundario requeridos' });
+      let q = supabase.from('articulos').select('capitulo, id')
+        .eq('pais', pais).eq('ley', ley)
+        .eq('titulo', nivel_secundario)
+        .not('capitulo', 'is', null).neq('capitulo', '');
+      q = conEstado(q, estado);
+      const { data, error } = await q;
+      if (error) throw error;
+      const mapa = {};
+      (data || []).forEach(r => {
+        if (!r.capitulo) return;
+        if (!mapa[r.capitulo] || r.id < mapa[r.capitulo]) mapa[r.capitulo] = r.id;
+      });
+      const unique = Object.entries(mapa).sort((a, b) => a[1] - b[1]).map(e => e[0]);
+      return res.status(200).json({ capitulos: unique });
+    }
+
     // ── articulos_capitulo ───────────────────────────────────────────────────
     if (action === 'articulos_capitulo') {
       if (!pais || !ley || !nivel_secundario) return res.status(400).json({ error: 'Parámetros pais, ley y nivel_secundario requeridos' });
-      let q = supabase.from('articulos').select('id_unico, numero_articulo')
+      const { capitulo: capFiltro } = req.query;
+      let q = supabase.from('articulos').select('id_unico, numero_articulo, texto_original')
         .eq('pais', pais).eq('ley', ley)
-        .eq('titulo', nivel_secundario)
-        .order('numero_articulo', { ascending: true });
+        .eq('titulo', nivel_secundario);
+      if (capFiltro) q = q.eq('capitulo', capFiltro);
+      q = q.order('numero_articulo', { ascending: true });
       q = conEstado(q, estado);
       const { data, error } = await q;
       if (error) throw error;
