@@ -762,6 +762,82 @@
       margin: 8px 0;
     }
 
+    /* Bookmarks */
+    .bookmarks-section {
+      padding: 10px 14px 4px;
+      border-bottom: 1px solid var(--border);
+    }
+    .bookmarks-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Cinzel', serif;
+      font-size: 8px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+      opacity: 0.7;
+    }
+    .bookmarks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .bookmark-chip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: var(--gold-dim);
+      border: 1px solid rgba(196,154,60,0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .bookmark-chip:hover { background: rgba(196,154,60,0.22); border-color: var(--gold); }
+    .bookmark-chip-label {
+      font-family: 'Cinzel', serif;
+      font-size: 8.5px;
+      letter-spacing: 0.08em;
+      color: var(--text-soft);
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bookmark-chip-del {
+      font-size: 10px;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0 2px;
+      transition: color 0.15s;
+      flex-shrink: 0;
+    }
+    .bookmark-chip-del:hover { color: var(--gold); }
+
+    /* Bookmark toggle button */
+    .btn-bookmark {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      margin-bottom: 1px;
+    }
+    .btn-bookmark:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-bookmark.guardado { color: var(--gold); border-color: var(--gold); background: var(--gold-dim); }
+
     /* Responsive fallback */
     @media (max-width: 900px) {
       .col-nav { width: 220px; }
@@ -789,24 +865,39 @@
     <!-- ── LEFT: NAV ── -->
     <aside class="col-nav">
 
+      <!-- Mis Leyes (bookmarks) -->
+      <div class="bookmarks-section" id="bookmarks-section" style="display:none">
+        <div class="bookmarks-header">☆ Mis Leyes</div>
+        <div class="bookmarks-list" id="bookmarks-list"></div>
+      </div>
+
       <div class="nav-controls">
         <div>
-          <div class="nav-label">Estado</div>
-          <select id="sel-estado" class="nav-select">
-            <option value="">Cargando estados…</option>
+          <div class="nav-label">País</div>
+          <select id="sel-pais" class="nav-select">
+            <option value="">Cargando…</option>
           </select>
         </div>
         <div>
           <div class="nav-label">Ley</div>
           <select id="sel-ley" class="nav-select" disabled>
-            <option value="">Selecciona un estado</option>
+            <option value="">Selecciona un país</option>
+          </select>
+        </div>
+        <div id="grupo-estado" style="display:none">
+          <div class="nav-label">Estado</div>
+          <select id="sel-estado" class="nav-select">
+            <option value="">Todos los estados…</option>
           </select>
         </div>
         <div>
-          <div class="nav-label">Buscar por artículo</div>
-          <div class="search-row">
-            <input type="text" id="inp-buscar" class="search-input" placeholder="Ej. 2273…">
-            <button class="btn-search" onclick="buscarArticulo()">Ir</button>
+          <div class="nav-label">Buscar artículo</div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <div class="search-row" style="flex:1">
+              <input type="text" id="inp-buscar" class="search-input" placeholder="Ej. 2273…">
+              <button class="btn-search" onclick="buscarArticulo()">Ir</button>
+            </div>
+            <button class="btn-bookmark" id="btn-bookmark" onclick="toggleBookmark()" title="Guardar en Mis Leyes" style="display:none">☆</button>
           </div>
         </div>
       </div>
@@ -814,7 +905,7 @@
       <div id="search-resultados"></div>
 
       <div class="nav-tree" id="arbol">
-        <div class="nav-placeholder">Selecciona un estado<br>y una ley</div>
+        <div class="nav-placeholder">Selecciona un país<br>y una ley</div>
       </div>
 
     </aside>
@@ -885,17 +976,19 @@
     // ═══════════════════════════════════════════════════════════
     //  STATE
     // ═══════════════════════════════════════════════════════════
-    let estadoActivo = '';
-    let leyActiva    = '';
-    let articuloActivo = null;
+    let paisActivo    = '';
+    let estadoActivo  = '';
+    let leyActiva     = '';
+    let articuloActivo    = null;
     let capituloArticulos = [];
-    let chatBloqueado = false;
+    let chatBloqueado     = false;
 
     // ═══════════════════════════════════════════════════════════
     //  INIT
     // ═══════════════════════════════════════════════════════════
     document.addEventListener('DOMContentLoaded', () => {
-      cargarEstados();
+      cargarPaises();
+      renderBookmarks();
       mostrarSaludo();
       autoResizeTextarea();
     });
@@ -909,47 +1002,55 @@
     }
 
     // ═══════════════════════════════════════════════════════════
-    //  LOAD ESTADOS
+    //  CASCADA: País → Ley → Estado (opcional)
     // ═══════════════════════════════════════════════════════════
-    async function cargarEstados() {
-      const sel = document.getElementById('sel-estado');
+    async function cargarPaises() {
+      const sel = document.getElementById('sel-pais');
       try {
-        const res  = await fetch('/api/abogado?action=estados');
+        const res  = await fetch('/api/abogado?action=paises');
         const json = await res.json();
-        const estados = json.estados || [];
-        sel.innerHTML = '<option value="">— Selecciona estado —</option>';
-        estados.forEach(e => {
+        const paises = json.paises || [];
+        const dn = new Intl.DisplayNames(['es'], { type: 'region' });
+        sel.innerHTML = '<option value="">— Selecciona país —</option>';
+        paises.forEach(p => {
           const opt = document.createElement('option');
-          opt.value = e; opt.textContent = e;
+          opt.value = p;
+          try { opt.textContent = dn.of(p); } catch { opt.textContent = p; }
           sel.appendChild(opt);
         });
       } catch (err) {
         sel.innerHTML = '<option value="">Error al cargar</option>';
-        console.error('[cargarEstados]', err);
+        console.error('[cargarPaises]', err);
       }
-      sel.addEventListener('change', onEstadoChange);
+      sel.addEventListener('change', onPaisChange);
     }
 
-    async function onEstadoChange() {
-      estadoActivo = document.getElementById('sel-estado').value;
-      leyActiva = '';
+    async function onPaisChange() {
+      paisActivo   = document.getElementById('sel-pais').value;
+      estadoActivo = '';
+      leyActiva    = '';
       articuloActivo = null;
       capituloArticulos = [];
 
-      const selLey = document.getElementById('sel-ley');
+      const selLey    = document.getElementById('sel-ley');
+      const selEstado = document.getElementById('sel-estado');
+      const grupoEst  = document.getElementById('grupo-estado');
+
       selLey.innerHTML = '<option value="">Cargando leyes…</option>';
       selLey.disabled = true;
-
+      grupoEst.style.display = 'none';
+      selEstado.innerHTML = '<option value="">Todos los estados…</option>';
       limpiarArbol();
       ocultarResultadosBusqueda();
+      actualizarBookmarkBtn();
 
-      if (!estadoActivo) {
-        selLey.innerHTML = '<option value="">Selecciona un estado</option>';
+      if (!paisActivo) {
+        selLey.innerHTML = '<option value="">Selecciona un país</option>';
         return;
       }
 
       try {
-        const res  = await fetch(`/api/abogado?action=leyes&estado=${enc(estadoActivo)}`);
+        const res  = await fetch(`/api/abogado?action=leyes&pais=${enc(paisActivo)}`);
         const json = await res.json();
         const leyes = json.leyes || [];
         selLey.innerHTML = '<option value="">— Selecciona ley —</option>';
@@ -961,21 +1062,55 @@
         selLey.disabled = false;
       } catch (err) {
         selLey.innerHTML = '<option value="">Error al cargar</option>';
-        console.error('[onEstadoChange]', err);
+        console.error('[onPaisChange]', err);
       }
 
       selLey.onchange = onLeyChange;
     }
 
     async function onLeyChange() {
-      leyActiva = document.getElementById('sel-ley').value;
-      articuloActivo = null;
+      leyActiva    = document.getElementById('sel-ley').value;
+      estadoActivo = '';
+      articuloActivo    = null;
       capituloArticulos = [];
+
+      const selEstado = document.getElementById('sel-estado');
+      const grupoEst  = document.getElementById('grupo-estado');
+      grupoEst.style.display = 'none';
+      selEstado.innerHTML = '<option value="">Todos los estados…</option>';
       limpiarArbol();
       ocultarResultadosBusqueda();
+      actualizarBookmarkBtn();
 
       if (!leyActiva) return;
+
+      // Check if this ley has estados
+      try {
+        const res  = await fetch(`/api/abogado?action=estados_por_ley&pais=${enc(paisActivo)}&ley=${enc(leyActiva)}`);
+        const json = await res.json();
+        const estados = json.estados || [];
+        if (estados.length > 0) {
+          selEstado.innerHTML = '<option value="">Todos los estados…</option>';
+          estados.forEach(e => {
+            const opt = document.createElement('option');
+            opt.value = e; opt.textContent = e;
+            selEstado.appendChild(opt);
+          });
+          grupoEst.style.display = 'block';
+          selEstado.onchange = onEstadoChange;
+        }
+      } catch (err) {
+        console.warn('[onLeyChange] estados_por_ley falló:', err);
+      }
+
       await cargarNivelesPrimarios();
+    }
+
+    function onEstadoChange() {
+      estadoActivo = document.getElementById('sel-estado').value;
+      actualizarBookmarkBtn();
+      limpiarArbol();
+      cargarNivelesPrimarios();
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -986,7 +1121,7 @@
       arbol.innerHTML = '<div class="nav-loading">Cargando…</div>';
 
       try {
-        const res  = await fetch(`/api/abogado?action=niveles_primarios&estado=${enc(estadoActivo)}&ley=${enc(leyActiva)}`);
+        const res  = await fetch(`/api/abogado?action=niveles_primarios&pais=${enc(paisActivo)}&ley=${enc(leyActiva)}&estado=${enc(estadoActivo)}`);
         const json = await res.json();
         const niveles = json.niveles_primarios || [];
 
@@ -1038,7 +1173,7 @@
       container.dataset.loaded = 'true';
 
       try {
-        const res  = await fetch(`/api/abogado?action=niveles_secundarios&estado=${enc(estadoActivo)}&ley=${enc(leyActiva)}&nivel_primario=${enc(nivelPrimario)}`);
+        const res  = await fetch(`/api/abogado?action=niveles_secundarios&pais=${enc(paisActivo)}&ley=${enc(leyActiva)}&estado=${enc(estadoActivo)}&nivel_primario=${enc(nivelPrimario)}`);
         const json = await res.json();
         const niveles = json.niveles_secundarios || [];
 
@@ -1090,7 +1225,7 @@
       container.dataset.loaded = 'true';
 
       try {
-        const res  = await fetch(`/api/abogado?action=articulos_capitulo&estado=${enc(estadoActivo)}&ley=${enc(leyActiva)}&nivel_secundario=${enc(nivelSecundario)}`);
+        const res  = await fetch(`/api/abogado?action=articulos_capitulo&pais=${enc(paisActivo)}&ley=${enc(leyActiva)}&estado=${enc(estadoActivo)}&nivel_secundario=${enc(nivelSecundario)}`);
         const json = await res.json();
         const arts = json.articulos || [];
 
@@ -1131,15 +1266,15 @@
       const numero = document.getElementById('inp-buscar').value.trim();
       const container = document.getElementById('search-resultados');
 
-      if (!numero || !estadoActivo || !leyActiva) {
-        container.innerHTML = '<div class="nav-loading" style="padding:8px 14px">Selecciona estado y ley primero</div>';
+      if (!numero || !paisActivo || !leyActiva) {
+        container.innerHTML = '<div class="nav-loading" style="padding:8px 14px">Selecciona país y ley primero</div>';
         return;
       }
 
       container.innerHTML = '<div class="nav-loading" style="padding:8px 14px">Buscando…</div>';
 
       try {
-        const res  = await fetch(`/api/abogado?action=buscar&estado=${enc(estadoActivo)}&ley=${enc(leyActiva)}&numero=${enc(numero)}`);
+        const res  = await fetch(`/api/abogado?action=buscar&pais=${enc(paisActivo)}&ley=${enc(leyActiva)}&estado=${enc(estadoActivo)}&numero=${enc(numero)}`);
         const json = await res.json();
         const resultados = json.resultados || [];
 
@@ -1193,7 +1328,7 @@
         // Load sibling articles for context
         if (art.nivel_secundario) {
           try {
-            const res2  = await fetch(`/api/abogado?action=articulos_capitulo&estado=${enc(art.estado)}&ley=${enc(art.ley)}&nivel_secundario=${enc(art.nivel_secundario)}`);
+            const res2  = await fetch(`/api/abogado?action=articulos_capitulo&pais=${enc(art.pais||paisActivo)}&ley=${enc(art.ley)}&estado=${enc(art.estado||'')}&nivel_secundario=${enc(art.nivel_secundario)}`);
             const json2 = await res2.json();
             capituloArticulos = json2.articulos || [];
           } catch (_) {
@@ -1325,7 +1460,7 @@
         const body = {
           pregunta: preguntaEnriquecida,
           estado:   estadoActivo || articuloActivo?.estado || '',
-          pais:     'MX',
+          pais:     paisActivo  || articuloActivo?.pais   || 'MX',
           fuente:   leyActiva   || articuloActivo?.ley    || '',
           tema:     articuloActivo?.nivel_secundario       || '',
           modo:     'abogado'
@@ -1407,7 +1542,138 @@
     }
 
     function limpiarArbol() {
-      document.getElementById('arbol').innerHTML = '<div class="nav-placeholder">Selecciona un estado<br>y una ley</div>';
+      document.getElementById('arbol').innerHTML = '<div class="nav-placeholder">Selecciona un país<br>y una ley</div>';
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  BOOKMARKS (localStorage)
+    // ═══════════════════════════════════════════════════════════
+    const BM_KEY = 'legalatlas_bookmarks_v1';
+
+    function getBookmarks() {
+      try { return JSON.parse(localStorage.getItem(BM_KEY) || '[]'); } catch { return []; }
+    }
+    function saveBookmarks(list) {
+      localStorage.setItem(BM_KEY, JSON.stringify(list));
+    }
+
+    function bookmarkId() {
+      return [paisActivo, leyActiva, estadoActivo].filter(Boolean).join('|');
+    }
+
+    function isBookmarked() {
+      const id = bookmarkId();
+      return getBookmarks().some(b => b.id === id);
+    }
+
+    function actualizarBookmarkBtn() {
+      const btn = document.getElementById('btn-bookmark');
+      if (!paisActivo || !leyActiva) { btn.style.display = 'none'; return; }
+      btn.style.display = 'flex';
+      btn.textContent = isBookmarked() ? '★' : '☆';
+      btn.classList.toggle('guardado', isBookmarked());
+    }
+
+    function toggleBookmark() {
+      const id    = bookmarkId();
+      const lista = getBookmarks();
+      const idx   = lista.findIndex(b => b.id === id);
+      if (idx >= 0) {
+        lista.splice(idx, 1);
+      } else {
+        const dn = new Intl.DisplayNames(['es'], { type: 'region' });
+        let label = '';
+        try { label = dn.of(paisActivo); } catch { label = paisActivo; }
+        label += ' · ' + leyActiva;
+        if (estadoActivo) label += ' · ' + estadoActivo;
+        lista.unshift({ id, pais: paisActivo, ley: leyActiva, estado: estadoActivo, label });
+      }
+      saveBookmarks(lista);
+      actualizarBookmarkBtn();
+      renderBookmarks();
+    }
+
+    function renderBookmarks() {
+      const lista   = getBookmarks();
+      const section = document.getElementById('bookmarks-section');
+      const container = document.getElementById('bookmarks-list');
+      if (lista.length === 0) { section.style.display = 'none'; return; }
+      section.style.display = 'block';
+      container.innerHTML = '';
+      lista.forEach(b => {
+        const chip = document.createElement('div');
+        chip.className = 'bookmark-chip';
+        chip.innerHTML = `
+          <span class="bookmark-chip-label">${escapeHtml(b.label)}</span>
+          <button class="bookmark-chip-del" title="Eliminar" onclick="eliminarBookmark('${escapeHtml(b.id)}');event.stopPropagation()">✕</button>`;
+        chip.addEventListener('click', () => aplicarBookmark(b));
+        container.appendChild(chip);
+      });
+    }
+
+    function eliminarBookmark(id) {
+      const lista = getBookmarks().filter(b => b.id !== id);
+      saveBookmarks(lista);
+      renderBookmarks();
+      actualizarBookmarkBtn();
+    }
+
+    async function aplicarBookmark(b) {
+      // Set selects without triggering full cascade manually
+      const selPais   = document.getElementById('sel-pais');
+      const selLey    = document.getElementById('sel-ley');
+      const selEstado = document.getElementById('sel-estado');
+
+      // Set pais
+      selPais.value = b.pais;
+      paisActivo    = b.pais;
+
+      // Load leyes for this pais
+      selLey.innerHTML = '<option value="">Cargando…</option>';
+      selLey.disabled  = true;
+      const dn = new Intl.DisplayNames(['es'], { type: 'region' });
+      try {
+        const res  = await fetch(`/api/abogado?action=leyes&pais=${enc(b.pais)}`);
+        const json = await res.json();
+        selLey.innerHTML = '<option value="">— Selecciona ley —</option>';
+        (json.leyes || []).forEach(l => {
+          const opt = document.createElement('option');
+          opt.value = l; opt.textContent = l;
+          selLey.appendChild(opt);
+        });
+        selLey.disabled = false;
+        selLey.value    = b.ley;
+        selLey.onchange = onLeyChange;
+      } catch (err) { console.error('[aplicarBookmark]', err); }
+
+      leyActiva = b.ley;
+
+      // Handle estado
+      const grupoEst = document.getElementById('grupo-estado');
+      if (b.estado) {
+        try {
+          const res  = await fetch(`/api/abogado?action=estados_por_ley&pais=${enc(b.pais)}&ley=${enc(b.ley)}`);
+          const json = await res.json();
+          selEstado.innerHTML = '<option value="">Todos los estados…</option>';
+          (json.estados || []).forEach(e => {
+            const opt = document.createElement('option');
+            opt.value = e; opt.textContent = e;
+            selEstado.appendChild(opt);
+          });
+          grupoEst.style.display = 'block';
+          selEstado.value  = b.estado;
+          selEstado.onchange = onEstadoChange;
+        } catch (err) { console.warn('[aplicarBookmark estados]', err); }
+        estadoActivo = b.estado;
+      } else {
+        grupoEst.style.display = 'none';
+        estadoActivo = '';
+      }
+
+      actualizarBookmarkBtn();
+      limpiarArbol();
+      ocultarResultadosBusqueda();
+      await cargarNivelesPrimarios();
     }
 
     // ═══════════════════════════════════════════════════════════
