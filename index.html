@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Legal Atlas — Motor Normativo APOLO</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
 :root {
   --p0: #1a1a16;
@@ -405,6 +406,94 @@ body {
   opacity: 0.6;
 }
 
+/* ── CAPACIDADES ── */
+.cap-section {
+  width: 100%;
+  max-width: 860px;
+  margin-top: 56px;
+  animation: emerger 1s ease 0.45s both;
+}
+.cap-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.cap-header-line {
+  flex: 1;
+  height: 0.5px;
+  background: linear-gradient(90deg, transparent, var(--borde));
+}
+.cap-header-line.r {
+  background: linear-gradient(90deg, var(--borde), transparent);
+}
+.cap-header-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.45em;
+  color: var(--tinta-muted);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.cap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--borde);
+  border: 1px solid var(--borde);
+}
+.cap-card {
+  background: rgba(20,20,16,0.88);
+  padding: 26px 22px 22px;
+  transition: background 0.25s;
+  backdrop-filter: blur(4px);
+}
+.cap-card:hover {
+  background: rgba(32,32,26,0.98);
+}
+.cap-card:hover .cap-titulo {
+  color: var(--sepia-md);
+}
+.cap-icon {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: var(--sepia);
+  display: block;
+  opacity: 0.75;
+  line-height: 1;
+}
+.cap-titulo {
+  font-family: 'Cinzel', serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--tinta);
+  margin-bottom: 10px;
+  transition: color 0.2s;
+  line-height: 1.4;
+}
+.cap-desc {
+  font-family: 'Lora', serif;
+  font-size: 12.5px;
+  color: var(--tinta-soft);
+  line-height: 1.75;
+  margin-bottom: 10px;
+}
+.cap-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 7.5px;
+  letter-spacing: 0.2em;
+  color: rgba(196,154,60,0.35);
+  text-transform: uppercase;
+}
+@media (max-width: 680px) {
+  .cap-grid { grid-template-columns: 1fr; }
+}
+@media (min-width: 681px) and (max-width: 900px) {
+  .cap-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 /* ── ANIMACIONES ── */
 @keyframes emerger {
   from { opacity: 0; transform: translateY(12px); }
@@ -424,9 +513,208 @@ body {
   .map-frame { inset: 8px; }
   .intro { padding: 18px; }
 }
+
+/* ═══════════════════════════════════════════
+   REDESIGN — Moderno · ciudadano-aligned
+═══════════════════════════════════════════ */
+
+/* 1. Ocultar decorado cartográfico */
+.mapa-fondo, .map-frame, .corner, .marginal { display: none; }
+
+/* 2. Fondo limpio con ambient glow dorado */
+.pergamino-overlay {
+  background:
+    radial-gradient(ellipse 75% 55% at 12% 45%, rgba(196,154,60,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 75% at 88% 55%, rgba(196,154,60,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 50% at 50% 100%, rgba(196,154,60,0.04) 0%, transparent 55%),
+    rgba(15,15,12,0.97);
+}
+
+/* 3. Topbar fijo */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 36px;
+  background: rgba(14,14,11,0.94);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(196,154,60,0.2);
+  z-index: 10;
+}
+.topbar-logo {
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: rgba(245,237,216,0.88);
+}
+.topbar-logo span { color: #c49a3c; font-weight: 400; }
+.topbar-nav {
+  display: flex;
+  gap: 28px;
+  margin-left: auto;
+}
+.topbar-link {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245,237,216,0.35);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.topbar-link:hover { color: #c49a3c; }
+.topbar-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 28px;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245,237,216,0.3);
+}
+.topbar-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #c49a3c;
+  box-shadow: 0 0 7px rgba(196,154,60,0.65);
+}
+@media (max-width: 680px) {
+  .topbar { padding: 0 20px; }
+  .topbar-nav { gap: 16px; }
+  .topbar-badge { display: none; }
+  .wrapper { padding-top: 90px !important; }
+}
+
+/* 4. Wrapper: espacio para topbar fijo */
+.wrapper { padding-top: 110px; }
+
+/* 5. Compass: ocultar → reemplazar con mark limpio */
+.compass-wrap { display: none; }
+
+.header-mark {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.55em;
+  color: rgba(196,154,60,0.7);
+  text-transform: uppercase;
+  margin-bottom: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.header-mark::before, .header-mark::after {
+  content: '';
+  width: 48px; height: 0.5px;
+  background: linear-gradient(90deg, transparent, rgba(196,154,60,0.5));
+}
+.header-mark::after {
+  background: linear-gradient(90deg, rgba(196,154,60,0.5), transparent);
+}
+
+/* 6. Hero: más grande, más impacto */
+.header-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.7em;
+  color: var(--sepia-md);
+  margin-bottom: 18px;
+}
+.header-logo {
+  font-size: clamp(46px, 8.5vw, 84px);
+  letter-spacing: 0.09em;
+  line-height: 1;
+}
+.header-tagline {
+  font-size: clamp(15px, 1.9vw, 19px);
+  max-width: 500px;
+  margin: 0 auto;
+  color: var(--tinta-soft);
+}
+.header-sub {
+  margin-top: 10px;
+  font-family: 'Cinzel', serif;
+  font-size: 9.5px;
+  letter-spacing: 0.4em;
+  color: var(--tinta-muted);
+}
+.header-ornament {
+  margin: 22px 0;
+}
+
+/* 7. Intro: más limpia */
+.intro {
+  max-width: 580px;
+  background: rgba(196,154,60,0.035);
+  border: none;
+  border-top: 0.5px solid rgba(196,154,60,0.22);
+  border-bottom: 0.5px solid rgba(196,154,60,0.22);
+  padding: 22px 36px;
+}
+.intro-text { font-size: clamp(14px, 1.5vw, 15.5px); }
+
+/* 8. Puertas: premium */
+.puertas-wrap { max-width: 900px; }
+.puerta {
+  background: rgba(15,15,12,0.9);
+  border: 1px solid rgba(196,154,60,0.14);
+  border-top: 2px solid rgba(196,154,60,0.32);
+  backdrop-filter: blur(10px);
+  padding: 42px 38px 38px;
+}
+.puerta:hover {
+  background: rgba(24,24,19,0.98);
+  border-color: rgba(196,154,60,0.65);
+  border-top-color: var(--sepia);
+  transform: translateY(-7px);
+  box-shadow: 0 16px 56px rgba(196,154,60,0.13), 0 0 0 1px rgba(196,154,60,0.18);
+}
+.puerta-titulo {
+  font-size: clamp(18px, 2.4vw, 24px);
+}
+.puerta-desc {
+  font-size: 14.5px;
+  line-height: 1.85;
+}
+
+/* 9. Cap cards: más premium */
+.cap-section { margin-top: 64px; }
+.cap-card {
+  background: rgba(15,15,12,0.88);
+  border-top: 2px solid transparent;
+  transition: background 0.3s, border-top-color 0.3s;
+}
+.cap-card:hover {
+  background: rgba(24,24,18,0.98);
+  border-top-color: rgba(196,154,60,0.5);
+}
+.cap-icon { font-size: 20px; opacity: 0.8; }
+.cap-titulo { font-size: 11px; }
+.cap-desc { font-size: 13px; line-height: 1.78; }
 </style>
 </head>
 <body>
+
+<!-- TOPBAR FIJO -->
+<div class="topbar">
+  <div class="topbar-logo">LEGAL<span>ATLAS</span></div>
+  <nav class="topbar-nav">
+    <a href="ciudadano.html" class="topbar-link">Ciudadano</a>
+    <a href="directorio.html" class="topbar-link">Directorio</a>
+    <a href="pro.html" class="topbar-link">Pro</a>
+  </nav>
+  <div class="topbar-badge">
+    <div class="topbar-dot"></div>
+    APOLO · En línea
+  </div>
+</div>
 
 <!-- MAPA TOPOGRÁFICO REAL COMO FONDO -->
 <div class="mapa-fondo">
@@ -555,6 +843,8 @@ body {
 <div class="wrapper">
 
   <header class="header">
+    <div class="header-mark">Motor Normativo</div>
+
     <div class="compass-wrap">
       <svg width="96" height="96" viewBox="0 0 96 96" fill="none">
         <circle cx="48" cy="48" r="44" stroke="#bfaa70" stroke-width="0.8" fill="none"/>
@@ -642,6 +932,53 @@ body {
       </div>
     </a>
 
+  </div>
+
+  <!-- CAPACIDADES -->
+  <div class="cap-section">
+    <div class="cap-header">
+      <div class="cap-header-line"></div>
+      <span class="cap-header-label">Instrumentos de Expedición</span>
+      <div class="cap-header-line r"></div>
+    </div>
+    <div class="cap-grid">
+      <div class="cap-card">
+        <span class="cap-icon">⚖</span>
+        <div class="cap-titulo">Motor APOLO</div>
+        <p class="cap-desc">RAG real sobre legislación vigente. Cada respuesta cita el artículo exacto — sin alucinaciones, sin invención.</p>
+        <span class="cap-tag">Retrieval-Augmented Generation</span>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon">✦</span>
+        <div class="cap-titulo">Redacción Jurídica</div>
+        <p class="cap-desc">Contratos, escritos y documentos generados con precisión legal. Cada cláusula fundada en la norma vigente.</p>
+        <span class="cap-tag">Documentos con validez jurídica</span>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon">◎</span>
+        <div class="cap-titulo">Cobertura Nacional</div>
+        <p class="cap-desc">México completo: 32 estados, múltiples jurisdicciones. En expansión hacia LATAM y Europa civil.</p>
+        <span class="cap-tag">Civil law · 4 mil millones de personas</span>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon">⟳</span>
+        <div class="cap-titulo">Referencias Cruzadas</div>
+        <p class="cap-desc">Cuando un artículo remite a otro, APOLO lo recupera automáticamente. Contexto legal completo, no fragmentos.</p>
+        <span class="cap-tag">Graph-RAG · 2 niveles de profundidad</span>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon">◈</span>
+        <div class="cap-titulo">Multi-Jurisdicción</div>
+        <p class="cap-desc">Civil, laboral, familiar, penal, mercantil. Acceso simultáneo a múltiples cuerpos legales y jerarquía normativa.</p>
+        <span class="cap-tag">5 niveles de jerarquía normativa</span>
+      </div>
+      <div class="cap-card">
+        <span class="cap-icon">✧</span>
+        <div class="cap-titulo">Directorio Verificado</div>
+        <p class="cap-desc">Cuando tu caso requiere asesoría profesional, APOLO te conecta con abogados especializados del directorio.</p>
+        <span class="cap-tag">Red de especialistas verificados</span>
+      </div>
+    </div>
   </div>
 
   <footer class="footer">

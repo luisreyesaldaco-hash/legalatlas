@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <!-- Metallic gold: bright at apex, dark toward base -->
+    <linearGradient id="gold" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%"   stop-color="#f4e060"/>
+      <stop offset="22%"  stop-color="#d4a840"/>
+      <stop offset="58%"  stop-color="#b88030"/>
+      <stop offset="100%" stop-color="#6a3e08"/>
+    </linearGradient>
+    <!-- Light catch: left face of A catches more light -->
+    <linearGradient id="lgt" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="rgba(255,248,150,0.48)"/>
+      <stop offset="60%"  stop-color="rgba(255,248,150,0.08)"/>
+      <stop offset="100%" stop-color="rgba(255,248,150,0)"/>
+    </linearGradient>
+    <!-- Shadow: right face is slightly darker -->
+    <linearGradient id="shd" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="rgba(0,0,0,0)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0.28)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Dark background with very slight rounding -->
+  <rect width="32" height="32" rx="4" fill="#111110"/>
+
+  <!-- Left leg of A -->
+  <polygon points="16,2 5,30 10.5,30" fill="url(#gold)"/>
+  <!-- Left leg: extra light (faces the light source from top-left) -->
+  <polygon points="16,2 5,30 10.5,30" fill="url(#lgt)"/>
+
+  <!-- Right leg of A (slightly darker — shadow side) -->
+  <polygon points="16,2 27,30 21.5,30" fill="url(#gold)"/>
+  <polygon points="16,2 27,30 21.5,30" fill="url(#shd)"/>
+
+  <!-- Crossbar -->
+  <rect x="9.5" y="18" width="13" height="3.5" fill="url(#gold)"/>
+  <!-- Crossbar left half catches light -->
+  <rect x="9.5" y="18" width="6.5" height="3.5" fill="url(#lgt)"/>
+
+  <!-- Specular highlight at the sharp apex — the "arrow tip" glint -->
+  <ellipse cx="16" cy="3.2" rx="0.9" ry="1.6" fill="#fff8c0" opacity="0.55"/>
+
+  <!-- Rim light along the left outer edge (top-left catch) -->
+  <line x1="16" y1="2"  x2="5.5"  y2="29.5" stroke="#f0d860" stroke-width="0.5" opacity="0.45"/>
+  <!-- Subtle dark edge on right outer edge (shadow rim) -->
+  <line x1="16" y1="2"  x2="26.5" y2="29.5" stroke="#5a3008" stroke-width="0.5" opacity="0.35"/>
+
+  <!-- Thin gold outline border for crispness/definition -->
+  <polygon points="16,2 5,30 10.5,30" fill="none" stroke="rgba(196,154,60,0.55)" stroke-width="0.5" stroke-linejoin="miter"/>
+  <polygon points="16,2 27,30 21.5,30" fill="none" stroke="rgba(196,154,60,0.4)"  stroke-width="0.5" stroke-linejoin="miter"/>
+  <rect x="9.5" y="18" width="13" height="3.5" fill="none" stroke="rgba(196,154,60,0.4)" stroke-width="0.4"/>
+</svg>
