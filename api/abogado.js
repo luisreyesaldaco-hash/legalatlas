@@ -59,29 +59,40 @@ export default async function handler(req, res) {
       return res.status(200).json({ estados: unique });
     }
 
-    // ── niveles_primarios (libro) ─────────────────────────────────────────────
+    // ── niveles_primarios (libro) — ordenados por id mínimo (orden de lectura) ─
     if (action === 'niveles_primarios') {
       if (!pais || !ley) return res.status(400).json({ error: 'Parámetros pais y ley requeridos' });
-      let q = supabase.from('articulos').select('libro')
+      let q = supabase.from('articulos').select('libro, id')
         .eq('pais', pais).eq('ley', ley).not('libro', 'is', null).neq('libro', '');
       q = conEstado(q, estado);
       const { data, error } = await q;
       if (error) throw error;
-      const unique = [...new Set((data || []).map(r => r.libro).filter(Boolean))];
+      // Agrupar por libro y ordenar por el id mínimo de sus artículos
+      const mapa = {};
+      (data || []).forEach(r => {
+        if (!r.libro) return;
+        if (!mapa[r.libro] || r.id < mapa[r.libro]) mapa[r.libro] = r.id;
+      });
+      const unique = Object.entries(mapa).sort((a, b) => a[1] - b[1]).map(e => e[0]);
       return res.status(200).json({ niveles_primarios: unique });
     }
 
-    // ── niveles_secundarios (titulo) ──────────────────────────────────────────
+    // ── niveles_secundarios (titulo) — ordenados por id mínimo ───────────────
     if (action === 'niveles_secundarios') {
       if (!pais || !ley || !nivel_primario) return res.status(400).json({ error: 'Parámetros pais, ley y nivel_primario requeridos' });
-      let q = supabase.from('articulos').select('titulo')
+      let q = supabase.from('articulos').select('titulo, id')
         .eq('pais', pais).eq('ley', ley)
         .eq('libro', nivel_primario)
         .not('titulo', 'is', null).neq('titulo', '');
       q = conEstado(q, estado);
       const { data, error } = await q;
       if (error) throw error;
-      const unique = [...new Set((data || []).map(r => r.titulo).filter(Boolean))];
+      const mapa = {};
+      (data || []).forEach(r => {
+        if (!r.titulo) return;
+        if (!mapa[r.titulo] || r.id < mapa[r.titulo]) mapa[r.titulo] = r.id;
+      });
+      const unique = Object.entries(mapa).sort((a, b) => a[1] - b[1]).map(e => e[0]);
       return res.status(200).json({ niveles_secundarios: unique });
     }
 
@@ -97,6 +108,7 @@ export default async function handler(req, res) {
       if (error) throw error;
       return res.status(200).json({ articulos: data || [] });
     }
+
 
     // ── articulo (single) ────────────────────────────────────────────────────
     if (action === 'articulo') {
