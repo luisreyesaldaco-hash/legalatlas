@@ -601,12 +601,31 @@
       if (modoActual === 'redaccion' && recetaActiva && preguntaIdxActual < todasLasPreguntas.length) {
         const texto = inputEl.value.trim();
         if (!texto) return;
-        inputEl.value   = '';
+        inputEl.value      = '';
         inputEl.disabled   = true;
         btnEnviar.disabled = true;
         agregarMensaje('usuario', texto);
+
+        // ── Respuesta a confirmación de nombre ────────────────────────────
+        if (esperandoConfirmacionNombre) {
+          esperandoConfirmacionNombre = false;
+          const nombreGuardado = localStorage.getItem('atlas_nombre');
+          const confirmaciones  = ['si', 'sí', 's', 'yes', 'y', 'ok', 'claro', 'correcto', 'ese soy yo'];
+          const esConfirmacion  = confirmaciones.includes(texto.trim().toLowerCase());
+          const nombreFinal     = esConfirmacion ? nombreGuardado : texto.trim();
+          datosRedaccion[campoNombreUsuario] = nombreFinal;
+          if (!esConfirmacion) localStorage.setItem('atlas_nombre', nombreFinal);
+          preguntaIdxActual++;
+          setTimeout(preguntarSiguiente, 300);
+          return;
+        }
+
         const pregunta = todasLasPreguntas[preguntaIdxActual];
         datosRedaccion[pregunta.campo] = texto;
+        // Guardar nombre en localStorage cuando se responde por primera vez
+        if (pregunta.campo === campoNombreUsuario) {
+          localStorage.setItem('atlas_nombre', texto);
+        }
         preguntaIdxActual++;
         setTimeout(preguntarSiguiente, 300);
         return;
@@ -662,6 +681,8 @@
     let datosRedaccion    = {};
     let preguntaIdxActual = 0;
     let todasLasPreguntas = [];
+    let campoNombreUsuario          = null;  // primer nombre_* de la receta activa
+    let esperandoConfirmacionNombre = false;
 
     const btnModoRed  = document.getElementById('btn-modo-redaccion');
     const grupoRecetas = document.getElementById('grupo-recetas');
@@ -720,6 +741,10 @@
         const pais = sel.pais || 'MX';
         const res = await fetch('/api/redactar?tipo=' + tipo + '&pais=' + pais);
         recetaActiva = await res.json();
+        // Campo nombre del usuario: primer nombre_* en datos_requeridos
+        campoNombreUsuario = (recetaActiva.datos_requeridos || [])
+          .find(d => d.campo.startsWith('nombre_'))?.campo || null;
+        esperandoConfirmacionNombre = false;
         // Pre-llenar datos conocidos del contexto actual
         datosRedaccion = {};
         if (sel.estado) datosRedaccion['estado'] = sel.estado;
@@ -749,6 +774,22 @@
         return;
       }
       const p = todasLasPreguntas[preguntaIdxActual];
+
+      // ── Confirmación de nombre guardado ──────────────────────────────────
+      const nombreGuardado = localStorage.getItem('atlas_nombre');
+      if (p.campo === campoNombreUsuario && nombreGuardado && !esperandoConfirmacionNombre) {
+        esperandoConfirmacionNombre = true;
+        agregarMensaje('apolo',
+          '¿Eres tú, <strong>' + nombreGuardado + '</strong>?<br>' +
+          '<em style="opacity:0.45;font-size:12px;">Escribe "sí" para confirmar, o tu nombre completo si es diferente.</em>'
+        );
+        inputEl.disabled   = false;
+        btnEnviar.disabled = false;
+        inputEl.placeholder = 'sí / tu nombre completo…';
+        inputEl.focus();
+        return;
+      }
+
       const esOp = p.opcional
         ? '<br><em style="opacity:0.45;font-size:12px;">(opcional — escribe "no" para omitir)</em>'
         : '';
