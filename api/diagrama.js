@@ -87,8 +87,8 @@ REGLAS DEL SVG:
 - Solo rect, line, text, path — sin imágenes externas
 - Máximo 7 nodos
 - Fondo transparente
-- Fondo SVG: blanco #ffffff — NO uses rect de fondo negro ni oscuro
-- Colores nodos: relleno #ffffff, stroke #8a6820, texto #1a1508
+- Fondo SVG: transparente — NO agregues ningún rect de fondo
+- Colores nodos: relleno #f0e8d0, stroke #8a6820, texto #1a1508
 - Líneas de conexión: stroke #8a6820
 - Muestra el flujo del proceso: quién hace qué, en qué orden
 - Responde SOLO con el SVG completo, sin texto adicional, sin markdown`;
