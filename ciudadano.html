@@ -166,7 +166,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      background: #0f0f11;
+      background: #f5edd8;
     }
     #mensajes::-webkit-scrollbar { width: 4px; }
     #mensajes::-webkit-scrollbar-track { background: transparent; }
@@ -187,24 +187,23 @@
       margin-bottom: 8px;
     }
     .msg-apolo {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.45);
+      border: 1px solid rgba(138,104,32,0.2);
       border-radius: 4px 18px 18px 18px;
       padding: 16px 20px;
       align-self: flex-start;
-      color: var(--text);
-      backdrop-filter: blur(10px);
+      color: #1a1508;
     }
-    .msg-apolo .msg-sender { color: var(--gold); }
+    .msg-apolo .msg-sender { color: #8a6820; }
     .msg-usuario {
-      background: rgba(196,154,60,0.1);
-      color: var(--text);
-      border: 1px solid rgba(196,154,60,0.2);
+      background: rgba(138,104,32,0.12);
+      color: #1a1508;
+      border: 1px solid rgba(138,104,32,0.25);
       border-radius: 18px 4px 18px 18px;
       padding: 14px 18px;
       align-self: flex-end;
     }
-    .msg-usuario .msg-sender { color: var(--text-muted); }
+    .msg-usuario .msg-sender { color: rgba(26,21,8,0.45); }
 
     /* Artículos citados */
     .articulos-citados {

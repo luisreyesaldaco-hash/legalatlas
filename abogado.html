@@ -645,6 +645,9 @@
       flex-shrink: 0;
       padding: 18px 18px 14px;
       border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
     }
     .chat-header-title {
       font-family: 'Cinzel', serif;
@@ -897,12 +900,63 @@
     .btn-bookmark:hover { border-color: var(--gold); color: var(--gold); }
     .btn-bookmark.guardado { color: var(--gold); border-color: var(--gold); background: var(--gold-dim); }
 
+    /* ═══ CHAT COLLAPSE ═══ */
+    .col-chat {
+      transition: width 0.3s ease;
+    }
+    .col-chat.collapsed {
+      width: 0 !important;
+      overflow: hidden;
+    }
+
+    .btn-chat-toggle {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+      line-height: 1;
+    }
+    .btn-chat-toggle:hover { color: var(--gold); background: var(--gold-dim); }
+
+    .btn-chat-reopen {
+      position: fixed;
+      bottom: 80px;
+      right: 0;
+      z-index: 200;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-right: none;
+      border-radius: 10px 0 0 10px;
+      padding: 10px 8px;
+      cursor: pointer;
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      transition: background 0.2s, border-color 0.2s;
+      display: none;
+    }
+    .btn-chat-reopen:hover { background: var(--gold-dim); border-color: var(--gold); }
+    .btn-chat-reopen.visible { display: block; }
+
     /* Responsive fallback */
     @media (max-width: 900px) {
       .col-nav { width: 220px; }
       .col-chat { width: 240px; }
       .centro-scroll { padding: 20px 20px 32px; }
       .art-numero { font-size: 38px; }
+    }
+    @media (max-width: 700px) {
+      .col-nav { width: 200px; }
+      .col-chat { width: 260px; }
     }
   </style>
 </head>
@@ -1014,10 +1068,13 @@
     </main>
 
     <!-- ── RIGHT: CHAT ── -->
-    <aside class="col-chat">
+    <aside class="col-chat" id="col-chat">
       <div class="chat-header">
-        <div class="chat-header-title">APOLO</div>
-        <div class="chat-context" id="chat-context">Sin artículo activo</div>
+        <div>
+          <div class="chat-header-title">APOLO</div>
+          <div class="chat-context" id="chat-context">Sin artículo activo</div>
+        </div>
+        <button class="btn-chat-toggle" onclick="toggleChat()" title="Ocultar chat">✕</button>
       </div>
 
       <div id="chat-mensajes"></div>
@@ -1036,6 +1093,9 @@
     </aside>
 
   </div><!-- /panel -->
+
+  <!-- Botón flotante para reabrir chat -->
+  <button class="btn-chat-reopen" id="btn-chat-reopen" onclick="toggleChat()">APOLO</button>
 
   <script>
     // ═══════════════════════════════════════════════════════════
@@ -1632,6 +1692,22 @@
 
     function volverAlArticulo() {
       mostrarVistaArticulo();
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    //  CHAT TOGGLE
+    // ═══════════════════════════════════════════════════════════
+    function toggleChat() {
+      const panel = document.getElementById('col-chat');
+      const reopen = document.getElementById('btn-chat-reopen');
+      const collapsed = panel.classList.toggle('collapsed');
+      reopen.classList.toggle('visible', collapsed);
+    }
+
+    // En móvil arrancar con el chat colapsado
+    if (window.innerWidth <= 700) {
+      document.getElementById('col-chat').classList.add('collapsed');
+      document.getElementById('btn-chat-reopen').classList.add('visible');
     }
 
     // ═══════════════════════════════════════════════════════════
