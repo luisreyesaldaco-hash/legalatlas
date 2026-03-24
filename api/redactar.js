@@ -76,15 +76,22 @@ export default async function handler(req, res) {
 
     // ── RAG: buscar artículos relevantes en Supabase ──────────────────────
     const CPEUM_LEY = 'Constitución Política de los Estados Unidos Mexicanos';
-    const queryRAG  = receta.query_rag
-      ? `${receta.query_rag} ${datos.concepto || ''}`.trim()
-      : [datos.concepto, datos.peticion].filter(Boolean).join(' ') || tipo.replace(/_/g, ' ');
     const esMexico  = !receta.pais || receta.pais === 'MX';
 
     let contextoLegal = [];
     try {
-      if (esMexico && datos.estado) {
-        // Búsqueda paralela: ley estatal (4 arts) + CPEUM (2 arts)
+      if (receta.rag_queries?.length) {
+        // Múltiples queries con n específico por query (formato nuevo)
+        const promises = receta.rag_queries.map(({ query, n }) =>
+          buscarArticulos(query, datos.estado || '', receta.fuente_ley || 'Código Civil', n)
+        );
+        const resultados = await Promise.allSettled(promises);
+        contextoLegal = resultados.flatMap(r => r.status === 'fulfilled' ? r.value : []);
+      } else if (esMexico && datos.estado) {
+        // Formato original: query_rag único + CPEUM paralelo
+        const queryRAG = receta.query_rag
+          ? `${receta.query_rag} ${datos.concepto || ''}`.trim()
+          : [datos.concepto, datos.peticion].filter(Boolean).join(' ') || tipo.replace(/_/g, ' ');
         const [leyResults, cpuemResults] = await Promise.allSettled([
           buscarArticulos(queryRAG, datos.estado, receta.fuente_ley || 'Código Civil', 4),
           buscarArticulos('acceso justicia petición derecho acudir tribunales garantías', '', CPEUM_LEY, 2)
@@ -94,6 +101,7 @@ export default async function handler(req, res) {
           ...(cpuemResults.status === 'fulfilled' ? cpuemResults.value : [])
         ];
       } else {
+        const queryRAG = receta.query_rag || tipo.replace(/_/g, ' ');
         contextoLegal = await buscarArticulos(queryRAG, datos.estado || '', receta.fuente_ley || 'Código Civil', 5);
       }
     } catch (e) {
@@ -146,8 +154,9 @@ export default async function handler(req, res) {
 
     res.status(200).json({
       html,
-      titulo: receta.titulo,
-      nota:   receta.nota_al_usuario
+      titulo:      receta.titulo,
+      nota:        receta.nota_al_usuario,
+      nota_upsell: receta.nota_upsell || null
     });
 
   } catch (error) {

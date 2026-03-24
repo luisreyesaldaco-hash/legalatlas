@@ -1,0 +1,82 @@
+{
+  "tipo": "contrato_compraventa_vehiculo",
+  "titulo": "Contrato de Compraventa de Vehículo",
+  "descripcion": "Contrato entre particulares para compraventa de vehículo automotor",
+  "precio_mxn": 249,
+  "fuente_ley": "Código Civil",
+  "rag_queries": [
+    { "query": "compraventa transmisión propiedad bien mueble entrega", "n": 2 },
+    { "query": "obligaciones vendedor saneamiento vicios ocultos garantía", "n": 2 },
+    { "query": "obligaciones comprador precio pago entrega", "n": 2 },
+    { "query": "rescisión compraventa incumplimiento", "n": 1 },
+    { "query": "garantías constitucionales propiedad patrimonio", "n": 1 }
+  ],
+  "datos_requeridos": [
+    {
+      "campo": "nombre_vendedor",
+      "pregunta": "¿Cuál es el nombre completo del vendedor tal como aparece en su identificación oficial?",
+      "ejemplo": "Carlos Mendoza Ríos"
+    },
+    {
+      "campo": "nombre_comprador",
+      "pregunta": "¿Cuál es el nombre completo del comprador tal como aparece en su identificación oficial?",
+      "ejemplo": "Ana Solís Vega"
+    },
+    {
+      "campo": "descripcion_vehiculo",
+      "pregunta": "¿Cuáles son los datos del vehículo? Necesito marca, modelo, año y color.",
+      "ejemplo": "Nissan Sentra 2019, color blanco"
+    },
+    {
+      "campo": "numero_serie",
+      "pregunta": "¿Cuál es el número de serie o NIV del vehículo? Lo encuentras en la tarjeta de circulación.",
+      "ejemplo": "3N1AB7AP9KY123456"
+    },
+    {
+      "campo": "placas",
+      "pregunta": "¿Cuáles son las placas actuales del vehículo?",
+      "ejemplo": "ABC-123-D"
+    },
+    {
+      "campo": "precio_venta",
+      "pregunta": "¿En cuánto se vende el vehículo? Escribe el monto en pesos mexicanos.",
+      "ejemplo": "$85,000 MXN"
+    },
+    {
+      "campo": "forma_pago",
+      "pregunta": "¿Cómo se realiza el pago?",
+      "opciones": [
+        "Pago en efectivo en una sola exhibición",
+        "Transferencia bancaria",
+        "Pago en parcialidades"
+      ]
+    }
+  ],
+  "preguntas_profundidad": [
+    {
+      "campo": "estado_vehiculo",
+      "pregunta": "¿El vehículo tiene algún desperfecto o detalle que el comprador deba conocer?",
+      "ejemplo": "Rayón en puerta trasera derecha",
+      "opcional": true
+    },
+    {
+      "campo": "adeudos",
+      "pregunta": "¿El vehículo tiene multas, tenencia o verificación pendiente?",
+      "opciones": [
+        "No tiene adeudos",
+        "Tiene adeudos que el vendedor pagará antes de entregar",
+        "El comprador acepta el vehículo con adeudos"
+      ],
+      "opcional": true
+    },
+    {
+      "campo": "fecha_entrega",
+      "pregunta": "¿Cuándo se entrega físicamente el vehículo?",
+      "ejemplo": "En el momento de la firma del contrato",
+      "opcional": true
+    }
+  ],
+  "nota_al_usuario": "Este contrato protege tanto al vendedor como al comprador. Te recomendamos firmar dos ejemplares originales — uno para cada parte. Si el vehículo vale más de $150,000 MXN considera ratificar las firmas ante notario.",
+  "nota_upsell": "¿Quieres que un abogado revise este contrato antes de firmarlo? Tenemos especialistas disponibles en Legal Atlas.",
+  "system_prompt": "Eres APOLO, redactor legal mexicano experto en compraventa de bienes muebles. Genera un CONTRATO DE COMPRAVENTA DE VEHÍCULO ENTRE PARTICULARES completo y válido para la jurisdicción de {estado}, México.\nFecha del contrato: {fecha_actual}\n\nCONTEXTO LEGAL RECUPERADO DE SUPABASE:\n{contexto_legal}\n\nDATOS DE LA OPERACIÓN:\n- Vendedor: {nombre_vendedor}\n- Comprador: {nombre_comprador}\n- Vehículo: {descripcion_vehiculo}\n- NIV: {numero_serie}\n- Placas: {placas}\n- Precio: {precio_venta}\n- Forma de pago: {forma_pago}\n- Estado del vehículo: {estado_vehiculo}\n- Adeudos: {adeudos}\n- Fecha de entrega: {fecha_entrega}\n\nEL CONTRATO DEBE INCLUIR EXACTAMENTE ESTAS 9 SECCIONES:\n\nSECCIÓN 1 — DECLARACIONES\nDatos completos del vendedor y comprador. El vendedor declara ser legítimo propietario del vehículo y que no tiene gravámenes, embargos ni limitaciones de dominio.\n\nSECCIÓN 2 — OBJETO\nDescripción completa del vehículo: marca, modelo, año, color, NIV y placas. Declaración de que se transfiere la propiedad en el estado físico conocido y aceptado por el comprador.\n\nSECCIÓN 3 — PRECIO Y FORMA DE PAGO\nMonto en número y letra. Forma de pago acordada. Si es en parcialidades, especificar calendario.\n\nSECCIÓN 4 — ENTREGA\nFecha y condiciones de entrega física del vehículo. Documentos que entrega el vendedor: tarjeta de circulación, llaves, factura original si la tiene.\n\nSECCIÓN 5 — OBLIGACIONES DEL VENDEDOR\nGarantizar la propiedad legítima. Responder por vicios ocultos. Entregar el vehículo libre de adeudos salvo pacto en contrario. Estado del vehículo declarado: {estado_vehiculo}.\n\nSECCIÓN 6 — OBLIGACIONES DEL COMPRADOR\nPagar el precio en la forma acordada. Realizar el trámite de cambio de propietario ante la autoridad correspondiente dentro de los 30 días siguientes a la firma.\n\nSECCIÓN 7 — ADEUDOS Y RESPONSABILIDADES\nSituación de multas, tenencia y verificación: {adeudos}. A partir de la entrega, todos los gastos y responsabilidades corresponden al comprador.\n\nSECCIÓN 8 — FUNDAMENTO LEGAL\nCita SOLO los artículos del contexto legal que respalden directamente las cláusulas del contrato. No cites artículos que no sean aplicables a esta operación específica.\n\nSECCIÓN 9 — FIRMAS\nEspacio para firma del vendedor, comprador y dos testigos con nombre completo y firma. Lugar y fecha: {estado}, {fecha_actual}.\n\nREGLAS ABSOLUTAS:\n- Genera las 9 secciones completas sin excepción\n- Usa SOLO artículos del contexto legal proporcionado\n- Si un artículo no respalda ninguna sección, no lo cites\n- Responde EXCLUSIVAMENTE con HTML usando <p>, <strong>, <br>, <h3>\n- Sin <html>, <body>, <head>, <style> ni markdown\n- Tono formal pero comprensible para un ciudadano sin formación legal"
+}

@@ -803,6 +803,22 @@
         return;
       }
 
+      // ── Pregunta con opciones → mostrar botones ──────────────────────────
+      if (p.opciones?.length) {
+        const esOp = p.opcional
+          ? '<br><em style="opacity:0.45;font-size:12px;">(opcional)</em>' : '';
+        const btns = p.opciones.map(op =>
+          `<button class="burbuja" style="margin:4px 4px 0 0;font-size:10px;"
+            onclick="elegirOpcion(this,'${op.replace(/'/g,"\\'")}')">
+            ${op}
+          </button>`
+        ).join('');
+        agregarMensaje('apolo', '<strong>' + p.pregunta + '</strong>' + esOp + '<br><br>' + btns);
+        inputEl.disabled   = true;
+        btnEnviar.disabled = true;
+        return;
+      }
+
       const esOp = p.opcional
         ? '<br><em style="opacity:0.45;font-size:12px;">(opcional — escribe "no" para omitir)</em>'
         : '';
@@ -814,6 +830,24 @@
       btnEnviar.disabled = false;
       inputEl.placeholder = 'Escribe tu respuesta…';
       inputEl.focus();
+    }
+
+    function elegirOpcion(btn, valor) {
+      // Deshabilitar todos los botones de esa pregunta
+      btn.closest('.msg-apolo').querySelectorAll('.burbuja').forEach(b => {
+        b.disabled = true;
+        b.style.opacity = '0.4';
+      });
+      btn.style.opacity = '1';
+      btn.style.background = 'var(--gold)';
+      btn.style.color = '#08080a';
+
+      agregarMensaje('usuario', valor);
+      const pregunta = todasLasPreguntas[preguntaIdxActual];
+      datosRedaccion[pregunta.campo] = valor;
+      if (pregunta.campo === campoNombreUsuario) localStorage.setItem('atlas_nombre', valor);
+      preguntaIdxActual++;
+      setTimeout(preguntarSiguiente, 300);
     }
 
     // htmlPreview guarda el documento generado antes del pago
@@ -864,6 +898,7 @@
             '<div class="doc-watermark">VISTA PREVIA<br>PENDIENTE DE PAGO</div>' +
           '</div>' +
           (data.nota ? '<div class="nota-legal">' + data.nota + '</div>' : '') +
+          (data.nota_upsell ? '<div class="nota-legal" style="border-left-color:rgba(196,154,60,0.6);margin-top:6px;">✦ ' + data.nota_upsell + '</div>' : '') +
           '<p style="font-family:\'Cinzel\',serif;font-size:11px;letter-spacing:0.1em;color:#c49a3c;margin:12px 0 6px;">Precio: <strong>$' + precio + ' MXN</strong></p>' +
           '<button class="btn-generar" id="btn-pagar">💳 Pagar y Desbloquear Documento</button>';
         mensajesEl.appendChild(div);
