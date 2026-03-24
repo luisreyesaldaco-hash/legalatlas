@@ -116,7 +116,7 @@ export default async function handler(req, res) {
     const contexto_legal_texto = contextoUnico.length
       ? contextoUnico.map(r => `Art. ${r.numero}: ${r.texto}`).join('\n\n')
       : '[SIN CONTEXTO LEGAL — REVISAR]';
-    console.log(`RAG redactar: ${contextoLegal.length} artículos para "${queryRAG}"`);
+    console.log(`RAG redactar: ${contextoLegal.length} artículos encontrados`);
 
     // Interpolar datos + contexto_legal en el system prompt
     let systemPrompt = receta.system_prompt;
