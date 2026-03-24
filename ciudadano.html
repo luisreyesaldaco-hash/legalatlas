@@ -344,6 +344,30 @@
       font-size: 14px;
       line-height: 1.8;
     }
+
+    /* ── Preview con marca de agua ── */
+    .doc-preview-wrap {
+      position: relative;
+    }
+    .doc-preview-wrap .doc-container {
+      opacity: 0.45;
+      user-select: none;
+      pointer-events: none;
+    }
+    .doc-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-30deg);
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      letter-spacing: 0.2em;
+      color: rgba(196,154,60,0.55);
+      white-space: nowrap;
+      pointer-events: none;
+      text-align: center;
+      line-height: 1.8;
+    }
     .nota-legal {
       font-size: 11px;
       font-style: italic;
@@ -738,20 +762,49 @@
       inputEl.focus();
     }
 
+    // htmlPreview guarda el documento generado antes del pago
+    let htmlPreview = null;
+
     function mostrarBotonGenerar() {
-      const precio = recetaActiva?.precio_mxn || 0;
-      const div = document.createElement('div');
-      div.className = 'msg msg-apolo';
-      div.innerHTML =
-        '<div class="msg-sender">APOLO</div>' +
-        '<p>Tengo todos los datos necesarios para redactar tu <strong>' + (recetaActiva?.titulo || 'documento') + '</strong>.</p>' +
-        '<p style="font-family:\'Cinzel\',serif;font-size:11px;letter-spacing:0.1em;color:#c49a3c;margin:8px 0;">Precio: <strong>$' + precio + ' MXN</strong></p>' +
-        '<button class="btn-generar" id="btn-pagar">💳 Pagar y Generar Documento</button>';
-      mensajesEl.appendChild(div);
-      mensajesEl.scrollTop = mensajesEl.scrollHeight;
+      // Generar el documento inmediatamente — el usuario lo ve antes de pagar
       inputEl.disabled   = true;
       btnEnviar.disabled = true;
-      document.getElementById('btn-pagar').addEventListener('click', iniciarPago);
+      generarPreview();
+    }
+
+    async function generarPreview() {
+      agregarTyping();
+      try {
+        const res = await fetch('/api/redactar', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ tipo: recetaActiva.tipo, datos: datosRedaccion, pais: sel.pais || 'MX' })
+        });
+        quitarTyping();
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        htmlPreview = data.html;
+
+        const precio = recetaActiva?.precio_mxn || 0;
+        const div = document.createElement('div');
+        div.className = 'msg msg-apolo';
+        div.style.maxWidth = '720px';
+        div.innerHTML =
+          '<div class="msg-sender">APOLO — VISTA PREVIA</div>' +
+          '<div class="doc-preview-wrap">' +
+            '<div class="doc-container">' + data.html + '</div>' +
+            '<div class="doc-watermark">VISTA PREVIA<br>PENDIENTE DE PAGO</div>' +
+          '</div>' +
+          (data.nota ? '<div class="nota-legal">' + data.nota + '</div>' : '') +
+          '<p style="font-family:\'Cinzel\',serif;font-size:11px;letter-spacing:0.1em;color:#c49a3c;margin:12px 0 6px;">Precio: <strong>$' + precio + ' MXN</strong></p>' +
+          '<button class="btn-generar" id="btn-pagar">💳 Pagar y Desbloquear Documento</button>';
+        mensajesEl.appendChild(div);
+        mensajesEl.scrollTop = mensajesEl.scrollHeight;
+        document.getElementById('btn-pagar').addEventListener('click', iniciarPago);
+      } catch (err) {
+        quitarTyping();
+        agregarMensaje('apolo', 'Error generando la vista previa: ' + err.message);
+      }
     }
 
     async function iniciarPago() {
@@ -762,79 +815,76 @@
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
           body:    JSON.stringify({
-            receta_id:    recetaActiva.tipo,
-            precio_mxn:   recetaActiva.precio_mxn,
-            titulo:       recetaActiva.titulo,
-            estado:       sel.estado || '',
-            datos_usuario: datosRedaccion
+            receta_id:      recetaActiva.tipo,
+            precio_mxn:     recetaActiva.precio_mxn,
+            titulo:         recetaActiva.titulo,
+            estado:         sel.estado || '',
+            datos_usuario:  datosRedaccion,
+            documento_html: htmlPreview   // guardado en Supabase, no en sessionStorage
           })
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const { url } = await res.json();
-        // Guardar datos en sessionStorage antes de redirigir
-        sessionStorage.setItem('redaccion_pendiente', JSON.stringify({
-          tipo:  recetaActiva.tipo,
-          datos: datosRedaccion,
-          pais:  sel.pais || 'MX'
-        }));
         window.location.href = url;
       } catch (err) {
         agregarMensaje('apolo', 'Error al iniciar el pago: ' + err.message);
-        if (btn) { btn.disabled = false; btn.textContent = '💳 Pagar y Generar Documento'; }
+        if (btn) { btn.disabled = false; btn.textContent = '💳 Pagar y Desbloquear Documento'; }
       }
     }
 
-    async function generarDocumento(tipo, datos) {
-      agregarTyping();
-      try {
-        const res = await fetch('/api/redactar', {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ tipo, datos, pais: sel.pais || 'MX' })
-        });
-        quitarTyping();
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
-
-        const div = document.createElement('div');
-        div.className = 'msg msg-apolo';
-        div.style.maxWidth = '720px';
-        div.innerHTML =
-          '<div class="msg-sender">APOLO — DOCUMENTO GENERADO</div>' +
-          '<div class="doc-container" id="doc-generado">' + data.html + '</div>' +
-          (data.nota ? '<div class="nota-legal">' + data.nota + '</div>' : '') +
-          '<button class="btn-docx" id="btn-docx">⬇ Descargar DOCX</button>';
-        mensajesEl.appendChild(div);
-        mensajesEl.scrollTop = mensajesEl.scrollHeight;
-        document.getElementById('btn-docx').addEventListener('click', descargarDOCX);
-      } catch (err) {
-        quitarTyping();
-        agregarMensaje('apolo', 'Error generando el documento: ' + err.message);
-      }
+    function mostrarDocumentoDesbloqueado(html, nota) {
+      const div = document.createElement('div');
+      div.className = 'msg msg-apolo';
+      div.style.maxWidth = '720px';
+      div.innerHTML =
+        '<div class="msg-sender">APOLO — DOCUMENTO DESBLOQUEADO</div>' +
+        '<div class="doc-container" id="doc-generado">' + html + '</div>' +
+        (nota ? '<div class="nota-legal">' + nota + '</div>' : '') +
+        '<button class="btn-docx" id="btn-docx">⬇ Descargar DOCX</button>';
+      mensajesEl.appendChild(div);
+      mensajesEl.scrollTop = mensajesEl.scrollHeight;
+      document.getElementById('btn-docx').addEventListener('click', descargarDOCX);
     }
 
     // ── Retorno desde Stripe ──────────────────────────────────────────────────
     (function detectarRetornoStripe() {
-      const params = new URLSearchParams(window.location.search);
-      const pago   = params.get('pago');
+      const params     = new URLSearchParams(window.location.search);
+      const pago       = params.get('pago');
+      const session_id = params.get('session_id');
       if (!pago) return;
 
-      // Limpiar URL
       window.history.replaceState({}, '', window.location.pathname);
 
-      if (pago === 'exitoso') {
-        const pendiente = sessionStorage.getItem('redaccion_pendiente');
-        sessionStorage.removeItem('redaccion_pendiente');
-        if (pendiente) {
-          const { tipo, datos, pais } = JSON.parse(pendiente);
-          sel.pais = pais || 'MX';
-          activarModoRedaccion();
-          agregarMensaje('apolo', '✅ <strong>Pago confirmado.</strong> Generando tu documento…');
-          generarDocumento(tipo, datos);
-        } else {
-          activarModoRedaccion();
-          agregarMensaje('apolo', '✅ Pago confirmado. Selecciona nuevamente el documento para generarlo.');
-        }
+      if (pago === 'exitoso' && session_id) {
+        activarModoRedaccion();
+        agregarTyping();
+        // Polling — el webhook puede tardar 1-3s en marcar el borrador como completado
+        let intentos = 0;
+        const maxIntentos = 8;
+        const intervalo = setInterval(async () => {
+          intentos++;
+          try {
+            const res = await fetch('/api/documento?session_id=' + session_id);
+            if (res.ok) {
+              clearInterval(intervalo);
+              quitarTyping();
+              const data = await res.json();
+              agregarMensaje('apolo', '✅ <strong>Pago confirmado.</strong> Tu documento está listo.');
+              mostrarDocumentoDesbloqueado(data.html, null);
+            } else if (intentos >= maxIntentos) {
+              clearInterval(intervalo);
+              quitarTyping();
+              agregarMensaje('apolo', '✅ Pago confirmado. El documento tardó más de lo esperado en procesarse. Por favor recarga la página en unos segundos o contáctanos.');
+            }
+          } catch (e) {
+            if (intentos >= maxIntentos) {
+              clearInterval(intervalo);
+              quitarTyping();
+              agregarMensaje('apolo', 'Error recuperando el documento: ' + e.message);
+            }
+          }
+        }, 2000);
+
       } else if (pago === 'cancelado') {
         activarModoRedaccion();
         agregarMensaje('apolo', 'El pago fue cancelado. Puedes intentarlo nuevamente cuando gustes.');

@@ -27,16 +27,34 @@ export default async function handler(req, res) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object
-    const { receta_id, estado, datos_usuario } = session.metadata || {}
+    const { receta_id, estado, borrador_id } = session.metadata || {}
 
+    // 1. Marcar borrador como completado — desbloquea el documento al usuario
+    if (borrador_id) {
+      try {
+        await supabase
+          .from('borradores_pago')
+          .update({
+            estado:            'completado',
+            stripe_session_id: session.id,
+            payment_intent_id: session.payment_intent || null
+          })
+          .eq('id', borrador_id)
+        console.log(`Borrador desbloqueado: ${borrador_id}`)
+      } catch (borradorErr) {
+        console.error('Error actualizando borrador:', borradorErr.message)
+      }
+    }
+
+    // 2. Registrar en tabla pagos (historial)
     try {
       await supabase.from('pagos').insert({
         stripe_session_id: session.id,
-        receta_id:         receta_id   || null,
-        estado:            estado       || null,
+        receta_id:         receta_id || null,
+        estado:            estado    || null,
         monto:             (session.amount_total || 0) / 100,
         moneda:            session.currency || 'mxn',
-        datos_usuario:     datos_usuario ? JSON.parse(datos_usuario) : {},
+        datos_usuario:     {},
         pagado:            true,
         created_at:        new Date().toISOString()
       })
