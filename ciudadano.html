@@ -606,6 +606,17 @@
         btnEnviar.disabled = true;
         agregarMensaje('usuario', texto);
 
+        // ── Respuesta a email ─────────────────────────────────────────────
+        if (esperandoEmail) {
+          esperandoEmail = false;
+          emailUsuario   = texto.trim();
+          localStorage.setItem('atlas_email', emailUsuario);
+          inputEl.disabled   = true;
+          btnEnviar.disabled = true;
+          generarPreview();
+          return;
+        }
+
         // ── Respuesta a confirmación de nombre ────────────────────────────
         if (esperandoConfirmacionNombre) {
           esperandoConfirmacionNombre = false;
@@ -683,6 +694,8 @@
     let todasLasPreguntas = [];
     let campoNombreUsuario          = null;  // primer nombre_* de la receta activa
     let esperandoConfirmacionNombre = false;
+    let emailUsuario                = null;
+    let esperandoEmail              = false;
 
     const btnModoRed  = document.getElementById('btn-modo-redaccion');
     const grupoRecetas = document.getElementById('grupo-recetas');
@@ -807,7 +820,21 @@
     let htmlPreview = null;
 
     function mostrarBotonGenerar() {
-      // Generar el documento inmediatamente — el usuario lo ve antes de pagar
+      // Pedir email si no lo tenemos aún
+      const emailGuardado = localStorage.getItem('atlas_email');
+      if (!emailUsuario && !emailGuardado) {
+        esperandoEmail = true;
+        agregarMensaje('apolo',
+          '¿A qué email te enviamos el documento una vez confirmado el pago?<br>' +
+          '<em style="opacity:0.45;font-size:12px;">Solo para enviarte el documento — no spam.</em>'
+        );
+        inputEl.disabled   = false;
+        btnEnviar.disabled = false;
+        inputEl.placeholder = 'tu@email.com';
+        inputEl.focus();
+        return;
+      }
+      emailUsuario = emailUsuario || emailGuardado;
       inputEl.disabled   = true;
       btnEnviar.disabled = true;
       generarPreview();
@@ -861,7 +888,8 @@
             titulo:         recetaActiva.titulo,
             estado:         sel.estado || '',
             datos_usuario:  datosRedaccion,
-            documento_html: htmlPreview   // guardado en Supabase, no en sessionStorage
+            documento_html: htmlPreview,
+            email:          emailUsuario || localStorage.getItem('atlas_email') || null
           })
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);

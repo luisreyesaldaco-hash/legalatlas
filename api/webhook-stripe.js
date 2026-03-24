@@ -29,9 +29,15 @@ export default async function handler(req, res) {
     const session = event.data.object
     const { receta_id, estado, borrador_id } = session.metadata || {}
 
-    // 1. Marcar borrador como completado — desbloquea el documento al usuario
+    // 1. Leer borrador completo y marcarlo como completado
     if (borrador_id) {
       try {
+        const { data: borrador } = await supabase
+          .from('borradores_pago')
+          .select('documento_html, email, tipo_documento, datos')
+          .eq('id', borrador_id)
+          .single()
+
         await supabase
           .from('borradores_pago')
           .update({
@@ -40,9 +46,52 @@ export default async function handler(req, res) {
             payment_intent_id: session.payment_intent || null
           })
           .eq('id', borrador_id)
+
         console.log(`Borrador desbloqueado: ${borrador_id}`)
+
+        // 2. Enviar email si hay dirección y documento
+        if (borrador?.email && borrador?.documento_html && process.env.RESEND_API_KEY) {
+          const nombreUsuario = Object.values(borrador.datos || {}).find(v =>
+            typeof v === 'string' && v.length > 2 && v.split(' ').length >= 2
+          ) || 'Cliente'
+          const tipoDoc = (borrador.tipo_documento || 'documento').replace(/_/g, ' ')
+          const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://www.legalatlas.io'
+
+          await fetch('https://api.resend.com/emails', {
+            method:  'POST',
+            headers: {
+              'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+              'Content-Type':  'application/json'
+            },
+            body: JSON.stringify({
+              from:    'Legal Atlas <documentos@legalatlas.io>',
+              to:      [borrador.email],
+              subject: `Tu ${tipoDoc} está listo — Legal Atlas`,
+              html: `
+                <div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;padding:32px;background:#f5edd8;color:#1a1508;">
+                  <h2 style="font-family:Georgia,serif;color:#8a6820;letter-spacing:0.1em;margin-bottom:8px;">LEGAL ATLAS</h2>
+                  <p style="color:#5a4a28;font-size:13px;margin-bottom:24px;letter-spacing:0.05em;">APOLO · Asistente Legal</p>
+                  <p>Hola <strong>${nombreUsuario}</strong>,</p>
+                  <p>Tu <strong>${tipoDoc}</strong> ha sido generado exitosamente. Puedes descargarlo en cualquier momento desde el siguiente enlace:</p>
+                  <div style="text-align:center;margin:32px 0;">
+                    <a href="${baseUrl}/ciudadano.html?pago=exitoso&session_id=${session.id}"
+                       style="background:#8a6820;color:#f5edd8;padding:14px 32px;border-radius:8px;text-decoration:none;font-family:Georgia,serif;font-size:14px;letter-spacing:0.1em;">
+                      Descargar documento
+                    </a>
+                  </div>
+                  <hr style="border:none;border-top:1px solid rgba(138,104,32,0.2);margin:24px 0;">
+                  <p style="font-size:12px;color:#8a7060;font-style:italic;">
+                    Este documento es orientativo. Para mayor seguridad jurídica se recomienda revisarlo con un abogado.
+                  </p>
+                </div>
+              `
+            })
+          })
+          console.log(`Email enviado a: ${borrador.email}`)
+        }
+
       } catch (borradorErr) {
-        console.error('Error actualizando borrador:', borradorErr.message)
+        console.error('Error en borrador/email:', borradorErr.message)
       }
     }
 

@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {})
-    const { receta_id, precio_mxn, titulo, datos_usuario, estado, documento_html } = body
+    const { receta_id, precio_mxn, titulo, datos_usuario, estado, documento_html, email } = body
 
     if (!receta_id || !precio_mxn) {
       return res.status(400).json({ error: 'Se requiere receta_id y precio_mxn' })
@@ -24,6 +24,7 @@ export default async function handler(req, res) {
         tipo_documento: receta_id,
         datos:          datos_usuario || {},
         documento_html: documento_html || null,
+        email:          email || null,
         estado:         'pendiente'
       })
       .select('id')
