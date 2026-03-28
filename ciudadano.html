@@ -489,24 +489,24 @@
     function saludoInicial() {
       mensajesEl.innerHTML = '';
       if (!sel.pais) {
-        agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Selecciona el <strong>país</strong> para comenzar.');
+        agregarMensaje('apolo', t('apolo.saludo.inicio', null, 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Selecciona el <strong>país</strong> para comenzar.'));
         return;
       }
       if (!sel.materia) {
-        agregarMensaje('apolo', 'País: <strong>' + nombrePais(sel.pais) + '</strong>.<br>Ahora selecciona el <strong>área legal</strong>.');
+        agregarMensaje('apolo', t('apolo.saludo.pais', { pais: nombrePais(sel.pais) }, 'País: <strong>' + nombrePais(sel.pais) + '</strong>.<br>Ahora selecciona el <strong>área legal</strong>.'));
         return;
       }
       if (sel.requiereEstado && !sel.estado) {
-        agregarMensaje('apolo', 'Área: <strong>' + sel.materia + '</strong>.<br>Ahora selecciona tu <strong>estado</strong>.');
+        agregarMensaje('apolo', t('apolo.saludo.estado', { materia: sel.materia }, 'Área: <strong>' + sel.materia + '</strong>.<br>Ahora selecciona tu <strong>estado</strong>.'));
         return;
       }
       const jurisdiccion = sel.estado
         ? 'el <strong>' + sel.ley + ' de ' + sel.estado + '</strong>'
         : '<strong>' + sel.ley + '</strong> (' + nombrePais(sel.pais) + ')';
       if (window._tipoContrato) {
-        agregarMensaje('apolo', 'Soy <strong>Apolo</strong>. Voy a ayudarte a redactar tu <strong>' + window._tipoContrato.replace(/_/g, ' ') + '</strong>.<br>Consulto ' + jurisdiccion + '. Cuéntame: ¿cuáles son los datos de las partes?');
+        agregarMensaje('apolo', t('apolo.saludo.tipo', { tipo: window._tipoContrato.replace(/_/g, ' '), jurisdiccion }, 'Soy <strong>Apolo</strong>. Voy a ayudarte a redactar tu <strong>' + window._tipoContrato.replace(/_/g, ' ') + '</strong>.<br>Consulto ' + jurisdiccion + '. Cuéntame: ¿cuáles son los datos de las partes?'));
       } else {
-        agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Consulto ' + jurisdiccion + ' y te cito el artículo exacto. ¿Cuál es tu duda?');
+        agregarMensaje('apolo', t('apolo.saludo.listo', { jurisdiccion }, 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Consulto ' + jurisdiccion + ' y te cito el artículo exacto. ¿Cuál es tu duda?'));
       }
     }
 
@@ -1112,6 +1112,7 @@
     saludoInicial();
     cargarPaises().then(() => aplicarURLParams());
   </script>
+  <script src="/locales/i18n.js"></script>
 
 </body>
 </html>

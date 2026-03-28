@@ -534,24 +534,29 @@
 <header class="topbar">
   <a href="index.html" class="topbar-logo">LEGAL<span>ATLAS</span></a>
   <nav class="topbar-nav">
-    <a href="ciudadano.html" class="topbar-link">Consulta</a>
-    <a href="contratos.html" class="topbar-link active">Contratos</a>
-    <a href="abogado.html" class="topbar-link">Abogado Pro</a>
-    <a href="indice.html" class="topbar-link">Índice Nacional</a>
-    <a href="#cuenta" class="topbar-link">Mi Cuenta</a>
+    <a href="ciudadano.html" class="topbar-link" data-i18n="nav.consulta">Consulta</a>
+    <a href="contratos.html" class="topbar-link active" data-i18n="nav.contratos">Contratos</a>
+    <a href="abogado.html" class="topbar-link" data-i18n="nav.abogado">Abogado Pro</a>
+    <a href="indice.html" class="topbar-link" data-i18n="nav.indice">Índice Nacional</a>
+    <a href="#cuenta" class="topbar-link" data-i18n="nav.cuenta">Mi Cuenta</a>
   </nav>
+  <div class="lang-switcher">
+    <button class="lang-btn" data-lang-btn="es" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" data-lang-btn="cs" onclick="setLang('cs')">CS</button>
+    <button class="lang-btn" data-lang-btn="fr" onclick="setLang('fr')">FR</button>
+  </div>
   <div class="topbar-status">
     <div class="status-dot"></div>
-    APOLO · En línea
+    <span data-i18n="apolo.online">APOLO · En línea</span>
   </div>
 </header>
 
 <main class="main">
   <section class="contratos-hero">
 
-    <p class="contratos-eyebrow">Motor de documentos legales</p>
-    <h1 class="contratos-titulo">CON<span>TRATOS</span></h1>
-    <p class="contratos-desc">
+    <p class="contratos-eyebrow" data-i18n="contratos.eyebrow">Motor de documentos legales</p>
+    <h1 class="contratos-titulo" data-i18n-html="contratos.titulo">CON<span>TRATOS</span></h1>
+    <p class="contratos-desc" data-i18n="contratos.desc">
       Redacta un contrato nuevo con fundamento legal real,
       o analiza uno existente para detectar riesgos y cláusulas abusivas.
     </p>
@@ -561,15 +566,15 @@
 
       <!-- CAMINO A — Redactar -->
       <div class="camino" id="btn-redactar" onclick="mostrarRedactar()">
-        <span class="camino-badge">Nuevo documento</span>
-        <h2 class="camino-titulo">Quiero redactar<br>un contrato</h2>
-        <p class="camino-desc">
+        <span class="camino-badge" data-i18n="camino.a.badge">Nuevo documento</span>
+        <h2 class="camino-titulo" data-i18n-html="camino.a.titulo">Quiero redactar<br>un contrato</h2>
+        <p class="camino-desc" data-i18n="camino.a.desc">
           Elige el tipo de contrato, responde las preguntas de Apolo
           y descarga tu documento en Word listo para firmar.
         </p>
         <p class="camino-precio">$99 – $299 MXN por documento</p>
         <div class="camino-cta">
-          <span>Elegir tipo de contrato</span>
+          <span data-i18n="camino.a.cta">Elegir tipo de contrato</span>
           <div class="camino-cta-arrow"></div>
         </div>
       </div>
@@ -577,21 +582,21 @@
       <!-- DIVISOR -->
       <div class="divisor">
         <div class="divisor-line"></div>
-        <span class="divisor-text">o</span>
+        <span class="divisor-text" data-i18n="meridiano">o</span>
         <div class="divisor-line"></div>
       </div>
 
       <!-- CAMINO B — Analizar -->
       <div class="camino" id="btn-analizar" onclick="mostrarAnalizar()">
-        <span class="camino-badge">Revisión de contrato</span>
-        <h2 class="camino-titulo">Tengo un contrato<br>y quiero revisarlo</h2>
-        <p class="camino-desc">
+        <span class="camino-badge" data-i18n="camino.b.badge">Revisión de contrato</span>
+        <h2 class="camino-titulo" data-i18n-html="camino.b.titulo">Tengo un contrato<br>y quiero revisarlo</h2>
+        <p class="camino-desc" data-i18n="camino.b.desc">
           Sube tu contrato en PDF o Word. Apolo detecta cláusulas abusivas,
           desequilibrios y violaciones a la ley vigente de tu estado.
         </p>
         <p class="camino-precio">$99 – $149 MXN por análisis</p>
         <div class="camino-cta">
-          <span>Subir mi contrato</span>
+          <span data-i18n="camino.b.cta">Subir mi contrato</span>
           <div class="camino-cta-arrow"></div>
         </div>
       </div>
@@ -602,7 +607,7 @@
 
       <div class="section-header" style="margin-bottom: 32px;">
         <div class="section-line"></div>
-        <span class="section-label">Paso 1 — Elige el país</span>
+        <span class="section-label" data-i18n="tree.step1">Paso 1 — Elige el país</span>
         <div class="section-line right"></div>
       </div>
 
@@ -610,7 +615,7 @@
         <div class="tree-step">
           <div class="tree-step-label">País</div>
           <select class="tree-select" id="tree-pais" onchange="actualizarTipos()">
-            <option value="">Selecciona país…</option>
+            <option value="" data-i18n="tree.pais">Selecciona país…</option>
             <option value="MX">México</option>
             <option value="CZ">República Checa</option>
             <option value="ES">España</option>
@@ -622,14 +627,14 @@
       <div id="tipos-container" style="display:none;">
         <div class="section-header" style="margin: 32px 0 24px;">
           <div class="section-line"></div>
-          <span class="section-label">Paso 2 — Tipo de contrato</span>
+          <span class="section-label" data-i18n="tree.step2">Paso 2 — Tipo de contrato</span>
           <div class="section-line right"></div>
         </div>
         <div class="tipos-grid" id="tipos-grid"></div>
       </div>
 
       <button class="tree-continuar" id="btn-continuar" onclick="irACiudadano()">
-        <span>Continuar con Apolo</span>
+        <span data-i18n="tree.continuar">Continuar con Apolo</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2"
              stroke-linecap="round" stroke-linejoin="round">
@@ -643,7 +648,7 @@
 
       <div class="section-header" style="margin-bottom: 32px;">
         <div class="section-line"></div>
-        <span class="section-label">Sube tu contrato</span>
+        <span class="section-label" data-i18n="upload.label">Sube tu contrato</span>
         <div class="section-line right"></div>
       </div>
 
@@ -656,9 +661,9 @@
           <polyline points="17 8 12 3 7 8"/>
           <line x1="12" y1="3" x2="12" y2="15"/>
         </svg>
-        <div class="upload-titulo">Arrastra tu contrato aquí</div>
-        <div class="upload-desc">PDF o Word · Máximo 10 MB</div>
-        <div class="upload-btn">Seleccionar archivo</div>
+        <div class="upload-titulo" data-i18n="upload.titulo">Arrastra tu contrato aquí</div>
+        <div class="upload-desc" data-i18n="upload.desc">PDF o Word · Máximo 10 MB</div>
+        <div class="upload-btn" data-i18n="upload.btn">Seleccionar archivo</div>
         <input type="file" id="file-input" accept=".pdf,.doc,.docx"
                onchange="handleFile(this.files[0])">
       </div>
@@ -797,5 +802,6 @@ function handleFile(file) {
 }
 </script>
 
+<script src="/locales/i18n.js"></script>
 </body>
 </html>

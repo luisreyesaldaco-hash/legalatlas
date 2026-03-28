@@ -640,15 +640,20 @@ body {
 <header class="topbar">
   <div class="topbar-logo">LEGAL<span>ATLAS</span></div>
   <nav class="topbar-nav">
-    <a href="ciudadano.html" class="topbar-link">Consulta</a>
-    <a href="abogado.html" class="topbar-link">Abogado Pro</a>
-    <a href="contratos.html" class="topbar-link">Contratos</a>
-    <a href="indice.html" class="topbar-link">Índice Nacional</a>
-    <a href="#cuenta" class="topbar-link">Mi Cuenta</a>
+    <a href="ciudadano.html" class="topbar-link" data-i18n="nav.consulta">Consulta</a>
+    <a href="contratos.html" class="topbar-link" data-i18n="nav.contratos">Contratos</a>
+    <a href="abogado.html" class="topbar-link" data-i18n="nav.abogado">Abogado Pro</a>
+    <a href="indice.html" class="topbar-link" data-i18n="nav.indice">Índice Nacional</a>
+    <a href="#cuenta" class="topbar-link" data-i18n="nav.cuenta">Mi Cuenta</a>
   </nav>
+  <div class="lang-switcher">
+    <button class="lang-btn" data-lang-btn="es" onclick="setLang('es')">ES</button>
+    <button class="lang-btn" data-lang-btn="cs" onclick="setLang('cs')">CS</button>
+    <button class="lang-btn" data-lang-btn="fr" onclick="setLang('fr')">FR</button>
+  </div>
   <div class="topbar-status">
     <div class="status-dot"></div>
-    APOLO · En línea
+    <span data-i18n="apolo.online">APOLO · En línea</span>
   </div>
 </header>
 
@@ -657,10 +662,10 @@ body {
 
   <!-- HERO -->
   <section class="hero">
-    <p class="hero-eyebrow">Motor Normativo</p>
+    <p class="hero-eyebrow" data-i18n="hero.eyebrow">Motor Normativo</p>
     <h1 class="hero-title">LEGAL<span>ATLAS</span></h1>
-    <p class="hero-tagline">Navega la ley con claridad</p>
-    <p class="hero-sub">
+    <p class="hero-tagline" data-i18n="hero.tagline">Navega la ley con claridad</p>
+    <p class="hero-sub" data-i18n="hero.sub">
       101,775 artículos verificados · Sin alucinación · Artículo real citado
     </p>
 
@@ -669,13 +674,13 @@ body {
       <div class="chat-box" id="chatBox">
         <div class="chat-filters" id="chatFilters">
           <select class="filter-select" id="f-pais">
-            <option value="">País…</option>
+            <option value="" data-i18n="chat.pais">País…</option>
           </select>
           <select class="filter-select" id="f-materia" disabled>
-            <option value="">Área legal…</option>
+            <option value="" data-i18n="chat.materia">Área legal…</option>
           </select>
           <select class="filter-select" id="f-estado" style="display:none">
-            <option value="">Estado…</option>
+            <option value="" data-i18n="chat.estado">Estado…</option>
           </select>
         </div>
 
@@ -683,21 +688,21 @@ body {
           <textarea
             class="chat-input"
             id="chatInput"
-            placeholder="¿En qué puedo ayudarte hoy?"
+            placeholder="¿En qué puedo ayudarte hoy?" data-i18n-placeholder="chat.placeholder"
             rows="2"
           ></textarea>
         </div>
 
         <div class="chat-actions">
           <button type="button" class="chat-submit" id="chatSubmit">
-            <span>Iniciar expedición</span>
+            <span data-i18n="chat.submit">Iniciar expedición</span>
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </button>
         </div>
       </div>
-      <p class="chat-hint" id="chatHint">Selecciona un <span>país y área legal</span> para comenzar</p>
+      <p class="chat-hint" id="chatHint" data-i18n-html="chat.hint">Selecciona un <span>país y área legal</span> para comenzar</p>
     </div>
   </section>
 
@@ -705,7 +710,7 @@ body {
   <section class="bifurcacion">
     <div class="section-header">
       <div class="section-line"></div>
-      <span class="section-label">Elige tu camino</span>
+      <span class="section-label" data-i18n="bifurcacion.label">Elige tu camino</span>
       <div class="section-line right"></div>
     </div>
 
@@ -717,22 +722,22 @@ body {
             <circle cx="12" cy="7" r="4"/>
           </svg>
         </div>
-        <span class="puerta-badge">Ciudadano</span>
-        <h2 class="puerta-titulo">Tengo una duda legal</h2>
-        <p class="puerta-desc">
+        <span class="puerta-badge" data-i18n="puerta.ciudadano.badge">Ciudadano</span>
+        <h2 class="puerta-titulo" data-i18n="puerta.ciudadano.titulo">Tengo una duda legal</h2>
+        <p class="puerta-desc" data-i18n="puerta.ciudadano.desc">
           Cuéntame tu situación con tus propias palabras.
           Apolo consulta la norma y te cita el artículo exacto
           que te protege — sin rodeos, sin invención.
         </p>
         <div class="puerta-cta">
-          <span>Iniciar consulta</span>
+          <span data-i18n="puerta.ciudadano.cta">Iniciar consulta</span>
           <div class="puerta-cta-arrow"></div>
         </div>
       </a>
 
       <div class="meridiano">
         <div class="meridiano-line"></div>
-        <span class="meridiano-text">o</span>
+        <span class="meridiano-text" data-i18n="meridiano">o</span>
         <div class="meridiano-line"></div>
       </div>
 
@@ -742,15 +747,15 @@ body {
             <path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
           </svg>
         </div>
-        <span class="puerta-badge">Abogado · Pro</span>
-        <h2 class="puerta-titulo">Soy profesional del derecho</h2>
-        <p class="puerta-desc">
+        <span class="puerta-badge" data-i18n="puerta.abogado.badge">Abogado · Pro</span>
+        <h2 class="puerta-titulo" data-i18n="puerta.abogado.titulo">Soy profesional del derecho</h2>
+        <p class="puerta-desc" data-i18n="puerta.abogado.desc">
           Búsqueda directa por artículo, materia y jurisdicción.
           Múltiples estados en paralelo. Sin intermediarios
           entre tú y la norma.
         </p>
         <div class="puerta-cta">
-          <span>Trazar ruta normativa</span>
+          <span data-i18n="puerta.abogado.cta">Trazar ruta normativa</span>
           <div class="puerta-cta-arrow"></div>
         </div>
       </a>
@@ -761,13 +766,13 @@ body {
   <section class="indice-banner">
     <div class="section-header">
       <div class="section-line"></div>
-      <span class="section-label">Investigación · B2G · Academia</span>
+      <span class="section-label" data-i18n="indice.label">Investigación · B2G · Academia</span>
       <div class="section-line right"></div>
     </div>
 
-    <div class="indice-eyebrow">Primer análisis computacional de México</div>
-    <h2 class="indice-titulo">Índice Nacional de<br>Calidad Normativa</h2>
-    <p class="indice-desc">
+    <div class="indice-eyebrow" data-i18n="indice.eyebrow">Primer análisis computacional de México</div>
+    <h2 class="indice-titulo" data-i18n-html="indice.titulo">Índice Nacional de<br>Calidad Normativa</h2>
+    <p class="indice-desc" data-i18n="indice.desc">
       32 Códigos Civiles analizados artículo por artículo.
       Inconsistencias constitucionales, artículos obsoletos y divergencia
       entre estados — con datos, no con opinión.
@@ -776,24 +781,24 @@ body {
     <div class="indice-metricas">
       <div class="indice-metrica">
         <span class="metrica-num">7.2%</span>
-        <span class="metrica-label">Riesgo constitucional<br>confirmado en Nuevo León</span>
+        <span class="metrica-label" data-i18n-html="indice.metrica1">Riesgo constitucional<br>confirmado en Nuevo León</span>
       </div>
       <div class="indice-metrica">
         <span class="metrica-num">37.6%</span>
-        <span class="metrica-label">Letra muerta<br>en Sinaloa</span>
+        <span class="metrica-label" data-i18n-html="indice.metrica2">Letra muerta<br>en Sinaloa</span>
       </div>
       <div class="indice-metrica">
         <span class="metrica-num">32</span>
-        <span class="metrica-label">Estados<br>analizados</span>
+        <span class="metrica-label" data-i18n-html="indice.metrica3">Estados<br>analizados</span>
       </div>
       <div class="indice-metrica">
         <span class="metrica-num">~9,800</span>
-        <span class="metrica-label">Alertas<br>detectadas</span>
+        <span class="metrica-label" data-i18n-html="indice.metrica4">Alertas<br>detectadas</span>
       </div>
     </div>
 
     <a href="indice.html" class="indice-cta">
-      <span>Ver el Índice Nacional</span>
+      <span data-i18n="indice.cta">Ver el Índice Nacional</span>
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2"
            stroke-linecap="round" stroke-linejoin="round">
         <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -805,7 +810,7 @@ body {
   <section class="servicios">
     <div class="section-header">
       <div class="section-line"></div>
-      <span class="section-label">Motor Apolo · Productos</span>
+      <span class="section-label" data-i18n="servicios.label">Motor Apolo · Productos</span>
       <div class="section-line right"></div>
     </div>
 
@@ -818,8 +823,8 @@ body {
             <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
           </svg>
         </div>
-        <h3 class="servicio-titulo">Consulta legal</h3>
-        <p class="servicio-desc">
+        <h3 class="servicio-titulo" data-i18n="srv.consulta.titulo">Consulta legal</h3>
+        <p class="servicio-desc" data-i18n="srv.consulta.desc">
           Escribe tu duda en lenguaje humano. Apolo busca en 101,775 artículos
           y te cita la norma exacta que aplica — sin inventar, sin rodeos.
         </p>
@@ -833,10 +838,10 @@ body {
             <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
           </svg>
         </div>
-        <h3 class="servicio-titulo">Redactor de documentos</h3>
-        <p class="servicio-desc">
+        <h3 class="servicio-titulo" data-i18n="srv.redactor.titulo">Redactor de contratos</h3>
+        <p class="servicio-desc" data-i18n="srv.redactor.desc">
           Apolo te hace preguntas, busca los artículos relevantes y genera
-          tu contrato o carta legal con fundamento real. Descarga en Word.
+          tu contrato con fundamento real. Descarga en Word listo para firmar.
         </p>
       </article>
 
@@ -848,8 +853,8 @@ body {
             <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
           </svg>
         </div>
-        <h3 class="servicio-titulo">Auditor de contratos</h3>
-        <p class="servicio-desc">
+        <h3 class="servicio-titulo" data-i18n="srv.auditor.titulo">Auditor de contratos</h3>
+        <p class="servicio-desc" data-i18n="srv.auditor.desc">
           Sube tu contrato PDF o Word. Apolo detecta cláusulas abusivas,
           desequilibrios y violaciones a la ley vigente de tu estado.
         </p>
@@ -862,8 +867,8 @@ body {
             <path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
           </svg>
         </div>
-        <h3 class="servicio-titulo">Panel del abogado</h3>
-        <p class="servicio-desc">
+        <h3 class="servicio-titulo" data-i18n="srv.panel.titulo">Panel del abogado</h3>
+        <p class="servicio-desc" data-i18n="srv.panel.desc">
           Navega la ley por jerarquía, genera diagramas de proceso con IA
           y consulta a Apolo en contexto del artículo activo. Multiestado.
         </p>
@@ -876,8 +881,8 @@ body {
             <path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18"/>
           </svg>
         </div>
-        <h3 class="servicio-titulo">Índice Nacional</h3>
-        <p class="servicio-desc">
+        <h3 class="servicio-titulo" data-i18n="srv.indice.titulo">Índice Nacional</h3>
+        <p class="servicio-desc" data-i18n="srv.indice.desc">
           32 Códigos Civiles analizados artículo por artículo. Ranking de
           calidad normativa, riesgos constitucionales y letra muerta por estado.
         </p>
@@ -892,8 +897,8 @@ body {
             <path d="M11 8v6M8 11h6"/>
           </svg>
         </div>
-        <h3 class="servicio-titulo">Análisis vectorial</h3>
-        <p class="servicio-desc">
+        <h3 class="servicio-titulo" data-i18n="srv.vectorial.titulo">Análisis vectorial</h3>
+        <p class="servicio-desc" data-i18n="srv.vectorial.desc">
           Descubre qué artículos son únicos en tu estado, qué comparte México
           en sus 32 códigos y dónde hay convergencias con el derecho europeo.
         </p>
@@ -1057,5 +1062,7 @@ textarea.addEventListener('input', function () {
 })();
 </script>
 
+
+<script src="/locales/i18n.js"></script>
 </body>
 </html>
