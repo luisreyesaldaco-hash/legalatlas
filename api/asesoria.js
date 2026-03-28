@@ -11,31 +11,68 @@ const CPEUM_LEY = 'Constitución Política de los Estados Unidos Mexicanos';
 const PAIS_NOMBRES = { MX: 'México', CZ: 'República Checa', CO: 'Colombia', PA: 'Panamá', FR: 'Francia', DE: 'Alemania' };
 function nombrePais(iso) { return PAIS_NOMBRES[iso] || iso; }
 
+async function detectarEscalacion(mensaje) {
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GOOGLE_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `Eres un clasificador legal. Analiza este mensaje y determina si describe una situación que requiere atención urgente de un abogado real.
+
+Responde ÚNICAMENTE con SI o NO. Sin explicación.
+
+Criterios para SI:
+- Proceso judicial activo (demanda, audiencia, amparo, tribunal)
+- Materia penal (acusación, detención, ministerio público)
+- Urgencia temporal crítica (audiencia mañana, plazo de horas)
+- Menores de edad en riesgo (custodia urgente, violencia)
+- Monto mayor a $200,000 MXN en riesgo inmediato
+
+Mensaje: "${mensaje}"` }] }],
+          generationConfig: { maxOutputTokens: 5, temperature: 0 }
+        })
+      }
+    );
+    const data = await response.json();
+    const resultado = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    return resultado === 'SI';
+  } catch (e) {
+    console.warn('detectarEscalacion falló:', e.message);
+    return false;
+  }
+}
+
 export default async function handler(req, res) {
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    const { pais, estado, tema, pregunta, fuente, modo } = body;
+    const { pais, estado, tema, pregunta, fuente, modo, tipo } = body;
 
-    // Búsqueda de contexto legal
+    // Búsqueda de contexto legal + detección de escalación en paralelo
     let contextoLegal;
     const esMexico = !pais || pais === 'MX';
+
+    let ragPromise;
     if (estado && esMexico) {
-      // México con estado: ley estatal (7) + CPEUM (3) en paralelo
-      const [ccResults, cpuemResults] = await Promise.allSettled([
+      ragPromise = Promise.allSettled([
         buscarArticulos(pregunta, estado, fuente || 'Código Civil', 7),
         buscarArticulos(pregunta, '', CPEUM_LEY, 3)
-      ]);
-      contextoLegal = [
+      ]).then(([ccResults, cpuemResults]) => [
         ...(ccResults.status   === 'fulfilled' ? ccResults.value   : []),
         ...(cpuemResults.status === 'fulfilled' ? cpuemResults.value : [])
-      ];
+      ]);
     } else if (esMexico) {
-      // México federal: solo CPEUM
-      contextoLegal = await buscarArticulos(pregunta, '', CPEUM_LEY, 10);
+      ragPromise = buscarArticulos(pregunta, '', CPEUM_LEY, 10);
     } else {
-      // Otro país: buscar por nombre de ley (fuente)
-      contextoLegal = await buscarArticulos(pregunta, '', fuente || '', 10);
+      ragPromise = buscarArticulos(pregunta, '', fuente || '', 10);
     }
+
+    const [contextoLegalResult, requiereAbogado] = await Promise.all([
+      ragPromise,
+      detectarEscalacion(pregunta)
+    ]);
+    contextoLegal = contextoLegalResult;
 
     // 1. Normalizar número de artículo a solo dígitos ("ART. 2273.-" → "2273")
     const normalizarNum = (n) => (n || '').replace(/\D/g, '') || n
@@ -58,21 +95,38 @@ export default async function handler(req, res) {
     // 2. System prompt de Apolo
     const paisDisplay  = nombrePais(pais || 'MX');
     const jurisdiccion = estado ? `${estado}, ${paisDisplay}` : `${paisDisplay} (Federal)`;
+    const instruccionEscalacion = requiereAbogado ? `
+INSTRUCCIÓN ADICIONAL OBLIGATORIA: Al final de tu respuesta en draftHtml, agrega un párrafo separado que diga exactamente:
+"Este caso tiene elementos que van más allá de lo que puedo resolver solo. Te recomiendo hablar con un abogado especializado. ¿Quieres que te conecte con uno en ${estado || paisDisplay}?"
+` : '';
+    const instruccionTipo = tipo
+      ? `\nINSTRUCCIÓN DE INICIO: El usuario quiere redactar un contrato de tipo "${tipo}". Hazle las preguntas necesarias para generarlo — datos de las partes, términos principales, condiciones especiales. Guíalo paso a paso.\n`
+      : '';
     const systemPrompt = `Eres APOLO, un asistente legal experto para la jurisdicción de ${jurisdiccion.toUpperCase()}.
-Tu objetivo es orientar a ciudadanos sobre sus derechos de forma clara, formal y tranquilizante.
+${instruccionTipo}
 
 FUENTES CONSULTADAS: ${fuentesActivas}
 
 CONTEXTO LEGAL RECUPERADO:
 ${leyesTexto}
 
+TONO OBLIGATORIO PARA CIUDADANO:
+- Habla como un amigo que sabe derecho, no como un abogado en audiencia
+- Frases cortas. Máximo 2 líneas por párrafo
+- Si usas un término legal, explícalo inmediatamente entre paréntesis
+- NUNCA uses estas frases: "en virtud de", "de conformidad con", "el suscrito", "en términos de lo dispuesto"
+- Siempre termina con un paso concreto que el usuario puede hacer hoy
+- Si tu respuesta tiene más de 3 párrafos, es demasiado larga — recórtala
+- Usa "tú" no "usted"
+
 INSTRUCCIONES:
-1. Explica de forma clara usando los artículos del contexto.
+1. Explica usando los artículos del contexto.
 2. Cita siempre el número de artículo exacto y la ley de donde proviene.
 3. Si la información necesaria no está en los artículos proporcionados, dilo con claridad.
 4. Nunca inventes leyes, artículos ni interpretaciones.
 5. REGLA DE IDIOMA: Responde SIEMPRE en el mismo idioma en que el usuario escribió su pregunta. Si pregunta en checo, responde en checo. Si pregunta en español, responde en español.
 6. Responde EXCLUSIVAMENTE en formato JSON con esta estructura:
+${instruccionEscalacion}
 {
   "draftHtml": "Respuesta en HTML con párrafos y listas si aplica",
   "resumen": "Explicación breve de 2 líneas",

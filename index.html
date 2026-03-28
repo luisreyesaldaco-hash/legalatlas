@@ -520,6 +520,91 @@ body {
 .footer-coords { font-size: 11px; letter-spacing: 0.25em; color: var(--text-muted); margin-bottom: 8px; }
 .footer-copy { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.35em; color: var(--gold-dim); text-transform: uppercase; }
 
+/* ═══ ÍNDICE NACIONAL BANNER ═══ */
+.indice-banner {
+  padding: 80px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+.indice-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.5em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.indice-titulo {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+}
+.indice-desc {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 48px;
+  line-height: 1.8;
+}
+.indice-metricas {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+.indice-metrica {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.metrica-num {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+.metrica-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.5;
+  letter-spacing: 0.05em;
+}
+.indice-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--gold-dim);
+  border: 1px solid var(--border-hover);
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.indice-cta svg {
+  width: 16px; height: 16px;
+  stroke: var(--gold);
+  transition: transform 0.3s ease;
+}
+.indice-cta:hover {
+  background: rgba(196,154,60,0.2);
+  border-color: var(--gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(196,154,60,0.2);
+}
+.indice-cta:hover svg { transform: translateX(4px); }
+
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 900px) {
   .servicios-grid { grid-template-columns: repeat(2, 1fr); }
@@ -555,9 +640,11 @@ body {
 <header class="topbar">
   <div class="topbar-logo">LEGAL<span>ATLAS</span></div>
   <nav class="topbar-nav">
-    <a href="ciudadano.html" class="topbar-link">Ciudadano</a>
-    <a href="directorio.html" class="topbar-link">Directorio</a>
-    <a href="pro.html" class="topbar-link">Pro</a>
+    <a href="ciudadano.html" class="topbar-link">Consulta</a>
+    <a href="abogado.html" class="topbar-link">Abogado Pro</a>
+    <a href="contratos.html" class="topbar-link">Contratos</a>
+    <a href="indice.html" class="topbar-link">Índice Nacional</a>
+    <a href="#cuenta" class="topbar-link">Mi Cuenta</a>
   </nav>
   <div class="topbar-status">
     <div class="status-dot"></div>
@@ -573,7 +660,9 @@ body {
     <p class="hero-eyebrow">Motor Normativo</p>
     <h1 class="hero-title">LEGAL<span>ATLAS</span></h1>
     <p class="hero-tagline">Navega la ley con claridad</p>
-    <p class="hero-sub">Apolo cita el artículo · Tú navegas la ley</p>
+    <p class="hero-sub">
+      101,775 artículos verificados · Sin alucinación · Artículo real citado
+    </p>
 
     <!-- CHAT BOX -->
     <div class="chat-container">
@@ -643,7 +732,7 @@ body {
 
       <div class="meridiano">
         <div class="meridiano-line"></div>
-        <span class="meridiano-text">vel</span>
+        <span class="meridiano-text">o</span>
         <div class="meridiano-line"></div>
       </div>
 
@@ -668,78 +757,148 @@ body {
     </div>
   </section>
 
+  <!-- ÍNDICE NACIONAL -->
+  <section class="indice-banner">
+    <div class="section-header">
+      <div class="section-line"></div>
+      <span class="section-label">Investigación · B2G · Academia</span>
+      <div class="section-line right"></div>
+    </div>
+
+    <div class="indice-eyebrow">Primer análisis computacional de México</div>
+    <h2 class="indice-titulo">Índice Nacional de<br>Calidad Normativa</h2>
+    <p class="indice-desc">
+      32 Códigos Civiles analizados artículo por artículo.
+      Inconsistencias constitucionales, artículos obsoletos y divergencia
+      entre estados — con datos, no con opinión.
+    </p>
+
+    <div class="indice-metricas">
+      <div class="indice-metrica">
+        <span class="metrica-num">7.2%</span>
+        <span class="metrica-label">Riesgo constitucional<br>confirmado en Nuevo León</span>
+      </div>
+      <div class="indice-metrica">
+        <span class="metrica-num">37.6%</span>
+        <span class="metrica-label">Letra muerta<br>en Sinaloa</span>
+      </div>
+      <div class="indice-metrica">
+        <span class="metrica-num">32</span>
+        <span class="metrica-label">Estados<br>analizados</span>
+      </div>
+      <div class="indice-metrica">
+        <span class="metrica-num">~9,800</span>
+        <span class="metrica-label">Alertas<br>detectadas</span>
+      </div>
+    </div>
+
+    <a href="indice.html" class="indice-cta">
+      <span>Ver el Índice Nacional</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </section>
+
   <!-- SERVICIOS -->
   <section class="servicios">
     <div class="section-header">
       <div class="section-line"></div>
-      <span class="section-label">Áreas de práctica</span>
+      <span class="section-label">Motor Apolo · Productos</span>
       <div class="section-line right"></div>
     </div>
 
     <div class="servicios-grid">
+
       <article class="servicio-card">
         <div class="servicio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 21h18M3 7v1a3 3 0 003 3h12a3 3 0 003-3V7M21 7l-9-4-9 4"/>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
           </svg>
         </div>
-        <h3 class="servicio-titulo">Derecho corporativo</h3>
-        <p class="servicio-desc">Constitución de sociedades, fusiones, adquisiciones y gobierno corporativo.</p>
+        <h3 class="servicio-titulo">Consulta legal</h3>
+        <p class="servicio-desc">
+          Escribe tu duda en lenguaje humano. Apolo busca en 101,775 artículos
+          y te cita la norma exacta que aplica — sin inventar, sin rodeos.
+        </p>
       </article>
 
       <article class="servicio-card">
         <div class="servicio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          </svg>
-        </div>
-        <h3 class="servicio-titulo">Litigios</h3>
-        <p class="servicio-desc">Representación en juicios civiles, mercantiles y administrativos.</p>
-      </article>
-
-      <article class="servicio-card">
-        <div class="servicio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/>
-          </svg>
-        </div>
-        <h3 class="servicio-titulo">Propiedad intelectual</h3>
-        <p class="servicio-desc">Marcas, patentes, derechos de autor y secretos industriales.</p>
-      </article>
-
-      <article class="servicio-card">
-        <div class="servicio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
-          </svg>
-        </div>
-        <h3 class="servicio-titulo">Derecho fiscal</h3>
-        <p class="servicio-desc">Planeación tributaria, defensa fiscal y cumplimiento normativo.</p>
-      </article>
-
-      <article class="servicio-card">
-        <div class="servicio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
             <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
           </svg>
         </div>
-        <h3 class="servicio-titulo">Contratos</h3>
-        <p class="servicio-desc">Redacción, revisión y negociación de contratos comerciales.</p>
+        <h3 class="servicio-titulo">Redactor de documentos</h3>
+        <p class="servicio-desc">
+          Apolo te hace preguntas, busca los artículos relevantes y genera
+          tu contrato o carta legal con fundamento real. Descarga en Word.
+        </p>
       </article>
 
       <article class="servicio-card">
         <div class="servicio-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
           </svg>
         </div>
-        <h3 class="servicio-titulo">Derecho laboral</h3>
-        <p class="servicio-desc">Relaciones de trabajo, despidos y cumplimiento de la LFT.</p>
+        <h3 class="servicio-titulo">Auditor de contratos</h3>
+        <p class="servicio-desc">
+          Sube tu contrato PDF o Word. Apolo detecta cláusulas abusivas,
+          desequilibrios y violaciones a la ley vigente de tu estado.
+        </p>
       </article>
+
+      <article class="servicio-card">
+        <div class="servicio-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+          </svg>
+        </div>
+        <h3 class="servicio-titulo">Panel del abogado</h3>
+        <p class="servicio-desc">
+          Navega la ley por jerarquía, genera diagramas de proceso con IA
+          y consulta a Apolo en contexto del artículo activo. Multiestado.
+        </p>
+      </article>
+
+      <article class="servicio-card">
+        <div class="servicio-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18"/>
+          </svg>
+        </div>
+        <h3 class="servicio-titulo">Índice Nacional</h3>
+        <p class="servicio-desc">
+          32 Códigos Civiles analizados artículo por artículo. Ranking de
+          calidad normativa, riesgos constitucionales y letra muerta por estado.
+        </p>
+      </article>
+
+      <article class="servicio-card">
+        <div class="servicio-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+            <path d="M11 8v6M8 11h6"/>
+          </svg>
+        </div>
+        <h3 class="servicio-titulo">Análisis vectorial</h3>
+        <p class="servicio-desc">
+          Descubre qué artículos son únicos en tu estado, qué comparte México
+          en sus 32 códigos y dónde hay convergencias con el derecho europeo.
+        </p>
+      </article>
+
     </div>
   </section>
 

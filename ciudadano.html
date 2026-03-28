@@ -503,7 +503,11 @@
       const jurisdiccion = sel.estado
         ? 'el <strong>' + sel.ley + ' de ' + sel.estado + '</strong>'
         : '<strong>' + sel.ley + '</strong> (' + nombrePais(sel.pais) + ')';
-      agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Consulto ' + jurisdiccion + ' y te cito el artículo exacto. ¿Cuál es tu duda?');
+      if (window._tipoContrato) {
+        agregarMensaje('apolo', 'Soy <strong>Apolo</strong>. Voy a ayudarte a redactar tu <strong>' + window._tipoContrato.replace(/_/g, ' ') + '</strong>.<br>Consulto ' + jurisdiccion + '. Cuéntame: ¿cuáles son los datos de las partes?');
+      } else {
+        agregarMensaje('apolo', 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Consulto ' + jurisdiccion + ' y te cito el artículo exacto. ¿Cuál es tu duda?');
+      }
     }
 
     // ── Carga dinámica de países y materias ─────────────────────────────────
@@ -590,7 +594,18 @@
     }
 
     selectorEst.addEventListener('change', function () {
+      if (!this.value) return;
       sel.estado = this.value;
+      if (esperandoEstadoRedaccion) {
+        esperandoEstadoRedaccion = false;
+        datosRedaccion['estado'] = this.value;
+        agregarMensaje('apolo',
+          'Perfecto. Voy a redactar una <strong>' + recetaActiva.titulo + '</strong>.<br>' +
+          'Necesito algunos datos. Responde las siguientes preguntas y al final generamos el documento.'
+        );
+        setTimeout(preguntarSiguiente, 400);
+        return;
+      }
       verificarListo();
       saludoInicial();
     });
@@ -660,7 +675,8 @@
             pais:     sel.pais   || '',
             tema:     sel.materia || 'civil',
             fuente:   sel.ley    || '',
-            modo:     'consulta'
+            modo:     'consulta',
+            tipo:     window._tipoContrato || ''
           })
         });
 
@@ -696,6 +712,7 @@
     let esperandoConfirmacionNombre = false;
     let emailUsuario                = null;
     let esperandoEmail              = false;
+    let esperandoEstadoRedaccion    = false;
 
     const btnModoRed  = document.getElementById('btn-modo-redaccion');
     const grupoRecetas = document.getElementById('grupo-recetas');
@@ -766,6 +783,8 @@
           ...(recetaActiva.datos_requeridos     || []),
           ...(recetaActiva.preguntas_profundidad || [])
         ];
+        const puedeEmpezar = await verificarJurisdiccion(recetaActiva);
+        if (!puedeEmpezar) return;
         agregarMensaje('apolo',
           'Perfecto. Voy a redactar una <strong>' + recetaActiva.titulo + '</strong>.<br>' +
           'Necesito algunos datos. Responde las siguientes preguntas y al final generamos el documento.'
@@ -774,6 +793,42 @@
       } catch (e) {
         agregarMensaje('apolo', 'Error cargando el documento: ' + e.message);
       }
+    }
+
+    async function verificarJurisdiccion(receta) {
+      const j = receta.jurisdiccion;
+      if (sel.estado) return true;
+      if (!j?.requiere_estado) return true;
+      // Siempre pedir el estado — acepta_federal solo controla si "Federal" aparece como opción
+      agregarMensaje('apolo',
+        'Para redactar este contrato necesito saber en qué estado se firma. ¿En qué estado de la República se celebrará?'
+      );
+      activarSelectorEstadoParaRedaccion(j.acepta_federal === true);
+      return false;
+    }
+
+    function activarSelectorEstadoParaRedaccion(incluirFederal) {
+      esperandoEstadoRedaccion = true;
+      const estados32 = [
+        'Aguascalientes','Baja California','Baja California Sur','Campeche','Chiapas',
+        'Chihuahua','Ciudad de México','Coahuila','Colima','Durango','Guanajuato',
+        'Guerrero','Hidalgo','Jalisco','México','Michoacán','Morelos','Nayarit',
+        'Nuevo León','Oaxaca','Puebla','Querétaro','Quintana Roo','San Luis Potosí',
+        'Sinaloa','Sonora','Tabasco','Tamaulipas','Tlaxcala','Veracruz','Yucatán','Zacatecas'
+      ];
+      selectorEst.innerHTML = '<option value="">Selecciona tu estado...</option>';
+      if (incluirFederal) {
+        const opt = document.createElement('option');
+        opt.value = 'Federal'; opt.textContent = 'Federal (aplica en todo México)';
+        selectorEst.appendChild(opt);
+      }
+      estados32.forEach(e => {
+        const opt = document.createElement('option');
+        opt.value = e; opt.textContent = e;
+        selectorEst.appendChild(opt);
+      });
+      selectorEst.value = '';
+      grupoEstado.style.display = 'flex';
     }
 
     function preguntarSiguiente() {
@@ -1016,6 +1071,8 @@
       const materia = params.get('materia');
       const estado  = params.get('estado');
       const q       = params.get('q');
+      const tipo    = params.get('tipo');
+      if (tipo) window._tipoContrato = tipo;
 
       if (!pais) return;
 
