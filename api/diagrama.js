@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    const { nivel_secundario, estado, ley } = body;
+    const { nivel_secundario, estado, ley, idioma = 'es' } = body;
 
     if (!nivel_secundario || !ley) {
       return res.status(400).json({ error: 'Parámetros requeridos: nivel_secundario, ley' });
@@ -46,6 +46,7 @@ export default async function handler(req, res) {
         .eq('estado', estado || '')
         .eq('ley', ley)
         .eq('nivel_secundario', nivel_secundario)
+        .eq('idioma', idioma)
         .single();
 
       if (!cacheErr && cached && cached.svg_content) {
@@ -83,14 +84,20 @@ ARTÍCULOS:
 ${articulosTexto}
 
 REGLAS DEL SVG:
-- viewBox="0 0 600 400"
+- viewBox="0 0 800 500"
 - Solo rect, line, text, path — sin imágenes externas
 - Máximo 7 nodos
-- Fondo transparente
-- Fondo SVG: transparente — NO agregues ningún rect de fondo
+- Fondo transparente — NO agregues ningún rect de fondo
 - Colores nodos: relleno #f0e8d0, stroke #8a6820, texto #1a1508
-- Líneas de conexión: stroke #8a6820
+- Líneas de conexión: stroke #8a6820, strokeWidth 1.5
+- Cada nodo: mínimo 160px de ancho, 50px de alto, padding interno de 12px
+- El texto dentro de cada nodo debe caber completo — ajusta el ancho del nodo al texto
+- Máximo 25 caracteres por línea dentro de un nodo — usa <tspan> para saltos de línea
+- Espaciado vertical entre niveles: mínimo 80px
+- Espaciado horizontal entre nodos del mismo nivel: mínimo 40px
+- Los nodos no deben solaparse nunca
 - Muestra el flujo del proceso: quién hace qué, en qué orden
+- El texto dentro del SVG debe estar en el mismo idioma de los artículos proporcionados
 - Responde SOLO con el SVG completo, sin texto adicional, sin markdown`;
 
     const geminiResponse = await ai.models.generateContent({
@@ -127,6 +134,7 @@ REGLAS DEL SVG:
           ley,
           nivel_secundario,
           svg_content: svg,
+          idioma,
           created_at: new Date().toISOString()
         });
     } catch (_) {

@@ -1638,7 +1638,7 @@
         const res = await fetch('/api/diagrama', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nivel_secundario: capitulo || titulo, estado: estadoActivo, ley: leyActiva })
+          body: JSON.stringify({ nivel_secundario: capitulo || titulo, estado: estadoActivo, ley: leyActiva, idioma: localStorage.getItem('atlas_lang') || 'es' })
         });
         const json = await res.json();
         if (!json.svg) throw new Error(json.error || 'Sin SVG');
@@ -1679,7 +1679,7 @@
         const res  = await fetch('/api/diagrama', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nivel_secundario: titulo, estado, ley })
+          body: JSON.stringify({ nivel_secundario: titulo, estado, ley, idioma: localStorage.getItem('atlas_lang') || 'es' })
         });
         const json = await res.json();
 
