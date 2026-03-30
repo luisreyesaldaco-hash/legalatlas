@@ -98,7 +98,7 @@ REGLAS DEL SVG:
       contents: prompt,
       config: {
         temperature: 0.2,
-        maxOutputTokens: 2000
+        maxOutputTokens: 8000
       }
     });
 
@@ -107,7 +107,17 @@ REGLAS DEL SVG:
 
     const svg = stripMarkdown(rawSvg);
 
-    // ── 4. Guardar en cache (si la tabla existe) ───────────────────────────────
+    // ── 4. Validar SVG completo antes de cachear ──────────────────────────────
+    function svgEsValido(s) {
+      return s && s.includes('<svg') && s.includes('</svg>') && s.length > 500;
+    }
+
+    if (!svgEsValido(svg)) {
+      console.error('[diagrama.js] SVG truncado — no se cachea. Longitud:', svg?.length);
+      return res.status(500).json({ error: 'SVG generado incompleto, intenta de nuevo' });
+    }
+
+    // ── 5. Guardar en cache (si la tabla existe) ───────────────────────────────
     try {
       await supabase
         .from('diagramas')
