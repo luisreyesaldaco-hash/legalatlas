@@ -94,9 +94,10 @@ REGLAS DEL SVG:
 - Responde SOLO con el SVG completo, sin texto adicional, sin markdown`;
 
     const geminiResponse = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
+        thinkingConfig: { thinkingBudget: 0 },
         temperature: 0.2,
         maxOutputTokens: 4000
       }
