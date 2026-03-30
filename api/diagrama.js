@@ -60,7 +60,7 @@ export default async function handler(req, res) {
       .from('articulos')
       .select('numero_articulo, texto_original')
       .eq('ley', ley)
-      .eq('titulo', nivel_secundario)
+      .eq('capitulo', nivel_secundario)
       .order('id', { ascending: true })
       .limit(20);
     if (estado) artQ = artQ.eq('estado', estado);
