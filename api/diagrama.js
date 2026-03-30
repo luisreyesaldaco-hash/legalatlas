@@ -135,7 +135,14 @@ REGLAS DEL SVG:
     return res.status(200).json({ svg, cached: false });
 
   } catch (err) {
-    console.error('[diagrama.js] Error:', err);
-    return res.status(500).json({ error: 'Error generando el diagrama', details: err.message });
+    console.error('DIAGRAMA ERROR COMPLETO:', {
+      message: err.message,
+      stack: err.stack,
+      tipo: typeof err
+    });
+    return res.status(500).json({
+      error: err.message,
+      detalle: err.stack
+    });
   }
 }
