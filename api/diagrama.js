@@ -34,6 +34,16 @@ export default async function handler(req, res) {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
     const { nivel_secundario, estado, ley, idioma = 'es' } = body;
 
+    const NOMBRES_IDIOMA = {
+      'es': 'español',
+      'cs': 'checo',
+      'fr': 'francés',
+      'pt': 'portugués',
+      'de': 'alemán',
+      'en': 'inglés'
+    };
+    const nombreIdioma = NOMBRES_IDIOMA[idioma] || 'español';
+
     if (!nivel_secundario || !ley) {
       return res.status(400).json({ error: 'Parámetros requeridos: nivel_secundario, ley' });
     }
@@ -97,7 +107,7 @@ REGLAS DEL SVG:
 - Espaciado horizontal entre nodos del mismo nivel: mínimo 40px
 - Los nodos no deben solaparse nunca
 - Muestra el flujo del proceso: quién hace qué, en qué orden
-- El texto dentro del SVG debe estar en el mismo idioma de los artículos proporcionados
+- El texto dentro del SVG debe estar en ${nombreIdioma}
 - Responde SOLO con el SVG completo, sin texto adicional, sin markdown`;
 
     const geminiResponse = await ai.models.generateContent({
