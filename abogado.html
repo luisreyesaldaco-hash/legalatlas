@@ -787,6 +787,40 @@
     .btn-send:hover { background: var(--gold-light); transform: scale(1.05); }
     .btn-send:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
 
+    /* Context buttons */
+    .chat-contexto {
+      display: flex;
+      gap: 6px;
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(196,154,60,0.2);
+    }
+    .ctx-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(196,154,60,0.3);
+      background: transparent;
+      color: rgba(245,237,216,0.5);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .ctx-btn.activo {
+      background: rgba(196,154,60,0.15);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .ctx-btn.deshabilitado {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .ctx-btn:hover:not(.deshabilitado):not(.activo) {
+      border-color: rgba(196,154,60,0.6);
+      color: rgba(245,237,216,0.8);
+    }
+
     /* Article tags in chat */
     .art-tags-row {
       display: flex;
@@ -1089,6 +1123,11 @@
       <div id="chat-mensajes"></div>
 
       <div class="chat-input-area">
+        <div class="chat-contexto">
+          <button class="ctx-btn activo" data-modo="articulo">Este artículo</button>
+          <button class="ctx-btn" data-modo="ley">Esta ley</button>
+          <button class="ctx-btn deshabilitado" data-modo="comparar" title="Disponible en Plan Despacho">Comparar estados</button>
+        </div>
         <div class="chat-input-row">
           <textarea
             id="chat-input"
@@ -1118,6 +1157,7 @@
     let capituloArticulos = [];
     let chatBloqueado     = false;
     let historialChat     = [];
+    let modoChat          = 'articulo';
 
     // ═══════════════════════════════════════════════════════════
     //  INIT
@@ -1127,6 +1167,14 @@
       renderBookmarks();
       mostrarSaludo();
       autoResizeTextarea();
+
+      document.querySelectorAll('.ctx-btn:not(.deshabilitado)').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.ctx-btn').forEach(b => b.classList.remove('activo'));
+          btn.classList.add('activo');
+          modoChat = btn.dataset.modo;
+        });
+      });
     });
 
     function autoResizeTextarea() {
@@ -1765,7 +1813,8 @@
           pais:      paisActivo  || articuloActivo?.pais   || 'MX',
           fuente:    leyActiva   || articuloActivo?.ley    || '',
           tema:      articuloActivo?.titulo                 || '',
-          modo:      'abogado'
+          modo:      'abogado',
+          alcance:   modoChat
         };
 
         const res  = await fetch('/api/asesoria', {
