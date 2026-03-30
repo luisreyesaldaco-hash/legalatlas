@@ -47,7 +47,7 @@ Mensaje: "${mensaje}"` }] }],
 export default async function handler(req, res) {
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    const { pais, estado, tema, pregunta, fuente, modo, tipo, historial } = body;
+    const { pais, estado, tema, pregunta, fuente, modo, tipo, historial, alcance } = body;
     const esAbogado = modo === 'abogado';
 
     // Búsqueda de contexto legal + detección de escalación en paralelo
@@ -106,12 +106,12 @@ INSTRUCCIÓN ADICIONAL OBLIGATORIA: Al final de tu respuesta en draftHtml, agreg
     const tonoPrompt = esAbogado ? `
 TONO OBLIGATORIO PARA ABOGADO:
 - Lenguaje técnico-jurídico sin explicar términos básicos
-- Cita artículos con número exacto primero, luego el texto
-- Respuestas densas y precisas — el abogado no necesita analogías
+- Cita artículos con número exacto primero, luego el texto relevante
+- Respuestas densas y precisas — sin analogías ni ejemplos cotidianos
 - Usa terminología procesal correcta
-- Puedes mencionar criterios jurisprudenciales si son relevantes
 - Máximo 4 párrafos — la precisión vale más que la extensión
-- Trato de usted o impersonal — nunca tuteo
+- Trato impersonal o de usted — nunca tuteo
+- Si el artículo tiene excepciones o remisiones a otros artículos, menciónalas
 ` : `
 TONO OBLIGATORIO PARA CIUDADANO:
 - Habla como un amigo que sabe derecho, no como un abogado en audiencia
@@ -122,6 +122,10 @@ TONO OBLIGATORIO PARA CIUDADANO:
 - Usa "tú" no "usted"
 `;
 
+    const alcancePrompt = alcance === 'articulo'
+      ? 'Responde enfocándote en el artículo activo proporcionado y sus relaciones con otros artículos del mismo código.'
+      : 'Responde con una visión amplia del tema dentro de la ley activa, citando los artículos más relevantes.';
+
     const systemPrompt = `Eres APOLO, un asistente legal experto para la jurisdicción de ${jurisdiccion.toUpperCase()}.
 ${instruccionTipo}
 
@@ -130,6 +134,7 @@ FUENTES CONSULTADAS: ${fuentesActivas}
 CONTEXTO LEGAL RECUPERADO:
 ${leyesTexto}
 ${tonoPrompt}
+${alcancePrompt}
 
 INSTRUCCIONES:
 1. Explica usando los artículos del contexto.
