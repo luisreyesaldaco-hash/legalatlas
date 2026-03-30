@@ -47,7 +47,8 @@ Mensaje: "${mensaje}"` }] }],
 export default async function handler(req, res) {
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    const { pais, estado, tema, pregunta, fuente, modo, tipo } = body;
+    const { pais, estado, tema, pregunta, fuente, modo, tipo, historial } = body;
+    const esAbogado = modo === 'abogado';
 
     // Búsqueda de contexto legal + detección de escalación en paralelo
     let contextoLegal;
@@ -102,6 +103,25 @@ INSTRUCCIÓN ADICIONAL OBLIGATORIA: Al final de tu respuesta en draftHtml, agreg
     const instruccionTipo = tipo
       ? `\nINSTRUCCIÓN DE INICIO: El usuario quiere redactar un contrato de tipo "${tipo}". Hazle las preguntas necesarias para generarlo — datos de las partes, términos principales, condiciones especiales. Guíalo paso a paso.\n`
       : '';
+    const tonoPrompt = esAbogado ? `
+TONO OBLIGATORIO PARA ABOGADO:
+- Lenguaje técnico-jurídico sin explicar términos básicos
+- Cita artículos con número exacto primero, luego el texto
+- Respuestas densas y precisas — el abogado no necesita analogías
+- Usa terminología procesal correcta
+- Puedes mencionar criterios jurisprudenciales si son relevantes
+- Máximo 4 párrafos — la precisión vale más que la extensión
+- Trato de usted o impersonal — nunca tuteo
+` : `
+TONO OBLIGATORIO PARA CIUDADANO:
+- Habla como un amigo que sabe derecho, no como un abogado en audiencia
+- Frases cortas. Máximo 2 líneas por párrafo
+- Si usas un término legal, explícalo entre paréntesis
+- NUNCA uses: "en virtud de", "de conformidad con", "el suscrito"
+- Siempre termina con un paso concreto que el usuario puede hacer hoy
+- Usa "tú" no "usted"
+`;
+
     const systemPrompt = `Eres APOLO, un asistente legal experto para la jurisdicción de ${jurisdiccion.toUpperCase()}.
 ${instruccionTipo}
 
@@ -109,15 +129,7 @@ FUENTES CONSULTADAS: ${fuentesActivas}
 
 CONTEXTO LEGAL RECUPERADO:
 ${leyesTexto}
-
-TONO OBLIGATORIO PARA CIUDADANO:
-- Habla como un amigo que sabe derecho, no como un abogado en audiencia
-- Frases cortas. Máximo 2 líneas por párrafo
-- Si usas un término legal, explícalo inmediatamente entre paréntesis
-- NUNCA uses estas frases: "en virtud de", "de conformidad con", "el suscrito", "en términos de lo dispuesto"
-- Siempre termina con un paso concreto que el usuario puede hacer hoy
-- Si tu respuesta tiene más de 3 párrafos, es demasiado larga — recórtala
-- Usa "tú" no "usted"
+${tonoPrompt}
 
 INSTRUCCIONES:
 1. Explica usando los artículos del contexto.
@@ -136,9 +148,19 @@ ${instruccionEscalacion}
 }`;
 
     // 3. Llamada a Gemini Flash
+    const mensajes = historial?.length > 0
+      ? [
+          ...historial.map(m => ({
+            role: m.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: m.content }]
+          })),
+          { role: 'user', parts: [{ text: pregunta }] }
+        ]
+      : pregunta;
+
     const geminiResponse = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: pregunta,
+      contents: mensajes,
       config: {
         systemInstruction: systemPrompt,
         responseMimeType:  'application/json',

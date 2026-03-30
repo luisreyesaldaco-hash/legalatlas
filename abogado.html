@@ -1117,6 +1117,7 @@
     let articuloActivo    = null;
     let capituloArticulos = [];
     let chatBloqueado     = false;
+    let historialChat     = [];
 
     // ═══════════════════════════════════════════════════════════
     //  INIT
@@ -1603,7 +1604,8 @@
         ctx.textContent = `Artículo activo: ${art.numero_articulo}`;
         ctx.classList.add('activo');
 
-        // Reset chat with greeting
+        // Reset chat e historial al cambiar artículo
+        historialChat = [];
         const msgs = document.getElementById('chat-mensajes');
         msgs.innerHTML = '';
         agregarMensaje('apolo', `He cargado el <strong>${art.numero_articulo}</strong>. Puedes preguntarme sobre su contenido, implicaciones o cómo aplicarlo en casos concretos.`);
@@ -1742,6 +1744,7 @@
       document.getElementById('btn-send').disabled = true;
 
       agregarMensaje('usuario', preguntaUsuario);
+      historialChat.push({ role: 'user', content: preguntaUsuario });
 
       // Build enriched question
       let preguntaEnriquecida = preguntaUsuario;
@@ -1756,12 +1759,13 @@
 
       try {
         const body = {
-          pregunta: preguntaEnriquecida,
-          estado:   estadoActivo || articuloActivo?.estado || '',
-          pais:     paisActivo  || articuloActivo?.pais   || 'MX',
-          fuente:   leyActiva   || articuloActivo?.ley    || '',
-          tema:     articuloActivo?.titulo                 || '',
-          modo:     'abogado'
+          pregunta:  preguntaEnriquecida,
+          historial: historialChat.slice(-6),
+          estado:    estadoActivo || articuloActivo?.estado || '',
+          pais:      paisActivo  || articuloActivo?.pais   || 'MX',
+          fuente:    leyActiva   || articuloActivo?.ley    || '',
+          tema:      articuloActivo?.titulo                 || '',
+          modo:      'abogado'
         };
 
         const res  = await fetch('/api/asesoria', {
@@ -1776,6 +1780,7 @@
         if (json.respuesta) {
           const html = json.respuesta.draftHtml || json.respuesta.resumen || 'Sin respuesta';
           agregarMensaje('apolo', html, null, json.respuesta.articulos || []);
+          historialChat.push({ role: 'assistant', content: html });
         } else if (json.error) {
           agregarMensaje('apolo', `Error: ${json.error}`);
         }
