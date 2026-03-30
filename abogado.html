@@ -1773,6 +1773,35 @@
     // ═══════════════════════════════════════════════════════════
     //  CHAT
     // ═══════════════════════════════════════════════════════════
+    function construirBody(preguntaUsuario) {
+      const base = {
+        historial: historialChat.slice(-6),
+        estado:    estadoActivo || articuloActivo?.estado || '',
+        pais:      paisActivo  || articuloActivo?.pais   || 'MX',
+        fuente:    leyActiva   || articuloActivo?.ley    || '',
+        tema:      articuloActivo?.titulo                 || '',
+        modo:      'abogado'
+      };
+
+      if (modoChat === 'articulo' && articuloActivo) {
+        return {
+          ...base,
+          pregunta: `[Artículo activo: ${articuloActivo.numero_articulo}]\n${articuloActivo.texto_original?.substring(0, 600)}\n\nPregunta: ${preguntaUsuario}`,
+          alcance: 'articulo'
+        };
+      }
+
+      if (modoChat === 'ley') {
+        return {
+          ...base,
+          pregunta: preguntaUsuario,
+          alcance: 'ley'
+        };
+      }
+
+      return { ...base, pregunta: preguntaUsuario };
+    }
+
     function chatKeydown(e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -1794,28 +1823,12 @@
       agregarMensaje('usuario', preguntaUsuario);
       historialChat.push({ role: 'user', content: preguntaUsuario });
 
-      // Build enriched question
-      let preguntaEnriquecida = preguntaUsuario;
-      if (articuloActivo) {
-        const extracto = (articuloActivo.texto_original || articuloActivo.texto || '').substring(0, 400);
-        preguntaEnriquecida = `[Artículo activo: ${articuloActivo.numero_articulo}: ${extracto}]\n\n${preguntaUsuario}`;
-      }
-
       // Typing indicator
       const typingId = 'typing-' + Date.now();
       agregarMensaje('apolo-typing', '', typingId);
 
       try {
-        const body = {
-          pregunta:  preguntaEnriquecida,
-          historial: historialChat.slice(-6),
-          estado:    estadoActivo || articuloActivo?.estado || '',
-          pais:      paisActivo  || articuloActivo?.pais   || 'MX',
-          fuente:    leyActiva   || articuloActivo?.ley    || '',
-          tema:      articuloActivo?.titulo                 || '',
-          modo:      'abogado',
-          alcance:   modoChat
-        };
+        const body = construirBody(preguntaUsuario);
 
         const res  = await fetch('/api/asesoria', {
           method:  'POST',
