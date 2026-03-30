@@ -147,8 +147,8 @@ REGLAS DEL SVG:
           idioma,
           created_at: new Date().toISOString()
         });
-    } catch (_) {
-      // tabla diagramas no existe — ignorar silenciosamente
+    } catch (cacheErr) {
+      console.error('[diagrama.js] Error al guardar en caché:', cacheErr?.message, JSON.stringify(cacheErr));
     }
 
     return res.status(200).json({ svg, cached: false });
