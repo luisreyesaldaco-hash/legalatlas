@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legal Atlas — Marco Teorizador</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <style>
+    :root {
+      --bg-deep:    #08080a;
+      --bg-card:    #0d0d0f;
+      --bg-raised:  #141416;
+      --gold:       #c49a3c;
+      --gold-light: #e8c878;
+      --gold-dim:   rgba(196,154,60,0.15);
+      --gold-glow:  rgba(196,154,60,0.4);
+      --text:       rgba(245,237,216,0.92);
+      --text-soft:  rgba(245,237,216,0.6);
+      --text-muted: rgba(245,237,216,0.35);
+      --border:     rgba(196,154,60,0.12);
+      --border-hov: rgba(196,154,60,0.35);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg-deep);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(196,154,60,0.25); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(196,154,60,0.45); }
+
+    /* ═══ AMBIENT ═══ */
+    .ambient {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.06;
+    }
+    .ambient-orb-1 {
+      width: 500px; height: 500px;
+      background: var(--gold);
+      top: -100px; left: -100px;
+    }
+    .ambient-orb-2 {
+      width: 400px; height: 400px;
+      background: var(--gold-light);
+      bottom: 0; right: -80px;
+    }
+    .ambient-orb-3 {
+      width: 300px; height: 300px;
+      background: var(--gold);
+      top: 40%; left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* ═══ TOPBAR ═══ */
+    .topbar {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      gap: 16px;
+      background: rgba(8,8,10,0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .topbar-logo span { color: var(--gold); font-weight: 400; }
+    .topbar-nav { display: flex; gap: 28px; margin-left: auto; }
+    .topbar-link {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .topbar-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+    .topbar-link:hover { color: var(--gold); }
+    .topbar-link:hover::after, .topbar-link.active::after { width: 100%; }
+    .topbar-link.active { color: var(--gold); }
+    .topbar-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+    }
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 10px var(--gold-glow);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.6; transform: scale(0.85); }
+    }
+
+    /* ═══ MAIN ═══ */
+    .main {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ═══ MARCO TEORIZADOR ═══ */
+    .marco-hero {
+      padding: 80px 24px 40px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .marco-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.5em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .marco-titulo {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(32px, 6vw, 60px);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+    }
+    .marco-titulo span { color: var(--gold); }
+    .marco-desc {
+      font-size: 16px;
+      color: var(--text-soft);
+      max-width: 520px;
+      margin: 0 auto 48px;
+      line-height: 1.8;
+    }
+
+    /* Input área */
+    .marco-input-area {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .marco-textarea {
+      width: 100%;
+      min-height: 140px;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 24px;
+      font-family: 'Lora', serif;
+      font-size: 15px;
+      color: var(--text);
+      resize: vertical;
+      line-height: 1.7;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+    .marco-textarea:focus {
+      outline: none;
+      border-color: var(--border-hov);
+    }
+    .marco-textarea::placeholder { color: var(--text-muted); }
+
+    .marco-opciones {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .marco-select {
+      flex: 1;
+      min-width: 200px;
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-family: 'Lora', serif;
+      font-size: 14px;
+      color: var(--text);
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c49a3c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      background-color: var(--bg-raised);
+      cursor: pointer;
+    }
+    .marco-select option { background: #111110; }
+
+    .marco-btn {
+      background: var(--text);
+      color: var(--bg-deep);
+      border: none;
+      border-radius: 12px;
+      padding: 14px 32px;
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    .marco-btn:hover:not(:disabled) {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(196,154,60,0.2);
+    }
+    .marco-btn:disabled { opacity: 0.5; cursor: default; }
+
+    /* Loading */
+    .marco-loading {
+      display: none;
+      text-align: center;
+      padding: 60px 24px;
+    }
+    .loading-icono {
+      font-family: 'Cinzel', serif;
+      font-size: 32px;
+      color: var(--gold);
+      margin-bottom: 20px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .loading-texto {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* Resultados */
+    .marco-resultados {
+      display: none;
+      max-width: 760px;
+      margin: 48px auto 0;
+      padding: 0 24px 80px;
+    }
+
+    .nivel-seccion { margin-bottom: 32px; }
+    .nivel-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .nivel-titulo {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+    }
+    .nivel-count {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--bg-raised);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .art-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      transition: border-color 0.3s ease;
+    }
+    .art-card:hover { border-color: var(--border-hov); }
+    .art-header {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .art-numero {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .art-ley { font-size: 12px; color: var(--text-muted); flex: 1; }
+    .art-score {
+      font-size: 11px;
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.05em;
+    }
+    .art-texto {
+      font-size: 14px;
+      color: var(--text-soft);
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+    .art-ver-mas {
+      background: none;
+      border: none;
+      color: var(--gold);
+      font-size: 11px;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      padding: 0;
+    }
+    .art-ver-mas:hover { opacity: 0.7; }
+    .sin-resultados {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 12px 0;
+    }
+
+    /* Síntesis */
+    .sintesis-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hov);
+      border-radius: 16px;
+      padding: 32px;
+      margin-top: 40px;
+      position: relative;
+    }
+    .sintesis-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      border-radius: 16px 16px 0 0;
+    }
+    .sintesis-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .sintesis-texto {
+      font-size: 15px;
+      color: var(--text-soft);
+      line-height: 1.9;
+      white-space: pre-wrap;
+    }
+    .sintesis-acciones {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .btn-accion {
+      background: var(--gold-dim);
+      border: 1px solid var(--border-hov);
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    .btn-accion:hover {
+      background: rgba(196,154,60,0.2);
+      border-color: var(--gold);
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 28px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .footer-coords {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .footer-copy {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 680px) {
+      .topbar-nav { gap: 16px; }
+      .topbar-status { display: none; }
+      .marco-opciones { flex-direction: column; }
+      .marco-btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="ambient">
+  <div class="ambient-orb ambient-orb-1"></div>
+  <div class="ambient-orb ambient-orb-2"></div>
+  <div class="ambient-orb ambient-orb-3"></div>
+</div>
+
+<header class="topbar">
+  <a href="index.html" class="topbar-logo">LEGAL<span>ATLAS</span></a>
+  <nav class="topbar-nav">
+    <a href="ciudadano.html" class="topbar-link">Consulta</a>
+    <a href="contratos.html" class="topbar-link">Contratos</a>
+    <a href="abogado.html" class="topbar-link">Abogado Pro</a>
+    <a href="marco.html" class="topbar-link active">Marco Teorizador</a>
+    <a href="indice.html" class="topbar-link">Índice Nacional</a>
+    <a href="#cuenta" class="topbar-link">Mi Cuenta</a>
+  </nav>
+  <div class="topbar-status">
+    <div class="status-dot"></div>
+    APOLO · En línea
+  </div>
+</header>
+
+<main class="main">
+
+  <section class="marco-hero">
+    <p class="marco-eyebrow">Herramienta profesional · B2B</p>
+    <h1 class="marco-titulo">MARCO<br><span>TEORIZADOR</span></h1>
+    <p class="marco-desc">
+      Describe tu caso. Apolo analiza toda la legislación mexicana
+      siguiendo la jerarquía constitucional y construye el marco
+      jurídico completo con artículos citados.
+    </p>
+  </section>
+
+  <div class="marco-input-area">
+    <textarea
+      id="caso-input"
+      class="marco-textarea"
+      placeholder="Describe tu caso con detalle. Ejemplo: Mi cliente arrendó un local comercial en Guadalajara. El arrendador le cortó la luz y el agua para obligarlo a desocupar sin ningún proceso judicial. ¿Qué artículos lo protegen?"
+    ></textarea>
+
+    <div class="marco-opciones">
+      <select id="estado-mx" class="marco-select">
+        <option value="">Todos los estados (recomendado)</option>
+        <option value="Aguascalientes">Aguascalientes</option>
+        <option value="Baja California">Baja California</option>
+        <option value="Baja California Sur">Baja California Sur</option>
+        <option value="Campeche">Campeche</option>
+        <option value="Chiapas">Chiapas</option>
+        <option value="Chihuahua">Chihuahua</option>
+        <option value="Ciudad de México">Ciudad de México</option>
+        <option value="Coahuila">Coahuila</option>
+        <option value="Colima">Colima</option>
+        <option value="Durango">Durango</option>
+        <option value="Estado de Mexico">Estado de México</option>
+        <option value="Guanajuato">Guanajuato</option>
+        <option value="Guerrero">Guerrero</option>
+        <option value="Hidalgo">Hidalgo</option>
+        <option value="Jalisco">Jalisco</option>
+        <option value="Michoacan">Michoacán</option>
+        <option value="Morelos">Morelos</option>
+        <option value="Nayarit">Nayarit</option>
+        <option value="Nuevo León">Nuevo León</option>
+        <option value="Oaxaca">Oaxaca</option>
+        <option value="Puebla">Puebla</option>
+        <option value="Querétaro">Querétaro</option>
+        <option value="Quintana Roo">Quintana Roo</option>
+        <option value="San Luis Potosi">San Luis Potosí</option>
+        <option value="Sinaloa">Sinaloa</option>
+        <option value="Sonora">Sonora</option>
+        <option value="Tabasco">Tabasco</option>
+        <option value="Tamaulipas">Tamaulipas</option>
+        <option value="Tlaxcala">Tlaxcala</option>
+        <option value="Veracruz">Veracruz</option>
+        <option value="Yucatán">Yucatán</option>
+        <option value="Zacatecas">Zacatecas</option>
+      </select>
+
+      <button id="btn-construir" class="marco-btn" onclick="construirMarco()">
+        Construir Marco Jurídico
+      </button>
+    </div>
+  </div>
+
+  <div id="marco-loading" class="marco-loading">
+    <div class="loading-icono">✦</div>
+    <div id="loading-texto" class="loading-texto">Analizando tu caso...</div>
+  </div>
+
+  <div id="marco-resultados" class="marco-resultados">
+
+    <div class="nivel-seccion">
+      <div class="nivel-header">
+        <span class="nivel-titulo">🏛️ CONSTITUCIÓN POLÍTICA</span>
+        <span class="nivel-count" id="count-constitucion">0 artículos</span>
+      </div>
+      <div id="seccion-constitucion"></div>
+    </div>
+
+    <div class="nivel-seccion">
+      <div class="nivel-header">
+        <span class="nivel-titulo">⚖️ LEYES FEDERALES</span>
+        <span class="nivel-count" id="count-federal">0 artículos</span>
+      </div>
+      <div id="seccion-federal"></div>
+    </div>
+
+    <div class="nivel-seccion">
+      <div class="nivel-header">
+        <span class="nivel-titulo">📖 CÓDIGO CIVIL ESTATAL</span>
+        <span class="nivel-count" id="count-estatal">0 artículos</span>
+      </div>
+      <div id="seccion-estatal"></div>
+    </div>
+
+    <div class="sintesis-card">
+      <div class="sintesis-eyebrow">✦ Marco Jurídico del Caso · Apolo</div>
+      <div id="sintesis-texto" class="sintesis-texto"></div>
+      <div class="sintesis-acciones">
+        <button class="btn-accion" onclick="copiarMarco()">Copiar marco</button>
+        <a href="abogado.html" class="btn-accion">Abrir panel del abogado →</a>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer class="footer">
+  <p class="footer-coords">19°25′N · 99°08′O · República Mexicana · MMXXVI</p>
+  <p class="footer-copy">Legal Atlas Engineering © 2026</p>
+</footer>
+
+<script>
+const PASOS_LOADING = [
+  'Analizando tu caso...',
+  'Generando consultas jurídicas...',
+  'Buscando en la Constitución...',
+  'Buscando en leyes federales...',
+  'Buscando en códigos civiles...',
+  'Construyendo el marco jurídico...'
+]
+
+async function construirMarco() {
+  const caso   = document.getElementById('caso-input').value.trim()
+  const estado = document.getElementById('estado-mx').value
+
+  if (caso.length < 20) {
+    alert('Por favor describe tu caso con más detalle.')
+    return
+  }
+
+  document.getElementById('marco-loading').style.display = 'block'
+  document.getElementById('marco-resultados').style.display = 'none'
+  document.getElementById('btn-construir').disabled = true
+
+  let pasoIdx = 0
+  const interval = setInterval(() => {
+    if (pasoIdx < PASOS_LOADING.length) {
+      document.getElementById('loading-texto').textContent = PASOS_LOADING[pasoIdx++]
+    }
+  }, 2500)
+
+  try {
+    const res = await fetch('/api/marco', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ caso, estado_mx: estado || null })
+    })
+
+    const data = await res.json()
+    clearInterval(interval)
+
+    if (!data.ok) throw new Error(data.error)
+
+    mostrarResultados(data)
+
+  } catch (err) {
+    clearInterval(interval)
+    alert(err.message || 'Error al generar el marco. Intenta de nuevo.')
+  } finally {
+    document.getElementById('marco-loading').style.display = 'none'
+    document.getElementById('btn-construir').disabled = false
+  }
+}
+
+function mostrarResultados(data) {
+  renderSeccion('seccion-constitucion', 'count-constitucion', data.articulos_por_nivel.constitucion)
+  renderSeccion('seccion-federal',      'count-federal',      data.articulos_por_nivel.federal)
+  renderSeccion('seccion-estatal',      'count-estatal',      data.articulos_por_nivel.estatal)
+
+  document.getElementById('sintesis-texto').textContent = data.sintesis
+
+  const el = document.getElementById('marco-resultados')
+  el.style.display = 'block'
+  el.scrollIntoView({ behavior: 'smooth' })
+}
+
+function renderSeccion(seccionId, countId, articulos) {
+  document.getElementById(countId).textContent = `${articulos?.length || 0} artículos`
+
+  const el = document.getElementById(seccionId)
+  if (!articulos || articulos.length === 0) {
+    el.innerHTML = '<p class="sin-resultados">No se encontraron artículos relevantes en este nivel.</p>'
+    return
+  }
+
+  el.innerHTML = articulos.map(art => `
+    <div class="art-card">
+      <div class="art-header">
+        <span class="art-numero">${art.numero_articulo || 'Art.'}</span>
+        <span class="art-ley">${art.ley || ''}${art.estado ? ' · ' + art.estado : ''}</span>
+        <span class="art-score">${Math.round((art.similarity || 0) * 100)}% relevante</span>
+      </div>
+      <div class="art-texto" id="txt-${art.id}">
+        ${(art.texto_original || '').slice(0, 250)}${(art.texto_original || '').length > 250 ? '...' : ''}
+      </div>
+      ${(art.texto_original || '').length > 250 ? `
+        <button class="art-ver-mas" onclick="toggleTexto('${art.id}', this)" data-completo="${encodeURIComponent(art.texto_original || '')}">
+          Ver artículo completo ▼
+        </button>` : ''}
+    </div>
+  `).join('')
+}
+
+function toggleTexto(id, btn) {
+  const el = document.getElementById('txt-' + id)
+  const completo = decodeURIComponent(btn.dataset.completo)
+  if (btn.textContent.includes('▼')) {
+    el.textContent = completo
+    btn.textContent = 'Cerrar ▲'
+  } else {
+    el.textContent = completo.slice(0, 250) + '...'
+    btn.textContent = 'Ver artículo completo ▼'
+  }
+}
+
+function copiarMarco() {
+  const texto = document.getElementById('sintesis-texto').textContent
+  navigator.clipboard.writeText(texto)
+    .then(() => alert('Marco jurídico copiado al portapapeles ✓'))
+}
+</script>
+</body>
+</html>
