@@ -55,12 +55,20 @@ export default async function handler(req, res) {
       contents: `Eres un jurisconsulto mexicano experto.
 Un abogado describe este caso: "${caso}"
 
-Genera exactamente 5 consultas jurídicas específicas para buscar
-en una base de datos legal mexicana. Enfoca cada una en un aspecto
-legal diferente del caso.
+Genera exactamente 5 consultas jurídicas MUY ESPECÍFICAS
+para buscar en una base de datos legal mexicana.
+
+IMPORTANTE:
+- Usa términos jurídicos precisos del derecho mexicano
+- Incluye nombres de documentos, trámites y figuras jurídicas
+- Una query debe ser sobre el tipo de contrato/acto jurídico
+- Una query sobre los derechos del afectado
+- Una query sobre las obligaciones de la contraparte
+- Una query sobre el procedimiento legal aplicable
+- Una query sobre las consecuencias o sanciones
 
 Responde SOLO con JSON sin markdown:
-{"queries": ["consulta 1", "consulta 2", "consulta 3", "consulta 4", "consulta 5"]}`,
+{"queries": ["query 1", "query 2", "query 3", "query 4", "query 5"]}`,
       config: {
         responseMimeType: 'application/json',
         thinkingConfig: { thinkingBudget: 0 },
@@ -84,7 +92,13 @@ Responde SOLO con JSON sin markdown:
               nivel_filter: nivel,
               estado_filter: nivel === 3 ? (estado_mx || null) : null,
               match_count: TOP_X_NIVEL[nivel]
-            }).then(r => r.data || [])
+            }).then(r => {
+              if (r.error) {
+                console.error(`[marco] RPC error nivel ${nivel}:`, r.error)
+                return []
+              }
+              return r.data || []
+            })
           )
         )
 
@@ -131,6 +145,7 @@ Construye el marco teórico jurídico completo:
 5. Conexión y jerarquía entre las normas
 6. Conclusión práctica con artículos clave citados
 
+REGLA CRÍTICA: SOLO cita artículos que aparezcan en la lista de artículos encontrados arriba. No inventes ni agregues artículos que no estén en esa lista.
 Cita siempre artículo y ley exactos. Máximo 600 palabras.
 Tono profesional jurídico en español.`,
       config: {
