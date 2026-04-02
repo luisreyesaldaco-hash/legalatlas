@@ -137,13 +137,25 @@ export default async function handler(req, res) {
       contents: getExpansionPrompt(caso, pais),
       config: {
         responseMimeType: 'application/json',
-        thinkingConfig: { thinkingBudget: 0 },
         temperature: 0.1,
         maxOutputTokens: 500
       }
     })
 
-    const { queries } = JSON.parse(expansionResp.text)
+    const rawExpansion = expansionResp.text?.trim()
+    console.log('[marco] expansion raw:', rawExpansion?.slice(0, 200))
+
+    let queries
+    try {
+      queries = JSON.parse(rawExpansion).queries
+    } catch (e) {
+      console.error('[marco] JSON.parse expansion falló:', rawExpansion)
+      throw new Error('No se pudo generar las consultas jurídicas. Intenta de nuevo.')
+    }
+
+    if (!Array.isArray(queries) || queries.length === 0) {
+      throw new Error('Respuesta de expansión inválida.')
+    }
 
     // ── PASO 2: Embeddear las 5 queries en paralelo ──
     const vectors = await Promise.all(queries.map(q => embedQuery(q)))
