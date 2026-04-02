@@ -485,41 +485,48 @@
     ></textarea>
 
     <div class="marco-opciones">
-      <select id="estado-mx" class="marco-select">
-        <option value="">Todos los estados (recomendado)</option>
-        <option value="Aguascalientes">Aguascalientes</option>
-        <option value="Baja California">Baja California</option>
-        <option value="Baja California Sur">Baja California Sur</option>
-        <option value="Campeche">Campeche</option>
-        <option value="Chiapas">Chiapas</option>
-        <option value="Chihuahua">Chihuahua</option>
-        <option value="Ciudad de México">Ciudad de México</option>
-        <option value="Coahuila">Coahuila</option>
-        <option value="Colima">Colima</option>
-        <option value="Durango">Durango</option>
-        <option value="Estado de Mexico">Estado de México</option>
-        <option value="Guanajuato">Guanajuato</option>
-        <option value="Guerrero">Guerrero</option>
-        <option value="Hidalgo">Hidalgo</option>
-        <option value="Jalisco">Jalisco</option>
-        <option value="Michoacan">Michoacán</option>
-        <option value="Morelos">Morelos</option>
-        <option value="Nayarit">Nayarit</option>
-        <option value="Nuevo León">Nuevo León</option>
-        <option value="Oaxaca">Oaxaca</option>
-        <option value="Puebla">Puebla</option>
-        <option value="Querétaro">Querétaro</option>
-        <option value="Quintana Roo">Quintana Roo</option>
-        <option value="San Luis Potosi">San Luis Potosí</option>
-        <option value="Sinaloa">Sinaloa</option>
-        <option value="Sonora">Sonora</option>
-        <option value="Tabasco">Tabasco</option>
-        <option value="Tamaulipas">Tamaulipas</option>
-        <option value="Tlaxcala">Tlaxcala</option>
-        <option value="Veracruz">Veracruz</option>
-        <option value="Yucatán">Yucatán</option>
-        <option value="Zacatecas">Zacatecas</option>
+      <select id="pais-select" class="marco-select" onchange="cambiarPais(this.value)">
+        <option value="MX">🇲🇽 México</option>
+        <option value="CZ">🇨🇿 República Checa</option>
       </select>
+
+      <div id="estado-wrap" style="display:flex; flex:1; min-width:200px;">
+        <select id="estado-mx" class="marco-select" style="width:100%;">
+          <option value="">Todos los estados (recomendado)</option>
+          <option value="Aguascalientes">Aguascalientes</option>
+          <option value="Baja California">Baja California</option>
+          <option value="Baja California Sur">Baja California Sur</option>
+          <option value="Campeche">Campeche</option>
+          <option value="Chiapas">Chiapas</option>
+          <option value="Chihuahua">Chihuahua</option>
+          <option value="Ciudad de México">Ciudad de México</option>
+          <option value="Coahuila">Coahuila</option>
+          <option value="Colima">Colima</option>
+          <option value="Durango">Durango</option>
+          <option value="Estado de Mexico">Estado de México</option>
+          <option value="Guanajuato">Guanajuato</option>
+          <option value="Guerrero">Guerrero</option>
+          <option value="Hidalgo">Hidalgo</option>
+          <option value="Jalisco">Jalisco</option>
+          <option value="Michoacan">Michoacán</option>
+          <option value="Morelos">Morelos</option>
+          <option value="Nayarit">Nayarit</option>
+          <option value="Nuevo León">Nuevo León</option>
+          <option value="Oaxaca">Oaxaca</option>
+          <option value="Puebla">Puebla</option>
+          <option value="Querétaro">Querétaro</option>
+          <option value="Quintana Roo">Quintana Roo</option>
+          <option value="San Luis Potosi">San Luis Potosí</option>
+          <option value="Sinaloa">Sinaloa</option>
+          <option value="Sonora">Sonora</option>
+          <option value="Tabasco">Tabasco</option>
+          <option value="Tamaulipas">Tamaulipas</option>
+          <option value="Tlaxcala">Tlaxcala</option>
+          <option value="Veracruz">Veracruz</option>
+          <option value="Yucatán">Yucatán</option>
+          <option value="Zacatecas">Zacatecas</option>
+        </select>
+      </div>
 
       <button id="btn-construir" class="marco-btn" onclick="construirMarco()">
         Construir Marco Jurídico
@@ -534,29 +541,8 @@
 
   <div id="marco-resultados" class="marco-resultados">
 
-    <div class="nivel-seccion">
-      <div class="nivel-header">
-        <span class="nivel-titulo">🏛️ CONSTITUCIÓN POLÍTICA</span>
-        <span class="nivel-count" id="count-constitucion">0 artículos</span>
-      </div>
-      <div id="seccion-constitucion"></div>
-    </div>
-
-    <div class="nivel-seccion">
-      <div class="nivel-header">
-        <span class="nivel-titulo">⚖️ LEYES FEDERALES</span>
-        <span class="nivel-count" id="count-federal">0 artículos</span>
-      </div>
-      <div id="seccion-federal"></div>
-    </div>
-
-    <div class="nivel-seccion">
-      <div class="nivel-header">
-        <span class="nivel-titulo">📖 CÓDIGO CIVIL ESTATAL</span>
-        <span class="nivel-count" id="count-estatal">0 artículos</span>
-      </div>
-      <div id="seccion-estatal"></div>
-    </div>
+    <!-- Secciones generadas dinámicamente según respuesta del API -->
+    <div id="secciones-dinamicos"></div>
 
     <div class="sintesis-card">
       <div class="sintesis-eyebrow">✦ Marco Jurídico del Caso · Apolo</div>
@@ -577,17 +563,25 @@
 </footer>
 
 <script>
-const PASOS_LOADING = [
-  'Analizando tu caso...',
-  'Generando consultas jurídicas...',
-  'Buscando en la Constitución...',
-  'Buscando en leyes federales...',
-  'Buscando en códigos civiles...',
-  'Construyendo el marco jurídico...'
-]
+const PLACEHOLDERS = {
+  MX: 'Describe tu caso con detalle. Ejemplo: Mi cliente arrendó un local comercial en Guadalajara. El arrendador le cortó la luz y el agua para obligarlo a desocupar sin ningún proceso judicial. ¿Qué artículos lo protegen?',
+  CZ: 'Popište svůj případ podrobně. Příklad: Můj klient si pronajal byt v Praze na dobu určitou. Pronajímatel ho chce vystěhovat bez soudního řízení. Co může dělat?'
+}
+
+const PASOS_LOADING = {
+  MX: ['Analizando tu caso...', 'Generando consultas jurídicas...', 'Buscando en la Constitución...', 'Buscando en leyes federales...', 'Buscando en códigos civiles...', 'Construyendo el marco jurídico...'],
+  CZ: ['Analyzuji váš případ...', 'Generuji právní dotazy...', 'Prohledávám českou legislativu...', 'Sestavuji právní rámec...']
+}
+
+function cambiarPais(pais) {
+  const estadoWrap = document.getElementById('estado-wrap')
+  estadoWrap.style.display = pais === 'MX' ? 'flex' : 'none'
+  document.getElementById('caso-input').placeholder = PLACEHOLDERS[pais] || PLACEHOLDERS.MX
+}
 
 async function construirMarco() {
-  const caso   = document.getElementById('caso-input').value.trim()
+  const caso  = document.getElementById('caso-input').value.trim()
+  const pais  = document.getElementById('pais-select').value
   const estado = document.getElementById('estado-mx').value
 
   if (caso.length < 20) {
@@ -599,10 +593,11 @@ async function construirMarco() {
   document.getElementById('marco-resultados').style.display = 'none'
   document.getElementById('btn-construir').disabled = true
 
+  const pasos = PASOS_LOADING[pais] || PASOS_LOADING.MX
   let pasoIdx = 0
   const interval = setInterval(() => {
-    if (pasoIdx < PASOS_LOADING.length) {
-      document.getElementById('loading-texto').textContent = PASOS_LOADING[pasoIdx++]
+    if (pasoIdx < pasos.length) {
+      document.getElementById('loading-texto').textContent = pasos[pasoIdx++]
     }
   }, 2500)
 
@@ -610,7 +605,7 @@ async function construirMarco() {
     const res = await fetch('/api/marco', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ caso, estado_mx: estado || null })
+      body: JSON.stringify({ caso, pais, estado_mx: estado || null })
     })
 
     const data = await res.json()
@@ -637,9 +632,30 @@ function parsearTexto(texto) {
 }
 
 function mostrarResultados(data) {
-  renderSeccion('seccion-constitucion', 'count-constitucion', data.articulos_por_nivel.constitucion)
-  renderSeccion('seccion-federal',      'count-federal',      data.articulos_por_nivel.federal)
-  renderSeccion('seccion-estatal',      'count-estatal',      data.articulos_por_nivel.estatal)
+  const contenedor = document.getElementById('secciones-dinamicos')
+  contenedor.innerHTML = ''
+
+  // Generar una sección por cada nivel que devuelva el API
+  Object.entries(data.articulos_por_nivel).forEach(([nivel, articulos]) => {
+    const label = articulos[0]?.nivel_label || `Nivel ${nivel}`
+    const count = articulos?.length || 0
+
+    const seccion = document.createElement('div')
+    seccion.className = 'nivel-seccion'
+    seccion.innerHTML = `
+      <div class="nivel-header">
+        <span class="nivel-titulo">${label.toUpperCase()}</span>
+        <span class="nivel-count">${count} artículos</span>
+      </div>
+      <div class="nivel-articulos">
+        ${count === 0
+          ? '<p class="sin-resultados">No se encontraron artículos relevantes en este nivel.</p>'
+          : articulos.map(art => renderArtCard(art)).join('')
+        }
+      </div>
+    `
+    contenedor.appendChild(seccion)
+  })
 
   document.getElementById('sintesis-texto').innerHTML = parsearTexto(data.sintesis)
 
@@ -648,31 +664,21 @@ function mostrarResultados(data) {
   el.scrollIntoView({ behavior: 'smooth' })
 }
 
-function renderSeccion(seccionId, countId, articulos) {
-  document.getElementById(countId).textContent = `${articulos?.length || 0} artículos`
-
-  const el = document.getElementById(seccionId)
-  if (!articulos || articulos.length === 0) {
-    el.innerHTML = '<p class="sin-resultados">No se encontraron artículos relevantes en este nivel.</p>'
-    return
-  }
-
-  el.innerHTML = articulos.map(art => `
+function renderArtCard(art) {
+  const texto = art.texto_original || ''
+  const preview = texto.slice(0, 250)
+  const hayMas = texto.length > 250
+  return `
     <div class="art-card">
       <div class="art-header">
         <span class="art-numero">${art.numero_articulo || 'Art.'}</span>
         <span class="art-ley">${art.ley || ''}${art.estado ? ' · ' + art.estado : ''}</span>
         <span class="art-score">${Math.round((art.similarity || 0) * 100)}% relevante</span>
       </div>
-      <div class="art-texto" id="txt-${art.id}">
-        ${(art.texto_original || '').slice(0, 250)}${(art.texto_original || '').length > 250 ? '...' : ''}
-      </div>
-      ${(art.texto_original || '').length > 250 ? `
-        <button class="art-ver-mas" onclick="toggleTexto('${art.id}', this)" data-completo="${encodeURIComponent(art.texto_original || '')}">
-          Ver artículo completo ▼
-        </button>` : ''}
+      <div class="art-texto" id="txt-${art.id}">${preview}${hayMas ? '...' : ''}</div>
+      ${hayMas ? `<button class="art-ver-mas" onclick="toggleTexto('${art.id}', this)" data-completo="${encodeURIComponent(texto)}">Ver artículo completo ▼</button>` : ''}
     </div>
-  `).join('')
+  `
 }
 
 function toggleTexto(id, btn) {

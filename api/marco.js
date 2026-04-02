@@ -9,8 +9,18 @@ const supabase = createClient(
 )
 const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY })
 
-const PESOS       = { 1: 1.0, 2: 0.85, 3: 0.70 }
-const TOP_X_NIVEL = { 1: 3,   2: 5,    3: 6    }
+const PESOS = { 1: 1.0, 2: 0.85, 3: 0.70 }
+
+const NIVELES_POR_PAIS = {
+  MX: [1, 2, 3],
+  CZ: [2]
+}
+
+const TOP_X_POR_PAIS = {
+  MX: { 1: 3, 2: 5, 3: 6 },
+  CZ: { 2: 10 }
+}
+
 const NIVEL_LABEL = {
   1: '🏛️ Constitución',
   2: '⚖️ Ley Federal',
@@ -36,23 +46,11 @@ async function embedQuery(text) {
   return json.embedding.values
 }
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end()
-
-  const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {})
-  const { caso, estado_mx } = body
-
-  if (!caso || caso.trim().length < 20) {
-    return res.status(400).json({
-      error: 'Describe tu caso con más detalle (mínimo 20 caracteres).'
-    })
+function getExpansionPrompt(caso, pais) {
+  if (pais === 'CZ') {
+    return `Jsi český právní poradce. Klient popisuje tento případ: "${caso}". Vygeneruj přesně 5 konkrétních právních dotazů pro vyhledávání v české právní databázi. Každý dotaz musí pokrývat jiný právní aspekt případu. Odpověz POUZE v JSON bez markdown: {"queries": ["dotaz 1", "dotaz 2", "dotaz 3", "dotaz 4", "dotaz 5"]}`
   }
-
-  try {
-    // ── PASO 1: Query Expansion ──
-    const expansionResp = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: `Eres un jurisconsulto mexicano experto.
+  return `Eres un jurisconsulto mexicano experto.
 Un abogado describe este caso: "${caso}"
 
 Genera exactamente 5 consultas jurídicas MUY ESPECÍFICAS
@@ -68,71 +66,29 @@ IMPORTANTE:
 - Una query sobre las consecuencias o sanciones
 
 Responde SOLO con JSON sin markdown:
-{"queries": ["query 1", "query 2", "query 3", "query 4", "query 5"]}`,
-      config: {
-        responseMimeType: 'application/json',
-        thinkingConfig: { thinkingBudget: 0 },
-        temperature: 0.1,
-        maxOutputTokens: 500
-      }
-    })
+{"queries": ["query 1", "query 2", "query 3", "query 4", "query 5"]}`
+}
 
-    const { queries } = JSON.parse(expansionResp.text)
+function getSintesisPrompt(caso, articulosTexto, pais) {
+  if (pais === 'CZ') {
+    return `Jsi Apolo, právní asistent Legal Atlas.
+Advokát popisuje tento případ: "${caso}"
 
-    // ── PASO 2: Embeddear las 5 queries en paralelo ──
-    const vectors = await Promise.all(queries.map(q => embedQuery(q)))
+Nalezené relevantní články:
+${articulosTexto}
 
-    // ── PASO 3: Buscar en cada nivel jerárquico ──
-    const resultadosPorNivel = await Promise.all(
-      [1, 2, 3].map(async nivel => {
-        const busquedas = await Promise.all(
-          vectors.map(v =>
-            supabase.rpc('buscar_marco_mx', {
-              query_embedding: v,
-              nivel_filter: nivel,
-              estado_filter: nivel === 3 ? (estado_mx || null) : null,
-              match_count: TOP_X_NIVEL[nivel]
-            }).then(r => {
-              if (r.error) {
-                console.error(`[marco] RPC error nivel ${nivel}:`, r.error)
-                return []
-              }
-              return r.data || []
-            })
-          )
-        )
+Analyzuj případ jako zkušený kolega právník:
+1. O jaký typ případu se jedná
+2. Co chrání klienta (jeho práva)
+3. Jaká je nejpřímější cesta (hlavní žaloba/návrh)
+4. Jaká jsou rizika
+5. Praktický závěr s citací konkrétních článků
 
-        // Deduplicar por id, conservar mayor similitud
-        const mapa = new Map()
-        busquedas.flat().forEach(art => {
-          const prev = mapa.get(art.id)
-          if (!prev || art.similarity > prev.similarity) mapa.set(art.id, art)
-        })
-
-        return Array.from(mapa.values())
-          .map(art => ({
-            ...art,
-            score_final: art.similarity * PESOS[nivel],
-            nivel,
-            nivel_label: NIVEL_LABEL[nivel]
-          }))
-          .sort((a, b) => b.score_final - a.score_final)
-          .slice(0, TOP_X_NIVEL[nivel])
-          .filter(art => art.similarity >= 0.65)
-      })
-    )
-
-    // ── PASO 4: Síntesis con Gemini ──
-    const articulosTexto = resultadosPorNivel.flat()
-      .map(a =>
-        `[${a.nivel_label}] ${a.numero_articulo} — ${a.ley}` +
-        (a.estado ? ` (${a.estado})` : '') +
-        `:\n${(a.texto_original || '').slice(0, 400)}`
-      ).join('\n\n---\n\n')
-
-    const sintesissResp = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: `Eres Apolo, asistente jurídico de Legal Atlas.
+Tón: profesionální, jako kolega.
+Pouze cituj články ze seznamu výše.
+Maximálně 400 slov.`
+  }
+  return `Eres Apolo, asistente jurídico de Legal Atlas.
 Un abogado te describe este caso: "${caso}"
 
 Artículos encontrados ordenados por jerarquía:
@@ -156,7 +112,94 @@ TONO:
 - Cita artículos SOLO los que aparecen en la lista
 - No inventes artículos que no estén en el contexto
 - Máximo 400 palabras
-- Sin asteriscos, sin markdown, texto limpio`,
+- Sin asteriscos, sin markdown, texto limpio`
+}
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).end()
+
+  const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {})
+  const { caso, estado_mx, pais = 'MX' } = body
+
+  if (!caso || caso.trim().length < 20) {
+    return res.status(400).json({
+      error: 'Describe tu caso con más detalle (mínimo 20 caracteres).'
+    })
+  }
+
+  const niveles = NIVELES_POR_PAIS[pais] || NIVELES_POR_PAIS.MX
+  const topX    = TOP_X_POR_PAIS[pais]  || TOP_X_POR_PAIS.MX
+
+  try {
+    // ── PASO 1: Query Expansion ──
+    const expansionResp = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: getExpansionPrompt(caso, pais),
+      config: {
+        responseMimeType: 'application/json',
+        thinkingConfig: { thinkingBudget: 0 },
+        temperature: 0.1,
+        maxOutputTokens: 500
+      }
+    })
+
+    const { queries } = JSON.parse(expansionResp.text)
+
+    // ── PASO 2: Embeddear las 5 queries en paralelo ──
+    const vectors = await Promise.all(queries.map(q => embedQuery(q)))
+
+    // ── PASO 3: Buscar en cada nivel jerárquico ──
+    const resultadosPorNivel = await Promise.all(
+      niveles.map(async nivel => {
+        const busquedas = await Promise.all(
+          vectors.map(v =>
+            supabase.rpc('buscar_marco_universal', {
+              query_embedding: v,
+              pais_filter:     pais,
+              nivel_filter:    nivel,
+              estado_filter:   nivel === 3 ? (estado_mx || null) : null,
+              match_count:     topX[nivel]
+            }).then(r => {
+              if (r.error) {
+                console.error(`[marco] RPC error pais=${pais} nivel=${nivel}:`, r.error)
+                return []
+              }
+              return r.data || []
+            })
+          )
+        )
+
+        // Deduplicar por id, conservar mayor similitud
+        const mapa = new Map()
+        busquedas.flat().forEach(art => {
+          const prev = mapa.get(art.id)
+          if (!prev || art.similarity > prev.similarity) mapa.set(art.id, art)
+        })
+
+        return Array.from(mapa.values())
+          .map(art => ({
+            ...art,
+            score_final: art.similarity * (PESOS[nivel] || 1.0),
+            nivel,
+            nivel_label: NIVEL_LABEL[nivel]
+          }))
+          .sort((a, b) => b.score_final - a.score_final)
+          .slice(0, topX[nivel])
+          .filter(art => art.similarity >= 0.65)
+      })
+    )
+
+    // ── PASO 4: Síntesis con Gemini ──
+    const articulosTexto = resultadosPorNivel.flat()
+      .map(a =>
+        `[${a.nivel_label}] ${a.numero_articulo} — ${a.ley}` +
+        (a.estado ? ` (${a.estado})` : '') +
+        `:\n${(a.texto_original || '').slice(0, 400)}`
+      ).join('\n\n---\n\n')
+
+    const sintesissResp = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: getSintesisPrompt(caso, articulosTexto, pais),
       config: {
         thinkingConfig: { thinkingBudget: 0 },
         temperature: 0.2,
@@ -164,14 +207,17 @@ TONO:
       }
     })
 
+    // Armar respuesta por nivel para el frontend
+    const articulosPorNivel = {}
+    niveles.forEach((nivel, i) => {
+      articulosPorNivel[nivel] = resultadosPorNivel[i]
+    })
+
     res.json({
       ok: true,
+      pais,
       queries_generadas: queries,
-      articulos_por_nivel: {
-        constitucion: resultadosPorNivel[0],
-        federal: resultadosPorNivel[1],
-        estatal: resultadosPorNivel[2]
-      },
+      articulos_por_nivel: articulosPorNivel,
       total_encontrados: resultadosPorNivel.flat().length,
       sintesis: sintesissResp.text
     })
