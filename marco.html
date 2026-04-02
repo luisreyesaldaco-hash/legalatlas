@@ -138,6 +138,7 @@
     .main {
       position: relative;
       z-index: 1;
+      width: 100%;
     }
 
     /* ═══ MARCO TEORIZADOR ═══ */
@@ -279,21 +280,27 @@
       padding: 0 24px 80px;
     }
 
-    .nivel-seccion { margin-bottom: 32px; }
+    .nivel-seccion { margin-bottom: 16px; }
     .nivel-header {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.2s, background 0.2s;
+      background: var(--bg-card);
     }
+    .nivel-header:hover { border-color: var(--border-hov); background: var(--bg-raised); }
     .nivel-titulo {
       font-family: 'Cinzel', serif;
       font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.1em;
       color: var(--gold);
+      flex: 1;
     }
     .nivel-count {
       font-size: 11px;
@@ -302,6 +309,17 @@
       padding: 3px 10px;
       border-radius: 20px;
     }
+    .nivel-chevron {
+      font-size: 11px;
+      color: var(--text-muted);
+      transition: transform 0.25s ease;
+    }
+    .nivel-header.abierto .nivel-chevron { transform: rotate(180deg); }
+    .nivel-articulos {
+      display: none;
+      padding-top: 12px;
+    }
+    .nivel-articulos.visible { display: block; }
 
     .art-card {
       background: var(--bg-card);
@@ -624,6 +642,12 @@ async function construirMarco() {
   }
 }
 
+function toggleSeccion(header) {
+  const articulos = header.nextElementSibling
+  const abierto = articulos.classList.toggle('visible')
+  header.classList.toggle('abierto', abierto)
+}
+
 function parsearTexto(texto) {
   return texto
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -643,9 +667,10 @@ function mostrarResultados(data) {
     const seccion = document.createElement('div')
     seccion.className = 'nivel-seccion'
     seccion.innerHTML = `
-      <div class="nivel-header">
+      <div class="nivel-header" onclick="toggleSeccion(this)">
         <span class="nivel-titulo">${label.toUpperCase()}</span>
         <span class="nivel-count">${count} artículos</span>
+        <span class="nivel-chevron">▼</span>
       </div>
       <div class="nivel-articulos">
         ${count === 0

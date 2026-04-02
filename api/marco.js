@@ -11,6 +11,8 @@ const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY })
 
 const PESOS = { 1: 1.0, 2: 0.85, 3: 0.70 }
 
+const THRESHOLD_POR_PAIS = { MX: 0.65, CZ: 0.45 }
+
 const NIVELES_POR_PAIS = {
   MX: [1, 2, 3],
   CZ: [2]
@@ -197,7 +199,7 @@ export default async function handler(req, res) {
           }))
           .sort((a, b) => b.score_final - a.score_final)
           .slice(0, topX[nivel])
-          .filter(art => art.similarity >= 0.65)
+          .filter(art => art.similarity >= (THRESHOLD_POR_PAIS[pais] || 0.65))
       })
     )
 
