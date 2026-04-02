@@ -383,9 +383,10 @@
     }
     .sintesis-texto {
       font-size: 15px;
-      color: var(--text-soft);
+      color: var(--text);
       line-height: 1.9;
       white-space: pre-wrap;
+      font-family: 'Lora', serif;
     }
     .sintesis-acciones {
       display: flex;
@@ -628,12 +629,19 @@ async function construirMarco() {
   }
 }
 
+function parsearTexto(texto) {
+  return texto
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\n/g, '<br>')
+}
+
 function mostrarResultados(data) {
   renderSeccion('seccion-constitucion', 'count-constitucion', data.articulos_por_nivel.constitucion)
   renderSeccion('seccion-federal',      'count-federal',      data.articulos_por_nivel.federal)
   renderSeccion('seccion-estatal',      'count-estatal',      data.articulos_por_nivel.estatal)
 
-  document.getElementById('sintesis-texto').textContent = data.sintesis
+  document.getElementById('sintesis-texto').innerHTML = parsearTexto(data.sintesis)
 
   const el = document.getElementById('marco-resultados')
   el.style.display = 'block'
@@ -680,7 +688,7 @@ function toggleTexto(id, btn) {
 }
 
 function copiarMarco() {
-  const texto = document.getElementById('sintesis-texto').textContent
+  const texto = document.getElementById('sintesis-texto').innerText
   navigator.clipboard.writeText(texto)
     .then(() => alert('Marco jurídico copiado al portapapeles ✓'))
 }
