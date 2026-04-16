@@ -1,0 +1,491 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  var t = localStorage.getItem('la-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legal Atlas · Staff</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+:root {
+  --bg-deep:        #F3EAD5;
+  --bg-card:        #FAF2E0;
+  --bg-elevated:    #EBE0C8;
+  --text-primary:   #1A1410;
+  --text-secondary: #3D342A;
+  --text-muted:     #7A6E60;
+  --gold:           #8B6820;
+  --gold-light:     #C49A3C;
+  --gold-dim:       rgba(139,104,32,0.08);
+  --gold-border:    rgba(139,104,32,0.22);
+  --border:         #DDD0B4;
+  --border-hover:   #C9BFB0;
+  --shadow-sm:      0 1px 4px rgba(26,20,16,0.07);
+  --shadow-md:      0 4px 20px rgba(26,20,16,0.10);
+}
+:root[data-theme="dark"] {
+  --bg-deep:        #0C0C0A;
+  --bg-card:        #141412;
+  --bg-elevated:    #1C1C19;
+  --text-primary:   #F0ECE4;
+  --text-secondary: #D0C4B4;
+  --text-muted:     #9C9082;
+  --gold:           #C49A3C;
+  --gold-light:     #D4AE58;
+  --gold-dim:       rgba(196,154,60,0.10);
+  --gold-border:    rgba(196,154,60,0.20);
+  --border:         #2A2A26;
+  --border-hover:   #3D3D38;
+  --shadow-sm:      0 1px 4px rgba(0,0,0,0.25);
+  --shadow-md:      0 4px 20px rgba(0,0,0,0.35);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Lora', Georgia, serif; background: var(--bg-deep); color: var(--text-primary); min-height: 100vh; }
+
+/* TOPBAR */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px; height: 58px;
+  background: var(--bg-elevated); border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-logo { font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.3em; color: var(--text-primary); text-decoration: none; }
+.topbar-logo span { color: var(--gold); }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.tema-btn { background: none; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 15px; color: var(--text-muted); padding: 3px 10px; line-height: 1.4; transition: all 0.2s; }
+.tema-btn:hover { color: var(--gold); border-color: var(--gold-border); }
+
+/* MAIN */
+.main { padding-top: 60px; }
+
+.cuenta-eyebrow { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+
+/* GRID DE MÉTRICAS */
+.staff-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-width: 900px;
+  margin: 0 auto 48px;
+  padding: 0 24px;
+}
+@media (max-width: 700px) { .staff-grid { grid-template-columns: repeat(2, 1fr); } }
+.metric-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+.metric-n { font-family: 'Cinzel', serif; font-size: 32px; font-weight: 700; color: var(--gold); display: block; }
+.metric-l { font-size: 11px; color: var(--text-muted); letter-spacing: 0.05em; margin-top: 4px; display: block; }
+
+/* TABLAS */
+.staff-tabla { max-width: 900px; margin: 0 auto 48px; padding: 0 24px; }
+.staff-titulo { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.tabla-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead { background: var(--bg-elevated); }
+th { text-align: left; padding: 10px 12px; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.2em; color: var(--text-muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+td { padding: 10px 12px; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--gold-dim); }
+.badge-pais { font-size: 10px; background: var(--gold-dim); color: var(--gold); padding: 2px 8px; border-radius: 20px; border: 1px solid var(--gold-border); }
+.btn-enviar { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--gold-border); background: transparent; color: var(--gold); text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+.btn-enviar:hover { background: var(--gold-dim); border-color: var(--gold); }
+.loading-txt { text-align: center; color: var(--text-muted); font-style: italic; padding: 20px; }
+.pivot-sel { font-family:'Lora',serif; font-size:13px; padding:7px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-primary); cursor:pointer; min-width:130px; }
+.pivot-sel:focus { outline:none; border-color:var(--gold-border); }
+.pivot-th-row { font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; white-space:nowrap; }
+.pivot-td-label { font-weight:600; color:var(--text-primary); white-space:nowrap; }
+.pivot-td-val { text-align:right; color:var(--text-secondary); font-variant-numeric:tabular-nums; }
+.pivot-td-val.pivot-zero { color:var(--border); }
+.pivot-td-total { font-weight:600; color:var(--gold); text-align:right; font-variant-numeric:tabular-nums; border-left:1px solid var(--border); }
+.pivot-tr-total td { background:var(--gold-dim); font-weight:600; border-top:2px solid var(--gold-border); }
+
+/* PIVOT v2 – SHELL */
+.pivot-shell { display:grid; grid-template-columns:210px 1fr; gap:16px; align-items:start; }
+@media (max-width:760px) { .pivot-shell { grid-template-columns:1fr; } }
+
+/* Sidebar */
+.pivot-sidebar {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:14px;
+  position:sticky; top:76px; max-height:calc(100vh - 110px); overflow-y:auto;
+}
+.pivot-filter-group { margin-bottom:14px; }
+.pivot-filter-group:last-child { margin-bottom:0; }
+.pivot-filter-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.pivot-filter-title { font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.22em; color:var(--gold); text-transform:uppercase; }
+.pivot-filter-actions { display:flex; gap:4px; }
+.pivot-filter-btn {
+  font-family:'Cinzel',serif; font-size:7px; letter-spacing:0.1em; padding:2px 7px;
+  border-radius:6px; border:1px solid var(--border); background:transparent;
+  color:var(--text-muted); cursor:pointer; transition:all 0.15s;
+}
+.pivot-filter-btn:hover { color:var(--gold); border-color:var(--gold-border); }
+.pivot-filter-list { display:flex; flex-direction:column; gap:3px; max-height:160px; overflow-y:auto; padding-right:2px; }
+.pivot-filter-item { display:flex; align-items:center; gap:7px; cursor:pointer; padding:3px 5px; border-radius:6px; transition:background 0.1s; }
+.pivot-filter-item:hover { background:var(--gold-dim); }
+.pivot-filter-item input[type=checkbox] { accent-color:var(--gold); width:13px; height:13px; flex-shrink:0; cursor:pointer; }
+.pivot-filter-item span { font-size:11.5px; color:var(--text-secondary); cursor:pointer; user-select:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:155px; }
+
+/* Main panel */
+.pivot-main { min-width:0; }
+.pivot-controls { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px; align-items:flex-end; }
+.pivot-status { font-size:11px; color:var(--text-muted); margin-bottom:10px; font-style:italic; min-height:16px; }
+.pivot-th-sortable { cursor:pointer; user-select:none; transition:color 0.15s; }
+.pivot-th-sortable:hover { color:var(--gold-light) !important; }
+.pivot-sort-icon { display:inline-block; margin-left:3px; font-size:9px; opacity:0.6; }
+.pivot-sort-icon.active { opacity:1; color:var(--gold); }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="index.html" class="topbar-logo">LEGAL<span>ATLAS</span></a>
+  <div class="topbar-right">
+    <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;color:var(--gold);">STAFF · INTERNO</span>
+    <button class="tema-btn" onclick="toggleTema()">◑</button>
+  </div>
+</header>
+
+<main class="main">
+
+  <div style="max-width:900px;margin:0 auto;padding:40px 24px 20px;text-align:center;">
+    <p class="cuenta-eyebrow">Panel interno</p>
+    <h1 style="font-family:'Cinzel',serif;font-size:32px;margin-bottom:40px;color:var(--text-primary);">CORPUS &amp; USUARIOS</h1>
+  </div>
+
+  <!-- Métricas globales -->
+  <div class="staff-grid" id="staff-grid">
+    <div class="metric-card"><span class="metric-n" id="m-articulos">—</span><span class="metric-l">Artículos</span></div>
+    <div class="metric-card"><span class="metric-n" id="m-paises">—</span><span class="metric-l">Países</span></div>
+    <div class="metric-card"><span class="metric-n" id="m-leyes">—</span><span class="metric-l">Leyes</span></div>
+    <div class="metric-card"><span class="metric-n" id="m-usuarios">—</span><span class="metric-l">Usuarios</span></div>
+    <div class="metric-card" style="grid-column:span 2"><span class="metric-n" id="m-logins-hoy">—</span><span class="metric-l">Logins hoy</span></div>
+  </div>
+
+  <!-- Pivot interactivo v2 -->
+  <div class="staff-tabla">
+    <div class="staff-titulo">ANÁLISIS DEL CORPUS · PIVOT</div>
+
+    <div class="pivot-shell">
+
+      <!-- Sidebar: filtros por dimensión -->
+      <aside class="pivot-sidebar">
+        <div class="pivot-filter-group" id="fg-pais"></div>
+        <div class="pivot-filter-group" id="fg-materia"></div>
+        <div class="pivot-filter-group" id="fg-nivel"></div>
+      </aside>
+
+      <!-- Panel principal: controles + tabla -->
+      <div class="pivot-main">
+        <div class="pivot-controls">
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <label style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;">Filas</label>
+            <select id="pivot-rows" class="pivot-sel" onchange="renderPivot()">
+              <option value="pais">País</option>
+              <option value="materia">Materia</option>
+              <option value="nivel">Nivel</option>
+            </select>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <label style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;">Columnas</label>
+            <select id="pivot-cols" class="pivot-sel" onchange="renderPivot()">
+              <option value="materia">Materia</option>
+              <option value="pais">País</option>
+              <option value="nivel">Nivel</option>
+            </select>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <label style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;">Valor</label>
+            <select id="pivot-val" class="pivot-sel" onchange="renderPivot()">
+              <option value="articulos">Artículos</option>
+              <option value="leyes">Leyes</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pivot-status" id="pivot-status">Cargando datos…</div>
+
+        <div class="tabla-wrap">
+          <table id="pivot-table">
+            <thead id="pivot-thead"></thead>
+            <tbody id="pivot-tbody"><tr><td class="loading-txt">Cargando…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Usuarios registrados -->
+  <div class="staff-tabla">
+    <div class="staff-titulo">USUARIOS REGISTRADOS</div>
+    <div class="tabla-wrap">
+      <table>
+        <thead><tr><th>Fecha</th><th>Nombre</th><th>Email</th><th>País</th><th>Plan</th><th>Acción</th></tr></thead>
+        <tbody id="usuarios-rows"><tr><td colspan="6" class="loading-txt">Cargando…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Logins de hoy -->
+  <div class="staff-tabla">
+    <div class="staff-titulo">LOGINS DE HOY · GOOGLE AUTH</div>
+    <div class="tabla-wrap">
+      <table>
+        <thead><tr><th>Hora</th><th>Nombre</th><th>Email</th><th>Nuevo</th><th>Acción</th></tr></thead>
+        <tbody id="hoy-rows"><tr><td colspan="5" class="loading-txt">Cargando…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ── Protección ──
+const PASS = 'apolo2026';
+(function() {
+  const ok = sessionStorage.getItem('staff-ok');
+  if (ok === '1') return;
+  const v = prompt('Contraseña de staff:');
+  if (v !== PASS) { alert('Acceso denegado'); window.location.href = '/'; return; }
+  sessionStorage.setItem('staff-ok', '1');
+})();
+
+const FLAG_PAISES = { MX:'🇲🇽', CZ:'🇨🇿', DE:'🇩🇪', ES:'🇪🇸', FR:'🇫🇷', CH:'🇨🇭', MC:'🇲🇨' };
+const HEADERS = { 'X-Staff-Key': PASS };
+
+async function staffFetch(tipo) {
+  const r = await fetch(`/api/staff?tipo=${tipo}`, { headers: HEADERS });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+async function cargar() {
+  // ── Stats ──
+  const stats = await staffFetch('stats');
+  document.getElementById('m-articulos').textContent = stats.articulos?.toLocaleString() || '—';
+  document.getElementById('m-paises').textContent    = stats.paises || '—';
+  document.getElementById('m-leyes').textContent     = stats.leyes?.toLocaleString() || '—';
+  document.getElementById('m-usuarios').textContent  = stats.usuarios || '—';
+
+  // ── Usuarios ──
+  const uData = await staffFetch('usuarios');
+  const lista = uData.usuarios || [];
+
+  document.getElementById('usuarios-rows').innerHTML = lista.length
+    ? lista.map(u=>`<tr>
+        <td>${new Date(u.created_at).toLocaleDateString('es-MX')}</td>
+        <td>${u.nombre||'—'}</td>
+        <td>${u.email}</td>
+        <td><span class="badge-pais">${FLAG_PAISES[u.pais]||''} ${u.pais||'—'}</span></td>
+        <td>${u.is_pro?'⭐ Pro':'Gratuito'}</td>
+        <td><a class="btn-enviar" href="mailto:${u.email}?subject=Acceso%20Legal%20Atlas&body=Hola%20${encodeURIComponent(u.nombre||'')}%2C%20tu%20acceso%20ha%20sido%20activado.%0Ahttps%3A%2F%2Flegalatlas.io">Enviar acceso →</a></td>
+      </tr>`).join('')
+    : '<tr><td colspan="6" class="loading-txt">Sin usuarios aún</td></tr>';
+
+  // ── Logins de hoy ──
+  const loginsData = await staffFetch('logins');
+  const logins = loginsData.logins || [];
+  document.getElementById('m-logins-hoy').textContent = logins.length || '0';
+  document.getElementById('hoy-rows').innerHTML = logins.length
+    ? logins.map(u=>`<tr>
+        <td>${new Date(u.last_sign_in_at).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'})}</td>
+        <td>${u.nombre||'—'}</td>
+        <td>${u.email}</td>
+        <td style="color:${u.es_nuevo?'var(--gold)':'var(--text-muted)'}">${u.es_nuevo?'✦ Nuevo':'Recurrente'}</td>
+        <td><a class="btn-enviar" href="mailto:${u.email}?subject=Bienvenido%20a%20Legal%20Atlas&body=Hola%20${encodeURIComponent(u.nombre||'')}%2C%20gracias%20por%20unirte%20a%20Legal%20Atlas.%0Ahttps%3A%2F%2Flegalatlas.io">Email →</a></td>
+      </tr>`).join('')
+    : '<tr><td colspan="5" class="loading-txt">Sin logins hoy</td></tr>';
+}
+
+// ── Pivot v2 ────────────────────────────────────────────────────────────────
+let rawData = [];
+let activeFilters = { pais: new Set(), materia: new Set(), nivel: new Set() };
+let pivotSort = { col: null, asc: false };
+
+async function iniciarPivot() {
+  try {
+    const json = await staffFetch('raw');
+    rawData = json.rows || [];
+
+    // Inicializar filtros con todos los valores seleccionados
+    ['pais', 'materia', 'nivel'].forEach(dim => {
+      const vals = [...new Set(rawData.map(r => r[dim]).filter(Boolean))].sort();
+      activeFilters[dim] = new Set(vals);
+    });
+
+    buildFilterLists();
+    renderPivot();
+  } catch(e) {
+    document.getElementById('pivot-status').textContent = 'Error cargando datos: ' + e.message;
+  }
+}
+
+function buildFilterLists() {
+  const CONFIG = [
+    { dim: 'pais',    label: 'País',    id: 'fg-pais' },
+    { dim: 'materia', label: 'Materia', id: 'fg-materia' },
+    { dim: 'nivel',   label: 'Nivel',   id: 'fg-nivel' }
+  ];
+  CONFIG.forEach(({ dim, label, id }) => {
+    const vals = [...new Set(rawData.map(r => r[dim]).filter(Boolean))].sort();
+    document.getElementById(id).innerHTML = `
+      <div class="pivot-filter-header">
+        <span class="pivot-filter-title">${label}</span>
+        <span class="pivot-filter-actions">
+          <button class="pivot-filter-btn" onclick="toggleAll('${dim}',true)">Todo</button>
+          <button class="pivot-filter-btn" onclick="toggleAll('${dim}',false)">Ninguno</button>
+        </span>
+      </div>
+      <div class="pivot-filter-list" id="filter-list-${dim}">
+        ${vals.map(v => {
+          const safe = v.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+          const flag = FLAG_PAISES[v] ? FLAG_PAISES[v] + ' ' : '';
+          return `<label class="pivot-filter-item">
+            <input type="checkbox" checked onchange="onFilterChange('${dim}','${safe}',this.checked)">
+            <span>${flag}${v}</span>
+          </label>`;
+        }).join('')}
+      </div>`;
+  });
+}
+
+function onFilterChange(dim, val, checked) {
+  if (checked) activeFilters[dim].add(val);
+  else activeFilters[dim].delete(val);
+  renderPivot();
+}
+
+function toggleAll(dim, checked) {
+  const allVals = [...new Set(rawData.map(r => r[dim]).filter(Boolean))];
+  if (checked) allVals.forEach(v => activeFilters[dim].add(v));
+  else activeFilters[dim].clear();
+  const list = document.getElementById(`filter-list-${dim}`);
+  if (list) list.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = checked);
+  renderPivot();
+}
+
+function renderPivot() {
+  const rowDim  = document.getElementById('pivot-rows').value;
+  const colDim  = document.getElementById('pivot-cols').value;
+  const valField = document.getElementById('pivot-val').value;
+  const DIM_LABEL = { pais: 'País', materia: 'Materia', nivel: 'Nivel' };
+  const fmt = n => n ? (+n).toLocaleString() : '';
+  const labelVal = (dim, v) => dim === 'pais' ? `${FLAG_PAISES[v]||''} ${v}` : v;
+
+  // Filtrar
+  const filtered = rawData.filter(r =>
+    activeFilters.pais.has(r.pais) &&
+    activeFilters.materia.has(r.materia) &&
+    activeFilters.nivel.has(r.nivel)
+  );
+
+  const totalVal = filtered.reduce((s, r) => s + (r[valField] || 0), 0);
+  document.getElementById('pivot-status').textContent =
+    `${filtered.length.toLocaleString()} combinaciones · ${totalVal.toLocaleString()} ${valField} totales`;
+
+  if (!filtered.length) {
+    document.getElementById('pivot-thead').innerHTML = '';
+    document.getElementById('pivot-tbody').innerHTML =
+      '<tr><td class="loading-txt">Sin datos con los filtros seleccionados</td></tr>';
+    return;
+  }
+
+  // Construir matriz
+  const colVals = [...new Set(filtered.map(r => r[colDim]))].sort();
+  let rowVals   = [...new Set(filtered.map(r => r[rowDim]))].sort();
+  const matrix  = {};
+  for (const r of filtered) {
+    const rv = r[rowDim], cv = r[colDim];
+    if (!matrix[rv]) matrix[rv] = {};
+    matrix[rv][cv] = (matrix[rv][cv] || 0) + (r[valField] || 0);
+  }
+
+  // Ordenar filas
+  if (pivotSort.col === '__label__') {
+    rowVals.sort((a, b) => pivotSort.asc ? a.localeCompare(b) : b.localeCompare(a));
+  } else if (pivotSort.col === '__total__') {
+    rowVals.sort((a, b) => {
+      const ta = colVals.reduce((s,c) => s + ((matrix[a]||{})[c]||0), 0);
+      const tb = colVals.reduce((s,c) => s + ((matrix[b]||{})[c]||0), 0);
+      return pivotSort.asc ? ta - tb : tb - ta;
+    });
+  } else if (pivotSort.col) {
+    rowVals.sort((a, b) => {
+      const va = (matrix[a]||{})[pivotSort.col] || 0;
+      const vb = (matrix[b]||{})[pivotSort.col] || 0;
+      return pivotSort.asc ? va - vb : vb - va;
+    });
+  }
+
+  const si = col => {
+    if (pivotSort.col !== col) return '<span class="pivot-sort-icon">⇅</span>';
+    return `<span class="pivot-sort-icon active">${pivotSort.asc ? '↑' : '↓'}</span>`;
+  };
+
+  // Cabecera
+  document.getElementById('pivot-thead').innerHTML = `<tr>
+    <th class="pivot-th-row pivot-th-sortable" onclick="sortPivot('__label__')">${DIM_LABEL[rowDim]}${si('__label__')}</th>
+    ${colVals.map(c => {
+      const safe = c.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      return `<th class="pivot-th-row pivot-th-sortable" onclick="sortPivot('${safe}')">${labelVal(colDim,c)}${si(c)}</th>`;
+    }).join('')}
+    <th class="pivot-th-row pivot-th-sortable" style="border-left:1px solid var(--border);" onclick="sortPivot('__total__')">Total${si('__total__')}</th>
+  </tr>`;
+
+  // Cuerpo
+  const colTotals = Object.fromEntries(colVals.map(c=>[c,0]));
+  let grandTotal = 0;
+  const bodyRows = rowVals.map(r => {
+    const rowTotal = colVals.reduce((s,c) => {
+      const v = (matrix[r]||{})[c] || 0;
+      colTotals[c] += v; grandTotal += v;
+      return s + v;
+    }, 0);
+    return `<tr>
+      <td class="pivot-td-label">${labelVal(rowDim,r)}</td>
+      ${colVals.map(c => {
+        const v = (matrix[r]||{})[c] || 0;
+        return `<td class="pivot-td-val${v?'':' pivot-zero'}">${fmt(v)||'·'}</td>`;
+      }).join('')}
+      <td class="pivot-td-total">${fmt(rowTotal)}</td>
+    </tr>`;
+  });
+  bodyRows.push(`<tr class="pivot-tr-total">
+    <td class="pivot-td-label">Total</td>
+    ${colVals.map(c=>`<td class="pivot-td-total">${fmt(colTotals[c])}</td>`).join('')}
+    <td class="pivot-td-total">${fmt(grandTotal)}</td>
+  </tr>`);
+
+  document.getElementById('pivot-tbody').innerHTML = bodyRows.join('');
+}
+
+function sortPivot(col) {
+  if (pivotSort.col === col) pivotSort.asc = !pivotSort.asc;
+  else { pivotSort.col = col; pivotSort.asc = false; }
+  renderPivot();
+}
+
+function toggleTema() {
+  const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('la-theme', t);
+}
+
+cargar();
+iniciarPivot();
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<script>
+(function(){
+  var t = localStorage.getItem('la-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legal Atlas · México — Navega la ley con precisión</title>
+<meta name="description" content="Legal Atlas es el primer motor que lee la ley de texto verificado. Sin alucinaciones. Con cita exacta.">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root {
+  --bg:        #F3EAD5;
+  --bg-card:   #FAF2E0;
+  --bg-raised: #EBE0C8;
+  --text:      #1A1410;
+  --soft:      #3D342A;
+  --muted:     #7A6E60;
+  --dim:       #A89880;
+  --gold:      #8B6820;
+  --gold-lt:   #C49A3C;
+  --gold-dim:  rgba(139,104,32,0.08);
+  --gold-brd:  rgba(139,104,32,0.22);
+  --border:    #DDD0B4;
+  --rule:      rgba(139,104,32,0.18);
+  --sh-sm:     0 1px 4px rgba(26,20,16,0.07);
+  --sh-md:     0 4px 20px rgba(26,20,16,0.10);
+  --sh-lg:     0 12px 48px rgba(26,20,16,0.13);
+}
+:root[data-theme="dark"] {
+  --bg:        #0C0C0A;
+  --bg-card:   #141412;
+  --bg-raised: #1C1C19;
+  --text:      #F0ECE4;
+  --soft:      #D0C4B4;
+  --muted:     #9C9082;
+  --dim:       #6A6058;
+  --gold:      #C49A3C;
+  --gold-lt:   #D4AE58;
+  --gold-dim:  rgba(196,154,60,0.08);
+  --gold-brd:  rgba(196,154,60,0.20);
+  --border:    #2A2A26;
+  --rule:      rgba(196,154,60,0.15);
+  --sh-sm:     0 1px 4px rgba(0,0,0,0.3);
+  --sh-md:     0 4px 20px rgba(0,0,0,0.4);
+  --sh-lg:     0 12px 48px rgba(0,0,0,0.5);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Lora', Georgia, serif; background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; transition: background .3s, color .3s; }
+
+/* ── AMBIENT ── */
+.amb { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.amb-o { position: absolute; border-radius: 50%; filter: blur(140px); }
+.amb-o1 { width: 700px; height: 700px; background: radial-gradient(circle, rgba(196,154,60,.09) 0%, transparent 70%); top: -200px; right: -100px; animation: driftA 25s ease-in-out infinite; }
+.amb-o2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(196,154,60,.06) 0%, transparent 70%); bottom: 0; left: -100px; animation: driftB 30s ease-in-out infinite; }
+@keyframes driftA { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-40px,40px)} }
+@keyframes driftB { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-30px)} }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center;
+  padding: 0 48px;
+  height: 64px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--sh-sm);
+}
+[data-theme="dark"] nav { background: rgba(14,14,12,.96); backdrop-filter: blur(20px); }
+.n-logo { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700; letter-spacing: .28em; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-right: 40px; }
+.n-logo span { color: var(--gold); font-weight: 400; }
+.n-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+.n-links a { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--soft); text-decoration: none; transition: color .2s; position: relative; white-space: nowrap; }
+.n-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:1px; background:var(--gold); transition:width .25s; }
+.n-links a:hover { color: var(--gold); }
+.n-links a:hover::after { width: 100%; }
+.n-pro { color: var(--gold) !important; }
+.n-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: auto; }
+.n-theme { background: none; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 14px; color: var(--muted); padding: 3px 10px; transition: all .2s; }
+.n-theme:hover { color: var(--gold); border-color: var(--gold-brd); }
+.n-en-link { font-family:'Cinzel',serif; font-size:9px; letter-spacing:.15em; color:var(--muted); text-decoration:none; border:1px solid var(--border); border-radius:20px; padding:3px 10px; transition:all .2s; }
+.n-en-link:hover { color:var(--gold); border-color:var(--gold-brd); }
+.n-cta { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; background: var(--gold); color: var(--bg); padding: 9px 22px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: background .2s; }
+.n-cta:hover { background: var(--gold-lt); }
+.n-burger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+.n-burger span { display: block; width: 22px; height: 2px; background: var(--muted); border-radius: 2px; transition: all .25s; }
+.n-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.n-burger.open span:nth-child(2) { opacity: 0; }
+.n-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── MOBILE SIDEBAR ── */
+.m-overlay { display:none; position:fixed; inset:0; background:rgba(26,20,16,.5); z-index:199; }
+.m-overlay.open { display:block; }
+.m-sidebar { position:fixed; top:0; right:-280px; width:260px; height:100vh; background:var(--bg-card); border-left:1px solid var(--border); z-index:200; transition:right .3s; display:flex; flex-direction:column; }
+.m-sidebar.open { right:0; }
+.m-sidebar-head { display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--border); }
+.m-sidebar-close { background:none; border:none; cursor:pointer; color:var(--muted); font-size:18px; }
+.m-sidebar-nav { flex:1; padding:16px 0; display:flex; flex-direction:column; position:relative; height:auto; top:auto; left:auto; right:auto; z-index:auto; }
+.m-sidebar-nav a { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--soft); text-decoration:none; padding:13px 24px; border-left:2px solid transparent; transition:all .2s; }
+.m-sidebar-nav a:hover { color:var(--gold); background:var(--gold-dim); border-left-color:var(--gold); }
+
+/* ── MAIN WRAPPER ── */
+.page { position: relative; z-index: 1; padding-top: 64px; }
+
+/* ── LAUNCH BANNER ── */
+.launch-banner {
+  background: var(--gold-dim);
+  border-bottom: 1px solid var(--gold-brd);
+  padding: 10px max(24px, calc((100vw - 1080px)/2 + 48px));
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .1em;
+  color: var(--gold); gap: 8px; text-align: center;
+}
+.launch-banner a { color: var(--gold); font-weight: 600; text-decoration: none; }
+.launch-banner a:hover { text-decoration: underline; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 92vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 80px max(24px, calc((100vw - 1080px)/2 + 48px)) 64px;
+  position: relative; overflow: hidden;
+}
+.hero-rule { position:absolute; top:0; bottom:0; width:1px; background:linear-gradient(to bottom, transparent, var(--rule) 20%, var(--rule) 80%, transparent); pointer-events:none; }
+.hero-eyebrow {
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .42em;
+  color: var(--gold); text-transform: uppercase; margin-bottom: 44px;
+  display: flex; align-items: center; gap: 16px;
+  opacity: 0; animation: up .9s ease .1s forwards;
+}
+.hero-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--gold); }
+.hero-h {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(52px, 8vw, 108px);
+  font-weight: 700; letter-spacing: .02em; line-height: 1.05;
+  margin-bottom: 0;
+  opacity: 0; animation: up .9s ease .2s forwards;
+}
+.hero-h span { color: var(--gold); }
+.hero-tagline {
+  font-family: 'Lora', serif; font-style: italic;
+  font-size: clamp(20px, 2.8vw, 32px); color: var(--soft);
+  margin-top: 24px; line-height: 1.5;
+  opacity: 0; animation: up .9s ease .3s forwards;
+}
+.hero-sub {
+  font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  color: var(--muted); letter-spacing: .08em; margin-top: 22px; line-height: 1.9;
+  opacity: 0; animation: up .9s ease .38s forwards;
+}
+.hero-sub span { color: var(--gold); }
+
+/* ── HERO CHAT ── */
+.hero-chat-wrap {
+  margin-top: 48px;
+  max-width: 720px;
+  opacity: 0; animation: up .9s ease .5s forwards;
+}
+.hero-chat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 8px 40px rgba(26,20,16,0.13);
+  overflow: hidden;
+  transition: box-shadow .25s, border-color .25s;
+}
+[data-theme="dark"] .hero-chat { box-shadow: 0 8px 40px rgba(0,0,0,0.4); }
+.hero-chat:focus-within { border-color: var(--gold-brd); box-shadow: 0 8px 40px rgba(139,104,32,0.18); }
+.chat-top-label {
+  padding: 12px 24px 0;
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .12em;
+  color: var(--dim); text-align: center;
+}
+.chat-input {
+  display: block; width: 100%;
+  font-family: 'Lora', serif; font-size: 15px;
+  background: transparent; border: none;
+  color: var(--text); padding: 20px 24px 12px;
+  outline: none; resize: none; line-height: 1.6;
+  min-height: 72px;
+}
+.chat-input::placeholder { color: var(--muted); font-style: italic; }
+.chat-bottom-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--border);
+}
+.chat-country-pill {
+  display: flex; align-items: center; gap: 7px;
+  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .13em;
+  color: var(--muted); background: var(--bg-raised);
+  border: 1px solid var(--border); border-radius: 20px;
+  padding: 5px 12px; cursor: pointer; transition: all .2s;
+  appearance: none; -webkit-appearance: none; outline: none;
+}
+.chat-country-pill:focus, .chat-country-pill:hover { border-color: var(--gold-brd); color: var(--gold); }
+.chat-send {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--gold); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s, transform .15s; flex-shrink: 0;
+}
+.chat-send:hover { background: var(--gold-lt); transform: scale(1.08); }
+.chat-send svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+/* Topic chips */
+.chat-chips {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-top: 16px; justify-content: flex-start;
+}
+.chat-chip {
+  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .1em;
+  color: var(--muted); background: none;
+  border: 1px solid var(--border); border-radius: 20px;
+  padding: 8px 16px; cursor: pointer;
+  transition: all .2s; white-space: nowrap;
+}
+.chat-chip:hover { color: var(--gold); border-color: var(--gold-brd); background: var(--gold-dim); }
+@keyframes up { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── STRIP ── */
+.strip {
+  background: var(--bg-raised);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 14px max(24px, calc((100vw - 1080px)/2 + 48px));
+  overflow: hidden;
+}
+[data-theme="dark"] .strip { background: var(--bg-card); }
+.strip-inner { display: flex; gap: 48px; white-space: nowrap; animation: scroll 28s linear infinite; }
+.strip-item { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .1em; color: var(--muted); flex-shrink: 0; }
+.strip-item span { color: var(--gold); }
+@keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ── HOW IT WORKS ── */
+.how {
+  padding: 100px max(24px, calc((100vw - 1080px)/2 + 48px));
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.section-eyebrow { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.36em; color:var(--gold); text-transform:uppercase; margin-bottom:52px; display:flex; align-items:center; gap:14px; }
+.section-eyebrow::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
+.how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.how-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:36px 28px; position:relative; overflow:hidden; transition:all .3s; }
+.how-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--border); transition:background .3s; }
+.how-card:hover { border-color:var(--gold-brd); box-shadow:var(--sh-md); }
+.how-card:hover::before { background:var(--gold); }
+.how-num { font-family:'JetBrains Mono',monospace; font-size:36px; font-weight:300; color:var(--gold); opacity:.4; line-height:1; margin-bottom:20px; }
+.how-title { font-family:'Cinzel',serif; font-size:16px; font-weight:700; letter-spacing:.04em; color:var(--text); margin-bottom:14px; }
+.how-desc { font-size:14px; color:var(--soft); line-height:1.85; }
+
+/* ── GIF DEMO ── */
+.gif-demo {
+  padding: 64px max(24px, calc((100vw - 1080px)/2 + 48px));
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: center;
+}
+.gif-demo-img {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 16px;
+  box-shadow: var(--sh-lg);
+  border: 1px solid var(--border);
+  display: block;
+}
+
+/* ── MANIFESTO / PHILOSOPHY ── */
+.manifesto {
+  padding: 120px max(24px, calc((100vw - 1080px)/2 + 48px));
+  border-bottom: 1px solid var(--border);
+  display: grid; grid-template-columns: 1fr 1.6fr; gap: 80px; align-items: start;
+}
+.man-label { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .36em; color: var(--gold); text-transform: uppercase; margin-bottom: 32px; display: flex; align-items: center; gap: 14px; }
+.man-label::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
+.man-pullquote {
+  font-family: 'Lora', serif; font-size: clamp(26px, 3.4vw, 42px); font-style: italic;
+  font-weight: 400; line-height: 1.35; color: var(--text); letter-spacing: -.01em;
+}
+.man-pullquote em { color: var(--gold); font-style: normal; }
+.man-body { padding-top: 8px; }
+.man-p { font-size: 16px; line-height: 1.95; color: var(--soft); margin-bottom: 24px; }
+.man-p:last-child { margin-bottom: 0; }
+.man-p strong { color: var(--text); font-weight: 600; }
+
+/* ── CORPUS / DATA ROWS ── */
+.corpus {
+  padding: 100px max(24px, calc((100vw - 1080px)/2 + 48px));
+  border-bottom: 1px solid var(--border);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.corpus-left .corpus-label { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .36em; color: var(--gold); text-transform: uppercase; margin-bottom: 24px; display: flex; align-items: center; gap: 14px; }
+.corpus-left .corpus-label::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
+.corpus-h { font-family: 'Cinzel', serif; font-size: clamp(28px, 3.5vw, 46px); font-weight: 700; letter-spacing: .02em; margin-bottom: 20px; line-height: 1.15; }
+.corpus-h em { font-style: italic; color: var(--gold); font-family: 'Lora', serif; }
+.corpus-desc { font-size: 15px; color: var(--soft); line-height: 1.85; }
+.corpus-right { display: flex; flex-direction: column; gap: 1px; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.corpus-row { background: var(--bg-card); padding: 22px 24px; display: flex; align-items: center; gap: 16px; transition: background .2s; }
+.corpus-row:not(:last-child) { border-bottom: 1px solid var(--border); }
+.corpus-row:hover { background: var(--bg-raised); }
+.c-flag { font-size: 22px; flex-shrink: 0; }
+.c-info { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.c-region { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: .08em; }
+.c-detail { font-size: 12px; color: var(--muted); font-style: italic; }
+.c-num { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 300; color: var(--gold); flex-shrink: 0; }
+
+/* ── PRODUCTS ── */
+.products {
+  padding: 100px max(24px, calc((100vw - 1080px)/2 + 48px));
+  border-bottom: 1px solid var(--border);
+}
+.products-label { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .36em; color: var(--gold); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; }
+.products-label::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
+.products-h { font-family: 'Cinzel', serif; font-size: clamp(26px, 3.2vw, 42px); font-weight: 700; letter-spacing: .02em; margin-bottom: 48px; }
+.products-h em { font-style: italic; color: var(--gold); font-family: 'Lora', serif; }
+.products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
+.tool-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 28px 24px; display: flex; flex-direction: column; gap: 12px; transition: all .3s; cursor: pointer; position: relative; overflow: hidden; }
+.tool-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--border); transition:background .3s; }
+.tool-card:hover { transform: translateY(-3px); box-shadow: var(--sh-md); border-color: var(--gold-brd); }
+.tool-card:hover::before { background: var(--gold); }
+.tool-badge { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .22em; color: var(--gold); text-transform: uppercase; display: flex; gap: 8px; align-items: center; }
+.badge-pro { background: var(--gold-dim); border: 1px solid var(--gold-brd); color: var(--gold); font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: .15em; padding: 2px 7px; border-radius: 4px; }
+.tool-name { font-family: 'Cinzel', serif; font-size: 26px; font-weight: 700; letter-spacing: .03em; color: var(--text); white-space: pre-line; }
+.tool-desc { font-size: 13px; color: var(--muted); line-height: 1.75; flex: 1; }
+.tool-feats { display: flex; flex-direction: column; gap: 8px; }
+.tool-feat { font-size: 13px; color: var(--soft); line-height: 1.5; display: flex; align-items: flex-start; gap: 8px; }
+.tool-feat::before { content: '✓'; color: var(--gold); flex-shrink: 0; font-family: 'Cinzel', serif; font-size: 11px; margin-top: 1px; }
+.tool-cta { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .2em; color: var(--gold); display: flex; align-items: center; gap: 6px; transition: gap .2s; background: none; border: none; cursor: pointer; padding: 0; border-top: 1px solid var(--border); padding-top: 14px; width: 100%; text-align: left; }
+.tool-cta:hover { gap: 12px; }
+/* Atlas banner card */
+.atlas-banner-card { background: var(--bg-raised); border: 1px solid var(--gold-brd); border-radius: 16px; padding: 32px 36px; display: flex; align-items: center; gap: 40px; transition: all .3s; cursor: pointer; position: relative; overflow: hidden; }
+.atlas-banner-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background: linear-gradient(to right, var(--gold), transparent); }
+.atlas-banner-card:hover { box-shadow: var(--sh-md); }
+.atlas-banner-left { flex: 1; }
+.atlas-banner-label { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .28em; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; }
+.atlas-banner-name { font-family: 'Cinzel', serif; font-size: 24px; font-weight: 700; letter-spacing: .02em; color: var(--text); margin-bottom: 10px; }
+.atlas-banner-name em { font-family: 'Lora', serif; font-style: italic; font-weight: 400; color: var(--gold); }
+.atlas-banner-desc { font-size: 14px; color: var(--muted); line-height: 1.75; }
+.atlas-banner-cta { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .2em; color: var(--gold); background: none; border: none; cursor: pointer; padding: 0; transition: opacity .2s; white-space: nowrap; flex-shrink: 0; text-decoration: none; }
+.atlas-banner-cta:hover { opacity: .7; }
+
+/* ── PROOF / MAGNUS SECTION ── */
+.proof {
+  padding: 120px max(24px, calc((100vw - 1080px)/2 + 48px));
+  border-bottom: 1px solid var(--border);
+}
+.proof-header { margin-bottom: 64px; }
+.proof-label-eyebrow { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .36em; color: var(--gold); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; }
+.proof-label-eyebrow::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
+.proof-h { font-family: 'Cinzel', serif; font-size: clamp(34px, 5vw, 64px); font-weight: 700; letter-spacing: .02em; line-height: 1.1; margin-bottom: 16px; }
+.proof-h em { font-family: 'Lora', serif; font-style: italic; font-weight: 400; color: var(--gold); }
+.proof-sub { font-size: 16px; color: var(--soft); line-height: 1.85; max-width: 680px; }
+.proof-body { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+.proof-left { background: var(--bg-raised); padding: 48px; position: relative; }
+.proof-left::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--gold); }
+.proof-label { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: .35em; color: var(--gold); text-transform: uppercase; margin-bottom: 16px; }
+.case-box { font-size: 13px; line-height: 1.85; color: var(--soft); font-style: italic; border-left: 2px solid var(--gold); padding-left: 16px; margin-bottom: 20px; }
+.sel-label { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .12em; color: var(--muted); margin-bottom: 24px; }
+.verdict { padding: 13px 16px; border: 1px solid var(--gold-brd); background: var(--gold-dim); border-radius: 10px; font-family: 'Cinzel', serif; font-size: 9px; color: var(--gold); letter-spacing: .08em; line-height: 1.65; margin-top: 4px; }
+.proof-right { background: var(--bg-card); padding: 48px; display: flex; flex-direction: column; gap: 16px; }
+.finding { display: flex; align-items: flex-start; gap: 12px; padding: 13px 15px; border: 1px solid var(--border); background: var(--bg-raised); border-radius: 10px; transition: background .2s; }
+.finding:hover { background: var(--bg); }
+.find-flag { font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+.find-body { flex: 1; }
+.find-art { font-family: 'Cinzel', serif; font-size: 9px; color: var(--gold); letter-spacing: .08em; margin-bottom: 2px; }
+.find-text { font-size: 11px; color: var(--muted); line-height: 1.5; }
+.find-score { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gold); opacity: .65; flex-shrink: 0; align-self: center; }
+
+/* ── FOOTER ── */
+footer {
+  padding: 48px max(24px, calc((100vw - 1080px)/2 + 48px));
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 20px; border-top: 1px solid var(--border);
+  position: relative; z-index: 1;
+}
+.f-logo { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .3em; color: var(--text); font-weight: 700; }
+.f-logo span { color: var(--gold); }
+.f-copy { font-size: 11px; color: var(--dim); font-style: italic; }
+.f-links { display: flex; gap: 24px; }
+.f-links a { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .12em; color: var(--muted); text-decoration: none; transition: color .2s; text-transform: uppercase; }
+.f-links a:hover { color: var(--gold); }
+.f-disclaimer { width: 100%; font-size: 10px; color: var(--dim); line-height: 1.7; font-style: italic; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 4px; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px) {
+  .manifesto { grid-template-columns: 1fr; gap: 48px; }
+  .corpus { grid-template-columns: 1fr; }
+  .proof-body { grid-template-columns: 1fr; }
+  .proof-right { display: none; }
+}
+@media(max-width:1024px) {
+  nav { padding: 0 24px; }
+  .n-links { display: none; }
+  .n-burger { display: flex; }
+  .hero { padding: 72px 24px 56px; min-height: auto; }
+  .how, .manifesto, .corpus, .products, .proof { padding: 80px 24px; }
+  .how-grid { grid-template-columns: 1fr; }
+  .products-grid { grid-template-columns: 1fr 1fr; }
+  footer { padding: 36px 24px; }
+}
+@media(max-width:600px) {
+  .n-cta { display: none; }
+  .n-en-link { display: none; }
+}
+@media(max-width:600px) {
+  .hero-h { font-size: clamp(36px, 11vw, 60px); }
+  .products-grid { grid-template-columns: 1fr; }
+  .atlas-banner-card { flex-direction: column; align-items: flex-start; gap: 16px; }
+  footer { flex-direction: column; text-align: center; }
+  .f-links { justify-content: center; flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="amb">
+  <div class="amb-o amb-o1"></div>
+  <div class="amb-o amb-o2"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="/cz/" class="n-logo">LEGAL<span>ATLAS</span></a>
+  <ul class="n-links">
+    <li><a href="/abogado.html?lang=es">Biblioteca</a></li>
+    <li><a href="/jurisprudencia.html">Jurisprudencia</a></li>
+    <li><a href="/magnus.html?lang=es" class="n-pro">Magnus</a></li>
+    <li><a href="/atlas.html?lang=es">Atlas</a></li>
+    <li><a href="/cuenta.html?lang=es">Cuenta</a></li>
+  </ul>
+  <div class="n-right">
+    <a href="/" class="n-en-link" onclick="localStorage.setItem('la-locale','en')">🌐 EN</a>
+    <button class="n-theme" id="theme-btn">◑</button>
+    <a href="/magnus.html?lang=es" class="n-cta">Empezar →</a>
+    <button class="n-burger" id="burger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="m-overlay" id="m-overlay" onclick="closeSidebar()"></div>
+<aside class="m-sidebar" id="m-sidebar">
+  <div class="m-sidebar-head">
+    <a href="/cz/" class="n-logo">LEGAL<span>ATLAS</span></a>
+    <button class="m-sidebar-close" onclick="closeSidebar()">✕</button>
+  </div>
+  <nav class="m-sidebar-nav">
+    <a href="/abogado.html?lang=es" onclick="closeSidebar()">Biblioteca</a>
+    <a href="/jurisprudencia.html" onclick="closeSidebar()">Jurisprudencia</a>
+    <a href="/magnus.html?lang=es" onclick="closeSidebar()">Magnus</a>
+    <a href="/atlas.html?lang=es" onclick="closeSidebar()">Atlas</a>
+    <a href="/cuenta.html?lang=es" onclick="closeSidebar()">Cuenta</a>
+    <a href="/" onclick="localStorage.setItem('la-locale','en');closeSidebar()">🌐 English version</a>
+  </nav>
+</aside>
+
+<div class="page">
+
+  <!-- LAUNCH BANNER -->
+  <div class="launch-banner">
+    ✦ Periodo de lanzamiento · Acceso gratuito hasta el 7 de mayo · <a href="/cuenta.html?lang=es">Registrarse con Google →</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-rule" style="left:33%"></div>
+    <div class="hero-rule" style="left:66%"></div>
+    <div class="hero-eyebrow">Motor jurídico</div>
+    <h1 class="hero-h">LEGAL <span>ATLAS</span></h1>
+    <p class="hero-tagline">Encuentra en la ley lo que otros pasan por alto</p>
+    <div class="hero-sub">
+      <span>7 leyes · 32 estados</span> · Constitución, Código Civil de 32 estados, leyes federales · <span>Cero alucinaciones AI</span> · Cita del artículo exacto en cada respuesta
+    </div>
+
+    <!-- CHAT BOX -->
+    <div class="hero-chat-wrap">
+      <div class="hero-chat">
+        <div class="chat-top-label">Respuesta verificada · Art. exacto · Sin invención</div>
+        <textarea class="chat-input" id="chat-q" rows="3" placeholder="Describe tu caso jurídico…"></textarea>
+        <div class="chat-bottom-row">
+          <select class="chat-country-pill" id="f-pais">
+            <option value="">🌐 Vyberte zemi…</option>
+          </select>
+          <button class="chat-send" id="chat-go" title="Iniciar análisis">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="chat-chips">
+        <button class="chat-chip" onclick="fillChip('Contrato de trabajo, despido')">Derecho laboral</button>
+        <button class="chat-chip" onclick="fillChip('Arrendamiento, contratos, herencia')">Derecho civil</button>
+        <button class="chat-chip" onclick="fillChip('Denuncia penal, defensa')">Derecho penal</button>
+        <button class="chat-chip" onclick="fillChip('Constitución de sociedad, contratos')">Derecho mercantil</button>
+        <button class="chat-chip" onclick="fillChip('Juicio de amparo, garantías')">Amparo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRIP -->
+  <div class="strip">
+    <div class="strip-inner" id="strip-inner">
+      <span class="strip-item"><span>Código Civil</span> · 32 estados</span>
+      <span class="strip-item"><span>Ley Federal del Trabajo</span> · 1 150 arts</span>
+      <span class="strip-item"><span>Código de Comercio</span> · 1 530 arts</span>
+      <span class="strip-item"><span>Código Penal Federal</span> · 480 arts</span>
+      <span class="strip-item"><span>Ley de Amparo</span> · 271 arts</span>
+      <span class="strip-item"><span>94 937</span> artículos totales</span>
+      <span class="strip-item"><span>7</span> leyes · 32 estados</span>
+      <span class="strip-item"><span>0</span> alucinaciones · texto real siempre citado</span>
+      <span class="strip-item"><span>Código Civil</span> · 32 estados</span>
+      <span class="strip-item"><span>Ley Federal del Trabajo</span> · 1 150 arts</span>
+      <span class="strip-item"><span>Código de Comercio</span> · 1 530 arts</span>
+      <span class="strip-item"><span>Código Penal Federal</span> · 480 arts</span>
+      <span class="strip-item"><span>Ley de Amparo</span> · 271 arts</span>
+      <span class="strip-item"><span>94 937</span> artículos totales</span>
+      <span class="strip-item"><span>7</span> leyes · 32 estados</span>
+      <span class="strip-item"><span>0</span> alucinaciones · texto real siempre citado</span>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <div class="section-eyebrow">Cómo funciona</div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">01</div>
+        <div class="how-title">Plantea tu consulta</div>
+        <p class="how-desc">Describe tu situación jurídica en tus propias palabras, sin terminología legal. Nuestra AI analiza el significado de tu consulta, no solo palabras clave.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">02</div>
+        <div class="how-title">Análisis del corpus legal</div>
+        <p class="how-desc">Nuestra AI analiza 7 leyes mexicanas y 32 códigos civiles estatales en tiempo real. Resultado: realidad jurídica sin ruido.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">03</div>
+        <div class="how-title">Resultado verificado</div>
+        <p class="how-desc">Recibes el artículo exacto, el nombre de la ley y el texto completo. Cada afirmación es verificable en la fuente.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GIF DEMO -->
+  <section class="gif-demo">
+    <video class="gif-demo-img" autoplay loop muted playsinline>
+      <source src="/cz/scroll_demo.mp4" type="video/mp4">
+    </video>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto">
+    <div>
+      <div class="man-label">Por qué importa</div>
+      <p class="man-pullquote">
+        En el derecho el detalle decide. Un artículo pasado por alto separa el éxito de la <em>derrota.</em>
+      </p>
+    </div>
+    <div class="man-body">
+      <p class="man-p">Mientras ChatGPT solo genera texto, nuestra AI <strong>analiza la realidad jurídica</strong> — a través de jurisdicciones simultáneamente.</p>
+      <p class="man-p">Despido de un ingeniero extranjero en México. Nuestra AI conecta en segundos la Ley Federal del Trabajo, el Código Civil local y la Constitución. Simultáneo e impecable.</p>
+      <p class="man-p"><strong>Nuestra AI es un sistema único capaz de analizar simultáneamente múltiples sistemas jurídicos en tiempo real.</strong></p>
+    </div>
+  </section>
+
+  <!-- CORPUS -->
+  <section class="corpus">
+    <div class="corpus-left">
+      <div class="corpus-label">Co jsme zmapovali</div>
+      <h2 class="corpus-h">7 leyes mexicanas.<br><em>94 937 artículos. Verificado.</em></h2>
+      <p class="corpus-desc">Sin resúmenes. Sin extractos. El texto legislativo completo — artículo por artículo, ley por ley — estructurado para búsqueda en tiempo real. Cada respuesta es rastreable al artículo exacto de la ley vigente.</p>
+    </div>
+    <div class="corpus-right">
+      <div class="corpus-row">
+        <div class="c-flag">⚖</div>
+        <div class="c-info">
+          <div class="c-region">Derecho privado</div>
+          <div class="c-detail">Código Civil (32 estados) · Código de Comercio · Ley Gral. de Títulos</div>
+        </div>
+        <div class="c-num">4 633</div>
+      </div>
+      <div class="corpus-row">
+        <div class="c-flag">🏛</div>
+        <div class="c-info">
+          <div class="c-region">Derecho procesal</div>
+          <div class="c-detail">Ley de Amparo · Código de Comercio (procedimientos)</div>
+        </div>
+        <div class="c-num">1 656</div>
+      </div>
+      <div class="corpus-row">
+        <div class="c-flag">🔒</div>
+        <div class="c-info">
+          <div class="c-region">Derecho penal</div>
+          <div class="c-detail">Código Penal Federal · Ley Federal del Trabajo · Constitución</div>
+        </div>
+        <div class="c-num">1 218</div>
+      </div>
+      <div class="corpus-row">
+        <div class="c-flag">📜</div>
+        <div class="c-info">
+          <div class="c-region">Derecho constitucional</div>
+          <div class="c-detail">Constitución Política · Ley de Amparo · Ley Federal del Trabajo</div>
+        </div>
+        <div class="c-num">159 §</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section class="products">
+    <div class="products-label">Herramientas</div>
+    <h2 class="products-h">Elige tu <em>herramienta.</em></h2>
+    <div class="products-grid">
+
+      <!-- Magnus -->
+      <div class="tool-card" onclick="location.href='/magnus.html?lang=es'">
+        <div class="tool-badge">Producto estrella <span class="badge-pro">PRO</span></div>
+        <div class="tool-name">Magnus</div>
+        <p class="tool-desc">El único sistema de AI en el mundo que realiza RAG paralelo a través de múltiples sistemas jurídicos simultáneamente. Describe tu caso en cualquier idioma. Selecciona hasta tres jurisdicciones. Magnus busca el derecho verificado y construye un análisis multijurisdiccional.</p>
+        <div class="tool-feats">
+          <div class="tool-feat">Hasta 3 jurisdicciones en una consulta</div>
+          <div class="tool-feat">94 937 artículos en base de datos</div>
+          <div class="tool-feat">Análisis de conflicto de leyes — derecho internacional privado</div>
+          <div class="tool-feat">Responde en el idioma de tu consulta</div>
+        </div>
+        <button class="tool-cta">Abrir Magnus →</button>
+      </div>
+
+      <!-- Legal Query -->
+      <div class="tool-card" onclick="location.href='/ciudadano.html?lang=es'">
+        <div class="tool-badge">Zdarma</div>
+        <div class="tool-name">Asistente
+dotaz</div>
+        <p class="tool-desc">Para ciudadanos y no abogados. Entrada en lenguaje natural. Artículo citado con precisión. Sin formación legal necesaria.</p>
+        <div class="tool-feats">
+          <div class="tool-feat">Lenguaje natural</div>
+          <div class="tool-feat">Jedna jurisdikce</div>
+          <div class="tool-feat">Cita verificada</div>
+        </div>
+        <button class="tool-cta">Probar gratis →</button>
+      </div>
+
+      <!-- Attorney Pro -->
+      <div class="tool-card" onclick="location.href='/abogado.html?lang=es'">
+        <div class="tool-badge">Biblioteca <span class="badge-pro">PRO</span></div>
+        <div class="tool-name">Attorney
+Pro</div>
+        <p class="tool-desc">Visor de leyes con chat AI contextual. Tres modos: artículo, ley, proceso.</p>
+        <div class="tool-feats">
+          <div class="tool-feat">Chat a nivel de artículo</div>
+          <div class="tool-feat">Contexto de toda la ley</div>
+          <div class="tool-feat">Análisis de proceso</div>
+        </div>
+        <button class="tool-cta">Abrir →</button>
+      </div>
+
+    </div>
+
+    <!-- Atlas Banner -->
+    <div class="atlas-banner-card" onclick="location.href='/atlas.html?lang=es'">
+      <div class="atlas-banner-left">
+        <div class="atlas-banner-label">En preparación · Beta</div>
+        <div class="atlas-banner-name">Atlas <em>— Universo legal dialéctico</em></div>
+        <div class="atlas-banner-desc">Tesis vs. antítesis. Cada ley que apoya tu caso — y cada una que lo contradice. Visualizado como sistema solar 3D de gravedad legal.</div>
+      </div>
+      <a href="/atlas.html?lang=es" class="atlas-banner-cta">Prozkoumat Atlas →</a>
+    </div>
+  </section>
+
+  <!-- PROOF -->
+  <section class="proof">
+    <div class="proof-header">
+      <div class="proof-label-eyebrow">Magnus v akci</div>
+      <h2 class="proof-h">Caso real.<br><em>45 segundos.</em></h2>
+      <p class="proof-sub">Un caso que requiere derecho laboral mexicano, código civil estatal y la Constitución — simultáneamente. Magnus lo resuelve todo de una vez.</p>
+    </div>
+    <div class="proof-body">
+      <div class="proof-left">
+        <div class="proof-label">Caso</div>
+        <div class="case-box">"Ingeniero extranjero, 3 años en CDMX, despedido sin aviso por su empleador. Tres semanas de salario sin pagar. Quiere demandar antes de regresar a su país."</div>
+        <div class="sel-label">México · Ley Federal del Trabajo</div>
+        <div class="verdict">HALLAZGO CRÍTICO: El Art. 518 de la LFT establece un plazo de 2 meses para impugnar el despido. Dejar pasar el plazo = derrota. Magnus lo encontró en 45 segundos.</div>
+      </div>
+      <div class="proof-right">
+        <div class="proof-label">Lo que Magnus encontró · artículos relevantes</div>
+        <div class="finding">
+          <div class="find-flag">🇨🇿</div>
+          <div class="find-body">
+            <div class="find-art">Art. 20 · Ley Federal del Trabajo</div>
+            <div class="find-text">Causales de rescisión sin responsabilidad para el patrón. Plazo en curso.</div>
+          </div>
+          <div class="find-score">91%</div>
+        </div>
+        <div class="finding">
+          <div class="find-flag">🇨🇿</div>
+          <div class="find-body">
+            <div class="find-art">Art. 47 · Ley Federal del Trabajo</div>
+            <div class="find-text">Reinstalación o indemnización a elección del trabajador.</div>
+          </div>
+          <div class="find-score">87%</div>
+        </div>
+        <div class="finding">
+          <div class="find-flag">🇪🇸</div>
+          <div class="find-body">
+            <div class="find-art">Art. 518 · Ley Federal del Trabajo</div>
+            <div class="find-text">Prescripción: 2 meses para acciones por despido injustificado.</div>
+          </div>
+          <div class="find-score">82%</div>
+        </div>
+        <div class="finding">
+          <div class="find-flag">🇪🇺</div>
+          <div class="find-body">
+            <div class="find-art">Art. 123 · Constitución Política</div>
+            <div class="find-text">Derecho aplicable: mexicano. Tribunal competente: Junta de Conciliación y Arbitraje.</div>
+          </div>
+          <div class="find-score">79%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="f-logo">LEGAL<span>ATLAS</span></div>
+    <div class="f-copy">© Legal Atlas 2026 · Ciudad de México, México · 7 leyes · 94 937 artículos</div>
+    <div class="f-links">
+      <a href="/magnus.html?lang=es">Magnus</a>
+      <a href="/abogado.html?lang=es">Biblioteca</a>
+      <a href="/pricing.html">Precios</a>
+      <a href="mailto:contact@legalatlas.io">Kontakt</a>
+      <a href="/" onclick="localStorage.setItem('la-locale','en')">🌐 EN</a>
+    </div>
+    <p class="f-disclaimer">Legal Atlas es una herramienta de investigación jurídica para profesionales del derecho. Genera contenido con ayuda de AI con referencias normativas verificadas. No constituye asesoría legal ni sustituye el juicio profesional independiente.</p>
+  </footer>
+
+</div>
+
+<script>
+// THEME
+const themeBtn = document.getElementById('theme-btn')
+const root = document.documentElement
+const t0 = root.getAttribute('data-theme') || 'dark'
+themeBtn.textContent = t0 === 'dark' ? '◑' : '●'
+themeBtn.addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
+  root.setAttribute('data-theme', next)
+  localStorage.setItem('la-theme', next)
+  themeBtn.textContent = next === 'dark' ? '◑' : '●'
+})
+
+// HAMBURGER
+function openSidebar() {
+  document.getElementById('m-sidebar').classList.add('open')
+  document.getElementById('m-overlay').classList.add('open')
+  document.getElementById('burger').classList.add('open')
+  document.body.style.overflow = 'hidden'
+}
+function closeSidebar() {
+  document.getElementById('m-sidebar').classList.remove('open')
+  document.getElementById('m-overlay').classList.remove('open')
+  document.getElementById('burger').classList.remove('open')
+  document.body.style.overflow = ''
+}
+document.getElementById('burger').addEventListener('click', openSidebar)
+
+// CHAT — load países and preselect CZ
+const fPais = document.getElementById('f-pais')
+fetch('/api/paises').then(r=>r.json()).then(paises=>{
+  paises.forEach(p=>{
+    const o = document.createElement('option')
+    o.value = p.code || p.id || p
+    o.textContent = p.name || p.nombre || p
+    fPais.appendChild(o)
+  })
+  fPais.value = 'CZ'
+  fPais.dispatchEvent(new Event('change'))
+}).catch(()=>{
+  // fallback: add common countries
+  const defaults = [
+    {value:'MX',label:'México'},
+    {value:'ES',label:'España'},
+    {value:'MX',label:'Mexiko'},
+    {value:'DE',label:'Alemania'},
+    {value:'FR',label:'Francie'},
+    {value:'CH',label:'Suiza'}
+  ]
+  defaults.forEach(d=>{
+    const o = document.createElement('option')
+    o.value = d.value
+    o.textContent = d.label
+    fPais.appendChild(o)
+  })
+  fPais.value = 'CZ'
+  fPais.dispatchEvent(new Event('change'))
+})
+
+// CHIP fill
+function fillChip(texto) {
+  const q = document.getElementById('chat-q')
+  q.value = texto
+  q.focus()
+}
+
+// CHAT submit
+document.getElementById('chat-go').addEventListener('click', ()=>{
+  const q = document.getElementById('chat-q').value.trim()
+  const pais = fPais.value
+  if(!q || !pais) return
+  const params = new URLSearchParams({q, pais, lang: 'cs'})
+  location.href = '/ciudadano.html?' + params.toString()
+})
+document.getElementById('chat-q').addEventListener('keydown', e=>{
+  if(e.key==='Enter' && !e.shiftKey) {
+    e.preventDefault()
+    document.getElementById('chat-go').click()
+  }
+})
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

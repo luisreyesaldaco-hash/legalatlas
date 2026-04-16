@@ -24,6 +24,13 @@ export default async function handler(req, res) {
 
   try {
 
+    // ── materias ─────────────────────────────────────────────────────────────
+    if (action === 'materias') {
+      const { data, error } = await supabase.rpc('obtener_materias')
+      if (error) throw error
+      return res.status(200).json(data || [])
+    }
+
     // ── paises ───────────────────────────────────────────────────────────────
     if (action === 'paises') {
       const { data, error } = await supabase.rpc('obtener_paises');

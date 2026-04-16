@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { GoogleGenAI } from '@google/genai';
+import Anthropic from '@anthropic-ai/sdk';
 
 export const config = { api: { bodyParser: true } };
 
@@ -9,6 +10,7 @@ const supabase = createClient(
 );
 
 const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 function stripMarkdown(text) {
   return text
@@ -110,18 +112,29 @@ REGLAS DEL SVG:
 - El texto dentro del SVG debe estar en ${nombreIdioma}
 - Responde SOLO con el SVG completo, sin texto adicional, sin markdown`;
 
-    const geminiResponse = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        thinkingConfig: { thinkingBudget: 0 },
-        temperature: 0.2,
-        maxOutputTokens: 4000
-      }
-    });
-
-    const rawSvg = geminiResponse.text;
-    if (!rawSvg) throw new Error('Gemini no devolvió contenido para el diagrama');
+    let rawSvg
+    try {
+      const geminiResponse = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          thinkingConfig: { thinkingBudget: 0 },
+          temperature: 0.2,
+          maxOutputTokens: 4000
+        }
+      });
+      rawSvg = geminiResponse.text
+      if (!rawSvg) throw new Error('Gemini no devolvió contenido para el diagrama')
+    } catch (geminiErr) {
+      console.warn('[diagrama] Gemini falló, usando Claude Haiku:', geminiErr.message)
+      const claudeResp = await anthropic.messages.create({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 4000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+      rawSvg = claudeResp.content[0].text
+      if (!rawSvg) throw new Error('Claude Haiku no devolvió contenido para el diagrama')
+    }
 
     const svg = stripMarkdown(rawSvg);
 

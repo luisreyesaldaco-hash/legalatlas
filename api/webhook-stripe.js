@@ -57,7 +57,7 @@ export default async function handler(req, res) {
           const tipoDoc = (borrador.tipo_documento || 'documento').replace(/_/g, ' ')
           const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://www.legalatlas.io'
 
-          await fetch('https://api.resend.com/emails', {
+          const resendRes = await fetch('https://api.resend.com/emails', {
             method:  'POST',
             headers: {
               'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
@@ -87,7 +87,12 @@ export default async function handler(req, res) {
               `
             })
           })
-          console.log(`Email enviado a: ${borrador.email}`)
+          if (!resendRes.ok) {
+            const resendError = await resendRes.json()
+            console.error('Resend error:', resendRes.status, resendError)
+            throw new Error(`Resend ${resendRes.status}: ${JSON.stringify(resendError)}`)
+          }
+          console.log('Email enviado correctamente a:', borrador.email)
         }
 
       } catch (borradorErr) {
@@ -111,9 +116,69 @@ export default async function handler(req, res) {
     } catch (dbErr) {
       console.error('Error registrando pago en Supabase:', dbErr.message)
     }
+
+    // 3. Guardar en corpus anonimizado — secundario, nunca interrumpe
+    if (borrador_id) {
+      try {
+        const { data: borradorCorpus } = await supabase
+          .from('borradores_pago')
+          .select('documento_html, tipo_documento, datos')
+          .eq('id', borrador_id)
+          .single()
+
+        if (borradorCorpus?.documento_html) {
+          await anonimizarYGuardar(
+            borradorCorpus.documento_html,
+            borradorCorpus.tipo_documento,
+            borradorCorpus.datos?.estado,
+            (session.amount_total || 0) / 100
+          )
+        }
+      } catch (corpusErr) {
+        console.error('Error guardando en corpus — no crítico:', corpusErr.message)
+      }
+    }
   }
 
   res.json({ received: true })
+}
+
+async function anonimizarYGuardar(documentoHtml, tipoDocumento, estado, precioMxn) {
+  const textoLimpio = documentoHtml
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\b[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+ [A-ZÁÉÍÓÚÑ][a-záéíóúñ]+ [A-ZÁÉÍÓÚÑ][a-záéíóúñ]+\b/g, 'NOMBRE')
+    .replace(/\$[\d,]+(\.\d{2})?\s*(MXN|USD)?/g, 'MONTO')
+    .replace(/\b\d{1,2} de \w+ de \d{4}\b/g, 'FECHA')
+    .replace(/\b[A-Z0-9]{17}\b/g, 'NIV')
+    .replace(/[A-Z]{3}-\d{3}-[A-Z]\b/g, 'PLACAS')
+    .replace(/C\.P\.\s*\d{5}/g, 'CP')
+    .replace(/\b\d{10}\b/g, 'TELEFONO')
+    .trim()
+
+  const embeddingRes = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent?key=${process.env.GOOGLE_API_KEY}`,
+    {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model:   'models/gemini-embedding-001',
+        content: { parts: [{ text: textoLimpio }] },
+        taskType: 'RETRIEVAL_DOCUMENT',
+        outputDimensionality: 1536
+      })
+    }
+  )
+  const embeddingData = await embeddingRes.json()
+  const embedding = embeddingData.embedding?.values
+
+  await supabase.from('contratos_corpus').insert({
+    tipo_documento:        tipoDocumento,
+    estado:                estado || null,
+    contrato_anonimizado:  textoLimpio,
+    embedding:             embedding || null,
+    precio_mxn:            Math.round(precioMxn)
+  })
+  console.log(`Corpus: contrato guardado — ${tipoDocumento} / ${estado}`)
 }
 
 async function buffer(req) {

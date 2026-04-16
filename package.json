@@ -1,8 +1,12 @@
 {
   "type": "module",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.87.0",
     "@google/genai": "^1.46.0",
     "@supabase/supabase-js": "^2.99.3",
+    "formidable": "^3.5.4",
+    "mammoth": "^1.12.0",
+    "pdf-parse": "^1.1.1",
     "stripe": "^17.0.0"
   }
 }

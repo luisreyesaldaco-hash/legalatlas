@@ -1,15 +1,31 @@
 import { GoogleGenAI } from "@google/genai";
-import { buscarArticulos } from "./buscar.js";
+import Anthropic from "@anthropic-ai/sdk";
+import { buscarArticulosPorPais } from "../lib/buscar.js";
 
 export const config = { api: { bodyParser: true } };
 
 const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-const CPEUM_LEY = 'Constitución Política de los Estados Unidos Mexicanos';
+function is503(err) {
+  return err?.message?.includes('503') || err?.message?.includes('429') ||
+    err?.message?.includes('UNAVAILABLE') || err?.message?.includes('high demand') || err?.message?.includes('RESOURCE_EXHAUSTED')
+}
 
-// ISO alpha-2 → display name (add more as needed)
-const PAIS_NOMBRES = { MX: 'México', CZ: 'República Checa', CO: 'Colombia', PA: 'Panamá', FR: 'Francia', DE: 'Alemania' };
-function nombrePais(iso) { return PAIS_NOMBRES[iso] || iso; }
+async function generateWithRetry(params, retries = 6) {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await ai.models.generateContent(params)
+    } catch (err) {
+      if (is503(err) && i < retries - 1) { await new Promise(r => setTimeout(r, 2000 * Math.pow(2, i))); continue }
+      throw err
+    }
+  }
+}
+
+function nombrePais(iso) {
+  try { return new Intl.DisplayNames(['es'], { type: 'region' }).of(iso) } catch { return iso }
+}
 
 async function detectarEscalacion(mensaje) {
   try {
@@ -50,30 +66,18 @@ export default async function handler(req, res) {
     const { pais, estado, tema, pregunta, fuente, modo, tipo, historial, alcance } = body;
     const esAbogado = modo === 'abogado';
 
-    // Búsqueda de contexto legal + detección de escalación en paralelo
-    let contextoLegal;
-    const esMexico = !pais || pais === 'MX';
-
-    let ragPromise;
-    if (estado && esMexico) {
-      ragPromise = Promise.allSettled([
-        buscarArticulos(pregunta, estado, fuente || 'Código Civil', 7),
-        buscarArticulos(pregunta, '', CPEUM_LEY, 3)
-      ]).then(([ccResults, cpuemResults]) => [
-        ...(ccResults.status   === 'fulfilled' ? ccResults.value   : []),
-        ...(cpuemResults.status === 'fulfilled' ? cpuemResults.value : [])
-      ]);
-    } else if (esMexico) {
-      ragPromise = buscarArticulos(pregunta, '', CPEUM_LEY, 10);
-    } else {
-      ragPromise = buscarArticulos(pregunta, '', fuente || '', 10);
+    if (!pregunta || !String(pregunta).trim()) {
+      return res.status(400).json({ error: 'Pregunta requerida.' })
     }
+
+    // Búsqueda de contexto legal + detección de escalación en paralelo
+    const ragPromise = buscarArticulosPorPais(String(pregunta).trim(), pais, 10, estado);
 
     const [contextoLegalResult, requiereAbogado] = await Promise.all([
       ragPromise,
       detectarEscalacion(pregunta)
     ]);
-    contextoLegal = contextoLegalResult;
+    const contextoLegal = contextoLegalResult;
 
     // 1. Normalizar número de artículo a solo dígitos ("ART. 2273.-" → "2273")
     const normalizarNum = (n) => (n || '').replace(/\D/g, '') || n
@@ -89,13 +93,9 @@ export default async function handler(req, res) {
           .join("\n\n")
       : "No se encontraron artículos específicos.";
 
-    const fuentesActivas = estado
-      ? `${fuente || 'Código Civil'} de ${estado} y ${CPEUM_LEY}`
-      : esMexico ? CPEUM_LEY : (fuente || 'Ley seleccionada');
-
-    // 2. System prompt de Apolo
-    const paisDisplay  = nombrePais(pais || 'MX');
-    const jurisdiccion = estado ? `${estado}, ${paisDisplay}` : `${paisDisplay} (Federal)`;
+    const paisDisplay  = nombrePais(pais);
+    const fuentesActivas = fuente || `legislación de ${paisDisplay}`;
+    const jurisdiccion = estado ? `${estado}, ${paisDisplay}` : paisDisplay;
     const instruccionEscalacion = requiereAbogado ? `
 INSTRUCCIÓN ADICIONAL OBLIGATORIA: Al final de tu respuesta en draftHtml, agrega un párrafo separado que diga exactamente:
 "Este caso tiene elementos que van más allá de lo que puedo resolver solo. Te recomiendo hablar con un abogado especializado. ¿Quieres que te conecte con uno en ${estado || paisDisplay}?"
@@ -114,19 +114,28 @@ TONO OBLIGATORIO PARA ABOGADO:
 - Si el artículo tiene excepciones o remisiones a otros artículos, menciónalas
 ` : `
 TONO OBLIGATORIO PARA CIUDADANO:
-- Habla como un amigo que sabe derecho, no como un abogado en audiencia
-- Frases cortas. Máximo 2 líneas por párrafo
-- Si usas un término legal, explícalo entre paréntesis
-- NUNCA uses: "en virtud de", "de conformidad con", "el suscrito"
-- Siempre termina con un paso concreto que el usuario puede hacer hoy
-- Usa "tú" no "usted"
+- Eres un asistente jurídico profesional
+- Responde con precisión y autoridad
+- Usa terminología legal correcta
+- Cita siempre el artículo exacto con su número y ley de origen
+- Tono: profesional pero accesible
+- NO uses lenguaje informal ni coloquial
+- Trato de usted
 `;
 
     const alcancePrompt = alcance === 'articulo'
       ? 'Responde enfocándote en el artículo activo proporcionado y sus relaciones con otros artículos del mismo código.'
       : 'Responde con una visión amplia del tema dentro de la ley activa, citando los artículos más relevantes.';
 
-    const systemPrompt = `Eres APOLO, un asistente legal experto para la jurisdicción de ${jurisdiccion.toUpperCase()}.
+    const systemPrompt = `ABSOLUTE RULE — NON-NEGOTIABLE: Detect the language of this exact string: "${String(pregunta).slice(0, 60)}"
+If that string is in English → write your ENTIRE response in English only. This applies to ALL JSON fields (draftHtml, resumen, fuentes).
+If in Spanish → respond entirely in Spanish.
+If in Czech → respond entirely in Czech.
+The legal articles below may be in Czech or Spanish — that is FINE. Cite them but explain them in the detected language.
+DO NOT let the language of the articles influence the language of your response.
+DO NOT announce what language you detected. DO NOT explain this rule. DO NOT write any preamble. START your response directly with the content.
+
+Eres APOLO, un asistente legal experto para la jurisdicción de ${jurisdiccion.toUpperCase()}.
 ${instruccionTipo}
 
 FUENTES CONSULTADAS: ${fuentesActivas}
@@ -141,8 +150,7 @@ INSTRUCCIONES:
 2. Cita siempre el número de artículo exacto y la ley de donde proviene.
 3. Si la información necesaria no está en los artículos proporcionados, dilo con claridad.
 4. Nunca inventes leyes, artículos ni interpretaciones.
-5. REGLA DE IDIOMA: Responde SIEMPRE en el mismo idioma en que el usuario escribió su pregunta. Si pregunta en checo, responde en checo. Si pregunta en español, responde en español.
-6. Responde EXCLUSIVAMENTE en formato JSON con esta estructura:
+5. Responde EXCLUSIVAMENTE en formato JSON con esta estructura:
 ${instruccionEscalacion}
 {
   "draftHtml": "Respuesta en HTML con párrafos y listas si aplica",
@@ -153,29 +161,50 @@ ${instruccionEscalacion}
 }`;
 
     // 3. Llamada a Gemini Flash
+    const preguntaTrimmed = String(pregunta).trim();
     const mensajes = historial?.length > 0
       ? [
           ...historial.map(m => ({
             role: m.role === 'assistant' ? 'model' : 'user',
             parts: [{ text: m.content }]
           })),
-          { role: 'user', parts: [{ text: pregunta }] }
+          { role: 'user', parts: [{ text: preguntaTrimmed }] }
         ]
-      : pregunta;
+      : preguntaTrimmed;
 
-    const geminiResponse = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: mensajes,
-      config: {
-        systemInstruction: systemPrompt,
-        responseMimeType:  'application/json',
-        temperature:       0.1,
-        maxOutputTokens:   4000
-      }
-    })
-
-    const raw = geminiResponse.text
-    if (!raw) throw new Error('Gemini no devolvió contenido')
+    let raw
+    try {
+      const geminiResponse = await generateWithRetry({
+        model: "gemini-2.5-flash",
+        contents: mensajes,
+        config: {
+          systemInstruction: systemPrompt,
+          responseMimeType:  'application/json',
+          thinkingConfig:    { thinkingBudget: 0 },
+          temperature:       0.1,
+          maxOutputTokens:   4000
+        }
+      })
+      raw = geminiResponse.text
+      if (!raw) throw new Error('Gemini no devolvió contenido')
+    } catch (geminiErr) {
+      console.warn('[asesoria] Gemini falló, usando Claude Haiku:', geminiErr.message)
+      const claudeMessages = Array.isArray(mensajes)
+        ? mensajes.map(m => ({
+            role: m.role === 'model' ? 'assistant' : 'user',
+            content: m.parts?.[0]?.text || ''
+          }))
+        : [{ role: 'user', content: mensajes }]
+      const claudeResp = await anthropic.messages.create({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 4000,
+        system: systemPrompt + '\n\nResponde SOLO con JSON válido, sin markdown.',
+        messages: claudeMessages
+      })
+      raw = claudeResp.content[0].text.trim()
+        .replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
+    }
+    if (!raw) throw new Error('No se obtuvo respuesta del modelo')
     let parsed
     try { parsed = JSON.parse(raw) }
     catch {

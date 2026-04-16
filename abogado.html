@@ -1,6 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
+<script>
+(function(){
+  var t = localStorage.getItem('la-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Legal Atlas — Apolo Pro</title>
@@ -8,18 +14,53 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <style>
     :root {
-      --bg-deep:    #08080a;
-      --bg-card:    #0d0d0f;
-      --bg-raised:  #141416;
-      --gold:       #c49a3c;
-      --gold-light: #e8c878;
-      --gold-dim:   rgba(196,154,60,0.15);
-      --gold-glow:  rgba(196,154,60,0.4);
-      --text:       rgba(245,237,216,0.92);
-      --text-soft:  rgba(245,237,216,0.6);
-      --text-muted: rgba(245,237,216,0.35);
-      --border:     rgba(196,154,60,0.12);
-      --border-hov: rgba(196,154,60,0.35);
+      --bg-deep:        #F3EAD5;
+      --bg-card:        #FAF2E0;
+      --bg-elevated:    #EBE0C8;
+      --bg-input:       #FAF2E0;
+      --text-primary:   #1A1410;
+      --text-secondary: #3D342A;
+      --text-muted:     #7A6E60;
+      --gold:           #8B6820;
+      --gold-light:     #C49A3C;
+      --gold-dim:       rgba(139,104,32,0.08);
+      --gold-border:    rgba(139,104,32,0.22);
+      --border:         #DDD0B4;
+      --border-hover:   #C9BFB0;
+      --shadow-sm:      0 1px 4px rgba(26,20,16,0.07);
+      --shadow-md:      0 4px 20px rgba(26,20,16,0.10);
+      --shadow-lg:      0 8px 40px rgba(26,20,16,0.13);
+      /* compat aliases — mantener los que ya existen */
+      --bg-raised:      var(--bg-elevated);
+      --text:           var(--text-primary);
+      --text-soft:      var(--text-secondary);
+      --border-hov:     var(--border-hover);
+      --accent:         var(--gold);
+      --gold-glow:      rgba(139,104,32,0.25);
+    }
+    :root[data-theme="dark"] {
+      --bg-deep:        #0C0C0A;
+      --bg-card:        #141412;
+      --bg-elevated:    #1C1C19;
+      --bg-input:       #1C1C19;
+      --text-primary:   #F0ECE4;
+      --text-secondary: #D0C4B4;
+      --text-muted:     #9C9082;
+      --gold:           #C49A3C;
+      --gold-light:     #D4AE58;
+      --gold-dim:       rgba(196,154,60,0.10);
+      --gold-border:    rgba(196,154,60,0.20);
+      --border:         #2A2A26;
+      --border-hover:   #3D3D38;
+      --shadow-sm:      0 1px 4px rgba(0,0,0,0.25);
+      --shadow-md:      0 4px 20px rgba(0,0,0,0.35);
+      --shadow-lg:      0 8px 40px rgba(0,0,0,0.45);
+      --bg-raised:      var(--bg-elevated);
+      --text:           var(--text-primary);
+      --text-soft:      var(--text-secondary);
+      --border-hov:     var(--border-hover);
+      --accent:         var(--gold);
+      --gold-glow:      rgba(196,154,60,0.35);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -52,12 +93,14 @@
       flex-shrink: 0;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       padding: 0 28px;
       gap: 16px;
-      background: rgba(8,8,10,0.88);
+      background: var(--bg-card);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
       position: relative;
       z-index: 100;
     }
@@ -67,7 +110,7 @@
       font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.3em;
-      color: var(--text);
+      color: var(--text-primary);
       text-decoration: none;
     }
     .topbar-logo span { color: var(--gold); font-weight: 400; }
@@ -82,6 +125,35 @@
       transition: color 0.2s;
     }
     .topbar-back:hover { color: var(--gold); }
+    .topbar-nav { display: flex; gap: 24px; }
+    .topbar-link {
+    font-family: 'Cinzel', serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+    .topbar-link:hover { color: var(--gold); }
+    .topbar-link.active { color: var(--gold); }
+    .topbar-link-pro {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pro-badge {
+      font-family: 'Cinzel', serif;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--bg-deep);
+      background: var(--gold);
+      padding: 2px 6px;
+      border-radius: 4px;
+      line-height: 1.4;
+    }
 
     .apolo-badge {
       display: flex;
@@ -400,6 +472,101 @@
       padding: 32px 36px 40px;
     }
 
+    /* ═══ LEY FLUIDA ═══ */
+    #ley-container {
+      display: none;
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 32px 40px;
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+      font-family: 'Lora', Georgia, serif;
+      font-size: 14px;
+      line-height: 1.85;
+      color: var(--text-primary);
+    }
+    #ley-loading {
+      display: none;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(196,154,60,0.5);
+    }
+    .ley-libro h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border-bottom: 1px solid rgba(139,104,32,0.2);
+      padding-bottom: 8px;
+      margin: 48px 0 20px;
+    }
+    .ley-titulo h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(139,104,32,0.55);
+      margin: 28px 0 12px;
+    }
+    .ley-capitulo h4 {
+      font-family: 'Lora', serif;
+      font-size: 11px;
+      font-style: italic;
+      color: var(--text-muted);
+      margin: 18px 0 10px;
+    }
+    .ley-articulo {
+      margin-bottom: 22px;
+      scroll-margin-top: 80px;
+      padding: 2px 0;
+    }
+    .ley-art-num {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 5px;
+    }
+    .ley-art-texto {
+      color: var(--text-primary);
+    }
+    .ley-art-zruseno {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      color: var(--text-muted);
+      opacity: 0.35;
+      margin: 4px 0;
+      scroll-margin-top: 80px;
+    }
+    .ley-articulo.activo {
+      background: rgba(139,104,32,0.06);
+      border-left: 2px solid var(--gold);
+      padding-left: 14px;
+      border-radius: 2px;
+      margin-left: -16px;
+    }
+    .ley-ref {
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(139,104,32,0.4);
+      transition: color 0.2s;
+    }
+    .ley-ref:hover { color: var(--gold-light); border-bottom-color: var(--gold-light); }
+    /* Dark mode overrides */
+    [data-theme="dark"] #ley-container { color: var(--text-primary); }
+    [data-theme="dark"] .ley-articulo.activo { background: rgba(196,154,60,0.07); border-left-color: var(--gold); }
+    :root:not([data-theme="dark"]) #ley-container { background: #f5edd8; }
+
     /* Empty state */
     .centro-vacio {
       display: flex;
@@ -697,12 +864,12 @@
       margin-bottom: 6px;
     }
     .msg-apolo {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
+      background: rgba(196,154,60,0.07);
+      border: 1px solid rgba(196,154,60,0.18);
       border-radius: 4px 16px 16px 16px;
       padding: 12px 14px;
       align-self: flex-start;
-      color: var(--text);
+      color: rgba(245,237,216,0.88);
       max-width: 92%;
     }
     .msg-apolo .msg-sender { color: var(--gold); }
@@ -787,38 +954,70 @@
     .btn-send:hover { background: var(--gold-light); transform: scale(1.05); }
     .btn-send:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
 
-    /* Context buttons */
+    /* Context buttons — segmented control */
     .chat-contexto {
       display: flex;
-      gap: 6px;
-      padding: 8px 12px;
-      border-bottom: 1px solid rgba(196,154,60,0.2);
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-bottom: 1px solid rgba(196,154,60,0.15);
+    }
+    .ctx-segment {
+      display: flex;
+      border: 1px solid rgba(196,154,60,0.22);
+      border-radius: 8px;
+      overflow: hidden;
     }
     .ctx-btn {
       font-family: 'Cinzel', serif;
-      font-size: 9px;
-      letter-spacing: 0.06em;
-      padding: 4px 10px;
-      border-radius: 20px;
-      border: 1px solid rgba(196,154,60,0.3);
-      background: transparent;
-      color: rgba(245,237,216,0.5);
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      padding: 5px 11px;
+      background: rgba(245,237,216,0.03);
+      color: rgba(245,237,216,0.38);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.18s;
+      white-space: nowrap;
+      border: none;
+      border-right: 1px solid rgba(196,154,60,0.22);
+      line-height: 1.4;
+      text-transform: uppercase;
     }
+    .ctx-btn:last-child { border-right: none; }
     .ctx-btn.activo {
-      background: rgba(196,154,60,0.15);
-      border-color: var(--gold);
-      color: var(--gold);
+      background: rgba(196,154,60,0.16);
+      color: #C49A3C;
     }
     .ctx-btn.deshabilitado {
-      opacity: 0.3;
+      opacity: 0.22;
       cursor: not-allowed;
       pointer-events: none;
     }
     .ctx-btn:hover:not(.deshabilitado):not(.activo) {
-      border-color: rgba(196,154,60,0.6);
-      color: rgba(245,237,216,0.8);
+      background: rgba(245,237,216,0.06);
+      color: rgba(245,237,216,0.72);
+    }
+
+    /* Modo proceso — pill separado */
+    .chat-modo-btn {
+      margin-left: auto;
+      background: none;
+      border: 1px solid rgba(196,154,60,0.22);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-family: 'Cinzel', serif;
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(245,237,216,0.38);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .chat-modo-btn:hover, .chat-modo-btn.activo {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(196,154,60,0.1);
     }
 
     /* Article tags in chat */
@@ -996,6 +1195,259 @@
       .col-nav { width: 200px; }
       .col-chat { width: 260px; }
     }
+  
+    /* ═══ THEME SYSTEM OVERRIDES ═══ */
+    .topbar {
+      background: var(--bg-elevated) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: var(--shadow-sm);
+      border-bottom: 1px solid var(--border);
+    }
+    [data-theme="dark"] .topbar {
+      background: rgba(20,20,18,0.96) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+    }
+    .topbar-logo { color: var(--text-primary); }
+    .topbar-link {
+    font-family: 'Cinzel', serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+    .topbar-link:hover { color: var(--gold); }
+    .topbar-link.active { color: var(--text-primary); font-weight: 600; }
+    .topbar-link.active::after, .topbar-link:hover::after { background: var(--gold); }
+    .topbar-status, .apolo-badge {
+      background: rgba(146,112,42,0.08);
+      border: 1px solid var(--gold-border);
+      color: var(--gold);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+    }
+    [data-theme="dark"] .topbar-status, [data-theme="dark"] .apolo-badge {
+      background: var(--gold-dim);
+    }
+    .status-dot, .apolo-dot {
+      background: #22C55E;
+      box-shadow: 0 0 6px rgba(34,197,94,0.5);
+      animation: none !important;
+    }
+    [data-theme="dark"] .status-dot, [data-theme="dark"] .apolo-dot {
+      background: var(--gold);
+      box-shadow: 0 0 10px var(--gold-glow);
+      animation: pulse-dot 2s ease-in-out infinite !important;
+    }
+    .ambient-orb { opacity: 0.04 !important; }
+    [data-theme="dark"] .ambient-orb { opacity: 0.08 !important; }
+    body { background: var(--bg-deep); color: var(--text-primary); }
+    /* Cards */
+    .art-card { box-shadow: var(--shadow-sm); border-left: 3px solid transparent; }
+    .art-card:hover { box-shadow: var(--shadow-md); border-left-color: var(--gold); }
+    .sintesis-card { box-shadow: var(--shadow-md); border-top: 3px solid var(--gold) !important; border-radius: 0 0 16px 16px !important; }
+    .sintesis-card::before { display: none; }
+    .art-score {
+      background: var(--gold-dim);
+      color: var(--gold);
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+    .capitulo-tag {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hover);
+      color: var(--text-secondary);
+    }
+    [data-theme="dark"] .capitulo-tag { background: var(--gold-dim); color: var(--gold); }
+    /* Inputs */
+    .marco-textarea, .marco-select, .tree-select {
+      background: var(--bg-input) !important;
+      border-color: var(--border);
+      color: var(--text-primary);
+    }
+    .marco-textarea:focus, .marco-select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(146,112,42,0.12);
+    }
+    /* Main button */
+    .marco-btn { background: var(--text-primary); color: var(--bg-card); box-shadow: var(--shadow-sm); }
+    .marco-btn:hover:not(:disabled) { background: var(--gold); color: var(--bg-card); box-shadow: var(--shadow-md); }
+    /* Nivel headers */
+    .nivel-header { background: var(--bg-card); box-shadow: var(--shadow-sm); }
+    .nivel-header:hover { background: var(--bg-elevated); box-shadow: var(--shadow-md); }
+    /* Text */
+    .sintesis-texto { color: var(--text-primary); }
+    .sintesis-eyebrow { color: var(--gold); }
+    /* Disclaimer */
+    .disclaimer {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 24px;
+      padding: 14px 18px;
+      background: rgba(146,112,42,0.06);
+      border: 1px solid var(--gold-border);
+      border-radius: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .disclaimer-icono { flex-shrink: 0; font-size: 14px; }
+    /* Tema toggle */
+    .tema-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 15px;
+      color: var(--text-muted);
+      padding: 3px 10px;
+      line-height: 1.4;
+      transition: all 0.2s;
+      margin-left: 8px;
+    }
+    .tema-btn:hover { color: var(--gold); border-color: var(--gold-border); }
+    .lang-dropdown { display: none; }
+    select option { background: #FDFAF5 !important; color: #1A1410 !important; }
+    select:focus option { background: #F0EBE0 !important; color: #1A1410 !important; }
+
+    /* ═══ BANNER ACCESO ═══ */
+    .acceso-banner {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 9px 28px;
+      background: rgba(196,154,60,0.10);
+      border-bottom: 1px solid rgba(196,154,60,0.22);
+      font-family: 'Cinzel', serif;
+      font-size: 9.5px;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      flex-wrap: wrap;
+    }
+    .acceso-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: var(--bg-deep);
+      background: var(--gold);
+      padding: 5px 14px;
+      border-radius: 20px;
+      text-decoration: none;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .acceso-btn:hover { background: var(--gold-light); }
+
+    /* ══════════════════════════════════════════
+       MODO CLARO — todos los textos muy oscuros
+       ══════════════════════════════════════════ */
+    /* Fondos de paneles */
+    :root:not([data-theme="dark"]) .topbar         { background: var(--bg-elevated) !important; }
+    :root:not([data-theme="dark"]) .col-nav         { background: var(--bg-elevated); }
+    :root:not([data-theme="dark"]) .nav-controls    { background: var(--bg-elevated); }
+    :root:not([data-theme="dark"]) .col-chat        { background: var(--bg-elevated); }
+    :root:not([data-theme="dark"]) .chat-header     { background: var(--bg-elevated); }
+    :root:not([data-theme="dark"]) #chat-mensajes   { background: var(--bg-card); }
+    :root:not([data-theme="dark"]) .chat-input-area { background: var(--bg-elevated); border-top-color: var(--border); }
+    :root:not([data-theme="dark"]) .chat-input-row  { background: var(--bg-card); border-color: var(--border); }
+
+    /* Nav izquierdo — etiquetas, selects, árbol */
+    :root:not([data-theme="dark"]) .nav-label       { color: var(--text-primary); opacity: 0.65; }
+    :root:not([data-theme="dark"]) .nav-select      { color: var(--text-primary); background: var(--bg-card); border-color: var(--border-hover); }
+    :root:not([data-theme="dark"]) .search-input    { color: var(--text-primary); background: var(--bg-card); border-color: var(--border-hover); }
+    :root:not([data-theme="dark"]) .search-input::placeholder { color: var(--text-muted); }
+    :root:not([data-theme="dark"]) .nav-placeholder { color: var(--text-muted); }
+    :root:not([data-theme="dark"]) .nav-loading     { color: var(--gold); }
+    :root:not([data-theme="dark"]) .acord-header    { color: var(--text-secondary); }
+    :root:not([data-theme="dark"]) .sub-acord-header { color: var(--text-secondary); }
+    :root:not([data-theme="dark"]) .art-link        { color: var(--text-secondary); }
+    :root:not([data-theme="dark"]) .search-result-item { color: var(--text-secondary); }
+    :root:not([data-theme="dark"]) .search-result-sub  { color: var(--text-muted); }
+    :root:not([data-theme="dark"]) .bookmark-chip-label { color: var(--text-secondary); }
+
+    /* Chat derecho */
+    :root:not([data-theme="dark"]) .ctx-segment     { border-color: var(--border); }
+    :root:not([data-theme="dark"]) .ctx-btn         { color: var(--text-secondary); border-right-color: var(--border); }
+    :root:not([data-theme="dark"]) .ctx-btn:hover:not(.deshabilitado):not(.activo) { color: var(--text-primary); background: rgba(139,104,32,0.08); }
+    :root:not([data-theme="dark"]) .chat-modo-btn   { color: var(--text-secondary); }
+    :root:not([data-theme="dark"]) .chat-context    { color: var(--text-secondary); }
+    :root:not([data-theme="dark"]) .msg-apolo       { background: var(--border); border-color: var(--border-hover); color: var(--text-primary); }
+    :root:not([data-theme="dark"]) .msg-apolo .msg-sender { color: var(--gold); }
+    :root:not([data-theme="dark"]) .msg-usuario     { color: var(--text-primary); }
+    :root:not([data-theme="dark"]) #chat-input      { color: var(--text-primary); }
+
+    /* Centro */
+    :root:not([data-theme="dark"]) .breadcrumb      { color: var(--text-secondary); }
+    :root:not([data-theme="dark"]) .art-ley-info    { color: var(--text-muted); }
+    :root:not([data-theme="dark"]) .vacio-title     { color: var(--text-muted); }
+    :root:not([data-theme="dark"]) .wb-titulo       { color: var(--text-muted); }
+    :root:not([data-theme="dark"]) .wb-back         { color: var(--text-muted); }
+    :root:not([data-theme="dark"]) .wb-caption      { color: var(--text-muted); }
+
+    /* ══════════════════════════════════════════
+       MODO OSCURO — todos los textos muy claros
+       ══════════════════════════════════════════ */
+    /* Nav izquierdo */
+    [data-theme="dark"] .nav-label         { color: rgba(196,154,60,0.75); }
+    [data-theme="dark"] .nav-select        { color: var(--text-primary); }
+    [data-theme="dark"] .search-input      { color: var(--text-primary); }
+    [data-theme="dark"] .nav-placeholder   { color: var(--text-secondary); }
+    [data-theme="dark"] .acord-header      { color: var(--text-secondary); }
+    [data-theme="dark"] .sub-acord-header  { color: var(--text-secondary); }
+    [data-theme="dark"] .art-link          { color: var(--text-secondary); }
+    /* Chat derecho */
+    [data-theme="dark"] .ctx-btn           { color: var(--text-secondary); }
+    [data-theme="dark"] .chat-modo-btn     { color: var(--text-secondary); }
+    [data-theme="dark"] .chat-context      { color: var(--text-secondary); }
+    /* Centro — elementos con colores hardcoded oscuros */
+    [data-theme="dark"] .breadcrumb        { color: var(--text-secondary); }
+    [data-theme="dark"] .art-ley-info      { color: var(--text-muted); }
+    [data-theme="dark"] .vacio-title       { color: var(--text-muted); }
+    [data-theme="dark"] .wb-titulo         { color: var(--text-muted); }
+    [data-theme="dark"] .wb-back           { color: var(--text-muted); }
+
+    /* ── Mobile sidebar ── */
+    .topbar-right { display: flex; align-items: center; gap: 4px; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #3D342A); border-radius: 2px; transition: background 0.2s; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(26,20,16,0.45); z-index: 199; }
+    .sidebar-overlay.open { display: block; }
+    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(26,20,16,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
+    .sidebar.open { right: 0; }
+    .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border, #E5DDD0); }
+    .sidebar-logo { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #1A1410); text-decoration: none; }
+    .sidebar-logo span { color: var(--gold, #8B6820); }
+    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #7A6E60); font-size: 18px; padding: 4px; line-height: 1; }
+    .sidebar-close:hover { color: var(--text-primary, #1A1410); }
+    .sidebar-nav { flex: 1; display: flex; flex-direction: column; padding: 16px 0; overflow-y: auto; }
+    .sidebar-link {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 13px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8B6820); background: rgba(139,104,32,0.06); border-left-color: var(--gold, #8B6820); }
+    .sidebar-link .pro-badge { font-size: 7px; }
+    @media (max-width: 680px) { .hamburger { display: flex; } .topbar-nav { display: none !important; } .topbar-status, .apolo-badge { display: none !important; } }
   </style>
 </head>
 <body>
@@ -1003,18 +1455,49 @@
   <!-- ═══ TOPBAR ═══ -->
   <header class="topbar">
     <a class="topbar-logo" href="index.html">LEGAL<span>ATLAS</span></a>
-    <a class="topbar-back" href="index.html" data-i18n="nav.inicio">← Inicio</a>
-    <a class="topbar-back" href="marco.html" style="margin-left: 8px;">Marco Teorizador</a>
-    <div class="lang-switcher">
-      <button class="lang-btn" data-lang-btn="es" onclick="setLang('es')">ES</button>
-      <button class="lang-btn" data-lang-btn="cs" onclick="setLang('cs')">CS</button>
-      <button class="lang-btn" data-lang-btn="fr" onclick="setLang('fr')">FR</button>
-    </div>
-    <div class="apolo-badge">
-      <div class="apolo-dot"></div>
-      <span data-i18n="apolo.pro">APOLO · Pro</span>
+    <nav class="topbar-nav">
+      <a href="abogado.html" class="topbar-link active">Biblioteca</a>
+      <a href="jurisprudencia.html" class="topbar-link ">Judikatura</a>
+      <a href="magnus.html" class="topbar-link topbar-link-pro ">Magnus</a>
+      <a href="atlas.html" class="topbar-link topbar-link-pro ">Atlas</a>
+      <a href="cuenta.html" class="topbar-link ">Mi Cuenta</a>
+    </nav>
+    <div class="topbar-right">
+      <div class="lang-switcher" id="lang-switcher">
+        <button class="lang-globe-btn" onclick="toggleLangDropdown()" title="Language / Idioma">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg><span class="lang-current" id="lang-current"></span>
+        </button>
+        <div class="lang-dropdown" id="lang-dropdown">
+          <button class="lang-option" data-lang-btn="es" onclick="setLang('es');closeLangDropdown()">🇪🇸 Español</button>
+          <button class="lang-option" data-lang-btn="cs" onclick="setLang('cs');closeLangDropdown()">🇨🇿 Čeština</button>
+          <button class="lang-option" data-lang-btn="fr" onclick="setLang('fr');closeLangDropdown()">🇫🇷 Français</button>
+          <button class="lang-option" data-lang-btn="en" onclick="setLang('en');closeLangDropdown()">🇬🇧 English</button>
+        </div>
+      </div>
+      <button class="tema-btn" id="tema-btn" onclick="toggleTema()" title="Cambiar tema">◑</button>
+      <button class="hamburger" onclick="openSidebar()" aria-label="Menú"><span></span><span></span><span></span></button>
     </div>
   </header>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="la-sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="sidebar-logo">LEGAL<span>ATLAS</span></a>
+      <button class="sidebar-close" onclick="closeSidebar()" aria-label="Cerrar menú">✕</button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="abogado.html" class="sidebar-link active">Biblioteca</a>
+      <a href="jurisprudencia.html" class="sidebar-link ">Judikatura</a>
+      <a href="magnus.html" class="sidebar-link ">Magnus</a>
+      <a href="atlas.html" class="sidebar-link ">Atlas</a>
+      <a href="cuenta.html" class="sidebar-link ">Mi Cuenta</a>
+    </nav>
+  </aside>
+
+  <!-- ═══ BANNER ACCESO ═══ -->
+  <div class="acceso-banner">
+    <span data-i18n="abogado.banner">Período de lanzamiento · Acceso gratuito hasta el 7 de mayo</span>
+    <a href="mailto:hola@legalatlas.io?subject=Acceso%20Legal%20Atlas" class="acceso-btn" data-i18n="abogado.acceso.cta">Solicitar acceso →</a>
+  </div>
 
   <!-- ═══ PANEL ═══ -->
   <div class="panel">
@@ -1069,6 +1552,11 @@
 
     <!-- ── CENTER ── -->
     <main class="col-centro">
+
+      <!-- LEY FLUIDA — visible cuando una ley está cargada -->
+      <div id="ley-loading"><div class="wb-spinner"></div>Cargando ley…</div>
+      <div id="ley-container"></div>
+
       <div class="centro-scroll" id="centro-scroll">
 
         <!-- Empty state -->
@@ -1125,9 +1613,13 @@
 
       <div class="chat-input-area">
         <div class="chat-contexto">
-          <button class="ctx-btn activo" data-modo="articulo">Este artículo</button>
-          <button class="ctx-btn" data-modo="ley">Esta ley</button>
-          <button class="ctx-btn deshabilitado" data-modo="comparar" title="Disponible en Plan Despacho">Comparar estados</button>
+          <div class="ctx-segment">
+            <button class="ctx-btn activo" data-modo="articulo" data-i18n="abogado.ctx.articulo">Este artículo</button>
+            <button class="ctx-btn" data-modo="ley" data-i18n="abogado.ctx.ley">Esta ley</button>
+            <button class="ctx-btn deshabilitado" data-modo="comparar" title="Disponible en Plan Despacho" data-i18n="abogado.ctx.comparar">Comparar estados</button>
+          </div>
+          <button class="chat-modo-btn" id="btn-proceso-abogado"
+                  onclick="activarModoProceso()" data-i18n="abogado.ctx.proceso">⟳ Proceso</button>
         </div>
         <div class="chat-input-row">
           <textarea
@@ -1159,6 +1651,130 @@
     let chatBloqueado     = false;
     let historialChat     = [];
     let modoChat          = 'articulo';
+    let modoProcesoActivo = false;
+    let leyFluidaCargada  = false;   // true cuando #ley-container tiene HTML
+
+    // ── Supabase client (read-only anon key)
+    const SUPA_URL = 'https://nuzzmcxirsghykzqbmmn.supabase.co'
+    const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51enptY3hpcnNnaHlrenFibW1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkzNDEzNjksImV4cCI6MjA4NDkxNzM2OX0.cjltICXHv8rCwb4DC2XEvgXSht-ychz192mXsjMDTt0'
+
+    // ═══════════════════════════════════════════════════════════
+    //  LEY FLUIDA
+    // ═══════════════════════════════════════════════════════════
+    function anchorId(numeroArticulo) {
+      return String(numeroArticulo)
+        .replace(/[§\s\.]/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '')
+        .toLowerCase()
+    }
+
+    // Fetch helper for leyes_html
+    async function fetchLeyHtml(pais, ley, estado) {
+      const res = await fetch(
+        `${SUPA_URL}/rest/v1/leyes_html?pais=eq.${encodeURIComponent(pais)}&ley=eq.${encodeURIComponent(ley)}&estado=eq.${encodeURIComponent(estado)}&select=html,total_articulos`,
+        { headers: { 'apikey': SUPA_ANON, 'Authorization': `Bearer ${SUPA_ANON}` } }
+      )
+      const data = await res.json()
+      return (data && data.length > 0 && data[0]?.html) ? data[0] : null
+    }
+
+    async function cargarLey(pais, ley, estado) {
+      const container = document.getElementById('ley-container')
+      const loading   = document.getElementById('ley-loading')
+      const scroll    = document.getElementById('centro-scroll')
+
+      loading.style.display   = 'flex'
+      container.style.display = 'none'
+      scroll.style.display    = 'none'
+      leyFluidaCargada = false
+
+      try {
+        // Try exact estado, then fallbacks: '', 'Nacional', 'Federal'
+        let data = await fetchLeyHtml(pais, ley, estado)
+        if (!data && estado !== '') data = await fetchLeyHtml(pais, ley, '')
+        if (!data && estado !== 'Nacional') data = await fetchLeyHtml(pais, ley, 'Nacional')
+        if (!data && estado !== 'Federal') data = await fetchLeyHtml(pais, ley, 'Federal')
+
+        if (!data) {
+          loading.style.display = 'none'
+          scroll.style.display  = 'block'
+          return
+        }
+
+        container.innerHTML     = data.html
+        loading.style.display   = 'none'
+        container.style.display = 'block'
+        scroll.style.display    = 'none'
+        leyFluidaCargada = true
+
+        // Click en artículo → set contexto chat
+        container.querySelectorAll('.ley-articulo').forEach(el => {
+          el.style.cursor = 'pointer'
+          el.addEventListener('click', () => {
+            const num = el.dataset.articulo
+            if (!num) return
+            resaltarArticuloById(el.id)
+            const texto = el.querySelector('.ley-art-texto')?.innerText || ''
+            articuloActivo = { numero_articulo: num, ley, estado, pais, texto_original: texto }
+            window.contextoActivo = {
+              articulo: num,
+              libro:    el.dataset.libro    || '',
+              titulo:   el.dataset.titulo   || '',
+              capitulo: el.dataset.capitulo || '',
+              ley
+            }
+            const ctx = document.getElementById('chat-context')
+            ctx.textContent = `Artículo activo: ${num}`
+            ctx.classList.add('activo')
+          })
+        })
+
+      } catch (err) {
+        console.error('[cargarLey]', err)
+        loading.style.display = 'none'
+        scroll.style.display  = 'block'
+      }
+    }
+
+    // Scroll a una sección/capítulo en ley fluida por nombre
+    function scrollLeySeccion(nombre) {
+      if (!leyFluidaCargada) return false
+      const container = document.getElementById('ley-container')
+      // Buscar primer artículo que coincida con libro, titulo o capitulo
+      const el = container.querySelector(
+        `.ley-articulo[data-titulo="${CSS.escape(nombre)}"]`) ||
+        container.querySelector(`.ley-articulo[data-libro="${CSS.escape(nombre)}"]`) ||
+        container.querySelector(`.ley-articulo[data-capitulo="${CSS.escape(nombre)}"]`)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        return true
+      }
+      return false
+    }
+
+    function resaltarArticuloById(id) {
+      document.querySelectorAll('.ley-articulo.activo').forEach(el => el.classList.remove('activo'))
+      const el = document.getElementById(id)
+      if (el) {
+        el.classList.add('activo')
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        // Set contexto para Apolo
+        if (el.dataset.articulo) {
+          window.contextoActivo = {
+            articulo: el.dataset.articulo,
+            libro:    el.dataset.libro    || '',
+            titulo:   el.dataset.titulo   || '',
+            capitulo: el.dataset.capitulo || '',
+            ley:      leyActiva
+          }
+        }
+      }
+    }
+
+    function resaltarArticulo(numeroArticulo) {
+      resaltarArticuloById(anchorId(numeroArticulo))
+    }
 
     // ═══════════════════════════════════════════════════════════
     //  INIT
@@ -1203,6 +1819,12 @@
           try { opt.textContent = dn.of(p); } catch { opt.textContent = p; }
           sel.appendChild(opt);
         });
+        // Auto-select CZ when lang=cs, else no default
+        const _abLang = localStorage.getItem('atlas_lang') || new URLSearchParams(location.search).get('lang') || '';
+        if (_abLang === 'cs' && paises.includes('CZ')) {
+          sel.value = 'CZ';
+          setTimeout(() => sel.dispatchEvent(new Event('change')), 0);
+        }
       } catch (err) {
         sel.innerHTML = '<option value="">Error al cargar</option>';
         console.error('[cargarPaises]', err);
@@ -1311,6 +1933,8 @@
         }
       }
 
+      // Cargar ley fluida y árbol en paralelo
+      cargarLey(paisActivo, leyActiva, estadoActivo)
       await cargarNivelesPrimarios();
     }
 
@@ -1318,6 +1942,7 @@
       estadoActivo = document.getElementById('sel-estado').value;
       actualizarBookmarkBtn();
       limpiarArbol();
+      cargarLey(paisActivo, leyActiva, estadoActivo);
       cargarNivelesPrimarios();
     }
 
@@ -1471,6 +2096,11 @@
     //  SECCIÓN EN CENTRO — muestra todas las tarjetas de artículos
     // ═══════════════════════════════════════════════════════════
     async function cargarSeccionEnCentro(titulo, capitulo) {
+      // Si ley fluida está activa → scroll en vez de cargar sección
+      if (leyFluidaCargada) {
+        scrollLeySeccion(capitulo || titulo)
+        return
+      }
       mostrarVistaSección();
       document.getElementById('seccion-titulo').textContent = capitulo || titulo;
       document.getElementById('seccion-articulos').innerHTML = '<div class="nav-loading">Cargando artículos…</div>';
@@ -1629,7 +2259,19 @@
 
         articuloActivo = art;
 
-        // Load sibling articles for context
+        // Si la ley fluida está cargada → solo scroll + highlight
+        if (leyFluidaCargada) {
+          resaltarArticulo(art.numero_articulo)
+          const ctx = document.getElementById('chat-context')
+          ctx.textContent = `Artículo activo: ${art.numero_articulo}`
+          ctx.classList.add('activo')
+          historialChat = []
+          document.getElementById('chat-mensajes').innerHTML = ''
+          agregarMensaje('apolo', `He cargado el <strong>${art.numero_articulo}</strong>. Puedes preguntarme sobre su contenido, implicaciones o cómo aplicarlo en casos concretos.`)
+          return
+        }
+
+        // Fallback: vista clásica de artículo
         if (art.titulo) {
           try {
             const res2  = await fetch(`/api/abogado?action=articulos_capitulo&pais=${enc(art.pais||paisActivo)}&ley=${enc(art.ley)}&estado=${enc(art.estado||'')}&nivel_secundario=${enc(art.titulo)}`);
@@ -1640,7 +2282,6 @@
           }
         }
 
-        // Render article
         document.getElementById('breadcrumb').innerHTML = buildBreadcrumb(art);
         document.getElementById('art-numero').textContent = art.numero_articulo || '';
         document.getElementById('art-ley-info').textContent = `${art.ley || ''} · ${art.estado || ''}`;
@@ -1648,15 +2289,12 @@
 
         mostrarVistaArticulo();
 
-        // Chat context
         const ctx = document.getElementById('chat-context');
         ctx.textContent = `Artículo activo: ${art.numero_articulo}`;
         ctx.classList.add('activo');
 
-        // Reset chat e historial al cambiar artículo
         historialChat = [];
-        const msgs = document.getElementById('chat-mensajes');
-        msgs.innerHTML = '';
+        document.getElementById('chat-mensajes').innerHTML = '';
         agregarMensaje('apolo', `He cargado el <strong>${art.numero_articulo}</strong>. Puedes preguntarme sobre su contenido, implicaciones o cómo aplicarlo en casos concretos.`);
 
       } catch (err) {
@@ -1810,6 +2448,19 @@
       }
     }
 
+    function activarModoProceso() {
+      if (!leyActiva) {
+        alert('Primero selecciona una ley en el panel izquierdo.');
+        return;
+      }
+      modoProcesoActivo = !modoProcesoActivo;
+      const btn = document.getElementById('btn-proceso-abogado');
+      btn.classList.toggle('activo', modoProcesoActivo);
+      document.getElementById('chat-input').placeholder = modoProcesoActivo
+        ? '⟳ Modo proceso: ¿Cómo se tramita...?'
+        : 'Pregunta sobre este artículo…';
+    }
+
     async function enviarChat() {
       if (chatBloqueado) return;
       const input = document.getElementById('chat-input');
@@ -1829,23 +2480,49 @@
       agregarMensaje('apolo-typing', '', typingId);
 
       try {
-        const body = construirBody(preguntaUsuario);
+        if (modoProcesoActivo && leyActiva) {
+          // ── Modo Proceso: RAG por capítulos ──
+          const res = await fetch('/api/proceso', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              pregunta: preguntaUsuario,
+              ley: leyActiva,
+              pais: paisActivo || 'MX'
+            })
+          });
+          const data = await res.json();
+          eliminarMensaje(typingId);
 
-        const res  = await fetch('/api/asesoria', {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify(body)
-        });
-        const json = await res.json();
+          if (data.ok) {
+            const capInfo = data.capitulos_encontrados
+              ?.map(c => `<span style="font-family:'Cinzel',serif;font-size:9px;color:var(--gold);background:var(--gold-dim);border-radius:20px;padding:2px 8px;margin-right:4px;">${c.capitulo}</span>`)
+              .join('') || '';
+            const html = `<div style="margin-bottom:10px;">${capInfo}</div>${data.flujo.replace(/\n/g, '<br>')}`;
+            agregarMensaje('apolo', html, null, []);
+            historialChat.push({ role: 'assistant', content: data.flujo });
+          } else {
+            agregarMensaje('apolo', `Error: ${data.error}`);
+          }
 
-        eliminarMensaje(typingId);
+        } else {
+          // ── Modo normal: RAG semántico vía asesoria ──
+          const body = construirBody(preguntaUsuario);
+          const res  = await fetch('/api/asesoria', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(body)
+          });
+          const json = await res.json();
+          eliminarMensaje(typingId);
 
-        if (json.respuesta) {
-          const html = json.respuesta.draftHtml || json.respuesta.resumen || 'Sin respuesta';
-          agregarMensaje('apolo', html, null, json.respuesta.articulos || []);
-          historialChat.push({ role: 'assistant', content: html });
-        } else if (json.error) {
-          agregarMensaje('apolo', `Error: ${json.error}`);
+          if (json.respuesta) {
+            const html = json.respuesta.draftHtml || json.respuesta.resumen || 'Sin respuesta';
+            agregarMensaje('apolo', html, null, json.respuesta.articulos || []);
+            historialChat.push({ role: 'assistant', content: html });
+          } else if (json.error) {
+            agregarMensaje('apolo', `Error: ${json.error}`);
+          }
         }
 
       } catch (err) {
@@ -1871,9 +2548,13 @@
         div.className = 'msg msg-apolo';
         let inner = `<div class="msg-sender">APOLO</div><div>${contenido}</div>`;
         if (articulos && articulos.length > 0) {
-          inner += `<div class="art-tags-row">${articulos.map(a => `<span class="art-tag">Art. ${a}</span>`).join('')}</div>`;
+          inner += `<div class="art-tags-row">${articulos.map(a => `<span class="art-tag" onclick="resaltarArticulo('§ ${a}')" style="cursor:pointer">§ ${a}</span>`).join('')}</div>`;
         }
         div.innerHTML = inner;
+        // Auto-scroll al primer artículo citado si ley fluida está activa
+        if (leyFluidaCargada && articulos && articulos.length > 0) {
+          setTimeout(() => resaltarArticulo(`§ ${articulos[0]}`), 300)
+        }
       } else if (tipo === 'apolo-typing') {
         div.className = 'msg msg-apolo';
         div.innerHTML = `<div class="msg-sender">APOLO</div><div class="typing-dots"><span></span><span></span><span></span></div>`;
@@ -1889,7 +2570,7 @@
     }
 
     function mostrarSaludo() {
-      agregarMensaje('apolo', 'Hola. Soy <strong>APOLO</strong>, tu asistente jurídico Pro. Selecciona un artículo del navegador para comenzar el análisis.');
+      agregarMensaje('apolo', window.t ? window.t('abogado.saludo', null, 'Hola. Soy <strong>APOLO</strong>, tu asistente jurídico Pro. Selecciona un artículo del navegador para comenzar el análisis.') : 'Hola. Soy <strong>APOLO</strong>, tu asistente jurídico Pro. Selecciona un artículo del navegador para comenzar el análisis.');
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -2067,5 +2748,55 @@
   </script>
 
   <script src="/locales/i18n.js"></script>
+<script>
+function toggleTema() {
+  var t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('la-theme', t);
+  var btn = document.getElementById('tema-btn');
+  if (btn) btn.textContent = t === 'dark' ? '◑' : '●';
+}
+(function() {
+  var t = document.documentElement.getAttribute('data-theme') || 'light';
+  var btn = document.getElementById('tema-btn');
+  if (btn) btn.textContent = t === 'dark' ? '◑' : '●';
+})();
+</script>
+
+<script>
+function openSidebar() {
+  document.getElementById('la-sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('la-sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+</script>
+
+<div id="overlay-registro" style="position:fixed;inset:0;background:rgba(253,250,245,0.97);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px">
+  <p style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;color:var(--gold);margin-bottom:16px" data-i18n="overlay.acceso">ACCESO REQUERIDO</p>
+  <h2 style="font-family:'Cinzel',serif;font-size:28px;margin-bottom:12px" data-i18n="overlay.registro">Regístrate para continuar</h2>
+  <p style="color:var(--text-muted);font-size:14px;margin-bottom:32px;max-width:400px;line-height:1.7" data-i18n="overlay.desc.abogado">El Biblioteca requiere una cuenta. Acceso gratuito hasta el 7 de mayo.</p>
+  <button onclick="loginConGoogle()" style="display:flex;align-items:center;gap:10px;padding:14px 24px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-family:'Lora',serif;font-size:14px;cursor:pointer;transition:all 0.2s">
+    <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2.01c-.72.48-1.63.77-2.7.77a4.9 4.9 0 01-4.62-3.38H1.68v2.07A8 8 0 008.98 17z"/><path fill="#FBBC05" d="M4.36 10.44A4.9 4.9 0 014.1 9c0-.5.09-1 .26-1.44V5.49H1.68a8 8 0 000 7.02l2.68-2.07z"/><path fill="#EA4335" d="M8.98 3.58c1.32 0 2.5.45 3.44 1.35l2.54-2.54A8 8 0 001.68 5.49l2.68 2.07a4.9 4.9 0 014.62-3.98z"/></svg>
+    Continuar con Google
+  </button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const _supabaseAuth = supabase.createClient('https://nuzzmcxirsghykzqbmmn.supabase.co', 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff')
+function loginConGoogle() {
+  _supabaseAuth.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/cuenta.html' } })
+}
+async function verificarAcceso() {
+  const { data: { session } } = await _supabaseAuth.auth.getSession()
+  document.getElementById('overlay-registro').style.display = session ? 'none' : 'flex'
+}
+verificarAcceso()
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

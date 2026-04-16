@@ -1,0 +1,55 @@
+═══════════════════════════════════════════════════════════
+  LEGAL ATLAS — MISIÓN 21 MARZO 2026
+═══════════════════════════════════════════════════════════
+
+CONTEXTO: El RAG está funcionando en producción.
+Lee CONTEXTO_LEGAL_ATLAS.md para el contexto completo.
+
+───────────────────────────────────────────────────────────
+TAREA 1 — SUPABASE (hacer ANTES de embeddear)
+───────────────────────────────────────────────────────────
+Actualizar la función buscar_articulos en Supabase SQL Editor
+con el boost de nivel_jerarquico (ya tienes el SQL listo,
+está en el historial de la conversación del 20 marzo).
+
+CASE nivel_jerarquico:
+  1 → +0.05  (Constitución / tratados)
+  2 → +0.03  (Federal)
+  3 → +0.01  (Local — todos los códigos civiles estatales)
+
+───────────────────────────────────────────────────────────
+TAREA 2 — EMBEDDEAR 27 CÓDIGOS CIVILES
+───────────────────────────────────────────────────────────
+Correr embedder.py para los 27 estados restantes.
+
+CHECKLIST por cada CSV antes de embeddear:
+  ✓ estado       → nombre exacto con acentos ("San Luis Potosí")
+  ✓ ley          → exactamente "Código Civil" (con acento en ó)
+  ✓ nivel_jerarquico → valor 3 para todos los códigos civiles estatales
+  ✓ texto_para_embedding → columna con el super-string completo
+  ✓ Sin espacios extra al final de los valores de texto
+
+RIESGO PRINCIPAL: si "estado" tiene typo o espacios,
+el filtro de Supabase no encontrará nada.
+
+───────────────────────────────────────────────────────────
+TAREA 3 — PROBAR EN EL CHAT (después de embeddear)
+───────────────────────────────────────────────────────────
+Ir a legalatlas.io/ciudadano.html y probar con:
+  - Un estado nuevo (ej: "causales de divorcio en Jalisco")
+  - Verificar que cite artículos reales del estado correcto
+
+Si no encuentra artículos → revisar que el valor de "estado"
+en Supabase coincide exactamente con lo que manda el frontend.
+
+───────────────────────────────────────────────────────────
+STACK ACTUAL (todo funcionando)
+───────────────────────────────────────────────────────────
+  Embedding:  gemini-embedding-001 (REST v1beta, 1536 dims)
+  Vector DB:  Supabase pgvector, 10 artículos por consulta
+  LLM:        Gemini 2.5 Flash (puerta ciudadano)
+  Azure:      Reservado para puerta abogado (B2B)
+  Frontend:   legalatlas.io/ciudadano.html
+  Repo:       github.com/luisreyesaldaco-hash/legalatlas
+
+═══════════════════════════════════════════════════════════

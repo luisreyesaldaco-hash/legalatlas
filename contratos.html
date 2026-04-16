@@ -1,6 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
+<script>
+(function(){
+  var t = localStorage.getItem('la-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Legal Atlas — Contratos</title>
@@ -8,18 +14,53 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <style>
     :root {
-      --bg-deep: #08080a;
-      --bg-card: #0d0d0f;
-      --bg-elevated: #141416;
-      --gold: #c49a3c;
-      --gold-light: #e8c878;
-      --gold-dim: rgba(196,154,60,0.15);
-      --gold-glow: rgba(196,154,60,0.4);
-      --text-primary: rgba(245,237,216,0.92);
-      --text-secondary: rgba(245,237,216,0.6);
-      --text-muted: rgba(245,237,216,0.35);
-      --border: rgba(196,154,60,0.12);
-      --border-hover: rgba(196,154,60,0.35);
+      --bg-deep:        #F3EAD5;
+      --bg-card:        #FAF2E0;
+      --bg-elevated:    #EBE0C8;
+      --bg-input:       #FAF2E0;
+      --text-primary:   #1A1410;
+      --text-secondary: #3D342A;
+      --text-muted:     #7A6E60;
+      --gold:           #8B6820;
+      --gold-light:     #C49A3C;
+      --gold-dim:       rgba(139,104,32,0.08);
+      --gold-border:    rgba(139,104,32,0.22);
+      --border:         #DDD0B4;
+      --border-hover:   #C9BFB0;
+      --shadow-sm:      0 1px 4px rgba(26,20,16,0.07);
+      --shadow-md:      0 4px 20px rgba(26,20,16,0.10);
+      --shadow-lg:      0 8px 40px rgba(26,20,16,0.13);
+      /* compat aliases — mantener los que ya existen */
+      --bg-raised:      var(--bg-elevated);
+      --text:           var(--text-primary);
+      --text-soft:      var(--text-secondary);
+      --border-hov:     var(--border-hover);
+      --accent:         var(--gold);
+      --gold-glow:      rgba(139,104,32,0.25);
+    }
+    :root[data-theme="dark"] {
+      --bg-deep:        #0C0C0A;
+      --bg-card:        #141412;
+      --bg-elevated:    #1C1C19;
+      --bg-input:       #1C1C19;
+      --text-primary:   #F0ECE4;
+      --text-secondary: #D0C4B4;
+      --text-muted:     #9C9082;
+      --gold:           #C49A3C;
+      --gold-light:     #D4AE58;
+      --gold-dim:       rgba(196,154,60,0.10);
+      --gold-border:    rgba(196,154,60,0.20);
+      --border:         #2A2A26;
+      --border-hover:   #3D3D38;
+      --shadow-sm:      0 1px 4px rgba(0,0,0,0.25);
+      --shadow-md:      0 4px 20px rgba(0,0,0,0.35);
+      --shadow-lg:      0 8px 40px rgba(0,0,0,0.45);
+      --bg-raised:      var(--bg-elevated);
+      --text:           var(--text-primary);
+      --text-soft:      var(--text-secondary);
+      --border-hov:     var(--border-hover);
+      --accent:         var(--gold);
+      --gold-glow:      rgba(196,154,60,0.35);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -81,10 +122,11 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 40px;
-      background: rgba(8,8,10,0.85);
+      background: var(--bg-card);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
       z-index: 100;
     }
     .topbar-logo {
@@ -98,15 +140,15 @@
     .topbar-logo span { color: var(--gold); font-weight: 400; }
     .topbar-nav { display: flex; gap: 32px; }
     .topbar-link {
-      font-family: 'Cinzel', serif;
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: color 0.3s ease;
-      position: relative;
-    }
+    font-family: 'Cinzel', serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
     .topbar-link::after {
       content: '';
       position: absolute;
@@ -119,6 +161,23 @@
     .topbar-link:hover::after { width: 100%; }
     .topbar-link.active { color: var(--gold); }
     .topbar-link.active::after { width: 100%; }
+    .topbar-link-pro {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pro-badge {
+      font-family: 'Cinzel', serif;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--bg-deep);
+      background: var(--gold);
+      padding: 2px 6px;
+      border-radius: 4px;
+      line-height: 1.4;
+    }
     .topbar-status {
       display: flex;
       align-items: center;
@@ -168,15 +227,18 @@
     }
 
     /* ═══ FOOTER ═══ */
-    .footer {
-      text-align: center;
-      padding: 48px 24px;
-      border-top: 1px solid var(--border);
-      position: relative;
-      z-index: 1;
+    .footer { text-align: center; padding: 48px 40px 40px; border-top: 1px solid var(--border); position: relative; z-index: 1; }
+    .footer-copy { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.25em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
+    .footer-disclaimer { font-size: 12px; color: var(--text-muted); line-height: 1.75; max-width: 640px; margin: 0 auto 18px; opacity: 0.85; }
+    .footer-links { display: flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-links span { margin: 0 14px; color: var(--border); }
+    @media (max-width: 680px) {
+      .footer { padding: 40px 24px 32px; }
+      .footer-links { flex-direction: column; gap: 10px; }
+      .footer-links span { display: none; }
     }
-    .footer-coords { font-size: 11px; letter-spacing: 0.25em; color: var(--text-muted); margin-bottom: 8px; }
-    .footer-copy { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.35em; color: var(--gold-dim); text-transform: uppercase; }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
@@ -519,9 +581,230 @@
       .topbar-nav { gap: 16px; }
       .topbar-status { display: none; }
     }
+  
+    /* ═══ THEME SYSTEM OVERRIDES ═══ */
+    .topbar {
+      background: var(--bg-card) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: var(--shadow-sm);
+      border-bottom: 1px solid var(--border);
+    }
+    [data-theme="dark"] .topbar {
+      background: rgba(20,20,18,0.96) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+    }
+    .topbar-logo { color: var(--text-primary); }
+    .topbar-link {
+    font-family: 'Cinzel', serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+    .topbar-link:hover { color: var(--gold); }
+    .topbar-link.active { color: var(--text-primary); font-weight: 600; }
+    .topbar-link.active::after, .topbar-link:hover::after { background: var(--gold); }
+    .topbar-status, .apolo-badge {
+      background: rgba(146,112,42,0.08);
+      border: 1px solid var(--gold-border);
+      color: var(--gold);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+    }
+    [data-theme="dark"] .topbar-status, [data-theme="dark"] .apolo-badge {
+      background: var(--gold-dim);
+    }
+    .status-dot, .apolo-dot {
+      background: #22C55E;
+      box-shadow: 0 0 6px rgba(34,197,94,0.5);
+      animation: none !important;
+    }
+    [data-theme="dark"] .status-dot, [data-theme="dark"] .apolo-dot {
+      background: var(--gold);
+      box-shadow: 0 0 10px var(--gold-glow);
+      animation: pulse-dot 2s ease-in-out infinite !important;
+    }
+    .ambient-orb { opacity: 0.04 !important; }
+    [data-theme="dark"] .ambient-orb { opacity: 0.08 !important; }
+    body { background: var(--bg-deep); color: var(--text-primary); }
+    /* Cards */
+    .art-card { box-shadow: var(--shadow-sm); border-left: 3px solid transparent; }
+    .art-card:hover { box-shadow: var(--shadow-md); border-left-color: var(--gold); }
+    .sintesis-card { box-shadow: var(--shadow-md); border-top: 3px solid var(--gold) !important; border-radius: 0 0 16px 16px !important; }
+    .sintesis-card::before { display: none; }
+    .art-score {
+      background: var(--gold-dim);
+      color: var(--gold);
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+    .capitulo-tag {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hover);
+      color: var(--text-secondary);
+    }
+    [data-theme="dark"] .capitulo-tag { background: var(--gold-dim); color: var(--gold); }
+    /* Inputs */
+    .marco-textarea, .marco-select, .tree-select {
+      background: var(--bg-input) !important;
+      border-color: var(--border);
+      color: var(--text-primary);
+    }
+    .marco-textarea:focus, .marco-select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(146,112,42,0.12);
+    }
+    /* Main button */
+    .marco-btn { background: var(--text-primary); color: var(--bg-card); box-shadow: var(--shadow-sm); }
+    .marco-btn:hover:not(:disabled) { background: var(--gold); color: var(--bg-card); box-shadow: var(--shadow-md); }
+    /* Nivel headers */
+    .nivel-header { background: var(--bg-card); box-shadow: var(--shadow-sm); }
+    .nivel-header:hover { background: var(--bg-elevated); box-shadow: var(--shadow-md); }
+    /* Text */
+    .sintesis-texto { color: var(--text-primary); }
+    .sintesis-eyebrow { color: var(--gold); }
+    /* Disclaimer */
+    .disclaimer {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 24px;
+      padding: 14px 18px;
+      background: rgba(146,112,42,0.06);
+      border: 1px solid var(--gold-border);
+      border-radius: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .disclaimer-icono { flex-shrink: 0; font-size: 14px; }
+    /* Tema toggle */
+    .tema-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 15px;
+      color: var(--text-muted);
+      padding: 3px 10px;
+      line-height: 1.4;
+      transition: all 0.2s;
+      margin-left: 8px;
+    }
+    .tema-btn:hover { color: var(--gold); border-color: var(--gold-border); }
+    .lang-dropdown { display: none; }
+    select option { background: #FDFAF5 !important; color: #1A1410 !important; }
+    select:focus option { background: #F0EBE0 !important; color: #1A1410 !important; }
+    /* ── Mobile sidebar ── */
+    .topbar-right { display: flex; align-items: center; gap: 4px; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #3D342A); border-radius: 2px; transition: background 0.2s; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(26,20,16,0.45); z-index: 199; }
+    .sidebar-overlay.open { display: block; }
+    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(26,20,16,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
+    .sidebar.open { right: 0; }
+    .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border, #E5DDD0); }
+    .sidebar-logo { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #1A1410); text-decoration: none; }
+    .sidebar-logo span { color: var(--gold, #8B6820); }
+    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #7A6E60); font-size: 18px; padding: 4px; line-height: 1; }
+    .sidebar-close:hover { color: var(--text-primary, #1A1410); }
+    .sidebar-nav { flex: 1; display: flex; flex-direction: column; padding: 16px 0; overflow-y: auto; }
+    .sidebar-link {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 13px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8B6820); background: rgba(139,104,32,0.06); border-left-color: var(--gold, #8B6820); }
+    .sidebar-link .pro-badge { font-size: 7px; }
+    @media (max-width: 680px) { .hamburger { display: flex; } .topbar-nav { display: none !important; } .topbar-status, .apolo-badge { display: none !important; } }
+
+    /* ═══ AUDITOR DE CONTRATOS ═══ */
+    .auditor-eyebrow { font-family:'Cinzel',serif; font-size:9px; letter-spacing:.35em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+    .auditor-titulo { font-family:'Cinzel',serif; font-size:26px; font-weight:700; color:var(--text-primary); margin-bottom:12px; }
+    .auditor-desc { font-size:14px; color:var(--text-muted); margin-bottom:32px; line-height:1.7; }
+
+    .pais-select {
+      width:100%; margin-top:16px;
+      background:var(--bg-elevated); border:1px solid var(--border);
+      border-radius:12px; padding:12px 16px;
+      font-family:'Lora',serif; font-size:14px; color:var(--text-primary);
+      cursor:pointer; appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c49a3c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 14px center;
+    }
+    .pais-select:focus { outline:none; border-color:var(--gold); }
+
+    .btn-primary {
+      display:block; width:100%; margin-top:16px;
+      background:var(--text-primary); color:var(--bg-deep);
+      border:none; border-radius:12px;
+      padding:16px 24px; font-family:'Cinzel',serif;
+      font-size:12px; letter-spacing:.15em; font-weight:700;
+      cursor:pointer; transition:all .2s;
+    }
+    .btn-primary:hover:not(:disabled) { background:var(--gold-light); }
+    .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+
+    .loading-auditor { display:none; text-align:center; padding:48px 24px; }
+    .spinner {
+      width:36px; height:36px; margin:0 auto;
+      border:3px solid var(--border);
+      border-top-color:var(--gold);
+      border-radius:50%;
+      animation:spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .loading-paso { margin-top:16px; color:var(--text-muted); font-size:13px; font-style:italic; }
+
+    .resumen-card {
+      background:var(--bg-card); border:1px solid var(--border);
+      border-radius:16px; padding:28px 24px; margin-bottom:24px;
+    }
+    .resumen-tipo { font-family:'Cinzel',serif; font-size:10px; letter-spacing:.2em; color:var(--gold); margin-bottom:8px; }
+    .resumen-texto { font-size:14px; line-height:1.75; color:var(--text-secondary); }
+    .contadores { display:flex; gap:12px; margin-top:20px; }
+    .contador { flex:1; text-align:center; padding:16px 8px; border-radius:12px; background:var(--bg-elevated); }
+    .contador span { font-family:'Cinzel',serif; font-size:28px; font-weight:700; display:block; color:var(--text-primary); }
+    .contador small { font-size:11px; color:var(--text-muted); margin-top:4px; display:block; }
+
+    .clausula-card { border-radius:12px; padding:20px; margin-bottom:10px; border-left:3px solid var(--border); background:var(--bg-card); }
+    .clausula-card.estado-invalida { border-left-color:#ef4444; background:rgba(239,68,68,.04); }
+    .clausula-card.estado-riesgo   { border-left-color:#f59e0b; background:rgba(245,158,11,.04); }
+    .clausula-card.estado-valida   { border-left-color:#10b981; background:rgba(16,185,129,.04); }
+    .clausula-header { display:flex; align-items:center; gap:8px; margin-bottom:10px; font-family:'Cinzel',serif; font-size:11px; letter-spacing:.05em; }
+    .clausula-titulo-txt { color:var(--text-muted); font-family:'Lora',serif; font-size:12px; font-weight:400; letter-spacing:0; }
+    .clausula-analisis { font-size:14px; line-height:1.7; color:var(--text-secondary); margin:0 0 10px; }
+    .clausula-articulo { font-size:12px; color:var(--gold); font-family:'Lora',serif; margin-bottom:8px; }
+    .ref-badge { display:inline-block; font-size:10px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:20px; padding:2px 8px; margin:3px 3px 0 0; color:var(--text-muted); }
+    .aviso-legal { font-size:11px; color:var(--text-muted); margin-top:32px; text-align:center; line-height:1.6; }
+
+    @media (max-width:480px) { .contadores { flex-direction:column; } }
   </style>
 </head>
 <body>
+
+<!-- COMING SOON BANNER -->
+<div style="background:rgba(196,154,60,0.12);border-bottom:1px solid rgba(196,154,60,0.3);padding:10px 24px;text-align:center;font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.15em;color:#C49A3C">
+  ⚠ &nbsp;Tento nástroj je momentálně v přípravě. Brzy k dispozici. &nbsp;·&nbsp; Este módulo está en preparación. Próximamente disponible.
+</div>
 
 <!-- AMBIENT BACKGROUND -->
 <div class="ambient">
@@ -534,21 +817,42 @@
 <header class="topbar">
   <a href="index.html" class="topbar-logo">LEGAL<span>ATLAS</span></a>
   <nav class="topbar-nav">
-    <a href="ciudadano.html" class="topbar-link" data-i18n="nav.consulta">Consulta</a>
-    <a href="contratos.html" class="topbar-link active" data-i18n="nav.contratos">Contratos</a>
-    <a href="abogado.html" class="topbar-link" data-i18n="nav.abogado">Abogado Pro</a>
-    <a href="#cuenta" class="topbar-link" data-i18n="nav.cuenta">Mi Cuenta</a>
-  </nav>
-  <div class="lang-switcher">
-    <button class="lang-btn" data-lang-btn="es" onclick="setLang('es')">ES</button>
-    <button class="lang-btn" data-lang-btn="cs" onclick="setLang('cs')">CS</button>
-    <button class="lang-btn" data-lang-btn="fr" onclick="setLang('fr')">FR</button>
-  </div>
-  <div class="topbar-status">
-    <div class="status-dot"></div>
-    <span data-i18n="apolo.online">APOLO · En línea</span>
+      <a href="abogado.html" class="topbar-link ">Biblioteca</a>
+      <a href="jurisprudencia.html" class="topbar-link ">Judikatura</a>
+      <a href="magnus.html" class="topbar-link topbar-link-pro ">Magnus</a>
+      <a href="atlas.html" class="topbar-link topbar-link-pro ">Atlas</a>
+      <a href="cuenta.html" class="topbar-link ">Mi Cuenta</a>
+    </nav>
+  <div class="topbar-right">
+    <div class="lang-switcher" id="lang-switcher">
+      <button class="lang-globe-btn" onclick="toggleLangDropdown()" title="Language / Idioma">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg><span class="lang-current" id="lang-current"></span>
+      </button>
+      <div class="lang-dropdown" id="lang-dropdown">
+        <button class="lang-option" data-lang-btn="es" onclick="setLang('es');closeLangDropdown()">🇪🇸 Español</button>
+        <button class="lang-option" data-lang-btn="cs" onclick="setLang('cs');closeLangDropdown()">🇨🇿 Čeština</button>
+        <button class="lang-option" data-lang-btn="fr" onclick="setLang('fr');closeLangDropdown()">🇫🇷 Français</button>
+        <button class="lang-option" data-lang-btn="en" onclick="setLang('en');closeLangDropdown()">🇬🇧 English</button>
+      </div>
+    </div>
+    <button class="tema-btn" id="tema-btn" onclick="toggleTema()" title="Cambiar tema">◑</button>
+    <button class="hamburger" onclick="openSidebar()" aria-label="Menú"><span></span><span></span><span></span></button>
   </div>
 </header>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="la-sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="sidebar-logo">LEGAL<span>ATLAS</span></a>
+    <button class="sidebar-close" onclick="closeSidebar()" aria-label="Cerrar menú">✕</button>
+  </div>
+  <nav class="sidebar-nav">
+      <a href="abogado.html" class="sidebar-link ">Biblioteca</a>
+      <a href="jurisprudencia.html" class="sidebar-link ">Judikatura</a>
+      <a href="magnus.html" class="sidebar-link ">Magnus</a>
+      <a href="atlas.html" class="sidebar-link ">Atlas</a>
+      <a href="cuenta.html" class="sidebar-link ">Mi Cuenta</a>
+    </nav>
+</aside>
 
 <main class="main">
   <section class="contratos-hero">
@@ -563,8 +867,8 @@
     <!-- DOS CAMINOS -->
     <div class="caminos" id="caminos">
 
-      <!-- CAMINO A — Redactar -->
-      <div class="camino" id="btn-redactar" onclick="mostrarRedactar()">
+      <!-- CAMINO A — Redactar (oculto en Fase 1) -->
+      <div class="camino" id="btn-redactar" onclick="mostrarRedactar()" style="display:none">
         <span class="camino-badge" data-i18n="camino.a.badge">Nuevo documento</span>
         <h2 class="camino-titulo" data-i18n-html="camino.a.titulo">Quiero redactar<br>un contrato</h2>
         <p class="camino-desc" data-i18n="camino.a.desc">
@@ -578,8 +882,8 @@
         </div>
       </div>
 
-      <!-- DIVISOR -->
-      <div class="divisor">
+      <!-- DIVISOR (oculto en Fase 1) -->
+      <div class="divisor" style="display:none">
         <div class="divisor-line"></div>
         <span class="divisor-text" data-i18n="meridiano">o</span>
         <div class="divisor-line"></div>
@@ -642,165 +946,251 @@
       </button>
     </div>
 
-    <!-- ══ PANEL B: UPLOAD ══ -->
-    <div class="upload-panel" id="upload-panel">
+    <!-- ══ PANEL B: AUDITOR ══ -->
+    <div class="upload-panel visible" id="upload-panel">
 
-      <div class="section-header" style="margin-bottom: 32px;">
-        <div class="section-line"></div>
-        <span class="section-label" data-i18n="upload.label">Sube tu contrato</span>
-        <div class="section-line right"></div>
-      </div>
+      <p class="auditor-eyebrow" data-i18n="auditor.eyebrow">Auditor de contratos</p>
+      <h2 class="auditor-titulo" data-i18n="auditor.titulo">Analiza tu contrato</h2>
+      <p class="auditor-desc" data-i18n="auditor.desc">
+        Apolo identifica cláusulas abusivas, riesgos legales y violaciones a la ley
+        — citando el artículo exacto.
+      </p>
 
+      <!-- Upload zone -->
       <div class="upload-zone" id="upload-zone"
-           ondragover="dragOver(event)" ondragleave="dragLeave(event)"
-           ondrop="handleDrop(event)" onclick="document.getElementById('file-input').click()">
-        <svg class="upload-icon" viewBox="0 0 24 24" fill="none"
-             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-          <polyline points="17 8 12 3 7 8"/>
-          <line x1="12" y1="3" x2="12" y2="15"/>
-        </svg>
-        <div class="upload-titulo" data-i18n="upload.titulo">Arrastra tu contrato aquí</div>
-        <div class="upload-desc" data-i18n="upload.desc">PDF o Word · Máximo 10 MB</div>
-        <div class="upload-btn" data-i18n="upload.btn">Seleccionar archivo</div>
-        <input type="file" id="file-input" accept=".pdf,.doc,.docx"
-               onchange="handleFile(this.files[0])">
+           onclick="document.getElementById('archivo-input').click()"
+           ondragover="event.preventDefault(); this.classList.add('dragover')"
+           ondragleave="this.classList.remove('dragover')"
+           ondrop="soltarArchivo(event)">
+        <input type="file" id="archivo-input" accept=".pdf,.docx" style="display:none"
+               onchange="archivoSeleccionado(this)">
+        <div id="upload-texto">
+          <p style="font-size:32px;margin:0">📄</p>
+          <div class="upload-titulo" style="margin-top:12px" data-i18n="upload.titulo">Arrastra tu contrato aquí o haz clic</div>
+          <div class="upload-desc" data-i18n="upload.desc">PDF o DOCX · Máximo 10 MB · Mejores resultados con DOCX</div>
+        </div>
       </div>
-      <p class="upload-precio">$99 – $149 MXN · Pago al recibir el análisis</p>
+
+      <!-- Selector de país -->
+      <select id="pais-contrato" class="pais-select">
+        <option value="MX">🇲🇽 México</option>
+        <option value="CZ">🇨🇿 República Checa</option>
+        <option value="DE">🇩🇪 Alemania</option>
+        <option value="ES">🇪🇸 España</option>
+        <option value="FR">🇫🇷 Francia</option>
+      </select>
+      <script>
+      (function(){ var l=localStorage.getItem('atlas_lang')||new URLSearchParams(location.search).get('lang')||''; if(l==='cs') document.getElementById('pais-contrato').value='CZ'; })();
+      </script>
+
+      <!-- Botón analizar -->
+      <button id="btn-analizar-doc" onclick="iniciarAnalisis()" class="btn-primary">
+        <span data-i18n="auditor.btn">Analizar contrato →</span>
+        <span style="font-weight:400;opacity:0.7;font-size:10px;letter-spacing:0"> (30–60 seg)</span>
+      </button>
+
+      <!-- Loading -->
+      <div id="loading-auditor" class="loading-auditor">
+        <div class="spinner"></div>
+        <p id="loading-paso" class="loading-paso" data-i18n="auditor.loading">Extrayendo texto del documento…</p>
+      </div>
+
+      <!-- Resultado -->
+      <div id="resultado-auditor" style="display:none">
+
+        <div class="resumen-card">
+          <p class="resumen-tipo" id="tipo-contrato"></p>
+          <p class="resumen-texto" id="resumen-texto"></p>
+          <div class="contadores">
+            <div class="contador"><span id="n-validas">0</span><small data-i18n="auditor.validas">✅ Válidas</small></div>
+            <div class="contador"><span id="n-riesgo">0</span><small data-i18n="auditor.riesgo">⚠️ Riesgo</small></div>
+            <div class="contador"><span id="n-invalidas">0</span><small data-i18n="auditor.invalidas">❌ Inválidas</small></div>
+          </div>
+        </div>
+
+        <div id="clausulas-lista"></div>
+
+        <p class="aviso-legal" data-i18n="auditor.aviso">
+          Este análisis es orientativo y no sustituye la revisión de un abogado calificado. Legal Atlas cita artículos reales verificados del corpus legislativo.
+        </p>
+      </div>
+
     </div>
 
   </section>
 </main>
 
 <footer class="footer">
-  <p class="footer-coords">19°25′N · 99°08′O · República Mexicana · MMXXVI</p>
-  <p class="footer-copy">Legal Atlas Engineering © 2026</p>
+  <p class="footer-copy">© Legal Atlas 2026 · All rights reserved</p>
+  <p class="footer-disclaimer">Legal Atlas is a legal research tool designed for legal professionals. It generates AI-assisted content with verified normative references. It does not constitute legal advice, legal diagnosis, or a substitute for independent professional judgment or verification of primary sources.</p>
+  <div class="footer-links">
+    <a href="/terms.html">Terms of Service</a>
+    <span>|</span>
+    <a href="/privacy.html">Privacy Policy</a>
+    <span>|</span>
+    <a href="/acceptable.html">Acceptable Use</a>
+  </div>
 </footer>
 
 <script>
-// ═══ TIPOS DE CONTRATO POR PAÍS ═══
-const TIPOS = {
-  MX: [
-    { id: 'arrendamiento',        nombre: 'Arrendamiento',        precio: '$299 MXN' },
-    { id: 'pagare',               nombre: 'Pagaré',               precio: '$199 MXN' },
-    { id: 'prestacion_servicios', nombre: 'Prestación servicios', precio: '$199 MXN' },
-    { id: 'prestamo_dinero',      nombre: 'Préstamo de dinero',   precio: '$149 MXN' },
-    { id: 'compraventa_auto',     nombre: 'Compraventa auto',     precio: '$249 MXN' },
-    { id: 'carta_requerimiento',  nombre: 'Carta de cobro',       precio: '$149 MXN' },
-    { id: 'carta_poder',          nombre: 'Carta poder',          precio: '$99 MXN'  },
-  ],
-  CZ: [
-    { id: 'najemni_smlouva',      nombre: 'Smlouva o nájmu',      precio: '299 CZK'  },
-    { id: 'kupni_smlouva',        nombre: 'Kupní smlouva',        precio: '249 CZK'  },
-  ],
-  ES: [
-    { id: 'arrendamiento_es',           nombre: 'Arrendamiento',        precio: '€9.99'  },
-    { id: 'prestacion_servicios_es',    nombre: 'Prestación servicios', precio: '€12.99' },
-  ],
-};
+// ═══ REDACTAR (oculto en Fase 1 — código preservado) ═══
+function mostrarRedactar() {}
+function mostrarAnalizar() {}
+function actualizarTipos() {}
+function seleccionarTipo() {}
+function irACiudadano() {}
 
-let tipoPaisSeleccionado = '';
-let tipoContratoSeleccionado = '';
+// ═══ AUDITOR DE CONTRATOS ═══
+const PASOS_LOADING = [
+  'Extrayendo texto del documento…',
+  'Protegiendo datos personales…',
+  'Identificando cláusulas…',
+  'Analizando contra la legislación vigente…',
+  'Generando resumen ejecutivo…'
+]
+const ICONOS_ESTADO = { valida:'✅', riesgo:'⚠️', invalida:'❌', sin_referencias:'❓' }
 
-function mostrarRedactar() {
-  document.getElementById('caminos').style.opacity = '0.5';
-  document.getElementById('tree-panel').classList.add('visible');
-  document.getElementById('upload-panel').classList.remove('visible');
-  document.getElementById('tree-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+let archivoActual = null
+let pasoInterval  = null
+
+function archivoSeleccionado(input) {
+  const file = input.files[0]
+  if (!file) return
+  archivoActual = file
+  document.getElementById('upload-texto').innerHTML = `
+    <p style="font-size:28px;margin:0">✅</p>
+    <div class="upload-titulo" style="margin-top:12px">${file.name}</div>
+    <div class="upload-desc">${(file.size/1024).toFixed(0)} KB · Clic para cambiar</div>`
 }
 
-function mostrarAnalizar() {
-  document.getElementById('caminos').style.opacity = '0.5';
-  document.getElementById('upload-panel').classList.add('visible');
-  document.getElementById('tree-panel').classList.remove('visible');
-  document.getElementById('upload-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function actualizarTipos() {
-  const pais = document.getElementById('tree-pais').value;
-  tipoPaisSeleccionado = pais;
-  tipoContratoSeleccionado = '';
-  document.getElementById('btn-continuar').classList.remove('visible');
-
-  const container = document.getElementById('tipos-container');
-  const grid = document.getElementById('tipos-grid');
-
-  if (!pais || !TIPOS[pais]) {
-    container.style.display = 'none';
-    return;
+function soltarArchivo(e) {
+  e.preventDefault()
+  document.getElementById('upload-zone').classList.remove('dragover')
+  const f = e.dataTransfer.files[0]
+  if (f) {
+    document.getElementById('archivo-input').files = e.dataTransfer.files
+    archivoSeleccionado(document.getElementById('archivo-input'))
   }
-
-  grid.innerHTML = '';
-  TIPOS[pais].forEach(tipo => {
-    const chip = document.createElement('div');
-    chip.className = 'tipo-chip';
-    chip.innerHTML = `
-      <div class="tipo-chip-nombre">${tipo.nombre}</div>
-      <div class="tipo-chip-precio">${tipo.precio}</div>
-    `;
-    chip.onclick = () => seleccionarTipo(tipo.id, chip);
-    grid.appendChild(chip);
-  });
-
-  container.style.display = 'block';
-  container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-function seleccionarTipo(id, chip) {
-  document.querySelectorAll('.tipo-chip').forEach(c => c.classList.remove('selected'));
-  chip.classList.add('selected');
-  tipoContratoSeleccionado = id;
-  document.getElementById('btn-continuar').classList.add('visible');
-  document.getElementById('btn-continuar').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+function avanzarPaso() {
+  let i = 0
+  pasoInterval = setInterval(() => {
+    i = (i + 1) % PASOS_LOADING.length
+    document.getElementById('loading-paso').textContent = PASOS_LOADING[i]
+  }, 6000)
 }
 
-function irACiudadano() {
-  if (!tipoPaisSeleccionado || !tipoContratoSeleccionado) return;
-  const params = new URLSearchParams({
-    pais:    tipoPaisSeleccionado,
-    materia: 'Contratos',
-    tipo:    tipoContratoSeleccionado,
-  });
-  window.location.href = `ciudadano.html?${params.toString()}`;
-}
+async function iniciarAnalisis() {
+  if (!archivoActual) { alert('Selecciona un archivo PDF o DOCX primero.'); return }
 
-// ═══ UPLOAD ═══
-function dragOver(e) {
-  e.preventDefault();
-  document.getElementById('upload-zone').classList.add('dragover');
-}
-function dragLeave() {
-  document.getElementById('upload-zone').classList.remove('dragover');
-}
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('upload-zone').classList.remove('dragover');
-  const file = e.dataTransfer.files[0];
-  if (file) handleFile(file);
-}
-function handleFile(file) {
-  if (!file) return;
-  const allowed = [
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  ];
-  if (!allowed.includes(file.type)) {
-    alert('Por favor sube un archivo PDF o Word.');
-    return;
+  document.getElementById('loading-auditor').style.display  = 'block'
+  document.getElementById('resultado-auditor').style.display = 'none'
+  document.getElementById('btn-analizar-doc').disabled = true
+  document.getElementById('loading-paso').textContent  = PASOS_LOADING[0]
+  avanzarPaso()
+
+  const formData = new FormData()
+  formData.append('archivo', archivoActual)
+  formData.append('pais', document.getElementById('pais-contrato').value)
+
+  try {
+    const res  = await fetch('/api/documento?action=analizar', { method:'POST', body:formData })
+    const data = await res.json()
+    if (!data.ok) throw new Error(data.error || 'Error en el análisis')
+    mostrarResultado(data)
+  } catch (err) {
+    alert(err.message || 'Error al analizar. Intenta de nuevo.')
+  } finally {
+    clearInterval(pasoInterval)
+    document.getElementById('loading-auditor').style.display = 'none'
+    document.getElementById('btn-analizar-doc').disabled = false
   }
-  document.getElementById('upload-zone').innerHTML = `
-    <svg class="upload-icon" viewBox="0 0 24 24" fill="none"
-         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="20 6 9 17 4 12"/>
-    </svg>
-    <div class="upload-titulo">${file.name}</div>
-    <div class="upload-desc">Archivo listo · Procesando análisis…</div>
-  `;
-  // TODO: llamar a la API del auditor con el archivo
+}
+
+function mostrarResultado(data) {
+  document.getElementById('tipo-contrato').textContent = data.tipo_contrato?.toUpperCase() || ''
+  document.getElementById('resumen-texto').textContent = data.resumen || ''
+  document.getElementById('n-validas').textContent     = data.clausulas_validas   || 0
+  document.getElementById('n-riesgo').textContent      = data.clausulas_riesgo    || 0
+  document.getElementById('n-invalidas').textContent   = data.clausulas_invalidas || 0
+
+  const ordenadas = [
+    ...(data.clausulas||[]).filter(c => c.estado === 'invalida'),
+    ...(data.clausulas||[]).filter(c => c.estado === 'riesgo'),
+    ...(data.clausulas||[]).filter(c => c.estado === 'valida'),
+    ...(data.clausulas||[]).filter(c => c.estado === 'sin_referencias')
+  ]
+
+  document.getElementById('clausulas-lista').innerHTML = ordenadas.map(c => `
+    <div class="clausula-card estado-${c.estado}">
+      <div class="clausula-header">
+        <span>${ICONOS_ESTADO[c.estado] || '❓'}</span>
+        <span>Cláusula ${c.numero}</span>
+        ${c.titulo ? `<span class="clausula-titulo-txt">${c.titulo}</span>` : ''}
+      </div>
+      <p class="clausula-analisis">${c.analisis || ''}</p>
+      ${c.articulo_clave ? `<div class="clausula-articulo">📖 ${c.articulo_clave}</div>` : ''}
+      ${c.articulos?.length ? `<div>${c.articulos.map(a =>
+        `<span class="ref-badge">${a.numero} · ${a.ley} · ${a.similitud}%</span>`
+      ).join('')}</div>` : ''}
+    </div>`).join('')
+
+  document.getElementById('resultado-auditor').style.display = 'block'
+  document.getElementById('resultado-auditor').scrollIntoView({ behavior:'smooth' })
 }
 </script>
 
 <script src="/locales/i18n.js"></script>
+<script>
+function toggleTema() {
+  var t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('la-theme', t);
+  var btn = document.getElementById('tema-btn');
+  if (btn) btn.textContent = t === 'dark' ? '◑' : '●';
+}
+(function() {
+  var t = document.documentElement.getAttribute('data-theme') || 'light';
+  var btn = document.getElementById('tema-btn');
+  if (btn) btn.textContent = t === 'dark' ? '◑' : '●';
+})();
+</script>
+
+<script>
+function openSidebar() {
+  document.getElementById('la-sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('la-sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+</script>
+
+<div id="overlay-registro" style="position:fixed;inset:0;background:rgba(253,250,245,0.97);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px">
+  <p style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;color:var(--gold);margin-bottom:16px" data-i18n="overlay.acceso">ACCESO REQUERIDO</p>
+  <h2 style="font-family:'Cinzel',serif;font-size:28px;margin-bottom:12px" data-i18n="overlay.registro">Regístrate para continuar</h2>
+  <p style="color:var(--text-muted);font-size:14px;margin-bottom:32px;max-width:400px;line-height:1.7" data-i18n="overlay.desc.contratos">El Auditor de Contratos requiere una cuenta. Acceso gratuito hasta el 7 de mayo.</p>
+  <button onclick="loginConGoogle()" style="display:flex;align-items:center;gap:10px;padding:14px 24px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-family:'Lora',serif;font-size:14px;cursor:pointer;transition:all 0.2s">
+    <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2.01c-.72.48-1.63.77-2.7.77a4.9 4.9 0 01-4.62-3.38H1.68v2.07A8 8 0 008.98 17z"/><path fill="#FBBC05" d="M4.36 10.44A4.9 4.9 0 014.1 9c0-.5.09-1 .26-1.44V5.49H1.68a8 8 0 000 7.02l2.68-2.07z"/><path fill="#EA4335" d="M8.98 3.58c1.32 0 2.5.45 3.44 1.35l2.54-2.54A8 8 0 001.68 5.49l2.68 2.07a4.9 4.9 0 014.62-3.98z"/></svg>
+    Continuar con Google
+  </button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const _supabaseAuth = supabase.createClient('https://nuzzmcxirsghykzqbmmn.supabase.co', 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff')
+function loginConGoogle() {
+  _supabaseAuth.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/cuenta.html' } })
+}
+async function verificarAcceso() {
+  const { data: { session } } = await _supabaseAuth.auth.getSession()
+  document.getElementById('overlay-registro').style.display = session ? 'none' : 'flex'
+}
+verificarAcceso()
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

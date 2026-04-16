@@ -78,5 +78,65 @@
   ],
   "nota_al_usuario": "Este contrato protege tanto al vendedor como al comprador. Te recomendamos firmar dos ejemplares originales — uno para cada parte. Si el vehículo vale más de $150,000 MXN considera ratificar las firmas ante notario.",
   "nota_upsell": "¿Quieres que un abogado revise este contrato antes de firmarlo? Tenemos especialistas disponibles en Legal Atlas.",
+  "jurisdiccion": {
+    "requiere_estado": true,
+    "acepta_federal": true
+  },
+  "secciones": [
+    {
+      "id": 1,
+      "titulo": "DECLARACIONES",
+      "tipo": "codigo",
+      "template": "declaraciones_vendedor_comprador"
+    },
+    {
+      "id": 2,
+      "titulo": "OBJETO",
+      "tipo": "gemini",
+      "instruccion": "Redacta ÚNICAMENTE la SECCIÓN 2 — OBJETO. Inicia con <h3>SECCIÓN 2 — OBJETO</h3>. Describe el vehículo con todos sus datos: marca, modelo, año, color, NIV y placas. Declara que el vendedor transfiere la propiedad en el estado físico conocido y aceptado por el comprador. Máximo 3 párrafos."
+    },
+    {
+      "id": 3,
+      "titulo": "PRECIO Y FORMA DE PAGO",
+      "tipo": "codigo",
+      "template": "precio_forma_pago_vehiculo"
+    },
+    {
+      "id": 4,
+      "titulo": "ENTREGA",
+      "tipo": "gemini",
+      "instruccion": "Redacta ÚNICAMENTE la SECCIÓN 4 — ENTREGA. Inicia con <h3>SECCIÓN 4 — ENTREGA</h3>. Incluye: fecha y condiciones de entrega física del vehículo, y listado de documentos que entrega el vendedor (tarjeta de circulación, llaves, factura original si la tiene). Máximo 3 párrafos."
+    },
+    {
+      "id": 5,
+      "titulo": "OBLIGACIONES DEL VENDEDOR",
+      "tipo": "gemini",
+      "instruccion": "Redacta ÚNICAMENTE la SECCIÓN 5 — OBLIGACIONES DEL VENDEDOR. Inicia con <h3>SECCIÓN 5 — OBLIGACIONES DEL VENDEDOR</h3>. Incluye: garantizar la propiedad legítima, responder por vicios ocultos, entregar el vehículo libre de adeudos salvo pacto en contrario, y mencionar el estado físico declarado del vehículo. Cita artículos del contexto legal si aplican. Máximo 4 párrafos."
+    },
+    {
+      "id": 6,
+      "titulo": "OBLIGACIONES DEL COMPRADOR",
+      "tipo": "gemini",
+      "instruccion": "Redacta ÚNICAMENTE la SECCIÓN 6 — OBLIGACIONES DEL COMPRADOR. Inicia con <h3>SECCIÓN 6 — OBLIGACIONES DEL COMPRADOR</h3>. Incluye: pagar el precio en la forma acordada, y realizar el trámite de cambio de propietario ante la autoridad correspondiente dentro de los 30 días siguientes a la firma. Máximo 3 párrafos."
+    },
+    {
+      "id": 7,
+      "titulo": "ADEUDOS Y RESPONSABILIDADES",
+      "tipo": "gemini",
+      "instruccion": "Redacta ÚNICAMENTE la SECCIÓN 7 — ADEUDOS Y RESPONSABILIDADES. Inicia con <h3>SECCIÓN 7 — ADEUDOS Y RESPONSABILIDADES</h3>. Detalla la situación de multas, tenencia y verificación según los adeudos declarados. Establece que a partir de la entrega, todos los gastos y responsabilidades corresponden al comprador. Máximo 3 párrafos."
+    },
+    {
+      "id": 8,
+      "titulo": "FUNDAMENTO LEGAL",
+      "tipo": "codigo",
+      "template": "fundamento_legal"
+    },
+    {
+      "id": 9,
+      "titulo": "FIRMAS",
+      "tipo": "codigo",
+      "template": "firmas_vendedor_comprador"
+    }
+  ],
   "system_prompt": "Eres APOLO, redactor legal mexicano experto en compraventa de bienes muebles. Genera un CONTRATO DE COMPRAVENTA DE VEHÍCULO ENTRE PARTICULARES completo y válido para la jurisdicción de {estado}, México.\nFecha del contrato: {fecha_actual}\n\nCONTEXTO LEGAL RECUPERADO DE SUPABASE:\n{contexto_legal}\n\nDATOS DE LA OPERACIÓN:\n- Vendedor: {nombre_vendedor}\n- Comprador: {nombre_comprador}\n- Vehículo: {descripcion_vehiculo}\n- NIV: {numero_serie}\n- Placas: {placas}\n- Precio: {precio_venta}\n- Forma de pago: {forma_pago}\n- Estado del vehículo: {estado_vehiculo}\n- Adeudos: {adeudos}\n- Fecha de entrega: {fecha_entrega}\n\nINSTRUCCIÓN CRÍTICA DE FORMATO:\nGenera el contrato con EXACTAMENTE 9 secciones en EXACTAMENTE este orden.\nCada sección debe comenzar con su encabezado exacto en <h3>.\nNo combines secciones. No reordenes secciones. No omitas secciones.\n\n<h3>SECCIÓN 1 — DECLARACIONES</h3>\n<h3>SECCIÓN 2 — OBJETO</h3>\n<h3>SECCIÓN 3 — PRECIO Y FORMA DE PAGO</h3>\n<h3>SECCIÓN 4 — ENTREGA</h3>\n<h3>SECCIÓN 5 — OBLIGACIONES DEL VENDEDOR</h3>\n<h3>SECCIÓN 6 — OBLIGACIONES DEL COMPRADOR</h3>\n<h3>SECCIÓN 7 — ADEUDOS Y RESPONSABILIDADES</h3>\n<h3>SECCIÓN 8 — FUNDAMENTO LEGAL</h3>\n<h3>SECCIÓN 9 — FIRMAS</h3>\n\nSi no generas estas 9 secciones en este orden exacto, el documento es inválido.\n\nCONTENIDO DE CADA SECCIÓN:\n\nSECCIÓN 1 — DECLARACIONES: Datos completos del vendedor y comprador. El vendedor declara ser legítimo propietario del vehículo y que no tiene gravámenes, embargos ni limitaciones de dominio.\n\nSECCIÓN 2 — OBJETO: Descripción completa del vehículo: marca, modelo, año, color, NIV y placas. Declaración de que se transfiere la propiedad en el estado físico conocido y aceptado por el comprador.\n\nSECCIÓN 3 — PRECIO Y FORMA DE PAGO: Monto en número y letra. Forma de pago acordada. Si es en parcialidades, especificar calendario.\n\nSECCIÓN 4 — ENTREGA: Fecha y condiciones de entrega física del vehículo. Documentos que entrega el vendedor: tarjeta de circulación, llaves, factura original si la tiene.\n\nSECCIÓN 5 — OBLIGACIONES DEL VENDEDOR: Garantizar la propiedad legítima. Responder por vicios ocultos. Entregar el vehículo libre de adeudos salvo pacto en contrario. Estado del vehículo declarado: {estado_vehiculo}.\n\nSECCIÓN 6 — OBLIGACIONES DEL COMPRADOR: Pagar el precio en la forma acordada. Realizar el trámite de cambio de propietario ante la autoridad correspondiente dentro de los 30 días siguientes a la firma.\n\nSECCIÓN 7 — ADEUDOS Y RESPONSABILIDADES: Situación de multas, tenencia y verificación: {adeudos}. A partir de la entrega, todos los gastos y responsabilidades corresponden al comprador.\n\nSECCIÓN 8 — FUNDAMENTO LEGAL: Cita SOLO los artículos del contexto legal que respalden directamente las cláusulas del contrato. No cites artículos que no sean aplicables a esta operación específica.\n\nSECCIÓN 9 — FIRMAS: Espacio para firma del vendedor, comprador y dos testigos con nombre completo y firma. Lugar y fecha: {estado}, {fecha_actual}.\n\nREGLAS ABSOLUTAS:\n- Genera las 9 secciones completas sin excepción\n- Usa SOLO artículos del contexto legal proporcionado\n- Si un artículo no respalda ninguna sección, no lo cites\n- Responde EXCLUSIVAMENTE con HTML usando <p>, <strong>, <br>, <h3>\n- Sin <html>, <body>, <head>, <style> ni markdown\n- Tono formal pero comprensible para un ciudadano sin formación legal"
 }

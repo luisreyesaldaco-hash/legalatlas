@@ -1,0 +1,1198 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<script>
+(function(){
+  var t = localStorage.getItem('la-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legal Atlas — Magnus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <script src="/locales/i18n.js"></script>
+  <style>
+    :root {
+      --bg-deep:        #F3EAD5;
+      --bg-card:        #FAF2E0;
+      --bg-elevated:    #EBE0C8;
+      --bg-input:       #FAF2E0;
+      --text-primary:   #1A1410;
+      --text-secondary: #3D342A;
+      --text-muted:     #7A6E60;
+      --gold:           #8B6820;
+      --gold-light:     #C49A3C;
+      --gold-dim:       rgba(139,104,32,0.08);
+      --gold-border:    rgba(139,104,32,0.22);
+      --border:         #DDD0B4;
+      --border-hover:   #C9BFB0;
+      --shadow-sm:      0 1px 4px rgba(26,20,16,0.07);
+      --shadow-md:      0 4px 20px rgba(26,20,16,0.10);
+      --shadow-lg:      0 8px 40px rgba(26,20,16,0.13);
+      --bg-raised:      var(--bg-elevated);
+      --text:           var(--text-primary);
+      --text-soft:      var(--text-secondary);
+      --border-hov:     var(--border-hover);
+      --accent:         var(--gold);
+      --gold-glow:      rgba(139,104,32,0.25);
+    }
+    :root[data-theme="dark"] {
+      --bg-deep:        #0C0C0A;
+      --bg-card:        #141412;
+      --bg-elevated:    #1C1C19;
+      --bg-input:       #1C1C19;
+      --text-primary:   #F0ECE4;
+      --text-secondary: #D0C4B4;
+      --text-muted:     #9C9082;
+      --gold:           #C49A3C;
+      --gold-light:     #D4AE58;
+      --gold-dim:       rgba(196,154,60,0.10);
+      --gold-border:    rgba(196,154,60,0.20);
+      --border:         #2A2A26;
+      --border-hover:   #3D3D38;
+      --shadow-sm:      0 1px 4px rgba(0,0,0,0.25);
+      --shadow-md:      0 4px 20px rgba(0,0,0,0.35);
+      --shadow-lg:      0 8px 40px rgba(0,0,0,0.45);
+      --bg-raised:      var(--bg-elevated);
+      --text:           var(--text-primary);
+      --text-soft:      var(--text-secondary);
+      --border-hov:     var(--border-hover);
+      --accent:         var(--gold);
+      --gold-glow:      rgba(196,154,60,0.35);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg-deep);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(196,154,60,0.25); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(196,154,60,0.45); }
+
+    /* ═══ AMBIENT ═══ */
+    .ambient { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .ambient-orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.06; }
+    .ambient-orb-1 { width: 500px; height: 500px; background: var(--gold); top: -100px; left: -100px; }
+    .ambient-orb-2 { width: 400px; height: 400px; background: var(--gold-light); bottom: 0; right: -80px; }
+    .ambient-orb-3 { width: 300px; height: 300px; background: var(--gold); top: 40%; left: 50%; transform: translateX(-50%); }
+
+    /* ═══ TOPBAR ═══ */
+    .topbar {
+      height: 58px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; gap: 16px; background: var(--bg-card);
+      border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-logo { font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.3em; color: var(--text-primary); text-decoration: none; }
+    .topbar-logo span { color: var(--gold); font-weight: 400; }
+    .topbar-nav { display: flex; gap: 28px; }
+    .topbar-link {
+    font-family: 'Cinzel', serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+    .topbar-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: var(--gold); transition: width 0.3s ease; }
+    .topbar-link:hover { color: var(--gold); }
+    .topbar-link:hover::after, .topbar-link.active::after { width: 100%; }
+    .topbar-link.active { color: var(--gold); }
+    .topbar-link-pro { position: relative; display: inline-flex; align-items: center; gap: 6px; }
+    .pro-badge { font-family: 'Cinzel', serif; font-size: 8px; font-weight: 700; letter-spacing: 0.15em; color: var(--bg-deep); background: var(--gold); padding: 2px 6px; border-radius: 4px; line-height: 1.4; }
+    .topbar-status { display: flex; align-items: center; gap: 8px; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.2em; color: var(--text-muted); background: rgba(146,112,42,0.08); border: 1px solid var(--gold-border); color: var(--gold); border-radius: 20px; padding: 4px 12px; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #22C55E; box-shadow: 0 0 6px rgba(34,197,94,0.5); }
+    [data-theme="dark"] .status-dot { background: var(--gold); box-shadow: 0 0 10px var(--gold-glow); animation: pulse-dot 2s ease-in-out infinite; }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.85); } }
+
+    /* ═══ MAIN ═══ */
+    .main { position: relative; z-index: 1; width: 100%; }
+
+    /* ═══ HERO ═══ */
+    .marco-hero { padding: 80px 24px 40px; max-width: 800px; margin: 0 auto; text-align: center; }
+    .marco-eyebrow { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.5em; color: var(--gold); text-transform: uppercase; margin-bottom: 20px; }
+    .marco-titulo { font-family: 'Cinzel', serif; font-size: clamp(32px, 6vw, 60px); font-weight: 700; letter-spacing: 0.06em; margin-bottom: 16px; }
+    .marco-titulo span { color: var(--gold); }
+    .marco-desc { font-size: 16px; color: var(--text-soft); max-width: 540px; margin: 0 auto 48px; line-height: 1.8; }
+
+    /* ═══ INPUT ═══ */
+    .marco-input-area { max-width: min(1100px, calc(100vw - 96px)); margin: 0 auto; padding: 0 24px; }
+    .marco-textarea-wrap {
+      background: rgba(235,224,200,0.65); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(139,104,32,0.15); border-radius: 20px; padding: 6px;
+      box-shadow: inset 0 2px 8px rgba(26,20,16,0.07), 0 4px 20px rgba(26,20,16,0.10); margin-bottom: 12px;
+    }
+    .marco-textarea {
+      width: 100%; min-height: 140px; background: rgba(250,242,224,0.85); border: none;
+      border-radius: 14px; padding: 18px 20px; font-family: 'Lora', serif; font-size: 15px;
+      color: var(--text); resize: vertical; line-height: 1.7; transition: box-shadow 0.2s ease; box-sizing: border-box;
+    }
+    .marco-textarea:focus { outline: none; box-shadow: 0 0 0 2px rgba(139,104,32,0.15); }
+    .marco-textarea::placeholder { color: var(--text-muted); }
+    [data-theme="dark"] .marco-textarea-wrap { background: rgba(28,28,25,0.65); border-color: rgba(196,154,60,0.18); }
+    [data-theme="dark"] .marco-textarea { background: rgba(20,20,18,0.85); color: var(--text-primary); }
+
+    /* ═══ COMO TOGGLE ═══ */
+    .como-toggle { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; }
+    .toggle-label { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+    .toggle-switch { position: relative; width: 40px; height: 22px; background: var(--border-hover, #c4b89a); border-radius: 11px; flex-shrink: 0; transition: background 0.2s; }
+    .toggle-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: transform 0.2s; }
+    #activar-como:checked + .toggle-switch { background: var(--gold); }
+    #activar-como:checked + .toggle-switch::after { transform: translateX(18px); }
+    #activar-como { display: none; }
+    .toggle-texto strong { display: block; font-size: 14px; color: var(--text-primary); font-family: 'Lora', serif; }
+    .toggle-texto small { font-size: 12px; color: var(--text-muted); margin-top: 2px; display: block; }
+
+    /* ═══ PAIS ROW ═══ */
+    .pais-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+    .pais-select { flex: 1; min-width: 160px; max-width: 280px; }
+    .multi-toggle-wrap {
+      display: flex; align-items: center; gap: 10px; cursor: pointer;
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      border-radius: 100px; padding: 8px 16px; white-space: nowrap;
+      user-select: none; transition: border-color 0.2s;
+    }
+    .multi-toggle-wrap:hover { border-color: var(--gold); }
+    .multi-toggle-wrap input { display: none; }
+    .multi-switch { position: relative; width: 36px; height: 20px; background: var(--border-hover, #c4b89a); border-radius: 10px; flex-shrink: 0; transition: background 0.2s; }
+    .multi-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: transform 0.2s; }
+    #multi-toggle:checked ~ .multi-switch { background: var(--gold); }
+    #multi-toggle:checked ~ .multi-switch::after { transform: translateX(16px); }
+    .multi-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; }
+
+    /* ═══ OPCIONES / ESTADO ═══ */
+    .marco-opciones { display: flex; gap: 16px; margin-top: 16px; align-items: center; flex-wrap: wrap; }
+    .marco-select {
+      flex: 1; min-width: 180px; background: var(--bg-raised); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 16px; font-family: 'Lora', serif; font-size: 14px;
+      color: var(--text); appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c49a3c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 16px center; background-color: var(--bg-raised); cursor: pointer;
+    }
+    .marco-select option { background: #FDFAF5 !important; color: #1A1410 !important; }
+
+    .marco-btn {
+      background: var(--gold); color: var(--bg-deep); border: none; border-radius: 100px;
+      padding: 14px 32px; font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.2em; cursor: pointer; transition: all 0.3s ease; white-space: nowrap;
+      box-shadow: var(--shadow-sm);
+    }
+    .marco-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 24px var(--gold-glow); filter: brightness(1.1); }
+    .marco-btn:disabled { opacity: 0.5; cursor: default; }
+    .marco-btn.magnus-mode {
+      padding: 16px 40px; font-size: 13px; letter-spacing: 0.25em;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+      background-size: 200% 200%;
+      animation: shimmer 3s ease infinite;
+      box-shadow: 0 4px 24px var(--gold-glow);
+    }
+    @keyframes shimmer {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ═══ LOADING ═══ */
+    .marco-loading { display: none; text-align: center; padding: 60px 24px; }
+    .loading-compass-wrap { display: inline-block; width: 96px; height: 96px; margin-bottom: 24px; }
+    .compass-svg { width: 96px; height: 96px; overflow: visible; }
+    .compass-needle { transform-origin: 50px 50px; animation: compassSwing 2.6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite; }
+    .compass-scan   { transform-origin: 50px 50px; animation: compassScan 5s linear infinite; }
+    @keyframes compassSwing {
+      0%   { transform: rotate(-22deg); }
+      28%  { transform: rotate(28deg); }
+      55%  { transform: rotate(-12deg); }
+      78%  { transform: rotate(18deg); }
+      100% { transform: rotate(-22deg); }
+    }
+    @keyframes compassScan { to { transform: rotate(360deg); } }
+    .loading-texto { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.3em; color: var(--text-muted); text-transform: uppercase; }
+
+    /* ═══ RESULTADOS ═══ */
+    .marco-resultados { display: none; max-width: min(1100px, calc(100vw - 96px)); margin: 48px auto 0; padding: 0 24px 40px; }
+    .seccion-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .seccion-header-label { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; }
+    .divisor-resultados { display: none; max-width: min(1100px, calc(100vw - 96px)); margin: 0 auto; padding: 20px 24px; align-items: center; gap: 24px; }
+    .divisor-linea { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border-hov), transparent); }
+    .divisor-texto { font-family: 'Lora', serif; font-style: italic; font-size: 14px; color: var(--text-muted); white-space: nowrap; }
+
+    /* ═══ ACCORDIONS ═══ */
+    .nivel-seccion { margin-bottom: 16px; }
+    .nivel-header { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border: 1px solid var(--border); border-radius: 12px; cursor: pointer; user-select: none; transition: border-color 0.2s, background 0.2s; background: var(--bg-card); box-shadow: var(--shadow-sm); }
+    .nivel-header:hover { border-color: var(--border-hov); background: var(--bg-elevated); box-shadow: var(--shadow-md); }
+    .nivel-titulo { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600; letter-spacing: 0.1em; color: var(--gold); flex: 1; }
+    .nivel-count { font-size: 11px; color: var(--text-muted); background: var(--bg-raised); padding: 3px 10px; border-radius: 20px; }
+    .nivel-chevron { font-size: 11px; color: var(--text-muted); transition: transform 0.25s ease; }
+    .nivel-header.abierto .nivel-chevron { transform: rotate(180deg); }
+    .nivel-articulos { display: none; padding-top: 12px; }
+    .nivel-articulos.visible { display: block; }
+
+    .art-card { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid transparent; border-radius: 12px; padding: 20px 24px; margin-bottom: 12px; transition: border-color 0.3s ease; box-shadow: var(--shadow-sm); }
+    .art-card:hover { border-color: var(--border-hov); border-left-color: var(--gold); box-shadow: var(--shadow-md); }
+    .art-header { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; margin-bottom: 10px; }
+    .art-numero { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600; color: var(--text); }
+    .art-ley { font-size: 12px; color: var(--text-muted); flex: 1; }
+    .art-score { font-size: 11px; color: var(--gold); font-family: 'Cinzel', serif; letter-spacing: 0.05em; background: var(--gold-dim); padding: 2px 8px; border-radius: 20px; }
+    .art-texto { font-size: 14px; color: var(--text-soft); line-height: 1.7; margin-bottom: 10px; }
+    .art-ver-mas { background: none; border: none; color: var(--gold); font-size: 11px; font-family: 'Cinzel', serif; letter-spacing: 0.1em; cursor: pointer; padding: 0; }
+    .art-ver-mas:hover { opacity: 0.7; }
+    .sin-resultados { font-size: 13px; color: var(--text-muted); font-style: italic; padding: 12px 0; }
+
+    /* ═══ SÍNTESIS ═══ */
+    .sintesis-card { background: var(--bg-card); border: 1px solid var(--border-hov); border-top: 3px solid var(--gold) !important; border-radius: 0 0 16px 16px !important; padding: 32px; margin-top: 40px; box-shadow: var(--shadow-md); }
+    .sintesis-eyebrow { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.4em; color: var(--gold); text-transform: uppercase; margin-bottom: 20px; }
+    .sintesis-texto { font-size: 15px; color: var(--text-primary); line-height: 1.9; white-space: pre-wrap; font-family: 'Lora', serif; }
+    .sintesis-acciones { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+    .btn-accion { background: var(--gold-dim); border: 1px solid var(--border-hov); border-radius: 10px; padding: 10px 20px; font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.2em; color: var(--gold); cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+    .btn-accion:hover { background: rgba(196,154,60,0.2); border-color: var(--gold); }
+
+    /* ═══ CAPITULO TAGS ═══ */
+    .capitulo-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--bg-elevated); border: 1px solid var(--border-hover); border-radius: 20px; padding: 4px 12px; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.1em; color: var(--text-secondary); margin: 4px; }
+    [data-theme="dark"] .capitulo-tag { background: var(--gold-dim); color: var(--gold); }
+
+    /* ═══ MAGNUS MULTI-COUNTRY RESULTS ═══ */
+    .magnus-pais-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 20px 0 12px; border-bottom: 1px solid var(--border);
+      margin-bottom: 16px; margin-top: 24px;
+    }
+    .magnus-pais-flag { font-size: 28px; }
+    .magnus-pais-nombre { font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 0.2em; color: var(--text-primary); text-transform: uppercase; }
+    .magnus-pais-count { margin-left: auto; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.2em; color: var(--gold); background: var(--gold-dim); border: 1px solid var(--gold-border); padding: 4px 10px; border-radius: 20px; }
+
+    /* ═══ JURISPRUDENCIA TOGGLE ═══ */
+    #activar-juris:checked + .toggle-switch { background: var(--gold); }
+    #activar-juris:checked + .toggle-switch::after { transform: translateX(18px); }
+    #activar-juris { display: none; }
+
+    /* ═══ JURISPRUDENCIA CARDS ═══ */
+    .juris-card { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid #7B5EA7; border-radius: 12px; padding: 20px 24px; margin-bottom: 12px; box-shadow: var(--shadow-sm); transition: border-color 0.3s, box-shadow 0.3s; }
+    .juris-card:hover { border-color: var(--border-hov); box-shadow: var(--shadow-md); }
+    .juris-card-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; flex-wrap: wrap; gap: 8px; }
+    .juris-caso { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600; color: var(--text); }
+    .juris-fecha { font-family: 'Cinzel', serif; font-size: 11px; color: var(--text-muted); background: var(--bg-elevated); padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
+    .juris-tribunal { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+    .juris-arts { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.1em; color: #7B5EA7; background: rgba(123,94,167,0.08); padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+    [data-theme="dark"] .juris-arts { color: #B497D6; background: rgba(123,94,167,0.15); }
+    .juris-ratio { font-size: 14px; color: var(--text-soft); line-height: 1.7; margin-bottom: 10px; }
+    .juris-link { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.1em; color: var(--gold); text-decoration: none; }
+    .juris-link:hover { opacity: 0.7; }
+
+    /* ═══ DISCLAIMER ═══ */
+    .disclaimer { display: flex; align-items: flex-start; gap: 10px; margin-top: 24px; padding: 14px 18px; background: rgba(146,112,42,0.06); border: 1px solid var(--gold-border); border-radius: 10px; font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+    .disclaimer-icono { flex-shrink: 0; font-size: 14px; }
+
+    /* ═══ FOOTER ═══ */
+    .footer { text-align: center; padding: 48px 40px 40px; border-top: 1px solid var(--border); position: relative; z-index: 1; margin-top: 80px; }
+    .footer-copy { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.25em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
+    .footer-disclaimer { font-size: 12px; color: var(--text-muted); line-height: 1.75; max-width: 640px; margin: 0 auto 18px; opacity: 0.85; }
+    .footer-links { display: flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-links span { margin: 0 14px; color: var(--border); }
+
+    /* ═══ THEME / TOPBAR OVERRIDES ═══ */
+    .topbar { background: var(--bg-card) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+    [data-theme="dark"] .topbar { background: rgba(20,20,18,0.96) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; }
+    .topbar-link {
+    font-family: 'Cinzel', serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+    .topbar-link:hover { color: var(--gold); }
+    .topbar-link.active { color: var(--text-primary); font-weight: 600; }
+    .topbar-link.active::after, .topbar-link:hover::after { background: var(--gold); }
+    .ambient-orb { opacity: 0.04 !important; }
+    [data-theme="dark"] .ambient-orb { opacity: 0.08 !important; }
+    body { background: var(--bg-deep); color: var(--text-primary); }
+    .marco-textarea, .marco-select { background: var(--bg-input) !important; border-color: var(--border); color: var(--text-primary); }
+    .marco-textarea:focus, .marco-select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(146,112,42,0.12); }
+    .sintesis-texto { color: var(--text-primary); }
+
+    /* ═══ TEMA BTN ═══ */
+    .tema-btn { background: none; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 15px; color: var(--text-muted); padding: 3px 10px; line-height: 1.4; transition: all 0.2s; margin-left: 8px; }
+    .tema-btn:hover { color: var(--gold); border-color: var(--gold-border); }
+
+    /* ═══ SIDEBAR MOBILE ═══ */
+    .topbar-right { display: flex; align-items: center; gap: 4px; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #3D342A); border-radius: 2px; transition: background 0.2s; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(26,20,16,0.45); z-index: 199; }
+    .sidebar-overlay.open { display: block; }
+    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(26,20,16,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
+    .sidebar.open { right: 0; }
+    .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border, #E5DDD0); }
+    .sidebar-logo { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #1A1410); text-decoration: none; }
+    .sidebar-logo span { color: var(--gold, #8B6820); }
+    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #7A6E60); font-size: 18px; padding: 4px; line-height: 1; }
+    .sidebar-close:hover { color: var(--text-primary, #1A1410); }
+    .sidebar-nav { flex: 1; display: flex; flex-direction: column; padding: 16px 0; overflow-y: auto; }
+    .sidebar-link {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 13px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8B6820); background: rgba(139,104,32,0.06); border-left-color: var(--gold, #8B6820); }
+    .sidebar-link .pro-badge { font-size: 7px; }
+    @media (max-width: 680px) {
+      .hamburger { display: flex; }
+      .topbar-nav, .topbar-status { display: none !important; }
+      .marco-input-area { max-width: 100%; padding: 0 16px; }
+      .marco-resultados { max-width: 100%; padding: 0 16px 40px; }
+      .marco-textarea { min-height: 180px; font-size: 14px; }
+      .marco-opciones { flex-direction: column; }
+      .marco-btn { width: 100%; }
+      .paises-grid { gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="ambient">
+  <div class="ambient-orb ambient-orb-1"></div>
+  <div class="ambient-orb ambient-orb-2"></div>
+  <div class="ambient-orb ambient-orb-3"></div>
+</div>
+
+<header class="topbar">
+  <a href="index.html" class="topbar-logo">LEGAL<span>ATLAS</span></a>
+  <nav class="topbar-nav">
+      <a href="abogado.html" class="topbar-link ">Biblioteca</a>
+      <a href="jurisprudencia.html" class="topbar-link ">Judikatura</a>
+      <a href="magnus.html" class="topbar-link topbar-link-pro active">Magnus</a>
+      <a href="atlas.html" class="topbar-link topbar-link-pro ">Atlas</a>
+      <a href="cuenta.html" class="topbar-link ">Mi Cuenta</a>
+    </nav>
+  <div class="topbar-right">
+    <div class="lang-switcher" id="lang-switcher">
+      <button class="lang-globe-btn" onclick="toggleLangDropdown()" title="Language / Idioma">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg><span class="lang-current" id="lang-current"></span>
+      </button>
+      <div class="lang-dropdown" id="lang-dropdown">
+        <button class="lang-option" data-lang-btn="es" onclick="setLang('es');closeLangDropdown()">🇪🇸 Español</button>
+        <button class="lang-option" data-lang-btn="cs" onclick="setLang('cs');closeLangDropdown()">🇨🇿 Čeština</button>
+        <button class="lang-option" data-lang-btn="fr" onclick="setLang('fr');closeLangDropdown()">🇫🇷 Français</button>
+        <button class="lang-option" data-lang-btn="en" onclick="setLang('en');closeLangDropdown()">🇬🇧 English</button>
+      </div>
+    </div>
+    <button class="tema-btn" id="tema-btn" onclick="toggleTema()" title="Cambiar tema">◑</button>
+    <button class="hamburger" onclick="openSidebar()" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<aside class="sidebar" id="la-sidebar">
+  <div class="sidebar-header">
+    <a href="index.html" class="sidebar-logo">LEGAL<span>ATLAS</span></a>
+    <button class="sidebar-close" onclick="closeSidebar()" aria-label="Cerrar menú">✕</button>
+  </div>
+  <nav class="sidebar-nav">
+      <a href="abogado.html" class="sidebar-link ">Biblioteca</a>
+      <a href="jurisprudencia.html" class="sidebar-link ">Judikatura</a>
+      <a href="magnus.html" class="sidebar-link active">Magnus</a>
+      <a href="atlas.html" class="sidebar-link ">Atlas</a>
+      <a href="cuenta.html" class="sidebar-link ">Mi Cuenta</a>
+    </nav>
+</aside>
+
+<main class="main">
+
+  <section class="marco-hero">
+    <p class="marco-eyebrow" data-i18n="magnus.eyebrow">Multi-jurisdictional legal analysis</p>
+    <h1 class="marco-titulo">MAG<span>NUS</span></h1>
+    <p class="marco-desc" data-i18n="magnus.desc">
+      Describe your case. Select jurisdictions.<br>Magnus searches every article simultaneously — not from memory, from verified law.
+    </p>
+  </section>
+
+  <div class="marco-input-area">
+
+    <!-- Toggle Motor CÓMO (solo visible con 1 país) -->
+    <div id="como-toggle-wrap" class="como-toggle">
+      <label class="toggle-label">
+        <input type="checkbox" id="activar-como" onchange="toggleComo(this.checked)">
+        <span class="toggle-switch"></span>
+        <span class="toggle-texto">
+          <strong data-i18n="marco.toggle.titulo">¿Cómo se tramita el proceso?</strong>
+          <small data-i18n="marco.toggle.desc">Actívalo para ver plazos, etapas y procedimiento paso a paso</small>
+        </span>
+      </label>
+    </div>
+
+    <!-- Toggle JURISPRUDENCIA (solo visible con 1 país) -->
+    <div id="juris-toggle-wrap" class="como-toggle" style="margin-top:8px;">
+      <label class="toggle-label">
+        <input type="checkbox" id="activar-juris">
+        <span class="toggle-switch"></span>
+        <span class="toggle-texto">
+          <strong data-i18n="juris.toggle.titulo">📚 ¿Buscar jurisprudencia relevante?</strong>
+          <small data-i18n="juris.toggle.desc">Sentencias y tesis judiciales que citen los artículos aplicables</small>
+        </span>
+      </label>
+    </div>
+
+    <!-- Selector de ley (solo cuando toggle ON) -->
+    <div id="bloque-ley" style="display:none; margin-bottom:12px;">
+      <select id="proceso-ley" class="marco-select" style="max-width: 460px; flex: none;">
+        <option value="" data-i18n="marco.motor.ley.vacia">Sin proceso específico — solo analiza QUÉ dice la ley</option>
+      </select>
+    </div>
+
+    <div class="marco-textarea-wrap">
+      <textarea
+        id="caso-input"
+        class="marco-textarea"
+        data-i18n-placeholder="magnus.placeholder"
+        placeholder="Describe el caso con detalle. Ejemplo: Mi cliente es un arquitecto mexicano con residencia temporal en CZ, firmó un contrato de obra con empresa checa, no le pagaron, quiere demandar pero planea irse a México. ¿Qué leyes aplican?"
+      ></textarea>
+    </div>
+
+    <!-- Selector de países (dropdowns) -->
+    <div class="pais-row">
+      <select id="pais-primario" class="marco-select pais-select"><!-- populated by JS --></select>
+      <label class="multi-toggle-wrap">
+        <input type="checkbox" id="multi-toggle">
+        <span class="multi-switch"></span>
+        <span class="multi-label" data-i18n="magnus.compare">Compare</span>
+      </label>
+      <select id="pais-secundario" class="marco-select pais-select" style="display:none"><!-- populated by JS --></select>
+    </div>
+    <!-- Magnus mode badge -->
+    <div id="magnus-badge" style="display:none; margin-bottom:12px;">
+      <span style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;color:var(--gold);background:var(--gold-dim);border:1px solid var(--gold-border);padding:6px 16px;border-radius:20px;display:inline-block;" data-i18n="magnus.badge">
+        ⚖ MAGNUS MULTI-JURISDICCIONAL
+      </span>
+    </div>
+
+    <div class="marco-opciones">
+      <div id="estado-wrap" style="display:none; flex:1; min-width:180px;">
+        <select id="estado-mx" class="marco-select" style="width:100%;">
+          <option value="" data-i18n="marco.estados">Todos los estados (recomendado)</option>
+          <option value="Aguascalientes">Aguascalientes</option>
+          <option value="Baja California">Baja California</option>
+          <option value="Baja California Sur">Baja California Sur</option>
+          <option value="Campeche">Campeche</option>
+          <option value="Chiapas">Chiapas</option>
+          <option value="Chihuahua">Chihuahua</option>
+          <option value="Ciudad de México">Ciudad de México</option>
+          <option value="Coahuila">Coahuila</option>
+          <option value="Colima">Colima</option>
+          <option value="Durango">Durango</option>
+          <option value="Estado de Mexico">Estado de México</option>
+          <option value="Guanajuato">Guanajuato</option>
+          <option value="Guerrero">Guerrero</option>
+          <option value="Hidalgo">Hidalgo</option>
+          <option value="Jalisco">Jalisco</option>
+          <option value="Michoacan">Michoacán</option>
+          <option value="Morelos">Morelos</option>
+          <option value="Nayarit">Nayarit</option>
+          <option value="Nuevo León">Nuevo León</option>
+          <option value="Oaxaca">Oaxaca</option>
+          <option value="Puebla">Puebla</option>
+          <option value="Querétaro">Querétaro</option>
+          <option value="Quintana Roo">Quintana Roo</option>
+          <option value="San Luis Potosi">San Luis Potosí</option>
+          <option value="Sinaloa">Sinaloa</option>
+          <option value="Sonora">Sonora</option>
+          <option value="Tabasco">Tabasco</option>
+          <option value="Tamaulipas">Tamaulipas</option>
+          <option value="Tlaxcala">Tlaxcala</option>
+          <option value="Veracruz">Veracruz</option>
+          <option value="Yucatán">Yucatán</option>
+          <option value="Zacatecas">Zacatecas</option>
+        </select>
+      </div>
+
+      <button id="btn-analizar" class="marco-btn" onclick="analizar()" data-i18n="marco.btn">
+        Analizar →
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div id="marco-loading" class="marco-loading">
+    <div class="loading-compass-wrap">
+      <svg viewBox="0 0 100 100" class="compass-svg">
+        <!-- Outer ring -->
+        <circle cx="50" cy="50" r="43" fill="none" stroke="#8B6820" stroke-width="0.8" opacity="0.25"/>
+        <!-- Minor ticks -->
+        <line x1="50" y1="7"  x2="50" y2="13" stroke="#8B6820" stroke-width="1.2" opacity="0.4"/>
+        <line x1="50" y1="87" x2="50" y2="93" stroke="#8B6820" stroke-width="1.2" opacity="0.4"/>
+        <line x1="7"  y1="50" x2="13" y2="50" stroke="#8B6820" stroke-width="1.2" opacity="0.4"/>
+        <line x1="87" y1="50" x2="93" y2="50" stroke="#8B6820" stroke-width="1.2" opacity="0.4"/>
+        <!-- Cardinal letters -->
+        <text x="50" y="5.5" text-anchor="middle" fill="#8B6820" font-size="7" font-family="Cinzel,serif" opacity="0.75">N</text>
+        <text x="96" y="53"  text-anchor="middle" fill="#8B6820" font-size="6" font-family="Cinzel,serif" opacity="0.4">E</text>
+        <text x="50" y="101" text-anchor="middle" fill="#8B6820" font-size="6" font-family="Cinzel,serif" opacity="0.4">S</text>
+        <text x="4"  y="53"  text-anchor="middle" fill="#8B6820" font-size="6" font-family="Cinzel,serif" opacity="0.4">W</text>
+        <!-- Radar sweep -->
+        <g class="compass-scan">
+          <path d="M50,50 L50,9 A41,41 0 0,1 91,50 Z" fill="#8B6820" opacity="0.07"/>
+        </g>
+        <!-- Needle -->
+        <g class="compass-needle">
+          <polygon points="50,13 47.5,50 50,54 52.5,50" fill="#8B6820"/>
+          <polygon points="50,87 47.5,50 50,54 52.5,50" fill="#8B6820" opacity="0.2"/>
+        </g>
+        <!-- Center -->
+        <circle cx="50" cy="50" r="3" fill="#8B6820" opacity="0.7"/>
+        <circle cx="50" cy="50" r="1.2" fill="#fff" opacity="0.5"/>
+      </svg>
+    </div>
+    <div id="loading-texto" class="loading-texto">Scanning legislation...</div>
+  </div>
+
+  <!-- ─── Sección QUÉ (single country) ─── -->
+  <div id="seccion-que" class="marco-resultados">
+    <div class="seccion-header">
+      <span class="seccion-header-label" data-i18n="marco.que.label">📋 QUÉ dice la ley</span>
+    </div>
+    <div id="secciones-dinamicos"></div>
+    <div class="sintesis-card">
+      <div class="sintesis-eyebrow" data-i18n="marco.sintesis.eyebrow">✦ Análisis Jurídico · Apolo</div>
+      <div id="sintesis-texto" class="sintesis-texto"></div>
+      <div class="sintesis-acciones">
+        <button class="btn-accion" onclick="copiarSintesis('sintesis-texto')" data-i18n="magnus.que.copiar">Copiar análisis</button>
+        <a href="abogado.html" class="btn-accion" data-i18n="marco.abrir.panel">Abrir panel del abogado →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Sección JURISPRUDENCIA (single country) ─── -->
+  <div id="seccion-juris" class="marco-resultados">
+    <div class="seccion-header">
+      <span class="seccion-header-label" data-i18n="juris.seccion.label">📚 JURISPRUDENCIA RELEVANTE</span>
+    </div>
+    <div id="juris-cards"></div>
+  </div>
+
+  <!-- Divisor -->
+  <div id="divisor-resultados" class="divisor-resultados">
+    <div class="divisor-linea"></div>
+    <span class="divisor-texto" data-i18n="marco.divisor">y además</span>
+    <div class="divisor-linea"></div>
+  </div>
+
+  <!-- ─── Sección CÓMO (single country) ─── -->
+  <div id="seccion-como" class="marco-resultados">
+    <div class="seccion-header">
+      <span class="seccion-header-label" data-i18n="marco.como.label">⟳ CÓMO se tramita el proceso</span>
+    </div>
+    <div class="sintesis-card" style="border-color: rgba(196,154,60,0.3);">
+      <div class="sintesis-eyebrow" data-i18n="marco.proceso.eyebrow">⟳ Proceso completo · Apolo</div>
+      <div id="capitulos-usados" style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);"></div>
+      <div id="proceso-flujo" class="sintesis-texto"></div>
+    </div>
+  </div>
+
+  <!-- ─── Sección Magnus multi-país ─── -->
+  <div id="seccion-magnus" class="marco-resultados">
+    <div class="seccion-header">
+      <span class="seccion-header-label" data-i18n="magnus.seccion.label">⚖️ Magnus — Análisis Multi-Jurisdiccional</span>
+    </div>
+    <!-- Articles per country -->
+    <div id="magnus-articulos"></div>
+    <!-- Cross-jurisdictional synthesis -->
+    <div class="sintesis-card">
+      <div class="sintesis-eyebrow" data-i18n="magnus.sintesis.eyebrow">⚖️ Síntesis Comparada · Magnus</div>
+      <div id="magnus-ejecutivo" class="sintesis-texto"></div>
+      <div id="magnus-ver-mas" style="display:none; margin: 20px 0 8px;">
+        <button class="btn-accion" onclick="toggleAnalisisCompleto(this)" data-i18n="magnus.ver.mas">Ver análisis completo ▼</button>
+      </div>
+      <div id="magnus-analisis-completo" style="display:none;" class="sintesis-texto"></div>
+      <div class="sintesis-acciones">
+        <button class="btn-accion" onclick="copiarSintesis('magnus-ejecutivo')" data-i18n="magnus.copiar.resumen">Copiar resumen</button>
+        <button class="btn-accion" onclick="copiarSintesis('magnus-analisis-completo')" data-i18n="magnus.copiar.completo">Copiar análisis completo</button>
+        <a href="abogado.html" class="btn-accion" data-i18n="marco.abrir.panel">Abrir panel del abogado →</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <p class="footer-copy">© Legal Atlas 2026 · All rights reserved</p>
+  <p class="footer-disclaimer">Legal Atlas is a legal research tool designed for legal professionals. It generates AI-assisted content with verified normative references. It does not constitute legal advice, legal diagnosis, or a substitute for independent professional judgment or verification of primary sources.</p>
+  <div class="footer-links">
+    <a href="/terms.html">Terms of Service</a>
+    <span>|</span>
+    <a href="/privacy.html">Privacy Policy</a>
+    <span>|</span>
+    <a href="/acceptable.html">Acceptable Use</a>
+  </div>
+</footer>
+
+<script>
+// ═══ LEYES POR PAÍS ═══
+const LEYES_PROCESO = {
+  MX: [
+    { value: 'Ley de Amparo',                                   label: 'Ley de Amparo' },
+    { value: 'Código de Comercio',                              label: 'Código de Comercio' },
+    { value: 'Código Civil',                                    label: 'Código Civil' },
+    { value: 'Ley Federal del Trabajo',                         label: 'Ley Federal del Trabajo' },
+    { value: 'Codigo Penal Federal',                            label: 'Código Penal Federal' },
+    { value: 'Ley General de Titulos y Operaciones de Credito', label: 'LGTOC' },
+  ],
+  CZ: [
+    { value: 'Občanský zákoník',               label: 'Občanský zákoník (CC)' },
+    { value: 'Zákon o obchodních korporacích', label: 'ZOK (sociedades)' },
+    { value: 'Občanský soudní řád',            label: 'OSŘ (proc. civil)' },
+    { value: 'Exekuční řád',                   label: 'Exekuční řád (ejecución)' },
+    { value: 'Insolvenční zákon',              label: 'Insolvenční zákon (quiebra)' },
+    { value: 'Trestní zákoník',                label: 'Trestní zákoník (CP)' },
+    { value: 'Trestní řád',                    label: 'Trestní řád (proc. penal)' },
+    { value: 'Zákoník práce',                  label: 'Zákoník práce (laboral)' },
+    { value: 'Správní řád',                    label: 'Správní řád (proc. admin)' },
+    { value: 'Zákon o mezinárodním právu soukromém', label: 'ZMPS (DIPr)' },
+  ],
+  DE: [
+    { value: 'Bürgerliches Gesetzbuch', label: 'BGB (Código Civil)' },
+    { value: 'Zivilprozessordnung',     label: 'ZPO (proc. civil)' },
+    { value: 'Strafprozessordnung',     label: 'StPO (proc. penal)' },
+    { value: 'Handelsgesetzbuch',       label: 'HGB (Código Comercio)' },
+  ],
+  ES: [
+    { value: 'Código Civil',               label: 'Código Civil' },
+    { value: 'Ley de Enjuiciamiento Civil', label: 'LEC (proc. civil)' },
+    { value: 'Código Penal',               label: 'Código Penal' },
+  ],
+  FR: [
+    { value: 'Code Civil',               label: 'Code Civil' },
+    { value: 'Code de procédure civile', label: 'Code de procédure civile' },
+    { value: 'Code de commerce',         label: 'Code de commerce' },
+    { value: 'Code du travail',          label: 'Code du travail' },
+  ],
+  CH: [
+    { value: 'Zivilgesetzbuch',          label: 'ZGB (Código Civil)' },
+    { value: 'Obligationenrecht',        label: 'OR (Código de Obligaciones)' },
+    { value: 'Zivilprozessordnung',      label: 'ZPO (proc. civil)' },
+  ],
+}
+
+const PASOS_LOADING = [
+  'Scanning legislation...',
+  'Mapping legal framework...',
+  'Identifying applicable procedures...',
+  'Building complete analysis...',
+]
+
+const PASOS_LOADING_MAGNUS = [
+  'Initializing multi-jurisdictional analysis...',
+  'Scanning comparative legislation...',
+  'Identifying jurisdictional conflicts...',
+  'Building Magnus synthesis...',
+]
+
+function flagEmoji(iso) {
+  try { return iso.toUpperCase().split('').map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join('') } catch { return iso }
+}
+
+function nombrePais(iso) {
+  const lang = localStorage.getItem('atlas_lang') || 'es';
+  try { return new Intl.DisplayNames([lang], { type: 'region' }).of(iso); } catch { return iso; }
+}
+
+// ─── Dropdown state ───
+async function cargarPaises() {
+  try {
+    const CACHE_KEY = 'atlas_paises_v1';
+    const CACHE_TTL = 24 * 60 * 60 * 1000;
+    let paisesUnicos;
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const { ts, paises } = JSON.parse(cached);
+      if (Date.now() - ts < CACHE_TTL) paisesUnicos = paises;
+    }
+    if (!paisesUnicos) {
+      const res = await fetch('/api/abogado?action=paises');
+      const data = await res.json();
+      paisesUnicos = data.paises || [];
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), paises: paisesUnicos }));
+    }
+    renderDropdowns(paisesUnicos);
+  } catch (e) {
+    console.warn('Error cargando países:', e);
+    renderDropdowns(['MX', 'CZ', 'DE', 'ES', 'FR', 'CH']);
+  }
+}
+
+function renderDropdowns(paises) {
+  const primEl  = document.getElementById('pais-primario');
+  const secEl   = document.getElementById('pais-secundario');
+  const optsHtml = paises.map(iso => `<option value="${iso}">${flagEmoji(iso)} ${nombrePais(iso)}</option>`).join('');
+  primEl.innerHTML  = optsHtml;
+  secEl.innerHTML   = '<option value="">Segunda jurisdicción…</option>' + optsHtml;
+  const _mgLang = localStorage.getItem('atlas_lang') || new URLSearchParams(location.search).get('lang') || '';
+  const _mgDefault = _mgLang === 'cs' ? 'CZ' : 'MX';
+  if (paises.includes(_mgDefault)) primEl.value = _mgDefault;
+  else if (paises.includes('MX')) primEl.value = 'MX';
+
+  primEl.addEventListener('change', actualizarUI);
+  document.getElementById('multi-toggle').addEventListener('change', () => {
+    const multi = document.getElementById('multi-toggle').checked;
+    document.getElementById('pais-secundario').style.display = multi ? 'inline-block' : 'none';
+    actualizarUI();
+  });
+  secEl.addEventListener('change', actualizarUI);
+  actualizarUI();
+}
+
+function getPaisesSeleccionados() {
+  const primario   = document.getElementById('pais-primario').value;
+  const multi      = document.getElementById('multi-toggle').checked;
+  const secundario = document.getElementById('pais-secundario').value;
+  const arr = [primario].filter(Boolean);
+  if (multi && secundario && secundario !== primario) arr.push(secundario);
+  return arr;
+}
+
+function actualizarUI() {
+  const paises  = getPaisesSeleccionados();
+  const esMulti = paises.length > 1;
+  const tieneMX = paises.includes('MX');
+
+  // Botón + clase Magnus
+  const btn = document.getElementById('btn-analizar');
+  btn.textContent = esMulti ? 'MAGNUS ⚖' : (window.t ? window.t('marco.btn.analizar', null, 'Analizar →') : 'Analizar →');
+  btn.classList.toggle('magnus-mode', esMulti);
+
+  // Toggle CÓMO + JURISPRUDENCIA — solo visible en single country
+  document.getElementById('como-toggle-wrap').style.display = esMulti ? 'none' : 'block';
+  document.getElementById('juris-toggle-wrap').style.display = esMulti ? 'none' : 'block';
+  if (esMulti) {
+    document.getElementById('bloque-ley').style.display = 'none';
+    const cb = document.getElementById('activar-como');
+    if (cb) cb.checked = false;
+    const cbJ = document.getElementById('activar-juris');
+    if (cbJ) cbJ.checked = false;
+  }
+
+  // Estado MX — solo single + MX seleccionado
+  document.getElementById('estado-wrap').style.display = (tieneMX && !esMulti) ? 'flex' : 'none';
+
+  // Badge multi-país
+  document.getElementById('magnus-badge').style.display = esMulti ? 'block' : 'none';
+
+  // Leyes proceso (single country only)
+  if (!esMulti) actualizarLeyesProceso(paises[0]);
+}
+
+function toggleComo(activo) {
+  document.getElementById('bloque-ley').style.display = activo ? 'block' : 'none';
+  if (!activo) document.getElementById('proceso-ley').value = '';
+}
+
+function actualizarLeyesProceso(pais) {
+  const select = document.getElementById('proceso-ley');
+  const leyes = LEYES_PROCESO[pais] || [];
+  select.innerHTML =
+    '<option value="">Sin proceso específico — solo analiza QUÉ dice la ley</option>' +
+    leyes.map(l => `<option value="${l.value}">${l.label}</option>`).join('');
+}
+
+async function analizar() {
+  const caso        = document.getElementById('caso-input').value.trim()
+  const paises      = getPaisesSeleccionados()
+  const ley         = paises.length === 1 ? (document.getElementById('proceso-ley').value || null) : null
+  const estado      = (paises.length === 1 && paises[0] === 'MX') ? (document.getElementById('estado-mx').value || null) : null
+  const incluir_juris = paises.length === 1 && document.getElementById('activar-juris')?.checked
+
+  if (caso.length < 20) {
+    alert(window.t ? window.t('magnus.alert.min') : 'Describe tu caso con más detalle.')
+    return
+  }
+  if (paises.length === 0) {
+    alert(window.t ? window.t('magnus.alert.pais') : 'Selecciona al menos un país.')
+    return
+  }
+
+  ocultarResultados()
+  document.getElementById('marco-loading').style.display = 'block'
+  document.getElementById('btn-analizar').disabled = true
+
+  const pasos = paises.length > 1 ? PASOS_LOADING_MAGNUS : PASOS_LOADING
+  let pasoIdx = 0
+  const interval = setInterval(() => {
+    if (pasoIdx < pasos.length) {
+      document.getElementById('loading-texto').textContent = pasos[pasoIdx++]
+    }
+  }, 3500)
+
+  const esMulti = paises.length > 1
+  let queSintesis = ''
+  let comoFlujo = ''
+  let magnusSintesis = ''
+  let queOk = false
+  let comoOk = false
+  let magnusOk = false
+
+  try {
+    const res = await fetch('/api/analizar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ caso, paises, ley, estado_mx: estado, incluir_juris }),
+      signal: AbortSignal.timeout(300000)
+    })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+    const reader = res.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      buffer += decoder.decode(value, { stream: true })
+
+      const lines = buffer.split('\n')
+      buffer = lines.pop()
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue
+        let evt
+        try { evt = JSON.parse(line.slice(6)) } catch { continue }
+
+        // ── Single country events ──
+        if (evt.type === 'que_articles') {
+          clearInterval(interval)
+          document.getElementById('marco-loading').style.display = 'none'
+          if (evt.ok && evt.total_encontrados > 0) {
+            queOk = true
+            renderSeccionQue({ articulos_por_nivel: evt.articulos_por_nivel, sintesis: '' })
+            document.getElementById('seccion-que').style.display = 'block'
+            document.getElementById('seccion-que').scrollIntoView({ behavior: 'smooth' })
+          }
+        }
+
+        if (evt.type === 'como_articles') {
+          if (evt.ok && evt.capitulos_encontrados?.length > 0) {
+            comoOk = true
+            const capitulosHTML = (evt.capitulos_encontrados || [])
+              .map(c => `<span class="capitulo-tag">${c.capitulo}<span style="opacity:0.6"> ${c.num_articulos} arts</span></span>`)
+              .join('')
+            document.getElementById('capitulos-usados').innerHTML =
+              `<div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;color:var(--text-muted);margin-bottom:10px;">${window.t ? window.t('magnus.capitulos') : 'CAPÍTULOS ANALIZADOS'}</div>${capitulosHTML}`
+            document.getElementById('proceso-flujo').textContent = ''
+            document.getElementById('seccion-como').style.display = 'block'
+            if (queOk) document.getElementById('divisor-resultados').style.display = 'flex'
+          }
+        }
+
+        if (evt.type === 'juris_articles') {
+          if (evt.ok && evt.articulos?.length > 0) {
+            document.getElementById('seccion-juris').style.display = 'block'
+            renderJurisCards(evt.articulos)
+          }
+        }
+
+        if (evt.type === 'que_chunk') {
+          queSintesis += evt.text
+          document.getElementById('sintesis-texto').innerHTML = parsearTexto(queSintesis)
+        }
+
+        if (evt.type === 'como_chunk') {
+          comoFlujo += evt.text
+          document.getElementById('proceso-flujo').textContent = comoFlujo
+        }
+
+        // ── Magnus multi-country events ──
+        if (evt.type === 'magnus_debug') {
+          console.log('[magnus_debug]', JSON.stringify(evt.diagnostics, null, 2))
+        }
+
+        if (evt.type === 'magnus_articles') {
+          clearInterval(interval)
+          document.getElementById('marco-loading').style.display = 'none'
+          const anyOk = evt.resultados?.some(r => r.ok && r.total_encontrados > 0)
+          if (anyOk) {
+            magnusOk = true
+            renderMagnusArticulos(evt.resultados)
+            document.getElementById('seccion-magnus').style.display = 'block'
+            document.getElementById('seccion-magnus').scrollIntoView({ behavior: 'smooth' })
+          } else {
+            // Surface per-country errors in console for debugging
+            console.warn('[magnus_articles] anyOk=false, resultados:', JSON.stringify(evt.resultados))
+          }
+        }
+
+        if (evt.type === 'magnus_chunk') {
+          magnusSintesis += evt.text
+          const DELIM = '---FULL_ANALYSIS---'
+          const idx   = magnusSintesis.indexOf(DELIM)
+          if (idx === -1) {
+            const clean = magnusSintesis.replace('---EXECUTIVE_SUMMARY---', '').trim()
+            document.getElementById('magnus-ejecutivo').innerHTML = parsearTexto(clean)
+          } else {
+            const summary  = magnusSintesis.slice(0, idx).replace('---EXECUTIVE_SUMMARY---', '').trim()
+            const analysis = magnusSintesis.slice(idx + DELIM.length).trim()
+            document.getElementById('magnus-ejecutivo').innerHTML = parsearTexto(summary)
+            if (analysis) {
+              document.getElementById('magnus-ver-mas').style.display = 'block'
+              document.getElementById('magnus-analisis-completo').innerHTML = parsearTexto(analysis)
+            }
+          }
+        }
+
+        if (evt.type === 'error_gemini') {
+          const errHtml = `<p style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.1em;color:var(--gold);opacity:0.8;margin-top:16px;border-top:1px solid var(--gold-border);padding-top:12px;">⚠ ${evt.message}</p>`
+          document.getElementById('magnus-ejecutivo').innerHTML += errHtml
+        }
+
+        if (evt.type === 'error') {
+          throw new Error(evt.error || 'Error en el servidor')
+        }
+      }
+    }
+
+    if (!queOk && !comoOk && !magnusOk) {
+      alert(window.t ? window.t('magnus.alert.sin_resultados') : 'No se encontraron resultados. Intenta con más detalle o cambia las jurisdicciones.')
+    }
+  } catch (err) {
+    clearInterval(interval)
+    document.getElementById('marco-loading').style.display = 'none'
+    alert(window.t ? window.t('magnus.alert.error') : 'El análisis encontró un problema. Por favor intenta de nuevo.')
+    console.error('[magnus]', err)
+  } finally {
+    clearInterval(interval)
+    document.getElementById('marco-loading').style.display = 'none'
+    document.getElementById('btn-analizar').disabled = false
+    actualizarUI()
+  }
+}
+
+function ocultarResultados() {
+  document.getElementById('seccion-que').style.display        = 'none'
+  document.getElementById('seccion-juris').style.display      = 'none'
+  document.getElementById('divisor-resultados').style.display = 'none'
+  document.getElementById('seccion-como').style.display       = 'none'
+  document.getElementById('seccion-magnus').style.display     = 'none'
+}
+
+function renderSeccionQue(queData) {
+  const contenedor = document.getElementById('secciones-dinamicos')
+  contenedor.innerHTML = ''
+  Object.entries(queData.articulos_por_nivel).forEach(([nivel, articulos]) => {
+    const label = articulos[0]?.nivel_label || `Nivel ${nivel}`
+    const count = articulos?.length || 0
+    const seccion = document.createElement('div')
+    seccion.className = 'nivel-seccion'
+    seccion.innerHTML = `
+      <div class="nivel-header" onclick="toggleSeccion(this)">
+        <span class="nivel-titulo">${label.toUpperCase()}</span>
+        <span class="nivel-count">${count} ${window.t ? window.t('magnus.articulos') : 'artículos'}</span>
+        <span class="nivel-chevron">▼</span>
+      </div>
+      <div class="nivel-articulos">
+        ${count === 0
+          ? `<p class="sin-resultados">${window.t ? window.t('magnus.sin_articulos') : 'No se encontraron artículos relevantes.'}</p>`
+          : articulos.map(art => renderArtCard(art)).join('')
+        }
+      </div>`
+    contenedor.appendChild(seccion)
+  })
+  document.getElementById('sintesis-texto').innerHTML = parsearTexto(queData.sintesis || '')
+}
+
+function renderMagnusArticulos(resultados) {
+  const contenedor = document.getElementById('magnus-articulos')
+  contenedor.innerHTML = ''
+  resultados.forEach(r => {
+    const wrap = document.createElement('div')
+    wrap.innerHTML = `
+      <div class="magnus-pais-header">
+        <span class="magnus-pais-flag">${flagEmoji(r.pais)}</span>
+        <span class="magnus-pais-nombre">${nombrePais(r.pais)}</span>
+        <span class="magnus-pais-count">${r.total_encontrados || 0} ${window.t ? window.t('magnus.articulos') : 'artículos'}</span>
+      </div>`
+    if (r.ok && r.articulos_por_nivel) {
+      Object.entries(r.articulos_por_nivel).forEach(([nivel, articulos]) => {
+        if (!articulos?.length) return
+        const seccion = document.createElement('div')
+        seccion.className = 'nivel-seccion'
+        seccion.innerHTML = `
+          <div class="nivel-header" onclick="toggleSeccion(this)">
+            <span class="nivel-titulo">${(articulos[0]?.nivel_label || (window.t ? window.t('magnus.nivel.legislacion', null, 'Legislación') : 'Legislación')).toUpperCase()}</span>
+            <span class="nivel-count">${articulos.length} ${window.t ? window.t('magnus.articulos') : 'artículos'}</span>
+            <span class="nivel-chevron">▼</span>
+          </div>
+          <div class="nivel-articulos">
+            ${articulos.map(art => renderArtCard(art)).join('')}
+          </div>`
+        wrap.appendChild(seccion)
+      })
+    } else {
+      wrap.innerHTML += `<p class="sin-resultados">${window.t ? window.t('magnus.sin_pais') : 'No se encontraron artículos para esta jurisdicción.'}</p>`
+    }
+    contenedor.appendChild(wrap)
+  })
+}
+
+function toggleSeccion(header) {
+  const articulos = header.nextElementSibling
+  const abierto = articulos.classList.toggle('visible')
+  header.classList.toggle('abierto', abierto)
+}
+
+function parsearTexto(texto) {
+  return texto
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\n/g, '<br>')
+}
+
+function renderArtCard(art) {
+  const texto = art.texto_original || ''
+  const preview = texto.slice(0, 250)
+  const hayMas = texto.length > 250
+  return `
+    <div class="art-card">
+      <div class="art-header">
+        <span class="art-numero">${art.numero_articulo || 'Art.'}</span>
+        <span class="art-ley">${art.ley || ''}${art.estado ? ' · ' + art.estado : ''}</span>
+        <span class="art-score">${Math.round((art.similarity || 0) * 100)}${window.t ? window.t('magnus.relevante') : '% relevante'}</span>
+      </div>
+      <div class="art-texto" id="txt-${art.id}">${preview}${hayMas ? '...' : ''}</div>
+      ${hayMas ? `<button class="art-ver-mas" onclick="toggleTexto('${art.id}', this)" data-completo="${encodeURIComponent(texto)}">${window.t ? window.t('magnus.ver_articulo') : 'Ver artículo completo ▼'}</button>` : ''}
+    </div>`
+}
+
+function toggleTexto(id, btn) {
+  const el = document.getElementById('txt-' + id)
+  const completo = decodeURIComponent(btn.dataset.completo)
+  if (btn.textContent.includes('▼')) {
+    el.textContent = completo
+    btn.textContent = window.t ? window.t('magnus.cerrar_art') : 'Cerrar ▲'
+  } else {
+    el.textContent = completo.slice(0, 250) + '...'
+    btn.textContent = window.t ? window.t('magnus.ver_articulo') : 'Ver artículo completo ▼'
+  }
+}
+
+function toggleAnalisisCompleto(btn) {
+  const el = document.getElementById('magnus-analisis-completo')
+  const visible = el.style.display !== 'none'
+  el.style.display = visible ? 'none' : 'block'
+  btn.textContent = visible
+    ? (window.t ? window.t('magnus.ver_analisis') : 'Ver análisis completo ▼')
+    : (window.t ? window.t('magnus.ocultar_analisis') : 'Ocultar análisis ▲')
+}
+
+function renderJurisCards(articulos) {
+  const contenedor = document.getElementById('juris-cards')
+  contenedor.innerHTML = ''
+  if (!articulos?.length) {
+    contenedor.innerHTML = `<p class="sin-resultados">${window.t('juris.sin_resultados','No se encontró jurisprudencia relevante para este caso.')}</p>`
+    return
+  }
+  articulos.forEach(j => {
+    const card = document.createElement('div')
+    card.className = 'juris-card'
+    const fecha = j.fecha ? new Date(j.fecha + 'T00:00:00').toLocaleDateString('es-MX', { month: 'short', year: 'numeric' }) : ''
+    const arts = Array.isArray(j.articulos_citados) ? j.articulos_citados.join(', ') : (j.articulos_citados || '')
+    const ratio = (j.ratio || '').replace(/^Jurisprudencia[\s\S]*?Texto:\s*/i, '').trim()
+    const preview = ratio.slice(0, 420) + (ratio.length > 420 ? '...' : '')
+    card.innerHTML = `
+      <div class="juris-card-header">
+        <span class="juris-caso">${j.caso || ''}</span>
+        <span class="juris-fecha">${fecha}</span>
+      </div>
+      <div class="juris-tribunal">${j.tribunal || ''}</div>
+      ${arts ? `<div class="juris-arts">Arts. citados: ${arts}</div>` : ''}
+      <div class="juris-ratio">${preview}</div>
+      ${j.url_original ? `<a href="${j.url_original}" target="_blank" rel="noopener" class="juris-link">${window.t ? window.t('magnus.juris.ver_sentencia', null, 'Ver sentencia original →') : 'Ver sentencia original →'}</a>` : ''}
+    `
+    contenedor.appendChild(card)
+  })
+}
+
+function copiarSintesis(elementId) {
+  const texto = document.getElementById(elementId).innerText
+  navigator.clipboard.writeText(texto)
+    .then(() => alert(window.t ? window.t('magnus.copiado') : 'Análisis copiado al portapapeles ✓'))
+}
+
+// Inicializar
+cargarPaises();
+
+if (window.innerWidth <= 680) {
+  var ta = document.getElementById('caso-input');
+  if (ta) ta.placeholder = window.t ? window.t('magnus.placeholder.mobile') : 'Describe tu caso con detalle…';
+}
+</script>
+
+<script>
+function toggleTema() {
+  var t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('la-theme', t);
+  var btn = document.getElementById('tema-btn');
+  if (btn) btn.textContent = t === 'dark' ? '◑' : '●';
+}
+(function() {
+  var t = document.documentElement.getAttribute('data-theme') || 'light';
+  var btn = document.getElementById('tema-btn');
+  if (btn) btn.textContent = t === 'dark' ? '◑' : '●';
+})();
+</script>
+
+<script>
+function openSidebar() {
+  document.getElementById('la-sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('la-sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+</script>
+
+<div id="overlay-registro" style="position:fixed;inset:0;background:rgba(253,250,245,0.97);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px">
+  <p style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;color:var(--gold);margin-bottom:16px" data-i18n="overlay.acceso">ACCESO REQUERIDO</p>
+  <h2 style="font-family:'Cinzel',serif;font-size:28px;margin-bottom:12px" data-i18n="overlay.registro">Regístrate para continuar</h2>
+  <p style="color:var(--text-muted);font-size:14px;margin-bottom:32px;max-width:400px;line-height:1.7" data-i18n="overlay.desc.magnus">Magnus requiere una cuenta. Análisis multi-jurisdiccional comparado. Acceso gratuito hasta el 7 de mayo.</p>
+  <button onclick="loginConGoogle()" style="display:flex;align-items:center;gap:10px;padding:14px 24px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-family:'Lora',serif;font-size:14px;cursor:pointer;transition:all 0.2s">
+    <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2.01c-.72.48-1.63.77-2.7.77a4.9 4.9 0 01-4.62-3.38H1.68v2.07A8 8 0 008.98 17z"/><path fill="#FBBC05" d="M4.36 10.44A4.9 4.9 0 014.1 9c0-.5.09-1 .26-1.44V5.49H1.68a8 8 0 000 7.02l2.68-2.07z"/><path fill="#EA4335" d="M8.98 3.58c1.32 0 2.5.45 3.44 1.35l2.54-2.54A8 8 0 001.68 5.49l2.68 2.07a4.9 4.9 0 014.62-3.98z"/></svg>
+    <span data-i18n="overlay.google">Continuar con Google</span>
+  </button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const _supabaseAuth = supabase.createClient('https://nuzzmcxirsghykzqbmmn.supabase.co', 'sb_publishable_yz1em9S40ZqDlB5Ou80Z5g_TCN4hCff')
+function loginConGoogle() {
+  _supabaseAuth.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/cuenta.html' } })
+}
+async function verificarAcceso() {
+  const { data: { session } } = await _supabaseAuth.auth.getSession()
+  document.getElementById('overlay-registro').style.display = session ? 'none' : 'flex'
+}
+verificarAcceso()
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

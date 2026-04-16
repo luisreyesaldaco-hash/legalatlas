@@ -3,6 +3,29 @@
   "titulo": "Contrato de Arrendamiento",
   "descripcion": "Contrato de renta de casa habitación entre particulares",
   "precio_mxn": 299,
+  "jurisdiccion": {
+    "requiere_estado": true,
+    "acepta_federal": false
+  },
+  "rag_queries": [
+    { "query": "arrendamiento obligaciones arrendador arrendatario inmueble habitacional", "n": 2 },
+    { "query": "depósito garantía arrendamiento devolución", "n": 2 },
+    { "query": "causas rescisión contrato arrendamiento incumplimiento", "n": 2 },
+    { "query": "garantías constitucionales aplicables arrendamiento", "n": 1 },
+    { "query": "rescisión incumplimiento obligaciones contrato", "n": 1 }
+  ],
+  "secciones": [
+    { "id": 1,  "titulo": "DECLARACIONES",               "tipo": "codigo" },
+    { "id": 2,  "titulo": "OBJETO",                      "tipo": "codigo" },
+    { "id": 3,  "titulo": "VIGENCIA",                    "tipo": "codigo" },
+    { "id": 4,  "titulo": "RENTA Y FORMA DE PAGO",       "tipo": "codigo" },
+    { "id": 5,  "titulo": "DEPÓSITO EN GARANTÍA",        "tipo": "codigo" },
+    { "id": 6,  "titulo": "OBLIGACIONES DEL ARRENDADOR", "tipo": "gemini" },
+    { "id": 7,  "titulo": "OBLIGACIONES DEL ARRENDATARIO","tipo": "gemini" },
+    { "id": 8,  "titulo": "CAUSAS DE RESCISIÓN",         "tipo": "gemini" },
+    { "id": 9,  "titulo": "FUNDAMENTO LEGAL",            "tipo": "rag"    },
+    { "id": 10, "titulo": "FIRMAS",                      "tipo": "codigo" }
+  ],
   "fuente_ley": "Código Civil",
   "query_rag": "arrendamiento contrato renta inmueble habitación depósito garantía obligaciones arrendador arrendatario",
   "datos_requeridos": [

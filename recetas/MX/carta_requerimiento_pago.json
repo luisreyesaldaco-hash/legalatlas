@@ -2,6 +2,7 @@
   "tipo": "carta_requerimiento_pago",
   "titulo": "Carta de Requerimiento de Pago",
   "descripcion": "Carta formal para exigir el pago de una deuda pendiente",
+  "precio_mxn": 149,
   "triggers": ["requerimiento de pago", "cobrar deuda", "carta de cobro", "requerir pago", "exigir pago"],
   "datos_requeridos": [
     {

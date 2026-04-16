@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh auth:*)",
+      "mcp__claude_ai_Vercel__deploy_to_vercel",
+      "mcp__claude_ai_Supabase__execute_sql",
+      "mcp__claude_ai_Vercel__get_runtime_logs",
+      "Bash(vercel logs:*)",
+      "Bash(vercel ls:*)",
+      "mcp__claude_ai_Vercel__list_projects",
+      "mcp__claude_ai_Vercel__get_project",
+      "mcp__claude_ai_Vercel__web_fetch_vercel_url",
+      "WebFetch(domain:www.legalatlas.io)",
+      "WebFetch(domain:www.bodyease.cz)",
+      "Bash(vercel inspect:*)",
+      "Bash(curl -s -X POST https://legalatlas.io/api/marco -H \"Content-Type: application/json\" -d \"{\"\"caso\"\":\"\"Mi cliente firmó un contrato de arrendamiento y el arrendador le cortó agua y luz para obligarlo a salir. ¿Qué artículos lo protegen?\"\",\"\"pais\"\":\"\"MX\"\"}\")",
+      "Bash(python -c \"import sys,json; p=json.load\\(sys.stdin\\); print\\(p.get\\(''''version'''',''''?''''\\)\\)\")",
+      "Bash(curl:*)",
+      "Bash(vercel deploy:*)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(''''articulos:'''', d[''''meta''''][''''articulos_procesados'''']\\)\")",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Read(//c/Users/Luis Alfonso Reyes/OneDrive/Escritorio/Pagina Web/**)",
+      "Bash(done)",
+      "Bash(\"/c/Users/Luis Alfonso Reyes/AppData/Local/Programs/Python/Python312/python\" \"C:/Users/Luis Alfonso Reyes/OneDrive/Escritorio/Pagina Web/legalatlas/apply_theme.py\")",
+      "Bash(grep -l \"la-theme\" *.html)",
+      "Bash(grep -l \"tema-btn\" *.html)",
+      "Bash(grep -l \"toggleTema\" *.html)",
+      "Bash(sed -n '570,580p' ciudadano.html)",
+      "Bash(sed -n '570,580p' marco.html)",
+      "Bash(sed -n '290,296p' index.html)",
+      "Bash(rm:*)"
+    ]
+  }
+}

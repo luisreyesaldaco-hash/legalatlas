@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg-0: var(--bg-0);
+  --color-bg-000: var(--bg-000);
+  --color-bg-100: var(--bg-100);
+  --color-bg-200: var(--bg-200);
+  --color-bg-300: var(--bg-300);
+  --color-text-100: var(--text-100);
+  --color-text-200: var(--text-200);
+  --color-text-300: var(--text-300);
+  --color-text-400: var(--text-400);
+  --color-text-500: var(--text-500);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --font-serif: "Cinzel", Georgia, serif;
+  --font-sans: "Lora", "Georgia", serif;
+  --shadow-input: 0 1px 4px rgba(26,20,16,0.07);
+  --shadow-input-hover: 0 4px 20px rgba(26,20,16,0.10);
+  --shadow-input-focus: 0 8px 40px rgba(26,20,16,0.13);
+  --color-background: var(--bg-0);
+  --color-foreground: var(--text-100);
+  --color-card: var(--bg-100);
+  --color-card-foreground: var(--text-100);
+  --color-border: var(--bg-300);
+  --color-ring: var(--accent);
+}
+
+/* Legal Atlas light (paper/sepia) theme */
+:root {
+  --bg-0: #F7F3EC;
+  --bg-000: #F7F3EC;
+  --bg-100: #FDFAF5;
+  --bg-200: #F0EBE0;
+  --bg-300: #E5DDD0;
+  --text-100: #1A1410;
+  --text-200: #3D342A;
+  --text-300: #7A6E60;
+  --text-400: #9A8E80;
+  --text-500: #B0A89A;
+  --accent: #8B6820;
+  --accent-hover: #6B5018;
+  --border: #E5DDD0;
+  --radius: 0.5rem;
+}
+
+/* Dark mode — triggered by .dark class on <html> */
+.dark {
+  --bg-0: #1A1410;
+  --bg-000: #1A1410;
+  --bg-100: #201C18;
+  --bg-200: #2A2420;
+  --bg-300: #3A332C;
+  --text-100: #F5F0E8;
+  --text-200: #E8E0D0;
+  --text-300: #B8AEA0;
+  --text-400: #8A7E70;
+  --text-500: #6A5E50;
+  --accent: #C49A3C;
+  --accent-hover: #E0B44E;
+  --border: #3A332C;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--bg-300);
+  border-radius: 2px;
+}

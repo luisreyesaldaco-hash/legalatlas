@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legal Atlas vs IA Genérica — La Diferencia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c8a84b;
+    --gold-dim: rgba(200,168,75,0.15);
+    --gold-border: rgba(200,168,75,0.3);
+    --bg: #070604;
+    --bg2: #0e0d0a;
+    --bg3: #161410;
+    --text: #e8e0d0;
+    --text-dim: rgba(232,224,208,0.5);
+    --red: #c84b4b;
+    --red-dim: rgba(200,75,75,0.12);
+    --red-border: rgba(200,75,75,0.3);
+    --green: #4bc87a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Subtle noise texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  header {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 56px 24px 40px;
+    border-bottom: 1px solid var(--gold-border);
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.8;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 14px;
+  }
+
+  header h1 span.gold { color: var(--gold); }
+  header h1 span.dim { color: var(--text-dim); }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-dim);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Input area */
+  .input-zone {
+    position: relative;
+    z-index: 10;
+    max-width: 760px;
+    margin: 48px auto 0;
+    padding: 0 24px;
+  }
+
+  .input-wrap {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--gold-border);
+    border-radius: 4px;
+    background: var(--bg2);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .input-wrap:focus-within {
+    border-color: var(--gold);
+  }
+
+  #pregunta {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 18px 22px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--text);
+    resize: none;
+    min-height: 64px;
+    max-height: 160px;
+  }
+
+  #pregunta::placeholder {
+    color: var(--text-dim);
+  }
+
+  #btn-ask {
+    background: var(--gold);
+    border: none;
+    padding: 0 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    color: #070604;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  #btn-ask:hover { opacity: 0.88; }
+  #btn-ask:active { transform: scale(0.98); }
+  #btn-ask:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Suggested queries */
+  .suggestions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+
+  .suggestion {
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    border: 1px solid rgba(232,224,208,0.12);
+    padding: 6px 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .suggestion:hover {
+    color: var(--gold);
+    border-color: var(--gold-border);
+    background: var(--gold-dim);
+  }
+
+  /* Battle arena */
+  .arena {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    max-width: 1280px;
+    margin: 56px auto 0;
+    padding: 0 24px 80px;
+    gap: 0;
+    min-height: 500px;
+  }
+
+  .divider {
+    background: var(--gold-border);
+    position: relative;
+  }
+
+  .divider::after {
+    content: 'VS';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    background: var(--bg);
+    padding: 8px 4px;
+    writing-mode: vertical-rl;
+  }
+
+  /* Contestant */
+  .contestant {
+    padding: 40px 40px;
+  }
+
+  .contestant-header {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid;
+  }
+
+  .contestant.generic .contestant-header { border-color: var(--red-border); }
+  .contestant.atlas .contestant-header { border-color: var(--gold-border); }
+
+  .contestant-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .contestant.generic .contestant-label { color: var(--red); }
+  .contestant.atlas .contestant-label { color: var(--gold); }
+
+  .contestant-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .contestant-desc {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Response area */
+  .response-box {
+    min-height: 280px;
+    padding: 24px;
+    border-radius: 3px;
+    border: 1px solid;
+    font-size: 14.5px;
+    line-height: 1.75;
+    position: relative;
+    transition: all 0.3s;
+  }
+
+  .contestant.generic .response-box {
+    border-color: var(--red-border);
+    background: var(--red-dim);
+  }
+
+  .contestant.atlas .response-box {
+    border-color: var(--gold-border);
+    background: var(--gold-dim);
+  }
+
+  .response-box.loading::after {
+    content: '▋';
+    animation: blink 0.8s step-end infinite;
+    color: var(--text-dim);
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .response-empty {
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 13px;
+  }
+
+  /* Tags / verdict */
+  .verdict-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .tag.bad { background: rgba(200,75,75,0.2); color: #e88080; border: 1px solid var(--red-border); }
+  .tag.good { background: rgba(75,200,122,0.15); color: #7ed8a0; border: 1px solid rgba(75,200,122,0.3); }
+  .tag.neutral { background: rgba(232,224,208,0.08); color: var(--text-dim); border: 1px solid rgba(232,224,208,0.12); }
+
+  /* Metrics bar */
+  .metrics {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .metrics-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    border: 1px solid var(--gold-border);
+    background: var(--gold-border);
+  }
+
+  .metric-cell {
+    background: var(--bg2);
+    padding: 24px;
+    text-align: center;
+  }
+
+  .metric-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .metric-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .metric-val.bad { color: var(--red); }
+  .metric-val.good { color: var(--green); }
+
+  /* Timing indicator */
+  .timing {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 12px;
+    text-align: right;
+  }
+
+  /* Highlight article citations */
+  .response-box .article-cite {
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--gold-dim);
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+
+  /* Footer note */
+  .footer-note {
+    text-align: center;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    padding: 32px 24px 48px;
+    border-top: 1px solid rgba(232,224,208,0.06);
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Fade-in animation */
+  .fade-in {
+    animation: fadeIn 0.4s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .arena {
+      grid-template-columns: 1fr;
+    }
+    .divider {
+      height: 1px;
+      width: 100%;
+    }
+    .divider::after {
+      writing-mode: horizontal-tb;
+      top: 50%;
+      left: 50%;
+    }
+    .contestant { padding: 28px 20px; }
+    .metrics-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Demostración · Legal Atlas</div>
+  <h1>
+    <span class="dim">IA Genérica</span>
+    <span class="gold"> vs </span>
+    Legal Atlas
+  </h1>
+  <p class="subtitle">La diferencia entre una respuesta que suena bien y una que cita el artículo exacto de la ley vigente.</p>
+</header>
+
+<div class="input-zone">
+  <div class="input-wrap">
+    <textarea id="pregunta" placeholder="Escribe una pregunta legal... ej: ¿Cuáles son las causas de nulidad de un contrato en México?" rows="2"></textarea>
+    <button id="btn-ask">Comparar →</button>
+  </div>
+  <div class="suggestions">
+    <span class="suggestion" onclick="useSuggestion(this)">¿Causas de nulidad de un contrato?</span>
+    <span class="suggestion" onclick="useSuggestion(this)">¿Qué es el dolo en derecho civil?</span>
+    <span class="suggestion" onclick="useSuggestion(this)">¿Cuándo prescribe una deuda en México?</span>
+    <span class="suggestion" onclick="useSuggestion(this)">¿Qué derechos tiene un trabajador despedido?</span>
+  </div>
+</div>
+
+<div class="arena">
+  <!-- Generic AI -->
+  <div class="contestant generic">
+    <div class="contestant-header">
+      <div class="contestant-label">Retador</div>
+      <div class="contestant-name">IA Genérica</div>
+      <div class="contestant-desc">// sin corpus jurídico verificado</div>
+    </div>
+
+    <div class="response-box" id="box-generic">
+      <span class="response-empty">La respuesta aparecerá aquí...</span>
+    </div>
+
+    <div class="verdict-tags" id="tags-generic" style="display:none">
+      <span class="tag bad">Sin artículos citados</span>
+      <span class="tag bad">Fuente: entrenamiento general</span>
+      <span class="tag neutral">Puede variar por versión</span>
+    </div>
+
+    <div class="timing" id="timing-generic"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Legal Atlas -->
+  <div class="contestant atlas">
+    <div class="contestant-header">
+      <div class="contestant-label">Legal Atlas</div>
+      <div class="contestant-name">Apolo · Motor Jurídico</div>
+      <div class="contestant-desc">// corpus verificado · 153K+ artículos · MX · CZ · EU</div>
+    </div>
+
+    <div class="response-box" id="box-atlas">
+      <span class="response-empty">La respuesta aparecerá aquí...</span>
+    </div>
+
+    <div class="verdict-tags" id="tags-atlas" style="display:none">
+      <span class="tag good">Artículos exactos citados</span>
+      <span class="tag good">Corpus verificado · Abr 2026</span>
+      <span class="tag neutral">RAG sobre ley vigente</span>
+    </div>
+
+    <div class="timing" id="timing-atlas"></div>
+  </div>
+</div>
+
+<div class="metrics" id="metrics-section" style="display:none">
+  <div class="metrics-title">// análisis de respuesta</div>
+  <div class="metrics-grid">
+    <div class="metric-cell">
+      <div class="metric-label">Citas de artículos</div>
+      <div class="metric-row">
+        <span class="metric-val bad" id="metric-generic-citas">0</span>
+        <span style="color:var(--text-dim);font-size:12px;">vs</span>
+        <span class="metric-val good" id="metric-atlas-citas">—</span>
+      </div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-label">Fuente verificable</div>
+      <div class="metric-row">
+        <span class="metric-val bad">✗</span>
+        <span style="color:var(--text-dim);font-size:12px;">vs</span>
+        <span class="metric-val good">✓</span>
+      </div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-label">Tiempo de respuesta</div>
+      <div class="metric-row">
+        <span class="metric-val" id="metric-generic-time" style="color:var(--text-dim)">—</span>
+        <span style="color:var(--text-dim);font-size:12px;">vs</span>
+        <span class="metric-val" id="metric-atlas-time" style="color:var(--text-dim)">—</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-note">
+  Legal Atlas · legalatlas.io · Corpus verificado al 31 mar 2026 · 153,105 artículos · MX · CZ · FR · DE · ES · CH · MC
+</div>
+
+<script>
+  function useSuggestion(el) {
+    document.getElementById('pregunta').value = el.textContent;
+  }
+
+  document.getElementById('pregunta').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      document.getElementById('btn-ask').click();
+    }
+  });
+
+  function countArticleCitations(text) {
+    // Count patterns like "Art. 2228", "artículo 1832", "art. 123 CPEUM"
+    const patterns = text.match(/art[íi]culo?\s*\d+|art\.\s*\d+|\bfracción\s+[IVX]+/gi);
+    return patterns ? patterns.length : 0;
+  }
+
+  function highlightCitations(text) {
+    return text.replace(/(art[íi]culo?\s*\d+[^\s,;.]*/gi, '<span class="article-cite">$1</span>');
+  }
+
+  document.getElementById('btn-ask').addEventListener('click', async () => {
+    const pregunta = document.getElementById('pregunta').value.trim();
+    if (!pregunta) return;
+
+    const btn = document.getElementById('btn-ask');
+    btn.disabled = true;
+    btn.textContent = 'Consultando...';
+
+    // Reset
+    const boxGeneric = document.getElementById('box-generic');
+    const boxAtlas = document.getElementById('box-atlas');
+    boxGeneric.innerHTML = '';
+    boxAtlas.innerHTML = '';
+    boxGeneric.classList.add('loading');
+    boxAtlas.classList.add('loading');
+    document.getElementById('tags-generic').style.display = 'none';
+    document.getElementById('tags-atlas').style.display = 'none';
+    document.getElementById('metrics-section').style.display = 'none';
+    document.getElementById('timing-generic').textContent = '';
+    document.getElementById('timing-atlas').textContent = '';
+
+    const t0 = Date.now();
+    let genericDone = false, atlasDone = false;
+    let genericTime = 0, atlasTime = 0;
+
+    function checkDone() {
+      if (genericDone && atlasDone) {
+        btn.disabled = false;
+        btn.textContent = 'Comparar →';
+
+        // Show metrics
+        const metricsSection = document.getElementById('metrics-section');
+        metricsSection.style.display = 'block';
+        metricsSection.classList.add('fade-in');
+
+        const genericText = boxGeneric.innerText;
+        const atlasText = boxAtlas.innerText;
+
+        document.getElementById('metric-generic-citas').textContent = countArticleCitations(genericText);
+        document.getElementById('metric-atlas-citas').textContent = countArticleCitations(atlasText);
+        document.getElementById('metric-generic-time').textContent = (genericTime / 1000).toFixed(1) + 's';
+        document.getElementById('metric-atlas-time').textContent = (atlasTime / 1000).toFixed(1) + 's';
+      }
+    }
+
+    // Call Gemini (generic)
+    fetch('/api/gemini-demo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pregunta })
+    })
+    .then(r => r.json())
+    .then(data => {
+      genericTime = Date.now() - t0;
+      boxGeneric.classList.remove('loading');
+      boxGeneric.innerHTML = data.respuesta || data.error || 'Sin respuesta';
+      boxGeneric.classList.add('fade-in');
+      document.getElementById('tags-generic').style.display = 'flex';
+      document.getElementById('timing-generic').textContent = `⏱ ${(genericTime/1000).toFixed(1)}s`;
+      genericDone = true;
+      checkDone();
+    })
+    .catch(err => {
+      genericTime = Date.now() - t0;
+      boxGeneric.classList.remove('loading');
+      boxGeneric.innerHTML = `<span style="color:var(--red)">Error: ${err.message}</span>`;
+      genericDone = true;
+      checkDone();
+    });
+
+    // Call Legal Atlas (Apolo)
+    fetch('/api/asesoria', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        pregunta: pregunta,
+        pais: 'MX',
+        modo: 'ciudadano',
+        historial: []
+      })
+    })
+    .then(async r => {
+      atlasTime = Date.now() - t0;
+      boxAtlas.classList.remove('loading');
+
+      const data = await r.json();
+      // Our /api/asesoria returns { respuesta: { draftHtml, resumen, fuentes } }
+      const resp = data.respuesta || {};
+      const text = resp.draftHtml || resp.resumen || data.error || JSON.stringify(data);
+      boxAtlas.innerHTML = highlightCitations(text);
+
+      boxAtlas.classList.add('fade-in');
+      document.getElementById('tags-atlas').style.display = 'flex';
+      document.getElementById('timing-atlas').textContent = `⏱ ${(atlasTime/1000).toFixed(1)}s`;
+      atlasDone = true;
+      checkDone();
+    })
+    .catch(err => {
+      atlasTime = Date.now() - t0;
+      boxAtlas.classList.remove('loading');
+      boxAtlas.innerHTML = `<span style="color:var(--red)">Error conectando con Legal Atlas: ${err.message}</span>`;
+      atlasDone = true;
+      checkDone();
+    });
+  });
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

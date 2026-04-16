@@ -1,6 +1,19 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
+<script>
+(function(){
+  var t = localStorage.getItem('la-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', t);
+  // Sync lang from URL before i18n.js loads — eliminates flash
+  var urlLang = new URLSearchParams(location.search).get('lang');
+  if (urlLang && ['es','cs','fr','en'].includes(urlLang)) {
+    localStorage.setItem('atlas_lang', urlLang);
+    document.documentElement.style.opacity = '0';
+    document.documentElement.style.transition = 'opacity 0.15s';
+  }
+})();
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Legal Atlas — Apolo</title>
@@ -9,18 +22,53 @@
   <script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
   <style>
     :root {
-      --bg-deep:    #08080a;
-      --bg-card:    #0d0d0f;
-      --bg-raised:  #141416;
-      --gold:       #c49a3c;
-      --gold-light: #e8c878;
-      --gold-dim:   rgba(196,154,60,0.15);
-      --gold-glow:  rgba(196,154,60,0.4);
-      --text:       rgba(245,237,216,0.92);
-      --text-soft:  rgba(245,237,216,0.6);
-      --text-muted: rgba(245,237,216,0.35);
-      --border:     rgba(196,154,60,0.12);
-      --border-hov: rgba(196,154,60,0.35);
+      --bg-deep:        #F3EAD5;
+      --bg-card:        #FAF2E0;
+      --bg-elevated:    #EBE0C8;
+      --bg-input:       #FAF2E0;
+      --text-primary:   #1A1410;
+      --text-secondary: #3D342A;
+      --text-muted:     #7A6E60;
+      --gold:           #8B6820;
+      --gold-light:     #C49A3C;
+      --gold-dim:       rgba(139,104,32,0.08);
+      --gold-border:    rgba(139,104,32,0.22);
+      --border:         #DDD0B4;
+      --border-hover:   #C9BFB0;
+      --shadow-sm:      0 1px 4px rgba(26,20,16,0.07);
+      --shadow-md:      0 4px 20px rgba(26,20,16,0.10);
+      --shadow-lg:      0 8px 40px rgba(26,20,16,0.13);
+      /* compat aliases — mantener los que ya existen */
+      --bg-raised:      var(--bg-elevated);
+      --text:           var(--text-primary);
+      --text-soft:      var(--text-secondary);
+      --border-hov:     var(--border-hover);
+      --accent:         var(--gold);
+      --gold-glow:      rgba(139,104,32,0.25);
+    }
+    :root[data-theme="dark"] {
+      --bg-deep:        #0C0C0A;
+      --bg-card:        #141412;
+      --bg-elevated:    #1C1C19;
+      --bg-input:       #1C1C19;
+      --text-primary:   #F0ECE4;
+      --text-secondary: #D0C4B4;
+      --text-muted:     #9C9082;
+      --gold:           #C49A3C;
+      --gold-light:     #D4AE58;
+      --gold-dim:       rgba(196,154,60,0.10);
+      --gold-border:    rgba(196,154,60,0.20);
+      --border:         #2A2A26;
+      --border-hover:   #3D3D38;
+      --shadow-sm:      0 1px 4px rgba(0,0,0,0.25);
+      --shadow-md:      0 4px 20px rgba(0,0,0,0.35);
+      --shadow-lg:      0 8px 40px rgba(0,0,0,0.45);
+      --bg-raised:      var(--bg-elevated);
+      --text:           var(--text-primary);
+      --text-soft:      var(--text-secondary);
+      --border-hov:     var(--border-hover);
+      --accent:         var(--gold);
+      --gold-glow:      rgba(196,154,60,0.35);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,21 +87,25 @@
     .topbar {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 14px;
       padding: 0 28px;
       height: 58px;
       border-bottom: 1px solid var(--border);
-      background: rgba(8,8,10,0.9);
+      background: var(--bg-card);
+      box-shadow: var(--shadow-sm);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       flex-shrink: 0;
+      position: relative;
+      z-index: 50;
     }
     .topbar-logo {
       font-family: 'Cinzel', serif;
       font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.3em;
-      color: var(--text);
+      color: var(--text-primary);
     }
     .topbar-logo span { color: var(--gold); font-weight: 400; }
     .apolo-badge {
@@ -88,12 +140,43 @@
       transition: color 0.2s;
     }
     .topbar-back:hover { color: var(--gold); }
+    .topbar-nav { display: flex; gap: 24px; }
+    .topbar-link {
+    font-family: 'Cinzel', serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+    .topbar-link:hover { color: var(--gold); }
+    .topbar-link.active { color: var(--gold); }
+    .topbar-link-pro {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pro-badge {
+      font-family: 'Cinzel', serif;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--bg-deep);
+      background: var(--gold);
+      padding: 2px 6px;
+      border-radius: 4px;
+      line-height: 1.4;
+    }
 
     /* ── Selection bar ── */
     .selection-bar {
       flex-shrink: 0;
-      background: rgba(13,13,15,0.95);
-      border-bottom: 1px solid var(--border);
+      background: rgba(26,20,16,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(196,154,60,0.18);
       padding: 10px 28px;
       display: flex;
       align-items: center;
@@ -109,7 +192,7 @@
       font-family: 'Cinzel', serif;
       font-size: 8px;
       letter-spacing: 0.25em;
-      color: rgba(196,154,60,0.4);
+      color: rgba(245,237,216,0.45);
       text-transform: uppercase;
       white-space: nowrap;
     }
@@ -125,29 +208,29 @@
       text-transform: uppercase;
       padding: 5px 14px;
       border-radius: 20px;
-      border: 1px solid rgba(196,154,60,0.25);
-      background: transparent;
-      color: rgba(196,154,60,0.65);
+      border: 1px solid rgba(245,237,216,0.2);
+      background: rgba(245,237,216,0.06);
+      color: rgba(245,237,216,0.75);
       cursor: pointer;
       transition: all 0.2s ease;
     }
     .burbuja:hover {
-      border-color: var(--gold);
-      color: var(--gold);
-      background: var(--gold-dim);
+      border-color: rgba(196,154,60,0.6);
+      color: #C49A3C;
+      background: rgba(196,154,60,0.1);
     }
     .burbuja.activa {
-      background: var(--gold);
-      color: #08080a;
-      border-color: var(--gold);
+      background: #C49A3C;
+      color: #0E0A06;
+      border-color: #C49A3C;
     }
     .selector-estado {
       font-family: 'Cinzel', serif;
       font-size: 9px;
       letter-spacing: 0.1em;
-      color: rgba(196,154,60,0.65);
-      background: var(--bg-raised);
-      border: 1px solid rgba(196,154,60,0.25);
+      color: rgba(245,237,216,0.75);
+      background: rgba(245,237,216,0.06);
+      border: 1px solid rgba(245,237,216,0.2);
       border-radius: 20px;
       padding: 5px 14px;
       cursor: pointer;
@@ -156,8 +239,8 @@
       -webkit-appearance: none;
       transition: border-color 0.2s;
     }
-    .selector-estado:focus { border-color: var(--gold); }
-    .selector-estado option { background: #0d0d0f; color: var(--text); }
+    .selector-estado:focus { border-color: rgba(196,154,60,0.6); }
+    .selector-estado option { background: #1a1410; color: #F5EDD8; }
 
     /* ── Mensajes ── */
     #mensajes {
@@ -245,60 +328,106 @@
     /* ── Input ── */
     .input-area {
       flex-shrink: 0;
-      padding: 16px 24px;
-      background: rgba(8,8,10,0.95);
+      padding: 14px 24px 10px;
+      background: rgba(250,242,224,0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       border-top: 1px solid var(--border);
-      backdrop-filter: blur(20px);
+    }
+    [data-theme="dark"] .input-area {
+      background: rgba(20,20,18,0.75);
+    }
+    .input-wrap {
+      max-width: 760px;
+      margin: 0 auto;
     }
     .input-row {
       display: flex;
-      max-width: 760px;
-      margin: 0 auto;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      background: rgba(235,224,200,0.7);
+      border: 1px solid rgba(139,104,32,0.18);
+      border-radius: 14px;
       padding: 4px;
-      transition: border-color 0.2s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: inset 0 2px 8px rgba(26,20,16,0.08), 0 4px 20px rgba(26,20,16,0.10);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
-    .input-row:focus-within { border-color: var(--border-hov); }
+    .input-row:focus-within {
+      border-color: var(--gold-border);
+      box-shadow: inset 0 2px 8px rgba(26,20,16,0.08), 0 6px 28px rgba(26,20,16,0.14);
+    }
     .input-row input {
       flex: 1;
       border: none;
-      background: transparent;
-      padding: 12px 16px;
-      font-size: 15px;
+      background: rgba(250,242,224,0.85);
+      padding: 11px 16px;
+      font-size: 14px;
       font-family: 'Lora', serif;
       color: var(--text);
       outline: none;
-      border-radius: 12px;
+      border-radius: 10px;
+    }
+    [data-theme="dark"] .input-row {
+      background: rgba(28,28,25,0.75);
+      border-color: rgba(196,154,60,0.18);
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.25), 0 4px 20px rgba(0,0,0,0.35);
+    }
+    [data-theme="dark"] .input-row input {
+      background: rgba(20,20,18,0.85);
+      color: var(--text-primary);
     }
     .input-row input::placeholder { color: var(--text-muted); font-style: italic; }
-    .input-row input:disabled::placeholder { color: rgba(245,237,216,0.15); }
+    .input-row input:disabled { opacity: 0.4; }
     .btn-enviar {
-      width: 44px; height: 44px;
-      border-radius: 12px;
+      width: 40px; height: 40px;
+      border-radius: 10px;
       background: var(--gold);
-      color: #08080a;
+      color: #fff;
       border: none;
       cursor: pointer;
-      font-size: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.2s ease;
       flex-shrink: 0;
     }
-    .btn-enviar:hover { background: var(--gold-light); transform: scale(1.05); }
-    .btn-enviar:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
-    .btn-redactar-inline {
-      background: var(--bg-raised);
-      color: var(--text-muted);
-      border-left: 1px solid var(--border);
-      border-radius: 0 12px 12px 0;
-      font-size: 14px;
+    .btn-enviar svg { width: 16px; height: 16px; stroke: #fff; }
+    .btn-enviar:hover:not(:disabled) { background: var(--gold-light); }
+    .btn-enviar:disabled { opacity: 0.3; cursor: not-allowed; }
+    .input-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      gap: 12px;
     }
-    .btn-redactar-inline:hover { background: var(--gold-dim); color: var(--gold); }
-    .btn-redactar-inline.activo { background: var(--gold); color: #08080a; }
+    .btn-modo-redaccion {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-modo-redaccion:hover { border-color: var(--gold-border); color: var(--gold); }
+    .btn-modo-redaccion.activo { background: var(--gold-dim); border-color: var(--gold-border); color: var(--gold); }
+    /* alias para JS que usa .activo en btn-redactar-inline */
+    #btn-modo-redaccion.activo { background: var(--gold-dim); border-color: var(--gold-border); color: var(--gold); }
+    .input-disclaimer {
+      font-family: 'Cinzel', serif;
+      font-size: 8px;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      opacity: 0.6;
+      text-align: right;
+      flex: 1;
+    }
 
     /* ── Modo Redacción ── */
     .recetas-wrap { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -379,30 +508,211 @@
       border-left: 2px solid rgba(196,154,60,0.4);
       background: var(--gold-dim);
     }
+  
+    /* ═══ THEME SYSTEM OVERRIDES ═══ */
+    .topbar {
+      background: var(--bg-card) !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      box-shadow: var(--shadow-sm);
+      border-bottom: 1px solid var(--border);
+    }
+    [data-theme="dark"] .topbar {
+      background: rgba(20,20,18,0.96) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+    }
+    .topbar-logo { color: var(--text-primary); }
+    .topbar-link {
+    font-family: 'Cinzel', serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+    .topbar-link:hover { color: var(--gold); }
+    .topbar-link.active { color: var(--text-primary); font-weight: 600; }
+    .topbar-link.active::after, .topbar-link:hover::after { background: var(--gold); }
+    .topbar-status, .apolo-badge {
+      background: rgba(146,112,42,0.08);
+      border: 1px solid var(--gold-border);
+      color: var(--gold);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+    }
+    [data-theme="dark"] .topbar-status, [data-theme="dark"] .apolo-badge {
+      background: var(--gold-dim);
+    }
+    .status-dot, .apolo-dot {
+      background: #22C55E;
+      box-shadow: 0 0 6px rgba(34,197,94,0.5);
+      animation: none !important;
+    }
+    [data-theme="dark"] .status-dot, [data-theme="dark"] .apolo-dot {
+      background: var(--gold);
+      box-shadow: 0 0 10px var(--gold-glow);
+      animation: pulse-dot 2s ease-in-out infinite !important;
+    }
+    .ambient-orb { opacity: 0.04 !important; }
+    [data-theme="dark"] .ambient-orb { opacity: 0.08 !important; }
+    body { background: var(--bg-deep); color: var(--text-primary); }
+    /* Cards */
+    .art-card { box-shadow: var(--shadow-sm); border-left: 3px solid transparent; }
+    .art-card:hover { box-shadow: var(--shadow-md); border-left-color: var(--gold); }
+    .sintesis-card { box-shadow: var(--shadow-md); border-top: 3px solid var(--gold) !important; border-radius: 0 0 16px 16px !important; }
+    .sintesis-card::before { display: none; }
+    .art-score {
+      background: var(--gold-dim);
+      color: var(--gold);
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+    .capitulo-tag {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hover);
+      color: var(--text-secondary);
+    }
+    [data-theme="dark"] .capitulo-tag { background: var(--gold-dim); color: var(--gold); }
+    /* Inputs */
+    .marco-textarea, .marco-select, .tree-select {
+      background: var(--bg-input) !important;
+      border-color: var(--border);
+      color: var(--text-primary);
+    }
+    .marco-textarea:focus, .marco-select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(146,112,42,0.12);
+    }
+    /* Main button */
+    .marco-btn { background: var(--text-primary); color: var(--bg-card); box-shadow: var(--shadow-sm); }
+    .marco-btn:hover:not(:disabled) { background: var(--gold); color: var(--bg-card); box-shadow: var(--shadow-md); }
+    /* Nivel headers */
+    .nivel-header { background: var(--bg-card); box-shadow: var(--shadow-sm); }
+    .nivel-header:hover { background: var(--bg-elevated); box-shadow: var(--shadow-md); }
+    /* Text */
+    .sintesis-texto { color: var(--text-primary); }
+    .sintesis-eyebrow { color: var(--gold); }
+    /* Disclaimer */
+    .disclaimer {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 24px;
+      padding: 14px 18px;
+      background: rgba(146,112,42,0.06);
+      border: 1px solid var(--gold-border);
+      border-radius: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .disclaimer-icono { flex-shrink: 0; font-size: 14px; }
+    /* Tema toggle */
+    .tema-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 15px;
+      color: var(--text-muted);
+      padding: 3px 10px;
+      line-height: 1.4;
+      transition: all 0.2s;
+      margin-left: 8px;
+    }
+    .tema-btn:hover { color: var(--gold); border-color: var(--gold-border); }
+    select option { background: #FDFAF5 !important; color: #1A1410 !important; }
+    select:focus option { background: #F0EBE0 !important; color: #1A1410 !important; }
+    /* ── Mobile sidebar ── */
+    .topbar-right { display: flex; align-items: center; gap: 4px; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #3D342A); border-radius: 2px; transition: background 0.2s; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(26,20,16,0.45); z-index: 199; }
+    .sidebar-overlay.open { display: block; }
+    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(26,20,16,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
+    .sidebar.open { right: 0; }
+    .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border, #E5DDD0); }
+    .sidebar-logo { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #1A1410); text-decoration: none; }
+    .sidebar-logo span { color: var(--gold, #8B6820); }
+    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #7A6E60); font-size: 18px; padding: 4px; line-height: 1; }
+    .sidebar-close:hover { color: var(--text-primary, #1A1410); }
+    .sidebar-nav { flex: 1; display: flex; flex-direction: column; padding: 16px 0; overflow-y: auto; }
+    .sidebar-link {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 13px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8B6820); background: rgba(139,104,32,0.06); border-left-color: var(--gold, #8B6820); }
+    .sidebar-link .pro-badge { font-size: 7px; }
+    @media (max-width: 680px) { .hamburger { display: flex; } .topbar-nav { display: none !important; } .topbar-status, .apolo-badge { display: none !important; } }
   </style>
 </head>
 <body>
 
   <div class="topbar">
-    <div class="topbar-logo">LEGAL<span>ATLAS</span></div>
-    <div class="apolo-badge">
-      <div class="apolo-dot"></div>
-      APOLO · Motor normativo
+    <a href="index.html" class="topbar-logo" style="text-decoration:none;">LEGAL<span>ATLAS</span></a>
+    <nav class="topbar-nav">
+      <a href="abogado.html" class="topbar-link ">Biblioteca</a>
+      <a href="jurisprudencia.html" class="topbar-link ">Judikatura</a>
+      <a href="magnus.html" class="topbar-link topbar-link-pro ">Magnus</a>
+      <a href="atlas.html" class="topbar-link topbar-link-pro ">Atlas</a>
+      <a href="cuenta.html" class="topbar-link ">Mi Cuenta</a>
+    </nav>
+    <div class="topbar-right">
+      <div class="lang-switcher" id="lang-switcher">
+        <button class="lang-globe-btn" onclick="toggleLangDropdown()" title="Language / Idioma">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg><span class="lang-current" id="lang-current"></span>
+        </button>
+        <div class="lang-dropdown" id="lang-dropdown">
+          <button class="lang-option" data-lang-btn="es" onclick="setLang('es');closeLangDropdown()">🇪🇸 Español</button>
+          <button class="lang-option" data-lang-btn="cs" onclick="setLang('cs');closeLangDropdown()">🇨🇿 Čeština</button>
+          <button class="lang-option" data-lang-btn="fr" onclick="setLang('fr');closeLangDropdown()">🇫🇷 Français</button>
+          <button class="lang-option" data-lang-btn="en" onclick="setLang('en');closeLangDropdown()">🇬🇧 English</button>
+        </div>
+      </div>
+      <button class="tema-btn" id="tema-btn" onclick="toggleTema()" title="Cambiar tema">◑</button>
+      <button class="hamburger" onclick="openSidebar()" aria-label="Menú"><span></span><span></span><span></span></button>
     </div>
-    <a href="index.html" class="topbar-back">← Inicio</a>
   </div>
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+  <aside class="sidebar" id="la-sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="sidebar-logo">LEGAL<span>ATLAS</span></a>
+      <button class="sidebar-close" onclick="closeSidebar()" aria-label="Cerrar menú">✕</button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="abogado.html" class="sidebar-link ">Biblioteca</a>
+      <a href="jurisprudencia.html" class="sidebar-link ">Judikatura</a>
+      <a href="magnus.html" class="sidebar-link ">Magnus</a>
+      <a href="atlas.html" class="sidebar-link ">Atlas</a>
+      <a href="cuenta.html" class="sidebar-link ">Mi Cuenta</a>
+    </nav>
+  </aside>
 
   <div class="selection-bar">
     <div class="sel-group">
-      <span class="sel-label">Selecciona un país</span>
-      <div class="burbujas-wrap" id="paises-wrap">
-        <span style="font-family:'Cinzel',serif;font-size:9px;color:rgba(196,154,60,0.4);letter-spacing:0.1em;">Cargando...</span>
-      </div>
+      <span class="sel-label" data-i18n="sel.pais.label">País</span>
+      <select id="sel-pais" class="selector-estado">
+        <option value="" data-i18n="sel.pais.vacio">País…</option>
+      </select>
     </div>
-    <div class="sel-group" id="grupo-materia" style="display:none">
-      <span class="sel-label">Área legal →</span>
-      <div class="burbujas-wrap" id="burbujas-wrap"></div>
-    </div>
+    <!-- Área legal movida a details opcional debajo del input -->
     <div class="sel-group" id="grupo-estado" style="display:none">
       <span class="sel-label">Estado</span>
       <select id="selector-estado" class="selector-estado">
@@ -420,37 +730,66 @@
   <div id="mensajes"></div>
 
   <div class="input-area">
-    <div class="input-row">
-      <input type="text" id="pregunta" placeholder="Primero selecciona un área legal arriba…" autocomplete="off" disabled>
-      <button class="btn-enviar" id="enviar" disabled title="Enviar">&#9658;</button>
-      <button class="btn-enviar btn-redactar-inline" id="btn-modo-redaccion" title="Modo Redacción — redacta un documento con precisión jurídica">✍</button>
+    <div class="input-wrap">
+      <div class="input-row">
+        <input type="text" id="pregunta" placeholder="Selecciona un país para comenzar…" data-i18n-placeholder="apolo.placeholder.inicio" autocomplete="off" disabled>
+        <button class="btn-enviar" id="enviar" disabled title="Enviar consulta">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+      <div class="input-actions">
+        <button class="btn-modo-redaccion" id="btn-modo-redaccion" title="Redactar un documento jurídico" style="display:none">
+          ✦ Redactar documento
+        </button>
+        <span class="input-disclaimer" data-i18n="apolo.disclaimer">Apolo es orientativo · No constituye asesoría jurídica</span>
+      </div>
     </div>
   </div>
+
+  <!-- Filtro opcional de área legal -->
+  <details id="details-materia" style="display:none; max-width:860px; margin:4px auto 0; padding:0 16px">
+    <summary style="font-size:11px; color:var(--text-muted); cursor:pointer; list-style:none; padding:4px 0; user-select:none">
+      ▸ Filtrar por área legal (opcional)
+    </summary>
+    <div style="margin-top:8px; padding-bottom:4px">
+      <div class="burbujas-wrap" id="burbujas-wrap"></div>
+    </div>
+  </details>
 
   <script>
     const mensajesEl   = document.getElementById('mensajes');
     const inputEl      = document.getElementById('pregunta');
     const btnEnviar    = document.getElementById('enviar');
-    const paisesWrap   = document.getElementById('paises-wrap');
-    const grupoMateria = document.getElementById('grupo-materia');
-    const burbujaWrap  = document.getElementById('burbujas-wrap');
-    const grupoEstado  = document.getElementById('grupo-estado');
-    const selectorEst  = document.getElementById('selector-estado');
+    const selPais       = document.getElementById('sel-pais');
+    const detailsMateria = document.getElementById('details-materia');
+    const burbujaWrap   = document.getElementById('burbujas-wrap');
+    const grupoEstado   = document.getElementById('grupo-estado');
+    const selectorEst   = document.getElementById('selector-estado');
 
     let sel = { materia: null, ley: null, pais: null, estado: null, requiereEstado: false };
     let todasLasMaterias = [];
 
-    // Country display names (browser-native i18n)
-    const displayNames = new Intl.DisplayNames(['es'], { type: 'region' });
+    // Country display names — usa el idioma activo del usuario
     function nombrePais(iso) {
-      try { return displayNames.of(iso); } catch { return iso; }
+      try {
+        const lang = localStorage.getItem('atlas_lang') || 'es';
+        return new Intl.DisplayNames([lang], { type: 'region' }).of(iso);
+      } catch { return iso; }
+    }
+    function traducirMateria(materia) {
+      try {
+        const key = 'materia.' + materia.toLowerCase().replace(/\s+/g, '_');
+        return typeof window.t === 'function' ? window.t(key, null, materia) : materia;
+      } catch { return materia; }
     }
 
     // ── Helpers de mensajes ──────────────────────────────────────────────────
     function agregarMensaje(tipo, html) {
       const div = document.createElement('div');
       div.className = 'msg msg-' + tipo;
-      const sender = tipo === 'apolo' ? 'APOLO' : 'TÚ';
+      const sender = tipo === 'apolo' ? 'APOLO' : (window.t ? window.t('chat.tu', null, 'TÚ') : 'TÚ');
       div.innerHTML = '<div class="msg-sender">' + sender + '</div>' + html;
       mensajesEl.appendChild(div);
       mensajesEl.scrollTop = mensajesEl.scrollHeight;
@@ -481,10 +820,14 @@
 
     // ── Saludo dinámico ──────────────────────────────────────────────────────
     function verificarListo() {
-      const listo = sel.pais && sel.materia && (!sel.requiereEstado || sel.estado);
+      const listo = !!sel.pais;
       inputEl.disabled   = !listo;
       btnEnviar.disabled = !listo;
-      inputEl.placeholder = listo ? 'Escribe tu consulta legal…' : 'Selecciona país y área legal arriba…';
+      if (listo) {
+        inputEl.placeholder = window.t ? window.t('apolo.placeholder.activo', null, 'Cuéntame qué pasó. Por ejemplo:\n"Mi jefe no me pagó el mes" · "El arrendador me quiere sacar sin avisar"') : 'Cuéntame qué pasó…';
+      } else {
+        inputEl.placeholder = window.t ? window.t('apolo.placeholder.inicio', null, 'Selecciona un país para comenzar…') : 'Selecciona un país para comenzar…';
+      }
     }
 
     function saludoInicial() {
@@ -493,57 +836,58 @@
         agregarMensaje('apolo', t('apolo.saludo.inicio', null, 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Selecciona el <strong>país</strong> para comenzar.'));
         return;
       }
-      if (!sel.materia) {
-        agregarMensaje('apolo', t('apolo.saludo.pais', { pais: nombrePais(sel.pais) }, 'País: <strong>' + nombrePais(sel.pais) + '</strong>.<br>Ahora selecciona el <strong>área legal</strong>.'));
-        return;
-      }
-      if (sel.requiereEstado && !sel.estado) {
-        agregarMensaje('apolo', t('apolo.saludo.estado', { materia: sel.materia }, 'Área: <strong>' + sel.materia + '</strong>.<br>Ahora selecciona tu <strong>estado</strong>.'));
-        return;
-      }
-      const jurisdiccion = sel.estado
+      const jurisdiccion = sel.estado && sel.ley
         ? 'el <strong>' + sel.ley + ' de ' + sel.estado + '</strong>'
-        : '<strong>' + sel.ley + '</strong> (' + nombrePais(sel.pais) + ')';
+        : sel.ley
+          ? '<strong>' + sel.ley + '</strong> (' + nombrePais(sel.pais) + ')'
+          : '<strong>' + nombrePais(sel.pais) + '</strong>';
       if (window._tipoContrato) {
         agregarMensaje('apolo', t('apolo.saludo.tipo', { tipo: window._tipoContrato.replace(/_/g, ' '), jurisdiccion }, 'Soy <strong>Apolo</strong>. Voy a ayudarte a redactar tu <strong>' + window._tipoContrato.replace(/_/g, ' ') + '</strong>.<br>Consulto ' + jurisdiccion + '. Cuéntame: ¿cuáles son los datos de las partes?'));
       } else {
-        agregarMensaje('apolo', t('apolo.saludo.listo', { jurisdiccion }, 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Consulto ' + jurisdiccion + ' y te cito el artículo exacto. ¿Cuál es tu duda?'));
+        agregarMensaje('apolo', t('apolo.saludo.listo', { jurisdiccion }, 'Soy <strong>Apolo</strong>, tu asistente legal.<br>Consulto ' + jurisdiccion + '.<br>¿Cuál es tu situación?'));
       }
     }
 
     // ── Carga dinámica de países y materias ─────────────────────────────────
     async function cargarPaises() {
       try {
-        const res = await fetch('/api/materias');
+        const res = await fetch('/api/abogado?action=materias');
         todasLasMaterias = await res.json();
         const paisesUnicos = [...new Set(todasLasMaterias.map(m => m.pais))].filter(Boolean);
-        paisesWrap.innerHTML = '';
+        selPais.innerHTML = '<option value="">País…</option>';
         paisesUnicos.forEach(iso => {
-          const btn = document.createElement('button');
-          btn.className = 'burbuja';
-          btn.textContent = nombrePais(iso);
-          btn.dataset.pais = iso;
-          btn.addEventListener('click', () => seleccionarPais(iso));
-          paisesWrap.appendChild(btn);
+          const opt = document.createElement('option');
+          opt.value = iso;
+          opt.dataset.paisIso = iso;
+          opt.textContent = nombrePais(iso);
+          selPais.appendChild(opt);
         });
+        selPais.addEventListener('change', function() {
+          if (this.value) seleccionarPais(this.value);
+        });
+        // Default: CZ when lang=cs, otherwise MX — wait for i18n before greeting
+        const _langActual = localStorage.getItem('atlas_lang') || new URLSearchParams(location.search).get('lang') || 'es';
+        const _paisDefecto = _langActual === 'cs' ? 'CZ' : 'MX';
+        const _doSelect = () => { if (paisesUnicos.includes(_paisDefecto)) seleccionarPais(_paisDefecto); else if (paisesUnicos.includes('MX')) seleccionarPais('MX'); };
+        if (window._i18nLoaded) { _doSelect(); }
+        else { document.addEventListener('i18n:ready', _doSelect, { once: true }); }
       } catch (e) {
-        paisesWrap.innerHTML = '<span style="font-family:Cinzel,serif;font-size:9px;color:rgba(196,154,60,0.4);">Error cargando países</span>';
+        selPais.innerHTML = '<option value="">Error cargando países</option>';
       }
     }
 
     function seleccionarPais(iso) {
-      document.querySelectorAll('#paises-wrap .burbuja').forEach(b => b.classList.remove('activa'));
-      paisesWrap.querySelector('[data-pais="' + iso + '"]').classList.add('activa');
+      selPais.value = iso;
 
       sel.pais    = iso;
       sel.materia = null;
       sel.ley     = null;
       sel.estado  = null;
+      sel.requiereEstado = false;
 
-      grupoEstado.style.display = 'none';
       selectorEst.value = '';
 
-      // Agrupar por materia (puede haber varias leyes por materia)
+      // Agrupar por materia — puebla los botones del details opcional
       const materiasDelPais = todasLasMaterias.filter(m => m.pais === iso);
       const agrupadas = {};
       materiasDelPais.forEach(m => {
@@ -555,12 +899,32 @@
       Object.values(agrupadas).forEach(m => {
         const btn = document.createElement('button');
         btn.className = 'burbuja';
-        btn.textContent = m.materia;
+        btn.textContent = traducirMateria(m.materia);
         btn.dataset.materia = m.materia;
+        btn.dataset.materiaEs = m.materia;
         btn.addEventListener('click', () => seleccionarMateria(m));
         burbujaWrap.appendChild(btn);
       });
-      grupoMateria.style.display = 'flex';
+
+      // Mostrar details de materia si hay opciones
+      detailsMateria.style.display = 'none';
+
+      // Para MX: mostrar estado de todos los materias combinados (no require materia)
+      const todosEstados = [...new Set(
+        materiasDelPais.filter(m => m.requiere_estado && m.estados).flatMap(m => m.estados)
+      )].sort();
+
+      if (todosEstados.length) {
+        selectorEst.innerHTML = '<option value="">Estado (opcional)…</option>';
+        todosEstados.forEach(e => {
+          const opt = document.createElement('option');
+          opt.value = e; opt.textContent = e;
+          selectorEst.appendChild(opt);
+        });
+        grupoEstado.style.display = 'flex';
+      } else {
+        grupoEstado.style.display = 'none';
+      }
 
       verificarListo();
       saludoInicial();
@@ -610,6 +974,9 @@
       verificarListo();
       saludoInicial();
     });
+
+    // ── Historial de conversación ─────────────────────────────────────────────
+    let conversationHistory = []
 
     // ── Envío de consulta ────────────────────────────────────────────────────
     async function enviar() {
@@ -666,6 +1033,9 @@
       agregarMensaje('usuario', texto);
       agregarTyping();
 
+      conversationHistory.push({ role: 'user', content: texto })
+      if (conversationHistory.length > 10) conversationHistory = conversationHistory.slice(-10)
+
       try {
         const res = await fetch('/api/asesoria', {
           method: 'POST',
@@ -674,23 +1044,34 @@
             pregunta: texto,
             estado:   sel.estado || '',
             pais:     sel.pais   || '',
-            tema:     sel.materia || 'civil',
+            tema:     sel.materia || '',
             fuente:   sel.ley    || '',
             modo:     'consulta',
-            tipo:     window._tipoContrato || ''
+            tipo:     window._tipoContrato || '',
+            historial: conversationHistory.slice(0, -1) // excluir el último (ya es la pregunta actual)
           })
         });
 
         quitarTyping();
-        if (!res.ok) throw new Error('HTTP ' + res.status);
+        if (!res.ok) {
+          let details = ''
+          try { const errBody = await res.json(); details = errBody.details || errBody.error || '' } catch {}
+          console.error('[asesoria 500]', details)
+          throw new Error('HTTP ' + res.status + (details ? ': ' + details : ''))
+        }
 
         const data = await res.json();
         const r = data.respuesta;
-        agregarMensaje('apolo', r.draftHtml || r.resumen || 'Sin respuesta.');
+        const respuestaTexto = r.draftHtml || r.resumen || 'Sin respuesta.'
+        agregarMensaje('apolo', respuestaTexto);
         mostrarArticulos(r.articulos);
+
+        conversationHistory.push({ role: 'assistant', content: respuestaTexto })
+        if (conversationHistory.length > 10) conversationHistory = conversationHistory.slice(-10)
 
       } catch (err) {
         quitarTyping();
+        conversationHistory.pop() // revertir el push del usuario si falló
         agregarMensaje('apolo', 'Error al conectar con el motor: ' + err.message);
       }
 
@@ -1055,7 +1436,7 @@
       const docEl = document.getElementById('doc-generado');
       if (!docEl) { alert('Primero genera el documento.'); return; }
       const titulo = (recetaActiva?.titulo || 'documento').replace(/\s+/g, '_');
-      const content = '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>' + docEl.innerHTML + '</body></html>';
+      const content = '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body>' + docEl.innerHTML + '<\/body><\/html>';
       const blob = htmlDocx.asBlob(content);
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement('a');
@@ -1077,12 +1458,18 @@
 
       if (!pais) return;
 
-      // Seleccionar país (carga burbujas de materia)
-      const btnPais = paisesWrap.querySelector('[data-pais="' + pais + '"]');
-      if (!btnPais) return;
       seleccionarPais(pais);
 
-      if (!materia) return;
+      // Pre-llenar texto aunque no haya materia (viene de homepage)
+      if (q) {
+        inputEl.value = q;
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+
+      if (!materia) {
+        if (q) setTimeout(() => { if (!inputEl.disabled) enviar(); }, 150);
+        return;
+      }
 
       // Reconstruir agrupadas para encontrar el objeto de materia
       const agrupadas = {};
@@ -1102,9 +1489,6 @@
       }
 
       if (q) {
-        inputEl.value = q;
-        // Limpiar URL para que los refrescos no re-envíen
-        window.history.replaceState({}, '', window.location.pathname);
         setTimeout(() => { if (!inputEl.disabled) enviar(); }, 150);
       }
     }
@@ -1114,5 +1498,31 @@
     cargarPaises().then(() => aplicarURLParams());
   </script>
 
+
+<script>
+function openSidebar() {
+  document.getElementById('la-sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('la-sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Al cambiar idioma, re-renderizar pills de países y materias
+const _origSetLang = window.setLang;
+window.setLang = async function(lang) {
+  await _origSetLang(lang);
+  document.querySelectorAll('#sel-pais option[value]').forEach(opt => {
+    if (opt.value) opt.textContent = nombrePais(opt.value);
+  });
+  document.querySelectorAll('[data-materia-es]').forEach(btn => {
+    btn.textContent = traducirMateria(btn.dataset.materiaEs);
+  });
+};
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
