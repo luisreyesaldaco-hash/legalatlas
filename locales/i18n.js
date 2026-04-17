@@ -99,24 +99,35 @@
   };
 
   // ── Init ───────────────────────────────────────────────────────
-  (async function init() {
+  async function doInit() {
     const lang = detectLang();
     _t = await loadJSON(lang);
     apply(_t);
 
-    // ── CZ home navigation ────────────────────────────────────────
-    // Si el usuario tiene locale CZ o ?lang=cs, los links "home" apuntan a /cz/
+    // ── Home navigation per locale ────────────────────────────────
     const locale  = localStorage.getItem('la-locale');
     const urlLang = new URLSearchParams(window.location.search).get('lang');
-    if (locale === 'CZ' || urlLang === 'cs') {
-      const homePatterns = ['/', '/index.html', 'index.html'];
+    const homePatterns = ['/', '/index.html', 'index.html'];
+
+    let homeTarget = null;
+    if (locale === 'CZ' || urlLang === 'cs') homeTarget = '/cz/';
+    if (locale === 'MX' || urlLang === 'es') homeTarget = '/mx/';
+
+    if (homeTarget) {
       document.querySelectorAll('a').forEach(a => {
         if (homePatterns.includes(a.getAttribute('href'))) {
-          a.setAttribute('href', '/cz/');
+          a.setAttribute('href', homeTarget);
         }
       });
     }
-  })();
+  }
+
+  // Ensure DOM is ready before applying
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', doInit);
+  } else {
+    doInit();
+  }
 
   // ── CSS del switcher (inyectado una sola vez) ──────────────────
   const style = document.createElement('style');

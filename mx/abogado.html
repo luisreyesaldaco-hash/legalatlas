@@ -1454,13 +1454,13 @@
 
   <!-- ═══ TOPBAR ═══ -->
   <header class="topbar">
-    <a class="topbar-logo" href="index.html">LEGAL<span>ATLAS</span></a>
+    <a class="topbar-logo" href="/mx/">LEGAL<span>ATLAS</span></a>
     <nav class="topbar-nav">
-      <a href="abogado.html" class="topbar-link active" data-i18n="nav.abogado">Biblioteca</a>
-      <a href="jurisprudencia.html" class="topbar-link " data-i18n="nav.juris">Judikatura</a>
-      <a href="magnus.html" class="topbar-link topbar-link-pro " data-i18n="nav.marco">Magnus</a>
-      <a href="atlas.html" class="topbar-link topbar-link-pro " data-i18n="nav.atlas">Atlas</a>
-      <a href="cuenta.html" class="topbar-link " data-i18n="nav.cuenta">Mi Cuenta</a>
+      <a href="/mx/abogado.html" class="topbar-link active">Biblioteca</a>
+      <a href="/mx/jurisprudencia.html" class="topbar-link ">Jurisprudencia</a>
+      <a href="/mx/magnus.html" class="topbar-link topbar-link-pro ">Magnus</a>
+      <a href="/mx/atlas.html" class="topbar-link topbar-link-pro ">Atlas</a>
+      <a href="/mx/cuenta.html" class="topbar-link ">Mi Cuenta</a>
     </nav>
     <div class="topbar-right">
       <div class="lang-switcher" id="lang-switcher">
@@ -1481,22 +1481,22 @@
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
   <aside class="sidebar" id="la-sidebar">
     <div class="sidebar-header">
-      <a href="index.html" class="sidebar-logo">LEGAL<span>ATLAS</span></a>
+      <a href="/mx/" class="sidebar-logo">LEGAL<span>ATLAS</span></a>
       <button class="sidebar-close" onclick="closeSidebar()" aria-label="Cerrar menú">✕</button>
     </div>
     <nav class="sidebar-nav">
-      <a href="abogado.html" class="sidebar-link active" data-i18n="nav.abogado">Biblioteca</a>
-      <a href="jurisprudencia.html" class="sidebar-link " data-i18n="nav.juris">Judikatura</a>
-      <a href="magnus.html" class="sidebar-link " data-i18n="nav.marco">Magnus</a>
-      <a href="atlas.html" class="sidebar-link " data-i18n="nav.atlas">Atlas</a>
-      <a href="cuenta.html" class="sidebar-link " data-i18n="nav.cuenta">Mi Cuenta</a>
+      <a href="/mx/abogado.html" class="sidebar-link active">Biblioteca</a>
+      <a href="/mx/jurisprudencia.html" class="sidebar-link ">Jurisprudencia</a>
+      <a href="/mx/magnus.html" class="sidebar-link ">Magnus</a>
+      <a href="/mx/atlas.html" class="sidebar-link ">Atlas</a>
+      <a href="/mx/cuenta.html" class="sidebar-link ">Mi Cuenta</a>
     </nav>
   </aside>
 
   <!-- ═══ BANNER ACCESO ═══ -->
   <div class="acceso-banner">
-    <span data-i18n="abogado.banner">Período de lanzamiento · Acceso gratuito hasta el 7 de mayo</span>
-    <a href="mailto:hola@legalatlas.io?subject=Acceso%20Legal%20Atlas" class="acceso-btn" data-i18n="abogado.acceso.cta">Solicitar acceso →</a>
+    <span >Periodo de lanzamiento · Acceso gratuito hasta el 7 de mayo</span>
+    <a href="mailto:hola@legalatlas.io?subject=Acceso%20Legal%20Atlas" class="acceso-btn" >Solicitar acceso →</a>
   </div>
 
   <!-- ═══ PANEL ═══ -->
@@ -1507,37 +1507,37 @@
 
       <!-- Mis Leyes (bookmarks) -->
       <div class="bookmarks-section" id="bookmarks-section" style="display:none">
-        <div class="bookmarks-header" data-i18n="abogado.mis_leyes">☆ Mis Leyes</div>
+        <div class="bookmarks-header" >☆ Mis Leyes</div>
         <div class="bookmarks-list" id="bookmarks-list"></div>
       </div>
 
       <div class="nav-controls">
         <div>
-          <div class="nav-label" data-i18n="abogado.pais">País</div>
+          <div class="nav-label" >País</div>
           <select id="sel-pais" class="nav-select">
-            <option value="" data-i18n="abogado.cargando">Cargando…</option>
+            <option value="" >Cargando…</option>
           </select>
         </div>
         <div>
-          <div class="nav-label" data-i18n="abogado.ley">Ley</div>
+          <div class="nav-label" >Ley</div>
           <select id="sel-ley" class="nav-select" disabled>
-            <option value="" data-i18n="abogado.sel.pais">Selecciona un país</option>
+            <option value="" >— Selecciona país —</option>
           </select>
         </div>
         <div id="grupo-estado" style="display:none">
-          <div class="nav-label" data-i18n="abogado.estado">Estado</div>
+          <div class="nav-label" >Estado</div>
           <select id="sel-estado" class="nav-select">
-            <option value="" data-i18n="abogado.sel.estados">Todos los estados…</option>
+            <option value="" >Todos los estados…</option>
           </select>
         </div>
         <div>
-          <div class="nav-label" data-i18n="abogado.buscar">Buscar artículo</div>
+          <div class="nav-label" >Buscar artículo</div>
           <div style="display:flex;gap:6px;align-items:center">
             <div class="search-row" style="flex:1">
-              <input type="text" id="inp-buscar" class="search-input" placeholder="Ej. 2273…" data-i18n-placeholder="abogado.buscar.placeholder">
+              <input type="text" id="inp-buscar" class="search-input" placeholder="Ej. 2273…" placeholder="Ej. 2273…">
               <button class="btn-search" onclick="buscarArticulo()">Ir</button>
             </div>
-            <button class="btn-bookmark" id="btn-bookmark" onclick="toggleBookmark()" title="Guardar en Mis Leyes" data-i18n-title="abogado.bookmark.title" style="display:none">☆</button>
+            <button class="btn-bookmark" id="btn-bookmark" onclick="toggleBookmark()" title="Guardar en Mis Leyes" title="Guardar en Mis Leyes" style="display:none">☆</button>
           </div>
         </div>
       </div>
@@ -1545,7 +1545,7 @@
       <div id="search-resultados"></div>
 
       <div class="nav-tree" id="arbol">
-        <div class="nav-placeholder" data-i18n-html="abogado.nav.empty">Selecciona un país<br>y una ley</div>
+        <div class="nav-placeholder" >Selecciona un país<br>y una ley</div>
       </div>
 
     </aside>
@@ -1562,7 +1562,7 @@
         <!-- Empty state -->
         <div class="centro-vacio" id="centro-vacio">
           <div class="vacio-symbol">⚖</div>
-          <div class="vacio-title" data-i18n="abogado.centro.vacio">Selecciona un artículo del navegador</div>
+          <div class="vacio-title" >Selecciona un artículo del navegador</div>
         </div>
 
         <!-- Article view -->
@@ -1572,8 +1572,8 @@
           <div class="art-ley-info" id="art-ley-info"></div>
           <div class="art-texto" id="art-texto"></div>
           <div class="art-acciones">
-            <button class="btn-accion primary" onclick="explicarCapitulo()" data-i18n="abogado.explicar">✦ Explícame este capítulo</button>
-            <a class="btn-accion" href="ciudadano.html" data-i18n="abogado.redactar">✍ Redactar con este artículo</a>
+            <button class="btn-accion primary" onclick="explicarCapitulo()" >✦ Explícame este capítulo</button>
+            <a class="btn-accion" href="/ciudadano.html" >✍ Redactar con este artículo</a>
           </div>
         </div>
 
@@ -1585,15 +1585,15 @@
 
         <!-- Whiteboard -->
         <div id="whiteboard">
-          <button class="wb-back" onclick="volverAlArticulo()" data-i18n="abogado.wb.back">← Volver al artículo</button>
+          <button class="wb-back" onclick="volverAlArticulo()" >← Volver al artículo</button>
           <div class="wb-titulo" id="wb-titulo"></div>
           <div class="wb-frame" id="wb-frame">
             <div class="wb-loading">
               <div class="wb-spinner"></div>
-              <span data-i18n="abogado.wb.generando">Generando diagrama…</span>
+              <span >Generando diagrama…</span>
             </div>
           </div>
-          <div class="wb-caption" id="wb-caption" data-i18n="abogado.wb.caption">Generando…</div>
+          <div class="wb-caption" id="wb-caption" >Generando diagrama…</div>
         </div>
 
       </div>
@@ -1604,7 +1604,7 @@
       <div class="chat-header">
         <div>
           <div class="chat-header-title">APOLO</div>
-          <div class="chat-context" id="chat-context" data-i18n="abogado.chat.vacio">Sin artículo activo</div>
+          <div class="chat-context" id="chat-context" >Sin artículo activo</div>
         </div>
         <button class="btn-chat-toggle" onclick="toggleChat()" title="Ocultar chat">✕</button>
       </div>
@@ -1614,18 +1614,18 @@
       <div class="chat-input-area">
         <div class="chat-contexto">
           <div class="ctx-segment">
-            <button class="ctx-btn activo" data-modo="articulo" data-i18n="abogado.ctx.articulo">Este artículo</button>
-            <button class="ctx-btn" data-modo="ley" data-i18n="abogado.ctx.ley">Esta ley</button>
-            <button class="ctx-btn deshabilitado" data-modo="comparar" title="Disponible en Plan Despacho" data-i18n="abogado.ctx.comparar">Comparar estados</button>
+            <button class="ctx-btn activo" data-modo="articulo" >Este artículo</button>
+            <button class="ctx-btn" data-modo="ley" >Esta ley</button>
+            <button class="ctx-btn deshabilitado" data-modo="comparar" title="Disponible en Plan Despacho" >Comparar estados</button>
           </div>
           <button class="chat-modo-btn" id="btn-proceso-abogado"
-                  onclick="activarModoProceso()" data-i18n="abogado.ctx.proceso">⟳ Proceso</button>
+                  onclick="activarModoProceso()" >⟳ Proceso</button>
         </div>
         <div class="chat-input-row">
           <textarea
             id="chat-input"
             placeholder="Pregunta sobre este artículo…"
-            data-i18n-placeholder="abogado.chat.placeholder"
+            placeholder="Pregunta sobre este artículo…"
             rows="1"
             onkeydown="chatKeydown(event)"
           ></textarea>

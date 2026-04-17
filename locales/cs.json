@@ -268,5 +268,12 @@
 
   "overlay.desc.magnus": "Magnus vyžaduje účet. Srovnávací vícejurisdikční analýza. Bezplatný přístup do 7. května.",
 
-  "atlas.placeholder": "Popište případ. Př: Zaměstnavatel mi ukončil smlouvu bez výpovědní doby a nevyplatil mi mzdu za poslední 3 týdny."
+  "atlas.placeholder": "Popište případ. Př: Zaměstnavatel mi ukončil smlouvu bez výpovědní doby a nevyplatil mi mzdu za poslední 3 týdny.",
+
+  "nav.juris": "Judikatura",
+  "nav.atlas": "Atlas",
+  "abogado.sel.ley": "— Vyberte zákon —",
+  "abogado.art.cargado": "Načetl jsem <strong>{art}</strong>. Můžete se mě zeptat na jeho obsah, důsledky nebo jak jej aplikovat v konkrétních případech.",
+  "abogado.leyes.federales": "Federální zákony",
+  "abogado.leyes.estatales": "Státní zákony"
 }

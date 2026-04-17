@@ -48,6 +48,30 @@ nav {
 .n-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:1px; background:var(--gold-dk); transition:width .25s; }
 .n-links a:hover { color: var(--gold-dk); }
 .n-links a:hover::after { width: 100%; }
+/* Dropdown */
+.n-dropdown-wrap { position: relative; }
+.n-dropdown-btn {
+  font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--soft);
+  background: none; border: none; cursor: pointer; transition: color .2s;
+  display: flex; align-items: center; gap: 4px;
+}
+.n-dropdown-btn:hover { color: var(--gold-dk); }
+.n-dd-arrow { font-size: 10px; transition: transform .25s; }
+.n-dropdown-wrap.open .n-dd-arrow { transform: rotate(180deg); }
+.n-dropdown {
+  display: none; position: absolute; top: calc(100% + 12px); left: 50%; transform: translateX(-50%);
+  background: #fff; border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(26,20,16,0.12); padding: 6px; min-width: 160px; z-index: 110;
+}
+.n-dropdown-wrap.open .n-dropdown { display: block; }
+.n-dropdown a {
+  display: block; padding: 10px 16px; border-radius: 8px;
+  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .08em;
+  color: var(--text); text-decoration: none; transition: all .15s; white-space: nowrap;
+}
+.n-dropdown a:hover { background: rgba(139,104,32,0.06); color: var(--gold-dk); }
+
 .n-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: auto; }
 .n-cta { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; background: var(--text); color: var(--bg); padding: 9px 22px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: background .2s; }
 .n-cta:hover { background: var(--gold-dk); }
@@ -82,22 +106,66 @@ nav {
   overflow: hidden;
 }
 
-/* ── HERO / MANIFESTO ── */
+/* ── HERO BANNER (beige, above dark box) ── */
+.hero-banner {
+  text-align: center;
+  padding: 64px 24px 40px;
+}
+.hero-banner-text {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 700;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  color: var(--text);
+  line-height: 1.6;
+}
+.hero-banner-text .gold-word { color: var(--gold-dk); }
+/* Banner reveal animation */
+.hero-banner-text .reveal-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: wordReveal .6s ease forwards;
+}
+@keyframes wordReveal { to { opacity:1; transform:translateY(0); } }
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity .8s ease, transform .8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── HERO / MANIFESTO (dark box) ── */
 .hero-outer {
-  padding: 24px max(24px, calc((100vw - 1200px)/2 + 24px)) 0;
+  padding: 0 max(24px, calc((100vw - 1200px)/2 + 24px));
 }
 .hero {
-  min-height: calc(100vh - 112px);
   display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
-  padding: 80px 64px;
+  padding: 48px 64px;
   position: relative; overflow: hidden;
 }
 .hero-content { z-index: 2; }
 .hero-globe {
   position: relative; width: 100%; aspect-ratio: 1;
+  max-height: 480px;
   display: flex; align-items: center; justify-content: center;
 }
 #globe-canvas { width: 100% !important; height: 100% !important; display: block; }
+.hero-hook {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--gold);
+  margin-bottom: 32px;
+  line-height: 1.6;
+  max-width: 480px;
+}
 .hero-quote {
   font-family: 'Playfair Display', serif;
   font-size: clamp(18px, 2.2vw, 24px);
@@ -163,7 +231,7 @@ nav {
   aspect-ratio: 7/4; border-radius: 12px; overflow: hidden;
   border: 1px solid rgba(200,168,75,0.1);
 }
-#entropy-canvas { width: 100%; height: 100%; display: block; }
+#entropy-canvas { width: 100%; height: 100%; display: block; cursor: crosshair; }
 .entropy-labels {
   position: absolute; bottom: 16px; left: 0; right: 0;
   display: flex; justify-content: space-between; padding: 0 32px;
@@ -312,12 +380,26 @@ footer {
 .f-links { display: flex; gap: 24px; }
 .f-links a { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .12em; color: var(--muted); text-decoration: none; transition: color .2s; text-transform: uppercase; }
 .f-links a:hover { color: var(--gold-dk); }
+.f-disclaimer {
+  width: 100%;
+  font-family: 'Barlow', sans-serif;
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px) {
-  .hero { grid-template-columns: 1fr; padding: 48px 32px; }
-  .hero-globe { max-width: 320px; margin: 0 auto; order: -1; }
+  .hero { grid-template-columns: 1fr; padding: 36px 28px; }
+  .hero-globe { max-width: 300px; margin: 0 auto; order: -1; }
   .hero-outer, .entropy-outer { padding-left: 16px; padding-right: 16px; }
+  .hero-banner { padding: 48px 24px 28px; }
+  .hero-banner-text { font-size: 11px; letter-spacing: .2em; }
 }
 @media(max-width:680px) {
   nav { padding: 0 24px; }
@@ -343,11 +425,15 @@ footer {
 <nav>
   <a href="/" class="n-logo">LEGAL<span>ATLAS</span></a>
   <ul class="n-links">
-    <li><a href="abogado.html">Biblioteca</a></li>
-    <li><a href="jurisprudencia.html">Jurisprudencia</a></li>
-    <li><a href="magnus.html">Magnus</a></li>
-    <li><a href="atlas.html">Atlas</a></li>
-    <li><a href="cuenta.html">Account</a></li>
+    <li><a href="#why">Manifesto</a></li>
+    <li><a href="#research">El libro</a></li>
+    <li class="n-dropdown-wrap">
+      <button class="n-dropdown-btn" onclick="this.parentElement.classList.toggle('open')">Jurisdictions <span class="n-dd-arrow">▾</span></button>
+      <div class="n-dropdown">
+        <a href="/cz/">🇨🇿 Česko</a>
+        <a href="/mx/">🇲🇽 México</a>
+      </div>
+    </li>
   </ul>
   <div class="n-right">
     <a href="magnus.html" class="n-cta">Open Magnus →</a>
@@ -363,10 +449,11 @@ footer {
     <button class="m-sidebar-close" onclick="closeSidebar()">✕</button>
   </div>
   <div class="m-sidebar-nav">
-    <a href="magnus.html" onclick="closeSidebar()">Magnus</a>
-    <a href="abogado.html" onclick="closeSidebar()">Biblioteca</a>
-    <a href="atlas.html" onclick="closeSidebar()">Atlas</a>
-    <a href="cuenta.html" onclick="closeSidebar()">Account</a>
+    <a href="#why" onclick="closeSidebar()">Manifesto</a>
+    <a href="#research" onclick="closeSidebar()">El libro</a>
+    <a href="/cz/" onclick="closeSidebar()">🇨🇿 Česko</a>
+    <a href="/mx/" onclick="closeSidebar()">🇲🇽 México</a>
+    <a href="magnus.html" onclick="closeSidebar()">Open Magnus</a>
   </div>
 </aside>
 
@@ -399,32 +486,99 @@ footer {
     </div>
   </div>
 
+  <!-- Sticky geo ribbon (bottom, persistent pressure) -->
+  <div id="geo-sticky" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:8888;background:var(--bg,#F3EAD5);border-top:1px solid var(--border,#DDD0B4);padding:11px 32px;align-items:center;gap:16px;box-shadow:0 -4px 20px rgba(26,20,16,0.1);font-family:'Barlow',sans-serif;">
+    <span id="geo-sticky-flag" style="font-size:20px;"></span>
+    <span id="geo-sticky-text" style="font-size:13px;color:var(--soft,#3D342A);"></span>
+    <button id="geo-sticky-btn" style="background:var(--text,#1A1410);color:var(--bg,#F3EAD5);border:none;border-radius:7px;padding:8px 18px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;font-weight:700;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='#8B6820'" onmouseout="this.style.background='var(--text,#1A1410)'"></button>
+    <button onclick="dismissSticky()" style="background:none;border:none;color:var(--muted,#7A6E60);cursor:pointer;font-size:20px;margin-left:auto;padding:0;line-height:1;">×</button>
+  </div>
+
   <script>
+  var detectedCountry = null;
+
   function czGoLocal(){ localStorage.setItem('la-locale','CZ'); window.location.replace('/cz/'); }
-  function czStayGlobal(){ localStorage.setItem('la-locale','global'); sessionStorage.setItem('cz-modal-shown','1'); document.getElementById('cz-overlay').style.display='none'; }
   function mxGoLocal(){ localStorage.setItem('la-locale','MX'); window.location.replace('/mx/'); }
-  function mxStayGlobal(){ localStorage.setItem('la-locale','global'); sessionStorage.setItem('mx-modal-shown','1'); document.getElementById('mx-overlay').style.display='none'; }
+
+  function czStayGlobal(){
+    localStorage.setItem('la-locale','global');
+    sessionStorage.setItem('cz-modal-shown','1');
+    document.getElementById('cz-overlay').style.display='none';
+    showSticky('CZ');
+  }
+  function mxStayGlobal(){
+    localStorage.setItem('la-locale','global');
+    sessionStorage.setItem('mx-modal-shown','1');
+    document.getElementById('mx-overlay').style.display='none';
+    showSticky('MX');
+  }
+
+  function showSticky(country) {
+    if (sessionStorage.getItem('geo-sticky-dismissed')) return;
+    var bar = document.getElementById('geo-sticky');
+    var cfg = {
+      CZ: { flag:'🇨🇿', text:'Česká verze Legal Atlas je k\u00a0dispozici.', btn:'Přejít na CZ →', go: czGoLocal },
+      MX: { flag:'🇲🇽', text:'La versión mexicana de Legal Atlas está disponible.', btn:'Ir a MX →', go: mxGoLocal }
+    };
+    var c = cfg[country];
+    if (!c) return;
+    document.getElementById('geo-sticky-flag').textContent = c.flag;
+    document.getElementById('geo-sticky-text').textContent = c.text;
+    var btn = document.getElementById('geo-sticky-btn');
+    btn.textContent = c.btn;
+    btn.onclick = c.go;
+    bar.style.display = 'flex';
+  }
+
+  function dismissSticky() {
+    document.getElementById('geo-sticky').style.display = 'none';
+    sessionStorage.setItem('geo-sticky-dismissed','1');
+  }
 
   (function geoInit(){
-    const locale = localStorage.getItem('la-locale');
-    if(locale==='CZ'){ window.location.replace('/cz/'); return; }
-    if(locale==='MX'){ window.location.replace('/mx/'); return; }
-    if(locale==='global') return;
+    var locale = localStorage.getItem('la-locale');
+    // User already chose a country → redirect immediately
+    if (locale === 'CZ') { window.location.replace('/cz/'); return; }
+    if (locale === 'MX') { window.location.replace('/mx/'); return; }
 
-    fetch('/api/geo').then(r=>r.json()).then(({country})=>{
-      if(country==='CZ' && !sessionStorage.getItem('cz-modal-shown')){ document.getElementById('cz-overlay').style.display='flex'; }
-      if(country==='MX' && !sessionStorage.getItem('mx-modal-shown')){ document.getElementById('mx-overlay').style.display='flex'; }
-    }).catch(()=>{});
+    // User chose global before → show sticky ribbon (not modal)
+    if (locale === 'global') {
+      fetch('/api/geo').then(function(r){return r.json()}).then(function(d){
+        if (d.country === 'CZ' || d.country === 'MX') showSticky(d.country);
+      }).catch(function(){});
+      return;
+    }
+
+    // First visit → detect geo and show full-screen modal
+    fetch('/api/geo').then(function(r){return r.json()}).then(function(d){
+      detectedCountry = d.country;
+      if (d.country === 'CZ' && !sessionStorage.getItem('cz-modal-shown')) {
+        document.getElementById('cz-overlay').style.display = 'flex';
+      }
+      if (d.country === 'MX' && !sessionStorage.getItem('mx-modal-shown')) {
+        document.getElementById('mx-overlay').style.display = 'flex';
+      }
+    }).catch(function(){});
   })();
   </script>
 
   <!-- ═══════════════════════════════════════════════════
        SECTION 1 — MANIFESTO HERO
        ═══════════════════════════════════════════════════ -->
+  <div class="hero-banner">
+    <p class="hero-banner-text">
+      <span class="reveal-word" style="animation-delay:.1s">Legal</span>
+      <span class="reveal-word" style="animation-delay:.25s">research</span>
+      <span class="reveal-word gold-word" style="animation-delay:.5s">·</span>
+      <span class="reveal-word" style="animation-delay:.65s">Cross-border</span>
+    </p>
+  </div>
+
   <div class="hero-outer">
   <section class="hero dark-box">
 
     <div class="hero-content">
+
       <p class="hero-quote">
         "Every legal article ever written is a line of <em>human</em> code.<br>
         Every constitution is an <em>operating system.</em><br>
@@ -437,6 +591,8 @@ footer {
         provisions</strong> in seven jurisdictions. The patterns are real.
         The convergences are measurable. <strong>The law has geometry.</strong>"
       </p>
+
+      <p class="hero-hook">Describe your case. Get the exact article that applies — cited, verified, across 7 jurisdictions. No hallucinations.</p>
 
       <div class="hero-cta-row">
         <a href="magnus.html" class="btn-primary">Open Magnus →</a>
@@ -452,41 +608,84 @@ footer {
   </div>
 
   <!-- ═══════════════════════════════════════════════════
-       SECTION 2 — WHY WE BUILT THIS
+       SECTION 2 — THE INSTRUMENTS (beige)
        ═══════════════════════════════════════════════════ -->
-  <section class="sec-pad" id="why">
+  <section class="sec-pad" id="instruments">
+
+    <div class="inst-label">The instruments</div>
+
+    <h2 class="inst-h">What exists today.</h2>
+
+    <div class="inst-item reveal">
+      <div>
+        <div class="inst-name">Magnus</div>
+        <p class="inst-desc">Multi-jurisdictional retrieval engine. Describe your case. Select up to three jurisdictions. Magnus reads the full legislative corpus of each — simultaneously — and synthesizes a cross-border legal analysis grounded in verified text.</p>
+      </div>
+      <a href="magnus.html" class="inst-cta">Open →</a>
+    </div>
+
+    <div class="inst-item reveal">
+      <div>
+        <div class="inst-name">Biblioteca</div>
+        <p class="inst-desc">Full statute browser with contextual AI. Navigate the law by hierarchy — part, title, chapter, article. Chat with Apolo in the context of any provision. Generate process diagrams from legal structure.</p>
+      </div>
+      <a href="abogado.html" class="inst-cta">Open →</a>
+    </div>
+
+    <div class="inst-item reveal">
+      <div>
+        <div class="inst-name">Jurisprudencia</div>
+        <p class="inst-desc">Verified court decisions from the Czech Constitutional Court and Supreme Court — embedded, searchable, directly linked to the legislative corpus. Find the ruling that interprets the exact provision you are reading.</p>
+      </div>
+      <a href="jurisprudencia.html" class="inst-cta">Open →</a>
+    </div>
+
+    <div class="inst-item reveal">
+      <div>
+        <div class="inst-name">Atlas</div>
+        <p class="inst-desc">Thesis versus antithesis. Every article that supports your case and every one that contradicts it — visualized as a 3D solar system of legal gravity. Dialectical legal reasoning, made visible.</p>
+      </div>
+      <a href="atlas.html" class="inst-cta">Open →</a>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════
+       SECTION 3 — WHY WE BUILT THIS (beige)
+       ═══════════════════════════════════════════════════ -->
+  <section class="sec-pad sec-divide reveal" id="why">
 
     <div class="why-label">Why we built this</div>
 
     <div class="center-text">
 
-      <div class="why-block">
+      <div class="why-block reveal">
         <p class="why-principle">"Justice is a human need."</p>
         <p class="why-body">We did not build Legal Atlas to optimize a workflow. We built it because access to accurate legal knowledge is a condition of justice — and that condition has never been universal.</p>
       </div>
 
       <div class="why-rule"></div>
 
-      <div class="why-block">
-        <p class="why-principle">"We build law in pursuit of justice. Nothing else."</p>
-        <p class="why-body">Every feature, every corpus decision, every jurisdiction we add answers one question: does this help someone find what the law actually says?</p>
+      <div class="why-block reveal">
+        <p class="why-principle">"Humanity builds law in pursuit of justice. Nothing else."</p>
+        <p class="why-body">Every legal article ever written — every code, every constitution, every court ruling — emerged from the same impulse: to resolve a break in reality that injustice creates. We did not invent that impulse. We built a tool to serve it.</p>
       </div>
 
       <div class="why-rule"></div>
 
-      <div class="why-block">
+      <div class="why-block reveal">
         <p class="why-principle">"Access to law is justice itself."</p>
-        <p class="why-body">A person who cannot read the law that governs them is not free. Legal Atlas makes the law readable — in any language, across any border.</p>
+        <p class="why-body">A person who cannot read the law that governs them is not free. Legal Atlas does not make the law simpler. It makes the search more precise — so lawyers, jurists, and citizens find what they need, when they need it, without hallucination.</p>
       </div>
 
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════════════════
-       ENTROPY — How Legal Atlas reads the law
+       SECTION 4 — ENTROPY (dark box)
        ═══════════════════════════════════════════════════ -->
   <div class="entropy-outer">
-  <section class="entropy-section dark-box" id="entropy">
+  <section class="entropy-section dark-box reveal" id="entropy">
     <div class="entropy-label">How it works</div>
     <h2 class="entropy-h">Structure meets query.</h2>
     <p class="entropy-sub">On the left, the legal corpus — 153,105 articles in ordered hierarchy. On the right, your question — unstructured, in natural language. Legal Atlas finds the connections in real time.</p>
@@ -501,9 +700,9 @@ footer {
   </div>
 
   <!-- ═══════════════════════════════════════════════════
-       SECTION 3 — THE BOOK
+       SECTION 5 — THE BOOK (beige)
        ═══════════════════════════════════════════════════ -->
-  <section class="sec-pad sec-divide" id="research">
+  <section class="sec-pad reveal" id="research">
 
     <div class="book-label">The research behind the engine</div>
 
@@ -519,41 +718,6 @@ footer {
 
   </section>
 
-  <!-- ═══════════════════════════════════════════════════
-       SECTION 4 — THE INSTRUMENTS
-       ═══════════════════════════════════════════════════ -->
-  <section class="sec-pad sec-divide" id="instruments">
-
-    <div class="inst-label">The instruments</div>
-
-    <h2 class="inst-h">What exists today.</h2>
-
-    <div class="inst-item">
-      <div>
-        <div class="inst-name">Magnus</div>
-        <p class="inst-desc">Multi-jurisdictional retrieval engine. Describe your case. Select up to three jurisdictions. Magnus reads the full legislative corpus of each — simultaneously — and synthesizes a cross-border legal analysis grounded in verified text.</p>
-      </div>
-      <a href="magnus.html" class="inst-cta">Open →</a>
-    </div>
-
-    <div class="inst-item">
-      <div>
-        <div class="inst-name">Biblioteca</div>
-        <p class="inst-desc">Full statute browser with contextual AI. Navigate the law by hierarchy — part, title, chapter, article. Chat with Apolo in the context of any provision. Generate process diagrams from legal structure.</p>
-      </div>
-      <a href="abogado.html" class="inst-cta">Open →</a>
-    </div>
-
-    <div class="inst-item">
-      <div>
-        <div class="inst-name">Atlas</div>
-        <p class="inst-desc">Thesis versus antithesis. Every article that supports your case and every one that contradicts it — visualized as a 3D solar system of legal gravity. Dialectical legal reasoning, made visible.</p>
-      </div>
-      <a href="atlas.html" class="inst-cta">Open →</a>
-    </div>
-
-  </section>
-
   <footer>
     <div class="f-logo">LEGAL<span>ATLAS</span></div>
     <div class="f-copy">© 2026 Legal Atlas Engineering · 153,105 provisions · 7 jurisdictions</div>
@@ -564,6 +728,7 @@ footer {
       <a href="pricing.html">Pricing</a>
       <a href="mailto:contact@legalatlas.io">Contact</a>
     </div>
+    <p class="f-disclaimer">Legal Atlas is a legal research tool for legal professionals. It generates AI-assisted content with verified normative references. It does not constitute legal advice nor replace independent professional judgment.</p>
   </footer>
 
 </div>
@@ -583,6 +748,12 @@ function closeSidebar() {
   document.body.style.overflow = ''
 }
 document.getElementById('burger').addEventListener('click', openSidebar)
+
+// Close dropdown on click outside
+document.addEventListener('click', e => {
+  const wrap = document.querySelector('.n-dropdown-wrap')
+  if (wrap && !wrap.contains(e.target)) wrap.classList.remove('open')
+})
 </script>
 <script>
 // ═══════════════════════════════════════════
@@ -732,7 +903,8 @@ document.getElementById('burger').addEventListener('click', openSidebar)
   let time = 0
   function animate() {
     requestAnimationFrame(animate)
-    globeGroup.rotation.y += 0.0015
+    globeGroup.rotation.y += 0.001
+
     glow.lookAt(camera.position)
 
     time += 0.02
@@ -817,6 +989,15 @@ document.getElementById('burger').addEventListener('click', openSidebar)
     }
   }
 
+  // Mouse interaction
+  let emx = -999, emy = -999
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect()
+    emx = e.clientX - rect.left
+    emy = e.clientY - rect.top
+  })
+  canvas.addEventListener('mouseleave', () => { emx = -999; emy = -999 })
+
   const particles = []
   const cols = 20, rows = 12
   for (let i = 0; i < cols; i++) {
@@ -833,6 +1014,19 @@ document.getElementById('burger').addEventListener('click', openSidebar)
     frame++
 
     particles.forEach(p => p.update(frame % 20 === 0 ? particles : []))
+
+    // Mouse repulsion / attraction
+    if (emx > 0) {
+      particles.forEach(p => {
+        const dx = p.x - emx, dy = p.y - emy
+        const d = Math.hypot(dx, dy)
+        if (d < 100 && d > 1) {
+          const force = (1 - d / 100) * 3
+          p.x += (dx / d) * force
+          p.y += (dy / d) * force
+        }
+      })
+    }
 
     // Draw connections
     for (let i = 0; i < particles.length; i++) {
@@ -902,6 +1096,20 @@ document.getElementById('burger').addEventListener('click', openSidebar)
     }
   })
 })()
+</script>
+<script>
+// ═══════════════════════════════════════════
+// SCROLL REVEAL — IntersectionObserver
+// ═══════════════════════════════════════════
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible')
+    }
+  })
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' })
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el))
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>

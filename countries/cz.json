@@ -1,0 +1,77 @@
+{
+  "CODE": "CZ",
+  "LANG": "cs",
+  "FLAG": "🇨🇿",
+  "HOME": "/cz/",
+  "ROUTE": "cz",
+  "LANG_PARAM": "?lang=cs",
+
+  "NAV_BIBLIOTECA": "Knihovna",
+  "NAV_JUDIKATURA": "Judikatura",
+  "NAV_MAGNUS": "Magnus",
+  "NAV_ATLAS": "Atlas",
+  "NAV_CUENTA": "Můj účet",
+
+  "BANNER_TEXT": "Zkušební období · Bezplatný přístup do 7. května",
+  "BANNER_CTA": "Požádat o přístup →",
+
+  "LABEL_PAIS": "Země",
+  "LABEL_LEY": "Zákon",
+  "LABEL_ESTADO": "Stát",
+  "LABEL_BUSCAR": "Hledat článek",
+  "BUSCAR_PLACEHOLDER": "Např. 2273…",
+  "BUSCAR_BTN": "Hledat",
+  "SELECT_PAIS": "— Vyberte zemi —",
+  "SELECT_LEY": "— Vyberte zákon —",
+  "SELECT_ESTADOS": "Všechny státy…",
+  "CARGANDO": "Načítám…",
+  "NAV_EMPTY": "Vyberte zemi<br>a zákon",
+  "CENTRO_VACIO": "Vyberte článek z navigátoru",
+  "MIS_LEYES": "☆ Moje zákony",
+  "BOOKMARK_TITLE": "Uložit do Moje zákony",
+
+  "EXPLICAR_CAPITULO": "✦ Vysvětlit tuto kapitolu",
+  "EXPLICAR_SECCION": "✦ Vysvětlit tuto sekci",
+  "REDACTAR_CON": "✍ Napsat s tímto článkem",
+  "WB_BACK": "← Zpět k článku",
+  "WB_GENERANDO": "Generuji diagram…",
+
+  "CHAT_TITULO": "APOLO",
+  "CHAT_VACIO": "Žádný aktivní článek",
+  "CHAT_PLACEHOLDER": "Zeptat se na tento článek…",
+  "CHAT_SENDER_USER": "VY",
+  "CTX_ARTICULO": "Tento článek",
+  "CTX_LEY": "Tento zákon",
+  "CTX_COMPARAR": "Porovnat státy",
+  "CTX_PROCESO": "⟳ Řízení",
+
+  "SALUDO_APOLO": "Dobrý den. Jsem <strong>APOLO</strong>, váš profesionální právní asistent. Vyberte článek z navigátoru a zahájíme analýzu.",
+  "ART_CARGADO": "Načetl jsem <strong>{{ART}}</strong>. Můžete se mě zeptat na jeho obsah, důsledky nebo jak jej aplikovat v konkrétních případech.",
+
+  "LEYES_FEDERALES": "Federální zákony",
+  "LEYES_ESTATALES": "Státní zákony",
+
+  "CAMBIAR_TEMA": "Změnit motiv",
+  "CERRAR_MENU": "Zavřít menu",
+
+  "MAGNUS_EYEBROW": "Multijurisdikční právní analýza",
+  "MAGNUS_DESC": "Popište svůj případ. Vyberte jurisdikce. Magnus prohledá každý článek současně — ne z paměti, ale z ověřeného práva.",
+  "MAGNUS_PLACEHOLDER": "Popište případ podrobně. Příklad: Můj klient je mexický architekt s dočasným pobytem v ČR, podepsal smlouvu o dílo s českou firmou, nebyl zaplacen, chce žalovat, ale plánuje odjet do Mexika. Které zákony platí?",
+  "MAGNUS_BTN": "Analyzovat →",
+  "MAGNUS_LOADING": "Analyzuji váš případ...",
+  "MAGNUS_COMPARE": "Porovnat",
+
+  "ATLAS_EYEBROW": "Hegelova dialektika · Legal Atlas",
+  "ATLAS_BTN": "ATLAS ⚡ — ANALYZOVAT",
+  "ATLAS_ANALIZANDO": "ANALYZUJI",
+  "ATLAS_PLACEHOLDER": "Popište případ. Př: Zaměstnavatel mi ukončil smlouvu bez výpovědní doby a nevyplatil mi mzdu za poslední 3 týdny.",
+
+  "CUENTA_EYEBROW": "Správa přístupu",
+  "CUENTA_TITULO": "MŮJ ÚČET",
+  "CUENTA_GOOGLE": "Pokračovat s Google",
+  "CUENTA_PLAN": "Aktuální plán",
+  "CUENTA_LOGOUT": "Odhlásit se",
+
+  "FOOTER_DISCLAIMER": "Legal Atlas je nástroj pro právní výzkum určený právním profesionálům. Generuje obsah s pomocí AI s ověřenými normativními odkazy. Nepředstavuje právní poradenství ani náhradu za nezávislý odborný úsudek.",
+  "FOOTER_COPY": "Legal Atlas Engineering © 2026"
+}
