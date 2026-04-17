@@ -57,7 +57,7 @@ body { font-family: 'Lora', Georgia, serif; background: var(--bg); color: var(--
 
 /* ── AMBIENT ── */
 .amb { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
-.amb-o { position: absolute; border-radius: 50%; filter: blur(80px); }
+.amb-o { position: absolute; border-radius: 50%; filter: blur(140px); }
 .amb-o1 { width: 700px; height: 700px; background: radial-gradient(circle, rgba(196,154,60,.09) 0%, transparent 70%); top: -200px; right: -100px; animation: driftA 25s ease-in-out infinite; }
 .amb-o2 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(196,154,60,.06) 0%, transparent 70%); bottom: 0; left: -100px; animation: driftB 30s ease-in-out infinite; }
 @keyframes driftA { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-40px,40px)} }
@@ -132,7 +132,7 @@ nav {
 .hero-eyebrow {
   font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .42em;
   color: var(--gold); text-transform: uppercase; margin-bottom: 44px;
-  display: flex; align-items: center; justify-content: center; gap: 16px;
+  display: flex; align-items: center; gap: 16px;
   opacity: 0; animation: up .9s ease .1s forwards;
 }
 .hero-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--gold); }
@@ -140,25 +140,19 @@ nav {
   font-family: 'Cinzel', serif;
   font-size: clamp(52px, 8vw, 108px);
   font-weight: 700; letter-spacing: .02em; line-height: 1.05;
-  margin-bottom: 0; text-align: center;
+  margin-bottom: 0;
+  opacity: 0; animation: up .9s ease .2s forwards;
 }
-.hero-h .letter {
-  display: inline-block; opacity: 0;
-  animation: letterIn .4s ease forwards;
-}
-@keyframes letterIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 .hero-h span { color: var(--gold); }
 .hero-tagline {
   font-family: 'Lora', serif; font-style: italic;
-  font-size: clamp(24px, 3.2vw, 36px); color: var(--soft);
-  margin-top: 36px; line-height: 1.5; text-align: center;
-  opacity: 0; animation: up .9s ease 1s forwards;
+  font-size: clamp(20px, 2.8vw, 32px); color: var(--soft);
+  margin-top: 24px; line-height: 1.5;
+  opacity: 0; animation: up .9s ease .3s forwards;
 }
-.hero-tagline em { font-style: normal; color: var(--gold); font-weight: 600; }
 .hero-sub {
   font-family: 'JetBrains Mono', monospace; font-size: 13px;
   color: var(--muted); letter-spacing: .08em; margin-top: 22px; line-height: 1.9;
-  text-align: center;
   opacity: 0; animation: up .9s ease .38s forwards;
 }
 .hero-sub span { color: var(--gold); }
@@ -167,7 +161,6 @@ nav {
 .hero-chat-wrap {
   margin-top: 48px;
   max-width: 720px;
-  margin-left: auto; margin-right: auto;
   opacity: 0; animation: up .9s ease .5s forwards;
 }
 .hero-chat {
@@ -219,7 +212,7 @@ nav {
 /* Topic chips */
 .chat-chips {
   display: flex; gap: 8px; flex-wrap: wrap;
-  margin-top: 16px; justify-content: center;
+  margin-top: 16px; justify-content: flex-start;
 }
 .chat-chip {
   font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .1em;
@@ -240,7 +233,7 @@ nav {
   overflow: hidden;
 }
 [data-theme="dark"] .strip { background: var(--bg-card); }
-.strip-inner { display: flex; gap: 48px; white-space: nowrap; animation: scroll 45s linear infinite; opacity: .6; }
+.strip-inner { display: flex; gap: 48px; white-space: nowrap; animation: scroll 28s linear infinite; }
 .strip-item { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .1em; color: var(--muted); flex-shrink: 0; }
 .strip-item span { color: var(--gold); }
 @keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
@@ -253,8 +246,7 @@ nav {
 }
 .section-eyebrow { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.36em; color:var(--gold); text-transform:uppercase; margin-bottom:52px; display:flex; align-items:center; gap:14px; }
 .section-eyebrow::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
-.how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; position: relative; }
-/* connecting line between cards sits behind them */
+.how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .how-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:36px 28px; position:relative; overflow:hidden; transition:all .3s; }
 .how-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--border); transition:background .3s; }
 .how-card:hover { border-color:var(--gold-brd); box-shadow:var(--sh-md); }
@@ -281,14 +273,14 @@ nav {
 
 /* ── MANIFESTO / PHILOSOPHY ── */
 .manifesto {
-  padding: 160px max(24px, calc((100vw - 1080px)/2 + 48px)) 120px;
+  padding: 120px max(24px, calc((100vw - 1080px)/2 + 48px));
   border-bottom: 1px solid var(--border);
   display: grid; grid-template-columns: 1fr 1.6fr; gap: 80px; align-items: start;
 }
 .man-label { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .36em; color: var(--gold); text-transform: uppercase; margin-bottom: 32px; display: flex; align-items: center; gap: 14px; }
 .man-label::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
 .man-pullquote {
-  font-family: 'Lora', serif; font-size: clamp(28px, 4vw, 48px); font-style: italic;
+  font-family: 'Lora', serif; font-size: clamp(26px, 3.4vw, 42px); font-style: italic;
   font-weight: 400; line-height: 1.35; color: var(--text); letter-spacing: -.01em;
 }
 .man-pullquote em { color: var(--gold); font-style: normal; }
@@ -382,18 +374,18 @@ nav {
 
 /* ── FOOTER ── */
 footer {
-  padding: 64px max(24px, calc((100vw - 1080px)/2 + 48px));
-  display: flex; flex-direction: column; align-items: center;
-  gap: 16px; border-top: 1px solid var(--border);
-  position: relative; z-index: 1; text-align: center;
+  padding: 48px max(24px, calc((100vw - 1080px)/2 + 48px));
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 20px; border-top: 1px solid var(--border);
+  position: relative; z-index: 1;
 }
-.f-logo { font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: .3em; color: var(--text); font-weight: 700; margin-bottom: 8px; }
+.f-logo { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .3em; color: var(--text); font-weight: 700; }
 .f-logo span { color: var(--gold); }
-.f-copy { font-size: 12px; color: var(--dim); font-style: italic; margin-bottom: 12px; }
-.f-links { display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; }
+.f-copy { font-size: 11px; color: var(--dim); font-style: italic; }
+.f-links { display: flex; gap: 24px; }
 .f-links a { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .12em; color: var(--muted); text-decoration: none; transition: color .2s; text-transform: uppercase; }
 .f-links a:hover { color: var(--gold); }
-.f-disclaimer { max-width: 640px; font-size: 10px; color: var(--dim); line-height: 1.7; font-style: italic; border-top: 1px solid var(--border); padding-top: 24px; margin-top: 16px; }
+.f-disclaimer { width: 100%; font-size: 10px; color: var(--dim); line-height: 1.7; font-style: italic; border-top: 1px solid var(--border); padding-top: 20px; margin-top: 4px; }
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px) {
@@ -402,61 +394,6 @@ footer {
   .proof-body { grid-template-columns: 1fr; }
   .proof-right { display: none; }
 }
-
-/* ── SCROLL REVEAL ── */
-.reveal { opacity:0; transform:translateY(20px); transition:opacity .6s ease, transform .6s ease; }
-.reveal.visible { opacity:1; transform:translateY(0); }
-
-/* ── MAGNUS PROMINENT ── */
-.tool-card.magnus-card { background:var(--gold-dim); border-color:var(--gold-brd); grid-column:span 2; }
-.tool-card.magnus-card:hover { border-color:var(--gold); }
-[data-theme="dark"] .tool-card.magnus-card { background:rgba(196,154,60,0.06); }
-
-/* ── ETHICAL LINE ── */
-.ethical { text-align:center; padding:80px 24px; border-top:1px solid var(--rule); background:var(--bg-raised); }
-[data-theme="dark"] .ethical { background:var(--bg-card); }
-.ethical-text { font-family:'Lora',serif; font-style:italic; font-size:clamp(20px,3vw,28px); color:var(--gold); line-height:1.5; max-width:640px; margin:0 auto; }
-
-/* ── GLOW CARDS ── */
-[data-glow]{
-  --spotlight:200px; --glow-hue:38; --glow-sat:72%; --glow-lit:55%;
-  position:relative;
-  background:
-    radial-gradient(var(--spotlight) var(--spotlight) at calc(var(--gx,50%) * 1px) calc(var(--gy,50%) * 1px),
-      hsla(var(--glow-hue) var(--glow-sat) var(--glow-lit) / .07), transparent),
-    var(--bg-card);
-  border:1.5px solid var(--border);
-  border-radius:16px;
-  overflow:hidden;
-  transition:border-color .3s, box-shadow .3s, transform .3s;
-}
-[data-glow]:hover{
-  border-color:hsla(var(--glow-hue) var(--glow-sat) var(--glow-lit) / .45);
-  box-shadow:0 0 28px hsla(var(--glow-hue) var(--glow-sat) var(--glow-lit) / .12), var(--sh-md);
-  transform:translateY(-2px);
-}
-[data-glow]::after{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(calc(var(--spotlight)*.75) calc(var(--spotlight)*.75) at calc(var(--gx,50%)*1px) calc(var(--gy,50%)*1px),
-    hsla(var(--glow-hue) var(--glow-sat) 70% / .12), transparent);
-  opacity:0;transition:opacity .3s;
-}
-[data-glow]:hover::after{opacity:1}
-
-/* ── BENEFIT CARDS ── */
-.bens{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:64px max(24px, calc((100vw - 1080px)/2 + 48px))}
-.ben{text-align:center;padding:32px 24px}
-.ben-icon{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:300;color:var(--gold);opacity:.5;margin-bottom:14px}
-.ben-title{font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:.08em;margin-bottom:10px;color:var(--text)}
-.ben-desc{font-family:'Lora',serif;font-size:13px;color:var(--muted);line-height:1.7}
-
-/* ── CTA BLOCK ── */
-.cta-block{text-align:center;padding:48px 24px;border-top:1px solid var(--rule)}
-.cta-block-h{font-family:'Cinzel',serif;font-size:clamp(16px,2.5vw,22px);font-weight:700;margin-bottom:12px}
-.cta-block-sub{font-family:'Lora',serif;font-size:14px;color:var(--muted);margin-bottom:24px}
-.cta-btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;background:var(--gold);color:#fff;padding:13px 32px;border-radius:8px;text-decoration:none;font-weight:700;transition:background .2s;display:inline-block}
-.cta-btn:hover{background:var(--gold-lt)}
-
 @media(max-width:1024px) {
   nav { padding: 0 24px; }
   .n-links { display: none; }
@@ -465,7 +402,6 @@ footer {
   .how, .manifesto, .corpus, .products, .proof { padding: 80px 24px; }
   .how-grid { grid-template-columns: 1fr; }
   .products-grid { grid-template-columns: 1fr 1fr; }
-  .bens { grid-template-columns: 1fr; padding: 48px 24px; }
   footer { padding: 36px 24px; }
 }
 @media(max-width:600px) {
@@ -536,7 +472,7 @@ footer {
     <div class="hero-rule" style="left:66%"></div>
     <div class="hero-eyebrow">Mozek právní praxe</div>
     <h1 class="hero-h">LEGAL <span>ATLAS</span></h1>
-    <p class="hero-tagline">Najděte přesný § <em>za pár minut</em></p>
+    <p class="hero-tagline">Najdete v zákoně to, co ostatní přehlédnou</p>
     <div class="hero-sub">
       <span>97 zákonů</span> · Kompletní a aktuální sbírka českých zákonů · <span>Nulové halucinace AI</span> · Citace konkrétního paragrafu u každé odpovědi
     </div>
@@ -587,50 +523,27 @@ footer {
     </div>
   </div>
 
-  <!-- BENEFITS -->
-  <div class="bens reveal">
-    <div class="ben">
-      <div class="ben-icon">01</div>
-      <div class="ben-title">Ověřený text zákona</div>
-      <p class="ben-desc">Plné znění článku přímo ze sbírky zákonů. Ne shrnutí, ne parafráze — skutečný text.</p>
-    </div>
-    <div class="ben">
-      <div class="ben-icon">02</div>
-      <div class="ben-title">Citace u každé odpovědi</div>
-      <p class="ben-desc">Číslo paragrafu, název zákona, plné znění. Každé tvrzení ověřitelné u zdroje.</p>
-    </div>
-    <div class="ben">
-      <div class="ben-icon">03</div>
-      <div class="ben-title">7 jurisdikcí současně</div>
-      <p class="ben-desc">České, německé, španělské, francouzské, mexické a švýcarské právo — v jednom dotazu.</p>
-    </div>
-  </div>
-
   <!-- HOW IT WORKS -->
-  <section class="how reveal">
+  <section class="how">
     <div class="section-eyebrow">Jak to funguje</div>
     <div class="how-grid">
       <div class="how-card">
         <div class="how-num">01</div>
         <div class="how-title">Zadání právního dotazu</div>
-        <p class="how-desc">Popište situaci vlastními slovy. AI rozumí významu, ne jen klíčovým slovům.</p>
+        <p class="how-desc">Popište svou právní situaci vlastními slovy, bez právní terminologie. Naše AI analyzuje význam vašeho dotazu, ne jen klíčová slova.</p>
       </div>
       <div class="how-card">
         <div class="how-num">02</div>
         <div class="how-title">Analýza sbírky zákonů</div>
-        <p class="how-desc">97 zákonů prohledáno v reálném čase. Čistá právní realita bez šumu.</p>
+        <p class="how-desc">Naše AI prohledá 97 českých zákonů v reálném čase. Výsledkem je čistá právní realita bez šumu.</p>
       </div>
       <div class="how-card">
         <div class="how-num">03</div>
         <div class="how-title">Ověřený výstup</div>
-        <p class="how-desc">Konkrétní §, název zákona, plné znění. Ověřitelné u zdroje.</p>
+        <p class="how-desc">Dostanete konkrétní paragraf, název zákona a plné znění článku. Každé tvrzení si tak můžete okamžitě ověřit u zdroje.</p>
       </div>
     </div>
   </section>
-
-  <div class="cta-block">
-    <a href="/magnus.html?lang=cs" class="cta-btn">Vyzkoušet zdarma →</a>
-  </div>
 
   <!-- GIF DEMO -->
   <section class="gif-demo">
@@ -640,7 +553,7 @@ footer {
   </section>
 
   <!-- MANIFESTO -->
-  <section class="manifesto reveal">
+  <section class="manifesto">
     <div>
       <div class="man-label">Proč na tom záleží</div>
       <p class="man-pullquote">
@@ -655,7 +568,7 @@ footer {
   </section>
 
   <!-- CORPUS -->
-  <section class="corpus reveal">
+  <section class="corpus">
     <div class="corpus-left">
       <div class="corpus-label">Co jsme zmapovali</div>
       <h2 class="corpus-h">97 českých zákonů.<br><em>19 772 §. Ověřeno.</em></h2>
@@ -698,13 +611,13 @@ footer {
   </section>
 
   <!-- PRODUCTS -->
-  <section class="products reveal">
+  <section class="products">
     <div class="products-label">Nástroje</div>
     <h2 class="products-h">Vyberte svůj <em>nástroj.</em></h2>
     <div class="products-grid">
 
       <!-- Magnus -->
-      <div class="tool-card magnus-card" onclick="location.href='/cz/magnus.html'">
+      <div class="tool-card" onclick="location.href='/magnus.html?lang=cs'">
         <div class="tool-badge">Vlajková loď <span class="badge-pro">PRO</span></div>
         <div class="tool-name">Magnus</div>
         <p class="tool-desc">Jediný AI systém na světě, který provádí paralelní RAG přes více právních systémů současně. Popište případ v libovolném jazyce. Vyberte až tři jurisdikce. Magnus dohledá ověřené právo a sestaví mezijurisdiční analýzu — včetně precedentů Ústavního soudu.</p>
@@ -759,7 +672,7 @@ Pro</div>
   </section>
 
   <!-- PROOF -->
-  <section class="proof reveal">
+  <section class="proof">
     <div class="proof-header">
       <div class="proof-label-eyebrow">Magnus v akci</div>
       <h2 class="proof-h">Skutečný případ.<br><em>45 sekund.</em></h2>
@@ -810,30 +723,15 @@ Pro</div>
     </div>
   </section>
 
-  <div class="cta-block">
-    <h3 class="cta-block-h">Žádný jiný AI systém to nedělá.</h3>
-    <p class="cta-block-sub">97 zákonů · 19 772 § · Plný text · Citace · Nulové halucinace · Zdarma</p>
-    <a href="/cz/magnus.html" class="cta-btn">Vyzkoušet zdarma →</a>
-  </div>
-
-  <div class="ethical">
-    <p class="ethical-text">"Přístup k právu je spravedlnost sama o sobě."</p>
-  </div>
-
   <footer>
     <div class="f-logo">LEGAL<span>ATLAS</span></div>
-    <div class="f-copy">© Legal Atlas 2026 · Praha, Česko · Postaveno s&nbsp;respektem k&nbsp;právu.</div>
+    <div class="f-copy">© Legal Atlas 2026 · Praha, Česká republika · 97 zákonů · 1 465 rozhodnutí</div>
     <div class="f-links">
-      <a href="/cz/magnus.html">Magnus</a>
-      <a href="/cz/abogado.html">Knihovna</a>
-      <a href="/cz/jurisprudencia.html">Judikatura</a>
+      <a href="/magnus.html?lang=cs">Magnus</a>
+      <a href="/abogado.html?lang=cs">Knihovna</a>
+      <a href="/pricing.html">Ceník</a>
       <a href="mailto:contact@legalatlas.io">Kontakt</a>
       <a href="/" onclick="localStorage.setItem('la-locale','en')">🌐 EN</a>
-    </div>
-    <div class="f-links" style="margin-top:8px">
-      <a href="/terms.html">Podmínky</a>
-      <a href="/privacy.html">Ochrana údajů</a>
-      <a href="/pricing.html">Ceník</a>
     </div>
     <p class="f-disclaimer">Legal Atlas je nástroj pro právní výzkum určený právním profesionálům. Generuje obsah s pomocí AI s ověřenými normativními odkazy. Nepředstavuje právní poradenství ani náhradu za nezávislý odborný úsudek.</p>
   </footer>
@@ -920,26 +818,6 @@ document.getElementById('chat-q').addEventListener('keydown', e=>{
     document.getElementById('chat-go').click()
   }
 })
-</script>
-<script>
-// LETTER REVEAL — hero title
-;(function(){
-  const h = document.querySelector('.hero-h')
-  if (!h) return
-  const html = h.innerHTML
-  let i = 0
-  h.innerHTML = html.replace(/(<[^>]+>)|(.)/g, (match, tag, char) => {
-    if (tag) return tag
-    if (char === ' ') return ' '
-    return `<span class="letter" style="animation-delay:${(i++) * 30}ms">${char}</span>`
-  })
-})()
-
-// SCROLL REVEAL
-const revealObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') })
-}, { threshold: 0.15 })
-document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el))
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
