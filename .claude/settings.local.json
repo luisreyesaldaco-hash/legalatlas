@@ -30,7 +30,14 @@
       "Bash(sed -n '570,580p' ciudadano.html)",
       "Bash(sed -n '570,580p' marco.html)",
       "Bash(sed -n '290,296p' index.html)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(python -c \"import pandas, numpy, sklearn, supabase, dotenv; print\\('deps OK'\\)\")",
+      "Bash(py --version)",
+      "Bash(ls /c/Python*)",
+      "Read(//c/Users/Luis Alfonso Reyes/AppData/Local/Programs/Python/**)",
+      "Bash(/c/Users/Luis Alfonso Reyes/AppData/Local/Programs/Python/Python312/python.exe *)",
+      "Bash(\"/c/Users/Luis Alfonso Reyes/AppData/Local/Programs/Python/Python312/python.exe\" masa_universal.py)",
+      "Bash(PYTHONIOENCODING=utf-8 PYTHONUTF8=1 \"/c/Users/Luis Alfonso Reyes/AppData/Local/Programs/Python/Python312/python.exe\" masa_universal.py)"
     ]
   }
 }

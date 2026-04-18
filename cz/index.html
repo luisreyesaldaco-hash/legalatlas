@@ -123,15 +123,14 @@ nav {
 
 /* ── HERO ── */
 .hero {
-  min-height: 92vh;
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 80px max(24px, calc((100vw - 1080px)/2 + 48px)) 64px;
+  display: flex; flex-direction: column;
+  padding: 40px max(24px, calc((100vw - 1080px)/2 + 48px)) 56px;
   position: relative; overflow: hidden;
 }
 .hero-rule { position:absolute; top:0; bottom:0; width:1px; background:linear-gradient(to bottom, transparent, var(--rule) 20%, var(--rule) 80%, transparent); pointer-events:none; }
 .hero-eyebrow {
   font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .42em;
-  color: var(--gold); text-transform: uppercase; margin-bottom: 44px;
+  color: var(--gold); text-transform: uppercase; margin-bottom: 12px;
   display: flex; align-items: center; justify-content: center; gap: 16px;
   opacity: 0; animation: up .9s ease .1s forwards;
 }
@@ -163,72 +162,80 @@ nav {
 }
 .hero-sub span { color: var(--gold); }
 
-/* ── HERO CHAT ── */
-.hero-chat-wrap {
+/* ── HERO DEMO ── */
+.hero-demo-wrap {
   margin-top: 48px;
   max-width: 720px;
   margin-left: auto; margin-right: auto;
   opacity: 0; animation: up .9s ease .5s forwards;
 }
-.hero-chat {
+.hero-demo {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 22px;
+  border-radius: 20px;
   box-shadow: 0 8px 40px rgba(26,20,16,0.13);
   overflow: hidden;
-  transition: box-shadow .25s, border-color .25s;
 }
-[data-theme="dark"] .hero-chat { box-shadow: 0 8px 40px rgba(0,0,0,0.4); }
-.hero-chat:focus-within { border-color: var(--gold-brd); box-shadow: 0 8px 40px rgba(139,104,32,0.18); }
-.chat-top-label {
-  padding: 12px 24px 0;
-  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .12em;
-  color: var(--dim); text-align: center;
-}
-.chat-input {
-  display: block; width: 100%;
-  font-family: 'Lora', serif; font-size: 15px;
-  background: transparent; border: none;
-  color: var(--text); padding: 20px 24px 12px;
-  outline: none; resize: none; line-height: 1.6;
-  min-height: 72px;
-}
-.chat-input::placeholder { color: var(--muted); font-style: italic; }
-.chat-bottom-row {
+[data-theme="dark"] .hero-demo { box-shadow: 0 8px 40px rgba(0,0,0,0.4); }
+.demo-top {
+  padding: 14px 24px 0;
   display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 16px 14px;
-  border-top: 1px solid var(--border);
 }
-.chat-country-pill {
-  display: flex; align-items: center; gap: 7px;
-  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .13em;
-  color: var(--muted); background: var(--bg-raised);
-  border: 1px solid var(--border); border-radius: 20px;
-  padding: 5px 12px; cursor: pointer; transition: all .2s;
-  appearance: none; -webkit-appearance: none; outline: none;
+.demo-label { font-family:'Cinzel',serif; font-size:8px; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; }
+.demo-country { font-family:'Cinzel',serif; font-size:8px; letter-spacing:.12em; color:var(--muted); background:var(--bg-raised); border:1px solid var(--border); border-radius:20px; padding:4px 10px; }
+.demo-query {
+  font-family: 'Lora', serif; font-size: 15px; font-style: italic;
+  color: var(--text); padding: 16px 24px 16px;
+  min-height: 56px; line-height: 1.6;
+  border-bottom: 1px solid var(--border);
 }
-.chat-country-pill:focus, .chat-country-pill:hover { border-color: var(--gold-brd); color: var(--gold); }
-.chat-send {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--gold); border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .2s, transform .15s; flex-shrink: 0;
+.demo-cursor { display:inline-block; width:2px; height:18px; background:var(--gold); margin-left:2px; vertical-align:text-bottom; animation:blink 1s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.demo-results { padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+.demo-result {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; border: 1px solid var(--border);
+  background: var(--bg-raised); border-radius: 12px;
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .4s ease, transform .4s ease;
 }
-.chat-send:hover { background: var(--gold-lt); transform: scale(1.08); }
-.chat-send svg { width: 16px; height: 16px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-/* Topic chips */
-.chat-chips {
-  display: flex; gap: 8px; flex-wrap: wrap;
-  margin-top: 16px; justify-content: center;
+.demo-result.show { opacity: 1; transform: translateY(0); }
+.demo-result-tag {
+  font-family:'Cinzel',serif; font-size:7px; letter-spacing:.15em; text-transform:uppercase;
+  color:#fff; padding:3px 8px; border-radius:6px; white-space:nowrap; flex-shrink:0; margin-top:2px;
 }
-.chat-chip {
-  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .1em;
-  color: var(--muted); background: none;
-  border: 1px solid var(--border); border-radius: 20px;
-  padding: 8px 16px; cursor: pointer;
-  transition: all .2s; white-space: nowrap;
+.tag-ustava { background:#7C6830; }
+.tag-civil { background:#5C7A3C; }
+.tag-juris { background:#4A6080; }
+.demo-result-body { flex:1; }
+.demo-result-art { font-family:'Cinzel',serif; font-size:10px; color:var(--gold); letter-spacing:.06em; margin-bottom:3px; font-weight:600; }
+.demo-result-text { font-size:12px; color:var(--soft); line-height:1.6; }
+.demo-result-score { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold); opacity:.6; flex-shrink:0; align-self:center; }
+.demo-cta-row { text-align:center; margin-top:16px; margin-bottom:-16px; }
+.demo-cta {
+  font-family:'Cinzel',serif; font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+  background:var(--gold); color:#fff; padding:13px 32px; border-radius:8px;
+  text-decoration:none; font-weight:700; transition:background .2s; display:inline-block;
 }
-.chat-chip:hover { color: var(--gold); border-color: var(--gold-brd); background: var(--gold-dim); }
+.demo-cta:hover { background:var(--gold-lt); }
+/* Fake cursor */
+.demo-cursor-arrow {
+  position:absolute; z-index:10; pointer-events:none;
+  width:20px; height:20px;
+  transition: left .6s cubic-bezier(.4,0,.2,1), top .6s cubic-bezier(.4,0,.2,1), opacity .25s;
+  opacity:0;
+}
+.demo-cursor-arrow svg { width:100%; height:100%; filter:drop-shadow(0 1px 3px rgba(0,0,0,.3)); }
+/* Analyze button in demo */
+.demo-analyze {
+  display:flex; align-items:center; justify-content:flex-end; padding:8px 16px 12px;
+}
+.demo-analyze-btn {
+  font-family:'Cinzel',serif; font-size:9px; letter-spacing:.12em; text-transform:uppercase;
+  background:var(--gold); color:#fff; border:none; border-radius:8px;
+  padding:8px 18px; cursor:default; transition:transform .15s, box-shadow .15s;
+}
+.demo-analyze-btn.pressed { transform:scale(.95); box-shadow:0 0 12px rgba(196,154,60,.4); }
 @keyframes up { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
 
 /* ── STRIP ── */
@@ -443,12 +450,125 @@ footer {
 }
 [data-glow]:hover::after{opacity:1}
 
-/* ── BENEFIT CARDS ── */
-.bens{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:64px max(24px, calc((100vw - 1080px)/2 + 48px))}
-.ben{text-align:center;padding:32px 24px}
-.ben-icon{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:300;color:var(--gold);opacity:.5;margin-bottom:14px}
-.ben-title{font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:.08em;margin-bottom:10px;color:var(--text)}
-.ben-desc{font-family:'Lora',serif;font-size:13px;color:var(--muted);line-height:1.7}
+/* ── FEATURE ROWS (Loom-style) ── */
+.feat-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+  padding: 100px max(24px, calc((100vw - 1100px)/2 + 48px));
+  border-bottom: 1px solid var(--rule);
+}
+.feat-row.reverse .feat-text { order: 2; }
+.feat-row.reverse .feat-visual { order: 1; }
+.feat-badge { font-family:'Cinzel',serif; font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:var(--gold); margin-bottom:16px; display:flex; align-items:center; gap:12px; }
+.feat-badge::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
+.feat-h { font-family:'Cinzel',serif; font-size:clamp(24px,3.5vw,38px); font-weight:700; line-height:1.15; margin-bottom:20px; }
+.feat-h em { font-family:'Lora',serif; font-style:italic; color:var(--gold); }
+.feat-desc { font-family:'Lora',serif; font-size:15px; line-height:1.85; color:var(--soft); margin-bottom:28px; }
+.feat-desc strong { color:var(--text); font-weight:600; }
+.feat-cta { font-family:'Cinzel',serif; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); text-decoration:none; display:inline-flex; align-items:center; gap:8px; transition:gap .2s; }
+.feat-cta:hover { gap:14px; }
+.feat-visual { border-radius:16px; overflow:hidden; border:1px solid var(--border); box-shadow:var(--sh-lg); }
+.feat-visual video, .feat-visual img { width:100%; display:block; }
+/* Feature mockup card */
+.feat-mock {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:16px;
+  padding:32px 28px; box-shadow:var(--sh-lg); min-height:280px;
+  display:flex; flex-direction:column; justify-content:center; gap:16px;
+}
+
+/* Magnus demo mockup */
+.magnus-mock {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:16px;
+  box-shadow:var(--sh-lg); overflow:hidden; position:relative; min-height:420px;
+}
+.mm-header { padding:12px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.mm-logo { font-family:'Cinzel',serif; font-size:9px; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; }
+.mm-pills { display:flex; gap:6px; }
+.mm-pill { font-family:'Cinzel',serif; font-size:8px; letter-spacing:.1em; padding:4px 10px; border-radius:14px; border:1px solid var(--border); color:var(--muted); transition:all .3s; }
+.mm-pill.active { background:var(--gold-dim); border-color:var(--gold); color:var(--gold); }
+.mm-input-area { padding:16px 20px; }
+.mm-input {
+  font-family:'Lora',serif; font-size:13px; color:var(--text); line-height:1.6;
+  min-height:48px;
+}
+.mm-input .demo-cursor { display:inline-block; width:2px; height:16px; background:var(--gold); margin-left:1px; vertical-align:text-bottom; animation:blink 1s step-end infinite; }
+.mm-actions { padding:10px 20px; border-bottom:1px solid var(--border); display:flex; justify-content:flex-end; }
+.mm-btn { font-family:'Cinzel',serif; font-size:8px; letter-spacing:.12em; text-transform:uppercase; background:var(--gold); color:#fff; border:none; border-radius:8px; padding:7px 16px; transition:transform .15s; }
+.mm-btn.pressed { transform:scale(.93); }
+.mm-results { padding:12px 16px; display:flex; flex-direction:column; gap:8px; }
+.mm-result {
+  display:flex; align-items:flex-start; gap:10px; padding:10px 12px;
+  border:1px solid var(--border); border-radius:10px; background:var(--bg-raised);
+  opacity:0; transform:translateY(8px); transition:all .35s ease;
+}
+.mm-result.show { opacity:1; transform:translateY(0); }
+.mm-flag { font-size:16px; flex-shrink:0; margin-top:1px; }
+.mm-rbody { flex:1; }
+.mm-rart { font-family:'Cinzel',serif; font-size:9px; color:var(--gold); letter-spacing:.05em; font-weight:600; margin-bottom:2px; }
+.mm-rtxt { font-size:11px; color:var(--soft); line-height:1.5; }
+.mm-rscore { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold); opacity:.5; flex-shrink:0; align-self:center; }
+/* zoom effect */
+.magnus-mock .mm-zoom { transition:transform .6s cubic-bezier(.4,0,.2,1), opacity .3s; transform-origin:center center; }
+
+/* Scrolling law list */
+.law-scroll-wrap {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:16px;
+  box-shadow:var(--sh-lg); height:380px; overflow:hidden; position:relative;
+}
+.law-scroll-wrap::before, .law-scroll-wrap::after {
+  content:''; position:absolute; left:0; right:0; height:80px; z-index:2; pointer-events:none;
+}
+.law-scroll-wrap::before { top:0; background:linear-gradient(to bottom, var(--bg-card), transparent); }
+.law-scroll-wrap::after { bottom:0; background:linear-gradient(to top, var(--bg-card), transparent); }
+.law-scroll-inner {
+  display:flex; flex-direction:column; animation:scrollLaws 40s linear infinite;
+}
+@keyframes scrollLaws { from{transform:translateY(0)} to{transform:translateY(-50%)} }
+.law-scroll-item {
+  padding:10px 24px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  flex-shrink:0;
+}
+.law-scroll-name {
+  font-family:'Lora',serif; font-size:13px; color:var(--text);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.law-scroll-badge {
+  font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold); opacity:.6; flex-shrink:0;
+}
+
+/* ── FEATURES CHECKLIST ── */
+.features-section {
+  padding: 72px max(24px, calc((100vw - 1080px)/2 + 48px));
+  border-bottom: 1px solid var(--rule);
+}
+.features-header {
+  text-align: center; margin-bottom: 48px;
+}
+.features-eyebrow {
+  font-family:'Cinzel',serif; font-size:9px; letter-spacing:.4em;
+  color:var(--gold); text-transform:uppercase; margin-bottom:16px;
+}
+.features-h {
+  font-family:'Cinzel',serif; font-size:clamp(22px,3vw,32px); font-weight:700; line-height:1.2;
+}
+.features-h em { font-family:'Lora',serif; font-style:italic; color:var(--gold); }
+.features-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  max-width: 900px; margin: 0 auto;
+}
+.feat-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 18px 24px;
+  font-family: 'Lora', serif; font-size: 14px; line-height: 1.6;
+  color: var(--soft); border-bottom: 1px solid var(--rule);
+}
+.feat-item:nth-last-child(-n+2) { border-bottom: none; }
+.feat-check {
+  flex-shrink: 0; width: 20px; height: 20px; margin-top: 2px;
+  border-radius: 50%; background: var(--gold-dim); border: 1px solid var(--gold-brd);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold); font-size: 11px; font-weight: 700;
+}
 
 /* ── CTA BLOCK ── */
 .cta-block{text-align:center;padding:48px 24px;border-top:1px solid var(--rule)}
@@ -464,6 +584,9 @@ footer {
   .hero { padding: 72px 24px 56px; min-height: auto; }
   .how, .manifesto, .corpus, .products, .proof { padding: 80px 24px; }
   .how-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .feat-row { grid-template-columns: 1fr; gap: 32px; padding: 64px 24px; }
+  .feat-row.reverse .feat-text, .feat-row.reverse .feat-visual { order: unset; }
   .products-grid { grid-template-columns: 1fr 1fr; }
   .bens { grid-template-columns: 1fr; padding: 48px 24px; }
   footer { padding: 36px 24px; }
@@ -525,15 +648,8 @@ footer {
 
 <div class="page">
 
-  <!-- LAUNCH BANNER -->
-  <div class="launch-banner">
-    ✦ Zkušební období · Bezplatný přístup do 7. května · <a href="/cuenta.html?lang=cs">Registrovat se přes Google →</a>
-  </div>
-
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-rule" style="left:33%"></div>
-    <div class="hero-rule" style="left:66%"></div>
     <div class="hero-eyebrow">Mozek právní praxe</div>
     <h1 class="hero-h">LEGAL <span>ATLAS</span></h1>
     <p class="hero-tagline">Najděte přesný § <em>za pár minut</em></p>
@@ -541,26 +657,48 @@ footer {
       <span>97 zákonů</span> · Kompletní a aktuální sbírka českých zákonů · <span>Nulové halucinace AI</span> · Citace konkrétního paragrafu u každé odpovědi
     </div>
 
-    <!-- CHAT BOX -->
-    <div class="hero-chat-wrap">
-      <div class="hero-chat">
-        <div class="chat-top-label">Ověřená odpověď · Přesný § · Žádné vymýšlení</div>
-        <textarea class="chat-input" id="chat-q" rows="3" placeholder="Položte svůj právní dotaz…"></textarea>
-        <div class="chat-bottom-row">
-          <select class="chat-country-pill" id="f-pais">
-            <option value="">🌐 Vyberte zemi…</option>
-          </select>
-          <button class="chat-send" id="chat-go" title="Zahájit analýzu">
-            <svg viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
-          </button>
+    <!-- DEMO ANIMATION -->
+    <div class="hero-demo-wrap">
+      <div class="hero-demo">
+        <div class="demo-top">
+          <span class="demo-label">Legal Atlas · Analýza</span>
+          <span class="demo-country">🇨🇿 Česko</span>
+        </div>
+        <div class="demo-query" id="demo-query"><span class="demo-cursor"></span></div>
+        <div class="demo-analyze"><button class="demo-analyze-btn" id="demo-btn">Analyzovat →</button></div>
+        <div class="demo-results" id="demo-results">
+          <div class="demo-result" id="dr1">
+            <span class="demo-result-tag tag-ustava">Ústava</span>
+            <div class="demo-result-body">
+              <div class="demo-result-art">čl. 11 · Listina základních práv a svobod</div>
+              <div class="demo-result-text">Každý má právo vlastnit majetek. Vlastnické právo všech vlastníků má stejný zákonný obsah a ochranu.</div>
+            </div>
+            <span class="demo-result-score">94%</span>
+          </div>
+          <div class="demo-result" id="dr2">
+            <span class="demo-result-tag tag-civil">Občanský zákoník</span>
+            <div class="demo-result-body">
+              <div class="demo-result-art">§ 2079 · Občanský zákoník</div>
+              <div class="demo-result-text">Kupní smlouvou se prodávající zavazuje, že kupujícímu odevzdá věc a umožní mu nabýt vlastnické právo k ní.</div>
+            </div>
+            <span class="demo-result-score">91%</span>
+          </div>
+          <div class="demo-result" id="dr3">
+            <span class="demo-result-tag tag-juris">Judikatura</span>
+            <div class="demo-result-body">
+              <div class="demo-result-art">I. ÚS 3512/11 · Ústavní soud</div>
+              <div class="demo-result-text">Princip ochrany dobré víry nabyvatele nemovitosti zapsaného v katastru nemovitostí.</div>
+            </div>
+            <span class="demo-result-score">87%</span>
+          </div>
+        </div>
+        <!-- Fake cursor -->
+        <div class="demo-cursor-arrow" id="demo-arrow">
+          <svg viewBox="0 0 24 24" fill="var(--text)" stroke="none"><path d="M5.5 3.2l13 10.3-5.7.8-3.2 5.2-1.5-6.3L5.5 3.2z"/></svg>
         </div>
       </div>
-      <div class="chat-chips">
-        <button class="chat-chip" onclick="fillChip('Propuštění ze zaměstnání')">Pracovní právo</button>
-        <button class="chat-chip" onclick="fillChip('Náhrada škody, odpovědnost')">Občanské právo</button>
-        <button class="chat-chip" onclick="fillChip('Trestní oznámení, obhajoba')">Trestní právo</button>
-        <button class="chat-chip" onclick="fillChip('Smlouva, obchodní spor')">Obchodní právo</button>
-        <button class="chat-chip" onclick="fillChip('Insolvence, oddlužení')">Insolvence</button>
+      <div class="demo-cta-row">
+        <a href="/cz/magnus.html" class="demo-cta">Vyzkoušet zdarma →</a>
       </div>
     </div>
   </section>
@@ -587,176 +725,118 @@ footer {
     </div>
   </div>
 
-  <!-- BENEFITS -->
-  <div class="bens reveal">
-    <div class="ben">
-      <div class="ben-icon">01</div>
-      <div class="ben-title">Ověřený text zákona</div>
-      <p class="ben-desc">Plné znění článku přímo ze sbírky zákonů. Ne shrnutí, ne parafráze — skutečný text.</p>
+  <!-- FEATURES CHECKLIST -->
+  <section class="features-section reveal">
+    <div class="features-header">
+      <div class="features-eyebrow">Co Legal Atlas umí</div>
+      <h2 class="features-h">Vše, co potřebujete pro <em>právní výzkum.</em></h2>
     </div>
-    <div class="ben">
-      <div class="ben-icon">02</div>
-      <div class="ben-title">Citace u každé odpovědi</div>
-      <p class="ben-desc">Číslo paragrafu, název zákona, plné znění. Každé tvrzení ověřitelné u zdroje.</p>
+    <div class="features-grid">
+      <div class="feat-item"><span class="feat-check">✓</span>Prohledá 97 zákonů v reálném čase — za sekundy, ne hodiny</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Cituje přesný § s plným zněním u každé odpovědi</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Porovná až 3 právní řády současně v jednom dotazu</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Najde nejrelevantnější soudní rozhodnutí k vašemu případu</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Zeptejte se na svůj případ — AI konzultuje celou legislativu</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Ptejte se v češtině, odpovědi i z německého či španělského práva</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Přístup k 1 465 rozhodnutím Ústavního a Nejvyššího soudu</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Nulové halucinace — každá odpověď je ověřitelná u zdroje</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Procházejte zákon hierarchicky — část, hlava, díl, paragraf</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Generování procesních diagramů z právní struktury</div>
     </div>
-    <div class="ben">
-      <div class="ben-icon">03</div>
-      <div class="ben-title">7 jurisdikcí současně</div>
-      <p class="ben-desc">České, německé, španělské, francouzské, mexické a švýcarské právo — v jednom dotazu.</p>
+  </section>
+
+  <!-- ═══ FEATURE 1 — MAGNUS ═══ -->
+  <div class="feat-row reveal">
+    <div class="feat-text">
+      <div class="feat-badge">Magnus</div>
+      <h2 class="feat-h">Popište případ.<br>Magnus najde <em>právo.</em></h2>
+      <p class="feat-desc">Jediný AI systém, který prohledá <strong>více právních systémů současně</strong>. Popište případ v libovolném jazyce, vyberte až 3 jurisdikce — Magnus dohledá ověřené články a sestaví srovnávací analýzu. Včetně kolize právních řádů.</p>
+      <a href="/cz/magnus.html" class="feat-cta">Otevřít Magnus →</a>
+    </div>
+    <div class="magnus-mock" id="magnus-mock" style="position:relative">
+      <div class="mm-header">
+        <span class="mm-logo">Magnus</span>
+        <div class="mm-pills">
+          <span class="mm-pill" id="mm-cz">🇨🇿 Česko</span>
+          <span class="mm-pill" id="mm-es">🇪🇸 España</span>
+        </div>
+      </div>
+      <div class="mm-input-area mm-zoom" id="mm-input-wrap">
+        <div class="mm-input" id="mm-input">&nbsp;</div>
+      </div>
+      <div class="mm-actions">
+        <button class="mm-btn" id="mm-btn">Porovnat →</button>
+      </div>
+      <div class="mm-results" id="mm-results">
+        <div class="mm-result" id="mr0">
+          <span class="mm-flag">🇨🇿</span>
+          <div class="mm-rbody">
+            <div class="mm-rart">§ 708 · Občanský zákoník</div>
+            <div class="mm-rtxt">To, co manželům náleží, má majetkovou hodnotu a není vyloučeno z právních poměrů, je součástí společného jmění manželů.</div>
+          </div>
+          <span class="mm-rscore">94%</span>
+        </div>
+        <div class="mm-result" id="mr1">
+          <span class="mm-flag">🇨🇿</span>
+          <div class="mm-rbody">
+            <div class="mm-rart">§ 49 · Zákon o mezinárodním právu soukromém</div>
+            <div class="mm-rtxt">Osobní poměry manželů se řídí právním řádem státu, jehož jsou oba občany. Jsou-li občany různých států, řídí se právním řádem státu, v němž mají oba obvyklý pobyt.</div>
+          </div>
+          <span class="mm-rscore">91%</span>
+        </div>
+        <div class="mm-result" id="mr2">
+          <span class="mm-flag">🇪🇸</span>
+          <div class="mm-rbody">
+            <div class="mm-rart">Art. 9 · Código Civil</div>
+            <div class="mm-rtxt">La ley personal correspondiente a las personas físicas es la determinada por su nacionalidad. Dicha ley regirá la capacidad, el estado civil y los derechos y deberes de familia.</div>
+          </div>
+          <span class="mm-rscore">88%</span>
+        </div>
+        <div class="mm-result" id="mr3">
+          <span class="mm-flag">🇪🇸</span>
+          <div class="mm-rbody">
+            <div class="mm-rart">Art. 1316 · Código Civil</div>
+            <div class="mm-rtxt">A falta de capitulaciones o cuando éstas sean ineficaces, el régimen será el de la sociedad de gananciales.</div>
+          </div>
+          <span class="mm-rscore">85%</span>
+        </div>
+      </div>
+      <!-- Fake cursor for Magnus -->
+      <div class="demo-cursor-arrow" id="mm-arrow">
+        <svg viewBox="0 0 24 24" fill="var(--text)" stroke="none"><path d="M5.5 3.2l13 10.3-5.7.8-3.2 5.2-1.5-6.3L5.5 3.2z"/></svg>
+      </div>
     </div>
   </div>
 
-  <!-- HOW IT WORKS -->
-  <section class="how reveal">
-    <div class="section-eyebrow">Jak to funguje</div>
-    <div class="how-grid">
-      <div class="how-card">
-        <div class="how-num">01</div>
-        <div class="how-title">Zadání právního dotazu</div>
-        <p class="how-desc">Popište situaci vlastními slovy. AI rozumí významu, ne jen klíčovým slovům.</p>
-      </div>
-      <div class="how-card">
-        <div class="how-num">02</div>
-        <div class="how-title">Analýza sbírky zákonů</div>
-        <p class="how-desc">97 zákonů prohledáno v reálném čase. Čistá právní realita bez šumu.</p>
-      </div>
-      <div class="how-card">
-        <div class="how-num">03</div>
-        <div class="how-title">Ověřený výstup</div>
-        <p class="how-desc">Konkrétní §, název zákona, plné znění. Ověřitelné u zdroje.</p>
+  <!-- ═══ FEATURE 2 — KNIHOVNA ═══ -->
+  <div class="feat-row reverse reveal">
+    <div class="feat-text">
+      <div class="feat-badge">Knihovna</div>
+      <h2 class="feat-h">Celý zákon.<br><em>Článek po článku.</em></h2>
+      <p class="feat-desc">97 zákonů v plném znění. Procházejte hierarchicky — část, hlava, díl, paragraf. Na každém článku <strong>chat s AI</strong>, který rozumí kontextu celého zákona. Generování procesních diagramů jedním kliknutím.</p>
+      <a href="/cz/abogado.html" class="feat-cta">Otevřít Knihovnu →</a>
+    </div>
+    <div class="law-scroll-wrap">
+      <div class="law-scroll-inner" id="law-scroll">
+        <!-- duplicated for infinite loop -->
       </div>
     </div>
-  </section>
-
-  <div class="cta-block">
-    <a href="/magnus.html?lang=cs" class="cta-btn">Vyzkoušet zdarma →</a>
   </div>
 
-  <!-- GIF DEMO -->
-  <section class="gif-demo">
-    <video class="gif-demo-img" autoplay loop muted playsinline>
-      <source src="/cz/scroll_demo.mp4" type="video/mp4">
-    </video>
-  </section>
-
-  <!-- MANIFESTO -->
-  <section class="manifesto reveal">
-    <div>
-      <div class="man-label">Proč na tom záleží</div>
-      <p class="man-pullquote">
-        V právu rozhoduje detail. Jeden přehlédnutý paragraf dělí úspěch od <em>prohry.</em>
-      </p>
+  <!-- ═══ FEATURE 3 — ATLAS ═══ -->
+  <div class="feat-row reveal">
+    <div class="feat-text">
+      <div class="feat-badge">Atlas · Beta</div>
+      <h2 class="feat-h">Teze vs. <em>antiteze.</em><br>Vizuálně.</h2>
+      <p class="feat-desc">Každý § který váš případ podporuje — a každý, který mu odporuje. Atlas sestaví <strong>dialektickou mapu</strong> celého případu a vizualizuje ji jako 3D sluneční soustavu právní gravitace. Vidíte slabiny dříve než oponent.</p>
+      <a href="/cz/atlas.html" class="feat-cta">Prozkoumat Atlas →</a>
     </div>
-    <div class="man-body">
-      <p class="man-p">Zatímco ChatGPT jen generuje text, náš AI model <strong>analyzuje právní realitu</strong> — napříč jurisdikcemi současně.</p>
-      <p class="man-p">Výpověď španělského architekta pracujícího v Česku. Naše AI v řádu vteřin propojí český zákoník práce, španělské předpisy i evropská nařízení Řím I a Brusel I bis. Současně a bezchybně.</p>
-      <p class="man-p"><strong>Náš AI je jedinečný systém, který dokáže simultánně analyzovat více právních systémů v reálném čase.</strong></p>
+    <div class="feat-mock" style="text-align:center;justify-content:center;min-height:320px;background:var(--bg-raised)">
+      <div style="font-size:48px;margin-bottom:16px;opacity:.4">⚖</div>
+      <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:8px">Dialektický právní vesmír</div>
+      <div style="font-size:13px;color:var(--muted);max-width:280px;margin:0 auto;line-height:1.6">3D vizualizace právních argumentů pro i proti vašemu případu</div>
     </div>
-  </section>
-
-  <!-- CORPUS -->
-  <section class="corpus reveal">
-    <div class="corpus-left">
-      <div class="corpus-label">Co jsme zmapovali</div>
-      <h2 class="corpus-h">97 českých zákonů.<br><em>19 772 §. Ověřeno.</em></h2>
-      <p class="corpus-desc">Žádné shrnutí. Žádné výtahy. Celý legislativní text — § po §, zákon po zákoně — strukturovaný pro vyhledávání v reálném čase. Každá odpověď je sledovatelná k přesnému ustanovení platného práva.</p>
-    </div>
-    <div class="corpus-right">
-      <div class="corpus-row">
-        <div class="c-flag">⚖</div>
-        <div class="c-info">
-          <div class="c-region">Soukromé právo</div>
-          <div class="c-detail">Občanský zákoník · Zákoník práce · Zákon o obchodních korporacích</div>
-        </div>
-        <div class="c-num">4 633</div>
-      </div>
-      <div class="corpus-row">
-        <div class="c-flag">🏛</div>
-        <div class="c-info">
-          <div class="c-region">Procesní právo</div>
-          <div class="c-detail">Občanský soudní řád · Trestní řád · Správní řád · Exekuční řád</div>
-        </div>
-        <div class="c-num">1 656</div>
-      </div>
-      <div class="corpus-row">
-        <div class="c-flag">🔒</div>
-        <div class="c-info">
-          <div class="c-region">Trestní právo</div>
-          <div class="c-detail">Trestní zákoník · Trestní řád · Zákon o přestupcích</div>
-        </div>
-        <div class="c-num">1 218</div>
-      </div>
-      <div class="corpus-row">
-        <div class="c-flag">📜</div>
-        <div class="c-info">
-          <div class="c-region">Ústavní právo</div>
-          <div class="c-detail">Ústava ČR · Listina základních práv a svobod · 588+ nálezů ÚS</div>
-        </div>
-        <div class="c-num">159 §</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PRODUCTS -->
-  <section class="products reveal">
-    <div class="products-label">Nástroje</div>
-    <h2 class="products-h">Vyberte svůj <em>nástroj.</em></h2>
-    <div class="products-grid">
-
-      <!-- Magnus -->
-      <div class="tool-card magnus-card" onclick="location.href='/cz/magnus.html'">
-        <div class="tool-badge">Vlajková loď <span class="badge-pro">PRO</span></div>
-        <div class="tool-name">Magnus</div>
-        <p class="tool-desc">Jediný AI systém na světě, který provádí paralelní RAG přes více právních systémů současně. Popište případ v libovolném jazyce. Vyberte až tři jurisdikce. Magnus dohledá ověřené právo a sestaví mezijurisdiční analýzu — včetně precedentů Ústavního soudu.</p>
-        <div class="tool-feats">
-          <div class="tool-feat">Až 3 jurisdikce v jednom dotazu</div>
-          <div class="tool-feat">588+ rozhodnutí Ústavního soudu ČR</div>
-          <div class="tool-feat">Analýza kolize právních řádů — Řím I, Brusel I bis</div>
-          <div class="tool-feat">Odpovídá v jazyce vašeho dotazu</div>
-        </div>
-        <button class="tool-cta">Otevřít Magnus →</button>
-      </div>
-
-      <!-- Legal Query -->
-      <div class="tool-card" onclick="location.href='/ciudadano.html?lang=cs'">
-        <div class="tool-badge">Zdarma</div>
-        <div class="tool-name">Právní
-dotaz</div>
-        <p class="tool-desc">Pro občany a neprávníky. Vstup v přirozeném jazyce. Přesný citovaný článek. Bez právního vzdělání.</p>
-        <div class="tool-feats">
-          <div class="tool-feat">Přirozený jazyk</div>
-          <div class="tool-feat">Jedna jurisdikce</div>
-          <div class="tool-feat">Ověřená citace</div>
-        </div>
-        <button class="tool-cta">Vyzkoušet zdarma →</button>
-      </div>
-
-      <!-- Attorney Pro -->
-      <div class="tool-card" onclick="location.href='/abogado.html?lang=cs'">
-        <div class="tool-badge">Knihovna <span class="badge-pro">PRO</span></div>
-        <div class="tool-name">Attorney
-Pro</div>
-        <p class="tool-desc">Prohlížeč zákonů s kontextovým AI chatem. Tři režimy: článek, zákon, proces.</p>
-        <div class="tool-feats">
-          <div class="tool-feat">Chat na úrovni článku</div>
-          <div class="tool-feat">Kontext celého zákona</div>
-          <div class="tool-feat">Analýza procesu</div>
-        </div>
-        <button class="tool-cta">Otevřít →</button>
-      </div>
-
-    </div>
-
-    <!-- Atlas Banner -->
-    <div class="atlas-banner-card" onclick="location.href='/atlas.html?lang=cs'">
-      <div class="atlas-banner-left">
-        <div class="atlas-banner-label">Připravujeme · Beta</div>
-        <div class="atlas-banner-name">Atlas <em>— Dialektický právní vesmír</em></div>
-        <div class="atlas-banner-desc">Teze vs. antiteze. Každý zákon, který váš případ podporuje — a každý, který mu odporuje. Vizualizováno jako 3D sluneční soustava právní gravitace.</div>
-      </div>
-      <a href="/atlas.html?lang=cs" class="atlas-banner-cta">Prozkoumat Atlas →</a>
-    </div>
-  </section>
+  </div>
 
   <!-- PROOF -->
   <section class="proof reveal">
@@ -868,58 +948,142 @@ function closeSidebar() {
 }
 document.getElementById('burger').addEventListener('click', openSidebar)
 
-// CHAT — load países and preselect CZ
-const fPais = document.getElementById('f-pais')
-fetch('/api/paises').then(r=>r.json()).then(paises=>{
-  paises.forEach(p=>{
-    const o = document.createElement('option')
-    o.value = p.code || p.id || p
-    o.textContent = p.name || p.nombre || p
-    fPais.appendChild(o)
-  })
-  fPais.value = 'CZ'
-  fPais.dispatchEvent(new Event('change'))
-}).catch(()=>{
-  // fallback: add common countries
-  const defaults = [
-    {value:'CZ',label:'Česká republika'},
-    {value:'ES',label:'Španělsko'},
-    {value:'MX',label:'Mexiko'},
-    {value:'DE',label:'Německo'},
-    {value:'FR',label:'Francie'},
-    {value:'CH',label:'Švýcarsko'}
+// DEMO ANIMATION — 3 rotating queries
+;(function runDemo() {
+  const demos = [
+    {
+      query: 'Soused prodal nemovitost, ale já mám předkupní právo. Jaká jsou moje práva?',
+      results: [
+        { tag:'Listina', cls:'tag-ustava', art:'Čl. 11 · Listina základních práv a svobod', text:'Každý má právo vlastnit majetek. Vlastnické právo všech vlastníků má stejný zákonný obsah a ochranu. Dědění se zaručuje.', score:'94%' },
+        { tag:'Občanský zákoník', cls:'tag-civil', art:'§ 2140 · Občanský zákoník', text:'Ujedná-li si předkupník k věci předkupní právo, vzniká dlužníku povinnost nabídnout věc předkupníkovi ke koupi, pokud by ji chtěl prodat třetí osobě (koupěchtivému).', score:'91%' },
+        { tag:'Občanský zákoník', cls:'tag-civil', art:'§ 2144 · Občanský zákoník', text:'Je-li předkupní právo zřízeno jako právo věcné, opravňuje předkupníka domáhat se vůči nástupci druhé strany, jenž věc nabyl koupí, aby mu věc za příslušnou úplatu převedl.', score:'87%' }
+      ]
+    },
+    {
+      query: 'Zaměstnavatel mi nevyplatil mzdu za poslední 2 měsíce. Co můžu dělat?',
+      results: [
+        { tag:'Zákoník práce', cls:'tag-civil', art:'§ 141 · Zákoník práce', text:'Mzda nebo plat jsou splatné po vykonání práce, a to nejpozději v kalendářním měsíci následujícím po měsíci, ve kterém vzniklo zaměstnanci právo na mzdu nebo plat.', score:'96%' },
+        { tag:'Zákoník práce', cls:'tag-civil', art:'§ 56 · Zákoník práce', text:'Zaměstnanec může pracovní poměr okamžitě zrušit jen, jestliže mu zaměstnavatel nevyplatil mzdu nebo plat nebo náhradu mzdy nebo platu anebo jakoukoli jejich část do 15 dnů po uplynutí období splatnosti.', score:'93%' },
+        { tag:'Zákoník práce', cls:'tag-civil', art:'§ 142 · Zákoník práce', text:'Mzdu nebo plat je zaměstnavatel povinen zaměstnanci vyplácet v zákonných penězích. Mzda nebo plat se zaokrouhlují na celé koruny směrem nahoru.', score:'85%' }
+      ]
+    },
+    {
+      query: 'Pronajímatel mi chce zvýšit nájem o 40 %. Je to legální?',
+      results: [
+        { tag:'Občanský zákoník', cls:'tag-civil', art:'§ 2249 · Občanský zákoník', text:'Pronajímatel může navrhnout nájemci zvýšení nájemného až do výše srovnatelného nájemného obvyklého v daném místě, pokud navržené zvýšení spolu s tím, k němuž již došlo v posledních třech letech, nepřesáhne dvacet procent.', score:'95%' },
+        { tag:'Občanský zákoník', cls:'tag-civil', art:'§ 2250 · Občanský zákoník', text:'Provede-li pronajímatel stavební úpravy, které trvale zlepšují užitnou hodnotu pronajatého bytu, může se s nájemci dohodnout o zvýšení nájemného, nejvýše však o deset procent z účelně vynaložených nákladů.', score:'88%' },
+        { tag:'Občanský zákoník', cls:'tag-civil', art:'§ 2248 · Občanský zákoník', text:'Strany si mohou ujednat každoroční zvyšování nájemného.', score:'82%' }
+      ]
+    }
   ]
-  defaults.forEach(d=>{
-    const o = document.createElement('option')
-    o.value = d.value
-    o.textContent = d.label
-    fPais.appendChild(o)
-  })
-  fPais.value = 'CZ'
-  fPais.dispatchEvent(new Event('change'))
-})
 
-// CHIP fill
-function fillChip(texto) {
-  const q = document.getElementById('chat-q')
-  q.value = texto
-  q.focus()
-}
+  const queryEl = document.getElementById('demo-query')
+  const resultsEl = document.getElementById('demo-results')
+  let demoIdx = 0
 
-// CHAT submit
-document.getElementById('chat-go').addEventListener('click', ()=>{
-  const q = document.getElementById('chat-q').value.trim()
-  const pais = fPais.value
-  if(!q || !pais) return
-  const params = new URLSearchParams({q, pais, lang: 'cs'})
-  location.href = '/ciudadano.html?' + params.toString()
-})
-document.getElementById('chat-q').addEventListener('keydown', e=>{
-  if(e.key==='Enter' && !e.shiftKey) {
-    e.preventDefault()
-    document.getElementById('chat-go').click()
+  const demoBox = document.querySelector('.hero-demo')
+  const arrow = document.getElementById('demo-arrow')
+  const btn = document.getElementById('demo-btn')
+
+  function wait(ms) { return new Promise(r => setTimeout(r, ms)) }
+
+  function moveArrow(left, top) {
+    arrow.style.left = left + 'px'
+    arrow.style.top = top + 'px'
   }
-})
+
+  async function playDemo(skipFade) {
+    const demo = demos[demoIdx % demos.length]
+    demoIdx++
+
+    // Fade out if not first run
+    if (!skipFade) {
+      demoBox.style.transition = 'opacity .5s ease'
+      demoBox.style.opacity = '0'
+      await wait(500)
+    }
+
+    // Reset
+    resultsEl.innerHTML = demo.results.map((r, i) =>
+      `<div class="demo-result" id="dr${i}">
+        <span class="demo-result-tag ${r.cls}">${r.tag}</span>
+        <div class="demo-result-body">
+          <div class="demo-result-art">${r.art}</div>
+          <div class="demo-result-text">${r.text}</div>
+        </div>
+        <span class="demo-result-score">${r.score}</span>
+      </div>`
+    ).join('')
+
+    queryEl.innerHTML = '&nbsp;'
+    btn.classList.remove('pressed')
+    arrow.style.opacity = '0'
+    moveArrow(40, 60)
+    demoBox.style.opacity = '1'
+
+    await wait(400)
+
+    // 1. Arrow appears and moves to text area
+    arrow.style.opacity = '1'
+    await wait(200)
+    moveArrow(120, 75)
+    await wait(700)
+
+    // 2. Arrow fades, text cursor appears
+    arrow.style.opacity = '0'
+    await wait(200)
+    queryEl.innerHTML = '<span class="demo-cursor"></span>'
+
+    // 3. Type the query
+    await wait(300)
+    let ci = 0
+    await new Promise(resolve => {
+      function typeChar() {
+        if (ci < demo.query.length) {
+          queryEl.innerHTML = demo.query.slice(0, ci + 1) + '<span class="demo-cursor"></span>'
+          ci++
+          setTimeout(typeChar, 18 + Math.random() * 12)
+        } else {
+          queryEl.innerHTML = demo.query
+          resolve()
+        }
+      }
+      typeChar()
+    })
+
+    // 4. Pause, then arrow reappears and moves to button
+    await wait(400)
+    const btnRect = btn.getBoundingClientRect()
+    const demoRect = demoBox.getBoundingClientRect()
+    const btnX = btnRect.left - demoRect.left + btnRect.width / 2 - 10
+    const btnY = btnRect.top - demoRect.top + btnRect.height / 2 - 5
+    moveArrow(btnX - 60, btnY - 20)
+    arrow.style.opacity = '1'
+    await wait(200)
+    moveArrow(btnX, btnY)
+    await wait(700)
+
+    // 5. Click the button
+    btn.classList.add('pressed')
+    await wait(150)
+    btn.classList.remove('pressed')
+    arrow.style.opacity = '0'
+
+    // 6. Results appear one by one
+    await wait(300)
+    for (let idx = 0; idx < demo.results.length; idx++) {
+      const el = document.getElementById('dr' + idx)
+      if (el) el.classList.add('show')
+      await wait(300)
+    }
+  }
+
+  // First play
+  setTimeout(() => playDemo(true), 2000)
+
+  // Loop
+  setInterval(() => playDemo(false), 12000)
+})()
 </script>
 <script>
 // LETTER REVEAL — hero title
@@ -933,6 +1097,178 @@ document.getElementById('chat-q').addEventListener('keydown', e=>{
     if (char === ' ') return ' '
     return `<span class="letter" style="animation-delay:${(i++) * 30}ms">${char}</span>`
   })
+})()
+
+// MAGNUS DEMO ANIMATION
+;(function magnusDemo(){
+  const mock = document.getElementById('magnus-mock')
+  const input = document.getElementById('mm-input')
+  const inputWrap = document.getElementById('mm-input-wrap')
+  const btn = document.getElementById('mm-btn')
+  const czPill = document.getElementById('mm-cz')
+  const esPill = document.getElementById('mm-es')
+  const arrow = document.getElementById('mm-arrow')
+  if (!mock) return
+
+  const query = 'Český manžel a česká manželka vlastní nemovitost ve Španělsku. Rozvádí se v Praze. Jaké právo se použije na majetek?'
+
+  function wait(ms) { return new Promise(r => setTimeout(r, ms)) }
+  function moveArr(l, t) { arrow.style.left = l + 'px'; arrow.style.top = t + 'px'; }
+
+  async function play() {
+    // Reset
+    input.innerHTML = '&nbsp;'
+    czPill.classList.remove('active')
+    esPill.classList.remove('active')
+    btn.classList.remove('pressed')
+    inputWrap.style.transform = ''
+    arrow.style.opacity = '0'
+    moveArr(30, 80)
+    for (let i = 0; i < 4; i++) {
+      const el = document.getElementById('mr' + i)
+      if (el) el.classList.remove('show')
+    }
+
+    await wait(600)
+
+    // 1. Cursor appears, moves to input
+    arrow.style.opacity = '1'
+    await wait(200)
+    moveArr(100, 68)
+    await wait(700)
+
+    // 2. Cursor disappears, text cursor appears, zoom in
+    arrow.style.opacity = '0'
+    inputWrap.style.transform = 'scale(1.03)'
+    await wait(200)
+    input.innerHTML = '<span class="demo-cursor"></span>'
+    await wait(200)
+
+    // 3. Type query
+    let ci = 0
+    await new Promise(resolve => {
+      function t() {
+        if (ci < query.length) {
+          input.innerHTML = query.slice(0, ci + 1) + '<span class="demo-cursor"></span>'
+          ci++
+          setTimeout(t, 15 + Math.random() * 10)
+        } else {
+          input.innerHTML = query
+          resolve()
+        }
+      }
+      t()
+    })
+
+    // 4. Zoom out, cursor reappears, moves to CZ pill
+    await wait(300)
+    inputWrap.style.transform = ''
+    const czRect = czPill.getBoundingClientRect()
+    const mockRect = mock.getBoundingClientRect()
+    moveArr(czRect.left - mockRect.left + 20, czRect.top - mockRect.top + 8)
+    arrow.style.opacity = '1'
+    await wait(600)
+
+    // 5. Click CZ
+    czPill.classList.add('active')
+    await wait(300)
+
+    // 6. Move to ES pill
+    const esRect = esPill.getBoundingClientRect()
+    moveArr(esRect.left - mockRect.left + 20, esRect.top - mockRect.top + 8)
+    await wait(500)
+    esPill.classList.add('active')
+    await wait(400)
+
+    // 7. Move to Porovnat button
+    const btnRect = btn.getBoundingClientRect()
+    moveArr(btnRect.left - mockRect.left + btnRect.width / 2, btnRect.top - mockRect.top + btnRect.height / 2)
+    await wait(600)
+
+    // 8. Click button
+    btn.classList.add('pressed')
+    await wait(150)
+    btn.classList.remove('pressed')
+    arrow.style.opacity = '0'
+
+    // 9. Results appear
+    await wait(400)
+    for (let i = 0; i < 4; i++) {
+      const el = document.getElementById('mr' + i)
+      if (el) el.classList.add('show')
+      await wait(350)
+    }
+
+    // 10. Hold
+    await wait(4000)
+
+    // 11. Fade
+    mock.style.transition = 'opacity .5s'
+    mock.style.opacity = '0'
+    await wait(500)
+    mock.style.opacity = '1'
+  }
+
+  // Start when visible
+  const obs = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      obs.disconnect()
+      play()
+      setInterval(play, 16000)
+    }
+  }, { threshold: 0.3 })
+  obs.observe(mock)
+})()
+
+// LAW SCROLL LIST
+;(function(){
+  const laws = [
+    'Autorský zákon','Daňový řád','Energetický zákon','Exekuční řád','Insolvenční zákon',
+    'Listina základních práv a svobod','Notářský řád','Občanský soudní řád','Občanský zákoník',
+    'Školský zákon','Správní řád','Stavební zákon','Trestní řád','Trestní zákoník',
+    'Ústava České republiky','Zákon na ochranu zvířat proti týrání','Zákon o advokacii',
+    'Zákon o archivnictví a spisové službě','Zákon o auditorech','Zákon o azylu',
+    'Zákon o bankách','Zákon o cenách','Zákon o cestovních dokladech',
+    'Zákon o církvích a náboženských společnostech','Zákon o civilním letectví',
+    'Zákon o dani z nemovitých věcí','Zákon o dani z přidané hodnoty','Zákon o daních z příjmů',
+    'Zákon o dětské skupině','Zákon o dráhách','Zákon o důchodovém pojištění',
+    'Zákon o elektronických komunikacích','Zákon o hazardních hrách',
+    'Zákon o hlavním městě Praze','Zákon o investičních pobídkách',
+    'Zákon o katastru nemovitostí','Zákon o krajích (krajské zřízení)',
+    'Zákon o kybernetické bezpečnosti','Zákon o léčivech','Zákon o lesích',
+    'Zákon o matrikách, jménu a příjmení','Zákon o mediaci',
+    'Zákon o mezinárodním právu soukromém','Zákon o nájmu a podnájmu nebytových prostor',
+    'Zákon o nemocenském pojištění','Zákon o obchodních korporacích',
+    'Zákon o obcích (obecní zřízení)','Zákon o ochraně hospodářské soutěže',
+    'Zákon o ochraně ovzduší','Zákon o ochraně přírody a krajiny',
+    'Zákon o ochraně spotřebitele','Zákon o ochraně veřejného zdraví',
+    'Zákon o ochranných známkách','Zákon o odpadech','Zákon o platebním styku',
+    'Zákon o pobytu cizinců na území ČR','Zákon o podnikání na kapitálovém trhu',
+    'Zákon o pojišťovnictví','Zákon o Policii ČR','Zákon o poštovních službách',
+    'Zákon o posuzování vlivů na životní prostředí','Zákon o potravinách a tabákových výrobcích',
+    'Zákon o pozemních komunikacích','Zákon o přestupcích',
+    'Zákon o provozování rozhlasového a televizního vysílání','Zákon o rozhodčím řízení',
+    'Zákon o silničním provozu','Zákon o sociálních službách','Zákon o sociálním zabezpečení',
+    'Zákon o soudech a soudcích','Zákon o specifických zdravotních službách',
+    'Zákon o spotřebitelském úvěru','Zákon o státní službě',
+    'Zákon o státním občanství ČR','Zákon o svobodném přístupu k informacím',
+    'Zákon o účetnictví','Zákon o Ústavním soudu',
+    'Zákon o územním plánování a stavebním řádu','Zákon o veřejném ochránci práv',
+    'Zákon o veřejném zdravotním pojištění','Zákon o veřejných dražbách',
+    'Zákon o veřejných rejstřících','Zákon o vlastnictví bytů','Zákon o vodách',
+    'Zákon o volbách do Parlamentu ČR','Zákon o vynálezech a patentech',
+    'Zákon o vysokých školách','Zákon o zadávání veřejných zakázek',
+    'Zákon o zaměstnanosti','Zákon o zbraních','Zákon o zdravotních službách',
+    'Zákon o znalcích a znaleckých kancelářích','Zákon o zpracování osobních údajů',
+    'Zákoník práce','Živnostenský zákon'
+  ]
+  const el = document.getElementById('law-scroll')
+  if (!el) return
+  // Build HTML twice for seamless loop
+  const html = laws.map(l =>
+    `<div class="law-scroll-item"><span class="law-scroll-name">${l}</span><span class="law-scroll-badge">§</span></div>`
+  ).join('')
+  el.innerHTML = html + html
 })()
 
 // SCROLL REVEAL
