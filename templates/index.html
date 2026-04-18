@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="{{LANG}}" data-theme="dark">
 <head>
 <script>
 (function(){
@@ -776,13 +776,13 @@ footer {
 
 <!-- NAV -->
 <nav>
-  <a href="/mx/" class="n-logo">LEGAL<span>ATLAS</span></a>
+  <a href="{{HOME}}" class="n-logo">LEGAL<span>ATLAS</span></a>
   <ul class="n-links">
-    <li><a href="/abogado.html?lang=cs">Biblioteca</a></li>
-    <li><a href="/jurisprudencia.html">Jurisprudencia</a></li>
+    <li><a href="/abogado.html?lang=cs">{{NAV_BIBLIOTECA}}</a></li>
+    <li><a href="/jurisprudencia.html">{{NAV_JUDIKATURA}}</a></li>
     <li><a href="/magnus.html?lang=cs" class="n-pro">Magnus</a></li>
     <li><a href="/atlas.html?lang=cs">Atlas</a></li>
-    <li><a href="/cuenta.html?lang=cs">Mi Cuenta</a></li>
+    <li><a href="/cuenta.html?lang=cs">{{NAV_CUENTA}}</a></li>
   </ul>
   <div class="n-right">
     <a href="/" class="n-en-link" onclick="localStorage.setItem('la-locale','en')">🌐 EN</a>
@@ -796,15 +796,15 @@ footer {
 <div class="m-overlay" id="m-overlay" onclick="closeSidebar()"></div>
 <aside class="m-sidebar" id="m-sidebar">
   <div class="m-sidebar-head">
-    <a href="/mx/" class="n-logo">LEGAL<span>ATLAS</span></a>
+    <a href="{{HOME}}" class="n-logo">LEGAL<span>ATLAS</span></a>
     <button class="m-sidebar-close" onclick="closeSidebar()">✕</button>
   </div>
   <nav class="m-sidebar-nav">
-    <a href="/abogado.html?lang=cs" onclick="closeSidebar()">Biblioteca</a>
-    <a href="/jurisprudencia.html" onclick="closeSidebar()">Jurisprudencia</a>
+    <a href="/abogado.html?lang=cs" onclick="closeSidebar()">{{NAV_BIBLIOTECA}}</a>
+    <a href="/jurisprudencia.html" onclick="closeSidebar()">{{NAV_JUDIKATURA}}</a>
     <a href="/magnus.html?lang=cs" onclick="closeSidebar()">Magnus</a>
     <a href="/atlas.html?lang=cs" onclick="closeSidebar()">Atlas</a>
-    <a href="/cuenta.html?lang=cs" onclick="closeSidebar()">Mi Cuenta</a>
+    <a href="/cuenta.html?lang=cs" onclick="closeSidebar()">{{NAV_CUENTA}}</a>
     <a href="/" onclick="localStorage.setItem('la-locale','en');closeSidebar()">🌐 English version</a>
   </nav>
 </aside>
@@ -813,19 +813,19 @@ footer {
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-eyebrow">Motor jurídico</div>
+    <div class="hero-eyebrow">{{HERO_EYEBROW}}</div>
     <h1 class="hero-h">LEGAL <span>ATLAS</span></h1>
-    <p class="hero-tagline">Encuentra el artículo exacto <em>en minutos</em></p>
+    <p class="hero-tagline">{{HERO_TAGLINE}}</p>
     <div class="hero-sub">
-      <span>7 leyes · 32 estados</span> · Constitución, Código Civil de 32 estados, leyes federales · <span>Cero alucinaciones AI</span> · Cita del artículo exacto en cada respuesta
+      {{HERO_SUB}}
     </div>
 
     <!-- DEMO ANIMATION -->
     <div class="hero-demo-wrap">
       <div class="hero-demo">
         <div class="demo-top">
-          <span class="demo-label">Legal Atlas · Análisis</span>
-          <span class="demo-country">🇲🇽 México</span>
+          <span class="demo-label">Legal Atlas · {{DEMO_LABEL}}</span>
+          <span class="demo-country">{{DEMO_COUNTRY_PILL}}</span>
         </div>
         <div class="demo-query" id="demo-query"><span class="demo-cursor"></span></div>
         <div class="demo-analyze"><button class="demo-analyze-btn" id="demo-btn">Analyzovat →</button></div>
@@ -847,7 +847,7 @@ footer {
             <span class="demo-result-score">91%</span>
           </div>
           <div class="demo-result" id="dr3">
-            <span class="demo-result-tag tag-juris">Jurisprudencia</span>
+            <span class="demo-result-tag tag-juris">{{NAV_JUDIKATURA}}</span>
             <div class="demo-result-body">
               <div class="demo-result-art">I. ÚS 3512/11 · Ústavní soud</div>
               <div class="demo-result-text">Princip ochrany dobré víry nabyvatele nemovitosti zapsaného v katastru nemovitostí.</div>
@@ -861,7 +861,7 @@ footer {
         </div>
       </div>
       <div class="demo-cta-row">
-        <a href="/mx/magnus.html" class="demo-cta">Probar gratis →</a>
+        <a href="{{HOME}}magnus.html" class="demo-cta">{{CTA_BTN}}</a>
       </div>
     </div>
   </section>
@@ -891,8 +891,8 @@ footer {
   <!-- FEATURES CHECKLIST -->
   <section class="features-section reveal">
     <div class="features-header">
-      <div class="features-eyebrow">Qué puede hacer Legal Atlas</div>
-      <h2 class="features-h">Todo lo que necesitas para <em>investigación jurídica.</em></h2>
+      <div class="features-eyebrow">{{CHECKLIST_EYEBROW}}</div>
+      <h2 class="features-h">{{CHECKLIST_TITLE}}</h2>
     </div>
     <div class="features-grid">
       <div class="feat-item"><span class="feat-check">✓</span>Prohledá 97 zákonů v reálném čase — za sekundy, ne hodiny</div>
@@ -911,8 +911,8 @@ footer {
   <!-- PROOF -->
   <section class="proof reveal">
     <div class="proof-header">
-      <div class="proof-label-eyebrow">Magnus en acción</div>
-      <h2 class="proof-h">Caso real.<br><em>45 segundos.</em></h2>
+      <div class="proof-label-eyebrow">{{PROOF_EYEBROW}}</div>
+      <h2 class="proof-h">{{PROOF_TITLE}}</h2>
       <p class="proof-sub">Případ vyžadující české pracovní právo, španělské pracovní právo, mezinárodní právo soukromé EU — a precedenty Ústavního soudu. Magnus zvládá vše najednou.</p>
     </div>
     <div class="proof-body">
@@ -964,15 +964,15 @@ footer {
   <div class="feat-row reveal">
     <div class="feat-text">
       <div class="feat-badge">Magnus</div>
-      <h2 class="feat-h">Describe tu caso.<br>Magnus encuentra <em>el derecho.</em></h2>
+      <h2 class="feat-h">{{MAGNUS_FEAT_TITLE}}</h2>
       <p class="feat-desc">Jediný AI systém, který prohledá <strong>více právních systémů současně</strong>. Popište případ v libovolném jazyce, vyberte až 3 jurisdikce — Magnus dohledá ověřené články a sestaví srovnávací analýzu. Včetně kolize právních řádů.</p>
-      <a href="/mx/magnus.html" class="feat-cta">Abrir Magnus →</a>
+      <a href="{{HOME}}magnus.html" class="feat-cta">{{MAGNUS_CTA}}</a>
     </div>
     <div class="magnus-mock" id="magnus-mock" style="position:relative">
       <div class="mm-header">
         <span class="mm-logo">Magnus</span>
         <div class="mm-pills">
-          <span class="mm-pill" id="mm-cz">🇲🇽 México</span>
+          <span class="mm-pill" id="mm-cz">{{DEMO_COUNTRY_PILL}}</span>
           <span class="mm-pill" id="mm-es">🇪🇸 España</span>
         </div>
       </div>
@@ -1025,8 +1025,8 @@ footer {
 
   <!-- ═══ FEATURE — JUDIKATURA (centered) ═══ -->
   <section class="juris-feat reveal" id="juris-feat">
-    <div class="juris-badge">Jurisprudencia</div>
-    <h2 class="juris-h">94 937 artículos.<br><em>Encuentra el tuyo.</em></h2>
+    <div class="juris-badge">{{NAV_JUDIKATURA}}</div>
+    <h2 class="juris-h">{{JURIS_FEAT_TITLE}}</h2>
     <p class="juris-sub">Popište svůj případ. AI najde nejrelevantnější nálezy Ústavního soudu a rozhodnutí Nejvyššího soudu — podle obsahu, ne klíčových slov.</p>
 
     <div class="juris-demo" id="juris-demo">
@@ -1056,31 +1056,31 @@ footer {
       </div>
     </div>
 
-    <a href="/mx/jurisprudencia.html" class="feat-cta">Buscar artículos →</a>
+    <a href="{{HOME}}jurisprudencia.html" class="feat-cta">{{JURIS_CTA}}</a>
   </section>
 
   <!-- ═══ FEATURE 2 — KNIHOVNA ═══ -->
   <div class="feat-row reverse reveal">
     <div class="feat-text">
-      <div class="feat-badge">Biblioteca</div>
-      <h2 class="feat-h">La ley completa.<br><em>Artículo por artículo.</em></h2>
+      <div class="feat-badge">{{NAV_BIBLIOTECA}}</div>
+      <h2 class="feat-h">{{KNIHOVNA_FEAT_TITLE}}</h2>
       <p class="feat-desc">97 zákonů v plném znění. Procházejte hierarchicky — část, hlava, díl, paragraf. Na každém článku <strong>chat s AI</strong>, který rozumí kontextu celého zákona. Generování procesních diagramů jedním kliknutím.</p>
-      <a href="/mx/abogado.html" class="feat-cta">Abrir Biblioteca →</a>
+      <a href="{{HOME}}abogado.html" class="feat-cta">{{KNIHOVNA_CTA}}</a>
     </div>
     <div class="kn-demo" id="kn-demo">
       <!-- Phase 1: law list -->
       <div class="kn-phase" id="kn-phase1">
-        <div class="kn-phase-head"><span class="kn-phase-label">Biblioteca</span><span class="kn-phase-sub">7 leyes</span></div>
+        <div class="kn-phase-head"><span class="kn-phase-label">{{NAV_BIBLIOTECA}}</span><span class="kn-phase-sub">{{FOOTER_STAT1}}</span></div>
         <div class="kn-list-scroll"><div class="kn-list-inner" id="kn-list"></div></div>
       </div>
       <!-- Phase 2: articles -->
       <div class="kn-phase kn-hidden" id="kn-phase2">
-        <div class="kn-phase-head"><span class="kn-phase-label">Občanský zákoník</span><span class="kn-phase-sub">1 150 arts</span></div>
+        <div class="kn-phase-head"><span class="kn-phase-label">Občanský zákoník</span><span class="kn-phase-sub">{{KNIHOVNA_ART_COUNT}}</span></div>
         <div class="kn-arts-scroll" id="kn-arts"></div>
       </div>
       <!-- Phase 3: chat -->
       <div class="kn-phase kn-hidden" id="kn-phase3">
-        <div class="kn-phase-head"><span class="kn-phase-label">Chat · Art. 47</span><span class="kn-phase-sub">Občanský zákoník</span></div>
+        <div class="kn-phase-head"><span class="kn-phase-label">{{KNIHOVNA_CHAT_HEADER}}</span><span class="kn-phase-sub">Občanský zákoník</span></div>
         <div class="kn-chat-msgs" id="kn-chat-msgs"></div>
       </div>
       <!-- Cursor -->
@@ -1094,17 +1094,17 @@ footer {
   <div class="feat-row reveal">
     <div class="feat-text">
       <div class="feat-badge">Atlas</div>
-      <h2 class="feat-h">Tesis vs. <em>antítesis.</em><br>Visual.</h2>
+      <h2 class="feat-h">{{ATLAS_FEAT_TITLE}}</h2>
       <p class="feat-desc">Každý § který váš případ podporuje — a každý, který mu odporuje. Atlas sestaví <strong>dialektickou mapu</strong> celého případu a vizualizuje ji jako 3D sluneční soustavu právní gravitace. Vidíte slabiny dříve než oponent.</p>
-      <a href="/mx/atlas.html" class="feat-cta">Explorar Atlas →</a>
+      <a href="{{HOME}}atlas.html" class="feat-cta">{{ATLAS_CTA}}</a>
     </div>
     <div class="atlas-dial" id="atlas-dial">
       <div class="dial-col">
-        <div class="dial-header dial-header-t">Tesis — a tu favor</div>
+        <div class="dial-header dial-header-t">{{ATLAS_TEZE_LABEL}}</div>
         <div class="dial-items" id="dial-teze"></div>
       </div>
       <div class="dial-col dial-col-anti">
-        <div class="dial-header dial-header-a">Antítesis — en tu contra</div>
+        <div class="dial-header dial-header-a">{{ATLAS_ANTI_LABEL}}</div>
         <div class="dial-items" id="dial-anti"></div>
       </div>
       <div class="dial-divider">⚖</div>
@@ -1112,9 +1112,9 @@ footer {
   </div>
 
   <div class="cta-block">
-    <h3 class="cta-block-h">Ningún otro sistema de AI lo hace.</h3>
-    <p class="cta-block-sub">7 leyes · 94 937 artículos · Texto completo · Citación · Cero alucinaciones · Gratis</p>
-    <a href="/mx/magnus.html" class="cta-btn">Probar gratis →</a>
+    <h3 class="cta-block-h">{{CTA_FINAL_TITLE}}</h3>
+    <p class="cta-block-sub">{{CTA_FINAL_SUB}}</p>
+    <a href="{{HOME}}magnus.html" class="cta-btn">{{CTA_BTN}}</a>
   </div>
 
   <footer>
@@ -1125,45 +1125,45 @@ footer {
         <a href="mailto:contact@legalatlas.io" class="f-contact-link">contact@legalatlas.io →</a>
       </div>
       <div class="f-col">
-        <div class="f-col-title">Herramientas</div>
-        <a href="/mx/magnus.html">Magnus</a>
-        <a href="/mx/abogado.html">Biblioteca</a>
-        <a href="/mx/jurisprudencia.html">Jurisprudencia</a>
-        <a href="/mx/atlas.html">Atlas</a>
-        <a href="/mx/selector.html">Selector</a>
+        <div class="f-col-title">{{FOOTER_COL1_TITLE}}</div>
+        <a href="{{HOME}}magnus.html">Magnus</a>
+        <a href="{{HOME}}abogado.html">{{NAV_BIBLIOTECA}}</a>
+        <a href="{{HOME}}jurisprudencia.html">{{NAV_JUDIKATURA}}</a>
+        <a href="{{HOME}}atlas.html">Atlas</a>
+        <a href="{{HOME}}selector.html">Selector</a>
       </div>
       <div class="f-col">
-        <div class="f-col-title">Jurisdicciones</div>
-        <a href="/mx/">🇨🇿 Česko</a>
+        <div class="f-col-title">{{FOOTER_COL2_TITLE}}</div>
+        <a href="{{HOME}}">🇨🇿 Česko</a>
         <a href="/mx/">🇲🇽 México</a>
         <a href="#">🇩🇪 Deutschland</a>
         <a href="#">🇫🇷 France</a>
         <a href="#">🇪🇸 España</a>
       </div>
       <div class="f-col">
-        <div class="f-col-title">Base de datos</div>
-        <a href="#">7 leyes</a>
-        <a href="#">94 937 artículos</a>
-        <a href="#">32 estados</a>
-        <a href="#">7 jurisdicciones</a>
+        <div class="f-col-title">{{FOOTER_COL3_TITLE}}</div>
+        <a href="#">{{FOOTER_STAT1}}</a>
+        <a href="#">{{FOOTER_STAT2}}</a>
+        <a href="#">{{FOOTER_STAT3}}</a>
+        <a href="#">{{FOOTER_STAT4}}</a>
       </div>
       <div class="f-col">
-        <div class="f-col-title">Empresa</div>
+        <div class="f-col-title">{{FOOTER_COL4_TITLE}}</div>
         <a href="/">English version</a>
-        <a href="/pricing.html">Precios</a>
-        <a href="https://a.co/d/01mnKTlj" target="_blank">Libro (EN)</a>
-        <a href="https://a.co/d/0aHW2roS" target="_blank">Libro (ES)</a>
+        <a href="/pricing.html">{{FOOTER_PRICING}}</a>
+        <a href="https://a.co/d/01mnKTlj" target="_blank">{{FOOTER_BOOK_EN}}</a>
+        <a href="https://a.co/d/0aHW2roS" target="_blank">{{FOOTER_BOOK_ES}}</a>
       </div>
     </div>
     <div class="f-bottom">
-      <div class="f-copy">© Legal Atlas Engineering 2026 · Ciudad de México, México</div>
+      <div class="f-copy">© Legal Atlas Engineering 2026 · {{FOOTER_CITY}}</div>
       <div class="f-legal">
-        <a href="/terms.html">Términos</a>
-        <a href="/privacy.html">Privacidad</a>
-        <a href="/acceptable.html">Uso aceptable</a>
+        <a href="/terms.html">{{FOOTER_TERMS}}</a>
+        <a href="/privacy.html">{{FOOTER_PRIVACY}}</a>
+        <a href="/acceptable.html">{{FOOTER_ACCEPTABLE}}</a>
       </div>
     </div>
-    <p class="f-disclaimer">Legal Atlas es una herramienta de investigación jurídica para profesionales del derecho. Genera contenido con ayuda de AI con referencias normativas verificadas. No constituye asesoría legal ni sustituye el juicio profesional independiente.</p>
+    <p class="f-disclaimer">{{FOOTER_DISCLAIMER}}</p>
   </footer>
 
 </div>
@@ -1198,30 +1198,7 @@ document.getElementById('burger').addEventListener('click', openSidebar)
 
 // DEMO ANIMATION — 3 rotating queries
 ;(function runDemo() {
-  const demos = [{
-      query: 'Mi patrón me despidió sin justificación después de 5 años. ¿Cuáles son mis derechos?',
-      results: [
-        { tag:'Constitución', cls:'tag-ustava', art:'Art. 123 · Constitución Política', text:'Toda persona tiene derecho al trabajo digno y socialmente útil; se promoverán la creación de empleos y la organización social de trabajo.', score:'94%' },
-        { tag:'Ley Federal del Trabajo', cls:'tag-civil', art:'Art. 48 · Ley Federal del Trabajo', text:'El trabajador podrá solicitar ante la Autoridad Conciliadora que se le reinstale en el trabajo o que se le indemnice con el importe de tres meses de salario.', score:'91%' },
-        { tag:'Ley Federal del Trabajo', cls:'tag-civil', art:'Art. 518 · Ley Federal del Trabajo', text:'Prescriben en dos meses las acciones de los trabajadores que sean separados del trabajo.', score:'87%' }
-      ]
-    },
-    {
-      query: 'El arrendador quiere aumentar la renta un 40%. ¿Es legal en CDMX?',
-      results: [
-        { tag:'Código Civil CDMX', cls:'tag-civil', art:'Art. 2448-D · Código Civil CDMX', text:'La renta debe ser fijada en cantidad líquida. Su incremento anual no podrá exceder del porcentaje de inflación reportado por el Banco de México.', score:'95%' },
-        { tag:'Código Civil CDMX', cls:'tag-civil', art:'Art. 2448-C · Código Civil CDMX', text:'La duración mínima de todo contrato de arrendamiento de fincas urbanas destinadas a la habitación será de un año.', score:'88%' },
-        { tag:'Constitución', cls:'tag-ustava', art:'Art. 4 · Constitución Política', text:'Toda familia tiene derecho a disfrutar de vivienda digna y decorosa. La Ley establecerá los instrumentos y apoyos necesarios.', score:'82%' }
-      ]
-    },
-    {
-      query: 'Me vendieron un carro con vicios ocultos. ¿Puedo anular la compraventa?',
-      results: [
-        { tag:'Código de Comercio', cls:'tag-civil', art:'Art. 383 · Código de Comercio', text:'Las ventas mercantiles no se rescindirán por causa de lesión; pero al perjudicado se le concederá acción para reclamar daños y perjuicios.', score:'93%' },
-        { tag:'Código Civil CDMX', cls:'tag-civil', art:'Art. 2142 · Código Civil CDMX', text:'La acción redhibitoria tiene lugar cuando la cosa vendida tiene vicios o defectos graves que la hagan impropia para los usos a que se la destina.', score:'89%' },
-        { tag:'Ley de Amparo', cls:'tag-juris', art:'Art. 1 · Ley de Amparo', text:'El juicio de amparo tiene por objeto resolver toda controversia que se suscite por normas generales, actos u omisiones de autoridad que violen derechos humanos.', score:'84%' }
-      ]
-    }
+  const demos = [{{HERO_DEMOS}}
   ]
 
   const queryEl = document.getElementById('demo-query')
@@ -1357,7 +1334,7 @@ document.getElementById('burger').addEventListener('click', openSidebar)
   const arrow = document.getElementById('mm-arrow')
   if (!mock) return
 
-  const query = 'Trabajador mexicano despedido sin justificación después de 5 años. El patrón no le pagó las últimas 3 semanas. ¿Qué derechos tiene?'
+  const query = '{{MAGNUS_DEMO_QUERY}}'
 
   function wait(ms) { return new Promise(r => setTimeout(r, ms)) }
   function moveArr(l, t) { arrow.style.left = l + 'px'; arrow.style.top = t + 'px'; }
@@ -1473,7 +1450,7 @@ document.getElementById('burger').addEventListener('click', openSidebar)
   const input = document.getElementById('jd-input')
   if (!demo) return
 
-  const query = 'Patrón despidió al trabajador sin causa justificada, derecho a indemnización'
+  const query = '{{JURIS_DEMO_QUERY}}'
 
   function wait(ms) { return new Promise(r => setTimeout(r, ms)) }
 
@@ -1544,41 +1521,16 @@ document.getElementById('burger').addEventListener('click', openSidebar)
   const cursor = document.getElementById('kn-cursor')
   if (!demo) return
 
-  const laws = ['Constitución Política','Ley Federal del Trabajo',
-    'Código de Comercio','Codigo Penal Federal',
-    'Ley de Amparo','Ley General de Títulos y Operaciones de Crédito',
-    'Código Civil · Aguascalientes','Código Civil · Baja California',
-    'Código Civil · Baja California Sur','Código Civil · Campeche',
-    'Código Civil · Chiapas','Código Civil · Chihuahua',
-    'Código Civil · Ciudad de México','Código Civil · Coahuila',
-    'Código Civil · Colima','Código Civil · Durango',
-    'Código Civil · Estado de México','Código Civil · Guanajuato',
-    'Código Civil · Guerrero','Código Civil · Hidalgo',
-    'Código Civil · Jalisco',
-    'Ley Federal del Trabajo',
-    'Código Civil · Michoacán',
-    'Código Civil · Morelos','Código Civil · Nayarit',
-    'Código Civil · Nuevo León','Código Civil · Oaxaca',
-    'Código Civil · Puebla','Código Civil · Querétaro',
-    'Código Civil · Quintana Roo','Código Civil · San Luis Potosí',
-    'Código Civil · Sinaloa','Código Civil · Sonora',
-    'Código Civil · Tabasco','Código Civil · Tamaulipas',
-    'Código Civil · Tlaxcala','Código Civil · Veracruz',
-    'Código Civil · Yucatán','Código Civil · Zacatecas'
+  const laws = [{{LAW_LIST}}
   ]
-  const TARGET = 'Ley Federal del Trabajo'
+  const TARGET = '{{LAW_TARGET}}'
   const TARGET_IDX = laws.indexOf(TARGET)
 
-  const articles = [{ num:'Art. 1', txt:'La presente Ley es de observancia general en toda la República y rige las relaciones de trabajo.' },
-    { num:'Art. 2', txt:'Las normas del trabajo tienden a conseguir el equilibrio entre los factores de la producción y la justicia social.' },
-    { num:'Art. 47', txt:'Son causas de rescisión de la relación de trabajo, sin responsabilidad para el patrón.', target:true },
-    { num:'Art. 48', txt:'El trabajador podrá solicitar que se le reinstale en el trabajo o que se le indemnice con tres meses de salario.' },
-    { num:'Art. 50', txt:'Las indemnizaciones consistirán en una cantidad igual al importe de los salarios correspondientes.' },
-    { num:'Art. 518', txt:'Prescriben en dos meses las acciones de los trabajadores que sean separados del trabajo.' },
+  const articles = [{{KNIHOVNA_ARTICLES}}
   ]
 
-  const userQ = '¿Puede el patrón despedir a un trabajador sin indemnización si no hay causa justificada?'
-  const aiResp = 'Según el <span class="kn-art">Art. 48 de la LFT</span>, el trabajador podrá solicitar la reinstalación o la indemnización de tres meses de salario. El <span class="kn-art">Art. 50 LFT</span> establece que las indemnizaciones consistirán en el importe de los salarios correspondientes más veinte días por cada año de servicios. El plazo para demandar es de dos meses según el Art. 518.'
+  const userQ = '{{KNIHOVNA_QUERY}}'
+  const aiResp = '{{KNIHOVNA_AI_RESPONSE}}'
 
   function wait(ms) { return new Promise(r => setTimeout(r, ms)) }
   function moveCur(l, t) { cursor.style.left = l + 'px'; cursor.style.top = t + 'px'; }
@@ -1712,7 +1664,7 @@ document.getElementById('burger').addEventListener('click', openSidebar)
     await wait(400)
     const spinner = document.createElement('div')
     spinner.className = 'kn-spinner'
-    spinner.innerHTML = '<div class="kn-spin-icon"></div> Analizando ley……'
+    spinner.innerHTML = '<div class="kn-spin-icon"></div> {{KNIHOVNA_LOADING}}…'
     msgsEl.appendChild(spinner)
     await wait(1800)
     spinner.remove()
@@ -1747,15 +1699,9 @@ document.getElementById('burger').addEventListener('click', openSidebar)
 
 // ATLAS TEZE vs ANTITEZE ANIMATION
 ;(function atlasDial(){
-  const teze = [{ art:'Art. 48 · LFT', txt:'El trabajador podrá solicitar reinstalación o indemnización de tres meses de salario.' },
-    { art:'Art. 50 · LFT', txt:'Las indemnizaciones consistirán en una cantidad igual al importe de los salarios.' },
-    { art:'Art. 518 · LFT', txt:'Prescriben en dos meses las acciones de los trabajadores separados del trabajo.' },
-    { art:'Art. 123 · CPEUM', txt:'Toda persona tiene derecho al trabajo digno y socialmente útil.' },
-    { art:'Art. 113 · LFT', txt:'Los salarios devengados en el último año y las indemnizaciones son preferentes sobre cualquier otro crédito.' },
+  const teze = [{{ATLAS_TEZE}}
   ]
-  const anti = [{ art:'Art. 47 Fracc. II · LFT', txt:'Incurrir el trabajador en faltas de probidad u honradez, en actos de violencia contra el patrón.' },
-    { art:'Art. 47 Fracc. X · LFT', txt:'Tener el trabajador más de tres faltas de asistencia en un período de treinta días sin causa justificada.' },
-    { art:'Art. 134 Fracc. IV · LFT', txt:'Ejecutar el trabajo con la intensidad, cuidado y esmero apropiados en la forma, tiempo y lugar convenidos.' },
+  const anti = [{{ATLAS_ANTI}}
   ]
 
   const tezeEl = document.getElementById('dial-teze')

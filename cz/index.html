@@ -782,7 +782,7 @@ footer {
     <li><a href="/jurisprudencia.html">Judikatura</a></li>
     <li><a href="/magnus.html?lang=cs" class="n-pro">Magnus</a></li>
     <li><a href="/atlas.html?lang=cs">Atlas</a></li>
-    <li><a href="/cuenta.html?lang=cs">Účet</a></li>
+    <li><a href="/cuenta.html?lang=cs">Můj účet</a></li>
   </ul>
   <div class="n-right">
     <a href="/" class="n-en-link" onclick="localStorage.setItem('la-locale','en')">🌐 EN</a>
@@ -804,7 +804,7 @@ footer {
     <a href="/jurisprudencia.html" onclick="closeSidebar()">Judikatura</a>
     <a href="/magnus.html?lang=cs" onclick="closeSidebar()">Magnus</a>
     <a href="/atlas.html?lang=cs" onclick="closeSidebar()">Atlas</a>
-    <a href="/cuenta.html?lang=cs" onclick="closeSidebar()">Účet</a>
+    <a href="/cuenta.html?lang=cs" onclick="closeSidebar()">Můj účet</a>
     <a href="/" onclick="localStorage.setItem('la-locale','en');closeSidebar()">🌐 English version</a>
   </nav>
 </aside>
@@ -1198,8 +1198,7 @@ document.getElementById('burger').addEventListener('click', openSidebar)
 
 // DEMO ANIMATION — 3 rotating queries
 ;(function runDemo() {
-  const demos = [
-    {
+  const demos = [{
       query: 'Soused prodal nemovitost, ale já mám předkupní právo. Jaká jsou moje práva?',
       results: [
         { tag:'Listina', cls:'tag-ustava', art:'Čl. 11 · Listina základních práv a svobod', text:'Každý má právo vlastnit majetek. Vlastnické právo všech vlastníků má stejný zákonný obsah a ochranu. Dědění se zaručuje.', score:'94%' },
@@ -1545,8 +1544,7 @@ document.getElementById('burger').addEventListener('click', openSidebar)
   const cursor = document.getElementById('kn-cursor')
   if (!demo) return
 
-  const laws = [
-    'Autorský zákon','Daňový řád','Energetický zákon','Exekuční řád',
+  const laws = ['Autorský zákon','Daňový řád','Energetický zákon','Exekuční řád',
     'Insolvenční zákon','Listina základních práv a svobod','Notářský řád',
     'Občanský soudní řád','Školský zákon','Správní řád','Stavební zákon',
     'Trestní řád','Trestní zákoník','Ústava České republiky',
@@ -1590,8 +1588,7 @@ document.getElementById('burger').addEventListener('click', openSidebar)
   const TARGET = 'Občanský zákoník'
   const TARGET_IDX = laws.indexOf(TARGET)
 
-  const articles = [
-    { num:'§ 2079', txt:'Kupní smlouvou se prodávající zavazuje, že kupujícímu odevzdá věc, která je předmětem koupě, a umožní mu nabýt vlastnické právo k ní.' },
+  const articles = [{ num:'§ 2079', txt:'Kupní smlouvou se prodávající zavazuje, že kupujícímu odevzdá věc, která je předmětem koupě, a umožní mu nabýt vlastnické právo k ní.' },
     { num:'§ 2080', txt:'Kupní cena je ujednána dostatečně určitě, je-li ujednán alespoň způsob jejího určení.' },
     { num:'§ 2128', txt:'Při prodeji a koupi nemovité věci vyžaduje kupní smlouva formu podle § 560.', target:true },
     { num:'§ 2129', txt:'Kupující má právo na přiměřenou slevu z kupní ceny, nemá-li pozemek výměru určenou v kupní smlouvě.' },
@@ -1734,7 +1731,7 @@ document.getElementById('burger').addEventListener('click', openSidebar)
     await wait(400)
     const spinner = document.createElement('div')
     spinner.className = 'kn-spinner'
-    spinner.innerHTML = '<div class="kn-spin-icon"></div> Analyzuji zákon…'
+    spinner.innerHTML = '<div class="kn-spin-icon"></div> Analyzuji zákon……'
     msgsEl.appendChild(spinner)
     await wait(1800)
     spinner.remove()
@@ -1769,15 +1766,13 @@ document.getElementById('burger').addEventListener('click', openSidebar)
 
 // ATLAS TEZE vs ANTITEZE ANIMATION
 ;(function atlasDial(){
-  const teze = [
-    { art:'§ 52 · Zákoník práce', txt:'Zaměstnavatel může dát výpověď jen z taxativně stanovených důvodů.' },
+  const teze = [{ art:'§ 52 · Zákoník práce', txt:'Zaměstnavatel může dát výpověď jen z taxativně stanovených důvodů.' },
     { art:'§ 67 · Zákoník práce', txt:'Zaměstnanci náleží odstupné při výpovědi z organizačních důvodů.' },
     { art:'§ 69 · Zákoník práce', txt:'Dal-li zaměstnavatel neplatnou výpověď, přísluší zaměstnanci náhrada mzdy.' },
     { art:'§ 72 · Zákoník práce', txt:'Neplatnost výpovědi lze napadnout u soudu do 2 měsíců.' },
     { art:'Čl. 26 · Listina', txt:'Každý má právo na svobodnou volbu povolání a právo podnikat.' },
   ]
-  const anti = [
-    { art:'§ 55 · Zákoník práce', txt:'Zaměstnavatel může pracovní poměr okamžitě zrušit při zvlášť hrubém porušení povinností.' },
+  const anti = [{ art:'§ 55 · Zákoník práce', txt:'Zaměstnavatel může pracovní poměr okamžitě zrušit při zvlášť hrubém porušení povinností.' },
     { art:'§ 58 · Zákoník práce', txt:'Pro porušení povinnosti lze dát výpověď do 2 měsíců ode dne, kdy se o něm zaměstnavatel dozvěděl.' },
     { art:'§ 301 · Zákoník práce', txt:'Zaměstnanci jsou povinni pracovat řádně, plnit pokyny nadřízených a dodržovat pracovní kázeň.' },
   ]

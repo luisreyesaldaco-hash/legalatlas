@@ -1,0 +1,6 @@
+
+    { art:'§ 52 · Zákoník práce', txt:'Zaměstnavatel může dát výpověď jen z taxativně stanovených důvodů.' },
+    { art:'§ 67 · Zákoník práce', txt:'Zaměstnanci náleží odstupné při výpovědi z organizačních důvodů.' },
+    { art:'§ 69 · Zákoník práce', txt:'Dal-li zaměstnavatel neplatnou výpověď, přísluší zaměstnanci náhrada mzdy.' },
+    { art:'§ 72 · Zákoník práce', txt:'Neplatnost výpovědi lze napadnout u soudu do 2 měsíců.' },
+    { art:'Čl. 26 · Listina', txt:'Každý má právo na svobodnou volbu povolání a právo podnikat.' },

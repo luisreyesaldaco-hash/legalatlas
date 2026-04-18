@@ -13,12 +13,22 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const TEMPLATES_DIR = resolve(__dirname, 'templates')
 const COUNTRIES_DIR = resolve(__dirname, 'countries')
 
-// Load all country configs
+// Load all country configs (JSON + data files)
 const countries = readdirSync(COUNTRIES_DIR)
-  .filter(f => f.endsWith('.json'))
+  .filter(f => f.endsWith('.json') && !f.includes('/'))
   .map(f => {
     const config = JSON.parse(readFileSync(resolve(COUNTRIES_DIR, f), 'utf8'))
     config._file = f
+
+    // Load data blobs from countries/<code>/*.js files
+    const dataDir = resolve(COUNTRIES_DIR, config.ROUTE || config.CODE.toLowerCase())
+    if (existsSync(dataDir)) {
+      readdirSync(dataDir).filter(d => d.endsWith('.js')).forEach(d => {
+        const varName = d.replace('.js', '').toUpperCase()
+        config[varName] = readFileSync(resolve(dataDir, d), 'utf8').trim()
+      })
+    }
+
     return config
   })
 
