@@ -1,5 +1,4 @@
-
-    'Autorský zákon','Daňový řád','Energetický zákon','Exekuční řád',
+'Autorský zákon','Daňový řád','Energetický zákon','Exekuční řád',
     'Insolvenční zákon','Listina základních práv a svobod','Notářský řád',
     'Občanský soudní řád','Školský zákon','Správní řád','Stavební zákon',
     'Trestní řád','Trestní zákoník','Ústava České republiky',

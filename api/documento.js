@@ -243,7 +243,7 @@ async function analizarClausula(clausula, pais, llm) {
           model: 'models/gemini-embedding-001',
           content: { parts: [{ text: clausula.texto }] },
           taskType: 'RETRIEVAL_QUERY',
-          outputDimensionality: 1536
+          outputDimensionality: 768
         })
       }
     )

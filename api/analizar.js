@@ -165,7 +165,7 @@ async function embedQueryJuris(text, retries = 4) {
           model:               'models/gemini-embedding-001',
           content:             { parts: [{ text }] },
           taskType:            'RETRIEVAL_QUERY',
-          outputDimensionality: 1536
+          outputDimensionality: 768
         })
       }
     )

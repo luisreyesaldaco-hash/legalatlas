@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="cs" data-theme="dark">
 <head>
 <script>
 (function(){
@@ -16,12 +16,9 @@
 <style>
 :root {
   --bg:        #F5EDDA;
-  --bg-alt:    #FAFAF8;
+  --bg-alt:    #EFECE6;
   --bg-card:   #FAF4E4;
   --bg-raised: #EDE3CC;
-  --bg-verde:  #3D4F32;
-  --bg-verde-lt: #4A5F3E;
-  --bg-verde-dk: #2A3822;
   --text:      #1A1410;
   --soft:      #3D342A;
   --muted:     #7A6E60;
@@ -47,10 +44,7 @@
   --bg:        #0C0C0A;
   --bg-alt:    #111110;
   --bg-card:   #141412;
-  --bg-raised: #1A1814;
-  --bg-verde:  #141210;
-  --bg-verde-lt: #1A1814;
-  --bg-verde-dk: #0A0908;
+  --bg-raised: #1C1C19;
   --text:      #F0ECE4;
   --soft:      #D0C4B4;
   --muted:     #9C9082;
@@ -59,17 +53,16 @@
   --gold-lt:   #D4AE58;
   --gold-dim:  rgba(196,154,60,0.08);
   --gold-brd:  rgba(196,154,60,0.20);
-  --verde:     #C49A3C;
-  --verde-lt:  #D4AE58;
-  --verde-dim: rgba(196,154,60,0.08);
-  --verde-brd: rgba(196,154,60,0.20);
+  --verde:     #6B7F58;
+  --verde-lt:  #8A9E74;
+  --verde-dim: rgba(107,127,88,0.12);
+  --verde-brd: rgba(107,127,88,0.30);
   --border:    #2A2A26;
   --rule:      rgba(196,154,60,0.15);
   --sh-sm:     0 1px 4px rgba(0,0,0,0.3);
   --sh-md:     0 4px 20px rgba(0,0,0,0.4);
   --sh-lg:     0 12px 48px rgba(0,0,0,0.5);
 }
-/* cursor default in dark mode */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -89,17 +82,15 @@ nav {
   display: flex; align-items: center;
   padding: 0 48px;
   height: 64px;
-  background: rgba(239,236,230,0.75);
-  border-bottom: 0.5px solid rgba(139,104,32,0.10);
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
   box-shadow: none;
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
 }
-[data-theme="dark"] nav { background: rgba(12,12,10,0.7); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border-bottom: 0.5px solid rgba(196,154,60,0.08); }
-.n-logo { font-family: 'Cinzel', serif; font-size:var(--text-lg); font-weight: 700; letter-spacing: .35em; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-right: 40px; }
-.n-logo span { color: var(--gold); font-weight: 300; }
+[data-theme="dark"] nav { background: rgba(17,17,16,.96); backdrop-filter: blur(20px); }
+.n-logo { font-family: 'Cinzel', serif; font-size:var(--text-lg); font-weight: 700; letter-spacing: .28em; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-right: 40px; }
+.n-logo span { color: var(--gold); font-weight: 400; }
 .n-links { display: flex; align-items: center; gap: 32px; list-style: none; }
-.n-links a { font-family: 'Cinzel', serif; font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--soft); text-decoration: none; transition: color .2s; position: relative; white-space: nowrap; }
+.n-links a { font-family: 'Cinzel', serif; font-size:var(--text-sm); font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--soft); text-decoration: none; transition: color .2s; position: relative; white-space: nowrap; }
 .n-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:1px; background:var(--gold); transition:width .25s; }
 .n-links a:hover { color: var(--gold); }
 .n-links a:hover::after { width: 100%; }
@@ -148,151 +139,62 @@ nav {
   display: flex; flex-direction: column;
   padding: 40px max(24px, calc((100vw - 1080px)/2 + 48px)) 56px;
   position: relative; overflow: hidden;
-  background: var(--bg);
-  border-radius: 0;
-  margin: 0;
-  box-shadow: none;
-  border: none;
-  min-height: 85vh;
-  justify-content: center;
+  background: var(--bg-raised);
+  border-radius:var(--r-lg);
+  margin: 12px max(16px, calc((100vw - 1200px)/2 + 16px));
+  box-shadow: 0 4px 24px rgba(26,20,16,0.10);
+  border: 1px solid rgba(139,104,32,0.08);
 }
 [data-theme="dark"] .hero {
   box-shadow: 0 2px 20px rgba(0,0,0,0.2);
   border-color: rgba(196,154,60,0.06);
 }
-.hero-bg {
-  position: absolute; inset: 0; overflow: hidden; pointer-events: none;
-}
-/* Radial glow from top-left */
-.hero-bg::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(100% 100% at 0% 0%, rgba(196,154,60,0.08) 0%, transparent 70%);
-}
-/* Skewed gold streaks */
-.hero-streak {
-  position: absolute; inset: 0; opacity: 0.04;
-  background: linear-gradient(rgba(196,154,60,1) 0%, rgba(196,154,60,0) 100%);
-  transform: skewX(45deg);
-}
-.hero-streak:nth-child(2) {
-  mask: linear-gradient(90deg, transparent 0%, black 20%, transparent 36%, black 55%, transparent 67%, black 78%, transparent 97%);
-}
-.hero-streak:nth-child(3) {
-  mask: linear-gradient(90deg, transparent 11%, black 25%, rgba(0,0,0,0.5) 41%, transparent 67%, black 78%, transparent 97%);
-  opacity: 0.03;
-}
-.hero-streak:nth-child(4) {
-  mask: linear-gradient(90deg, transparent 9%, black 20%, rgba(0,0,0,0.5) 28%, rgba(0,0,0,0.4) 40%, black 48%, transparent 54%, transparent 78%, black 88%, transparent 97%);
-  opacity: 0.025;
-}
-/* Dot pattern */
-.hero-dots {
-  position: absolute; inset: 0;
-  background-image: radial-gradient(circle at 1px 1px, rgba(139,104,32,0.12) 1px, transparent 0);
-  background-size: 24px 24px;
-}
+.hero-bg { display: none; }
 .hero > *:not(.hero-bg) { position: relative; z-index: 1; }
 
 /* ── ALTERNATING BACKGROUNDS ── */
 body { background: var(--bg-alt); }
-.card-beige {
+.bg-beige {
   background: var(--bg);
-  border-radius: 0;
-  margin: 0;
-  box-shadow: none;
+  border-radius:var(--r-lg);
+  margin: 12px max(16px, calc((100vw - 1200px)/2 + 16px));
+  box-shadow: 0 2px 20px rgba(26,20,16,0.06);
+  border: 1px solid rgba(139,104,32,0.06);
 }
-.card-verde {
-  background: var(--bg-verde);
-  border-radius: var(--r-lg);
-  margin: 16px max(16px, calc((100vw - 1200px)/2 + 16px));
-  box-shadow: 0 4px 24px rgba(45,56,34,0.15);
-  color: #F0ECE4;
+[data-theme="dark"] .bg-beige {
+  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  border-color: rgba(196,154,60,0.06);
 }
-.card-verde .feat-badge, .card-verde .juris-badge { color: var(--gold-lt); }
-.card-verde .feat-h, .card-verde .juris-h { color: #F0ECE4; }
-.card-verde .feat-h em, .card-verde .juris-h em { color: var(--gold-lt); }
-.card-verde .feat-desc, .card-verde .juris-sub { color: rgba(240,236,228,0.7); }
-.card-verde .feat-desc strong { color: #F0ECE4; }
-.card-verde .feat-cta, .card-verde .juris-badge::before { color: var(--gold-lt); background: var(--gold-lt); }
-.card-verde .feat-cta { color: var(--gold-lt); }
-.card-verde .jd-search { border-bottom-color: rgba(240,236,228,0.1); }
-.card-verde .jd-search-icon { color: var(--gold-lt); }
-.card-verde .jd-result { background: rgba(0,0,0,0.15); border-color: rgba(240,236,228,0.08); }
-.card-verde .jd-caso { color: var(--gold-lt); }
-.card-verde .jd-tribunal { color: rgba(240,236,228,0.5); }
-.card-verde .jd-ratio { color: rgba(240,236,228,0.7); }
-.card-verde .jd-score { color: var(--gold-lt); }
-.card-verde .jd-search-input { color: #F0ECE4; }
-.card-verde .juris-demo { background: rgba(0,0,0,0.2); border-color: rgba(240,236,228,0.08); }
-
-/* Proof on verde */
-.card-verde .proof-h { color: #F0ECE4; }
-.card-verde .proof-h em { color: var(--gold-lt); }
-.card-verde .proof-sub { color: rgba(240,236,228,0.6); }
-.card-verde .proof-label { color: var(--gold-lt); }
-.card-verde .case-box { color: rgba(240,236,228,0.8); border-left-color: var(--gold-lt); }
-.card-verde .sel-label { color: rgba(240,236,228,0.5); }
-.card-verde .verdict { color: var(--gold-lt); background: rgba(0,0,0,0.15); border-color: rgba(196,154,60,0.2); }
-.card-verde .proof-body { background: rgba(0,0,0,0.1); border-color: rgba(240,236,228,0.08); }
-.card-verde .proof-left { background: rgba(0,0,0,0.1); }
-.card-verde .proof-right { background: rgba(0,0,0,0.15); }
-.card-verde .finding { border-color: rgba(240,236,228,0.08); background: rgba(0,0,0,0.1); }
-.card-verde .find-art { color: var(--gold-lt); }
-.card-verde .find-text { color: rgba(240,236,228,0.7); }
-.card-verde .find-score span { color: rgba(240,236,228,0.6); }
-
-/* Atlas on verde */
-.card-verde .dial-col-anti { border-left-color: rgba(240,236,228,0.08); }
-.card-verde .atlas-dial { background: rgba(0,0,0,0.2); border-color: rgba(240,236,228,0.08); }
-.card-verde .dial-divider { background: var(--bg-verde); border-color: rgba(240,236,228,0.1); }
 .bg-alt { background: var(--bg-alt); }
 .hero-rule { position:absolute; top:0; bottom:0; width:1px; background:linear-gradient(to bottom, transparent, var(--rule) 20%, var(--rule) 80%, transparent); pointer-events:none; }
 .hero-eyebrow {
-  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .25em;
-  color: #F0ECE4; text-transform: uppercase; margin-bottom: 32px;
-  display: inline-flex; align-items: center; justify-content: center;
-  align-self: center;
-  background: var(--bg-verde); padding: 8px 20px; border-radius: 8px;
+  font-family: 'Cinzel', serif; font-size:var(--text-sm); letter-spacing: .42em;
+  color: var(--soft); text-transform: uppercase; margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: center; gap: 16px;
   opacity: 0; animation: up .9s ease .1s forwards;
 }
-.hero-eyebrow::before { display:none; }
+.hero-eyebrow::before { content:''; display:block; width:32px; height:1px; background:var(--soft); }
 .hero-h {
   font-family: 'Cinzel', serif;
-  font-size: clamp(42px, 6.5vw, 80px);
-  font-weight: 700; letter-spacing: .12em; line-height: 1;
+  font-size: clamp(52px, 8vw, 108px);
+  font-weight: 700; letter-spacing: .02em; line-height: 1.05;
   margin-bottom: 0; text-align: center;
-  text-transform: uppercase;
-  color: var(--text);
-  /* Embossed / engraved */
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.4),
-    0 2px 0 rgba(255,255,255,0.15),
-    0 -1px 0 rgba(0,0,0,0.2),
-    0 3px 6px rgba(0,0,0,0.06);
-}
-[data-theme="dark"] .hero-h {
-  color: #F0ECE4;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.04),
-    0 -1px 0 rgba(0,0,0,0.5),
-    0 -2px 0 rgba(0,0,0,0.3),
-    0 4px 12px rgba(0,0,0,0.4);
 }
 .hero-h .letter {
   display: inline-block; opacity: 0;
   animation: letterIn .4s ease forwards;
 }
 @keyframes letterIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-.hero-h span { color: var(--gold); font-weight: 700; letter-spacing: .08em; }
+.hero-h span { color: var(--gold); }
 .hero-tagline {
   font-family: 'Lora', serif; font-style: italic;
-  font-size: clamp(22px, 2.8vw, 34px); color: var(--soft);
-  margin-top: 32px; line-height: 1.5; text-align: center;
+  font-size: clamp(24px, 3.2vw, 36px); color: var(--soft);
+  margin-top: 36px; line-height: 1.5; text-align: center;
   opacity: 0; animation: up .9s ease 1s forwards;
 }
 .hero-tagline em { font-style: normal; color: var(--gold); font-weight: 600; }
 .hero-sub {
-  font-family: 'Lora', Georgia, serif; font-size: 14px; font-weight: 400;
+  font-family: 'JetBrains Mono', monospace; font-size:var(--text-base);
   color: var(--muted); letter-spacing: .08em; margin-top: 22px; line-height: 1.9;
   text-align: center;
   opacity: 0; animation: up .9s ease .38s forwards;
@@ -321,7 +223,7 @@ body { background: var(--bg-alt); }
 .demo-label { font-family:'Cinzel',serif; font-size:var(--text-xs); letter-spacing:.2em; color:var(--gold); text-transform:uppercase; }
 .demo-country { font-family:'Cinzel',serif; font-size:var(--text-xs); letter-spacing:.12em; color:var(--muted); background:var(--bg-raised); border:1px solid var(--border); border-radius:var(--r-md); padding:4px 10px; }
 .demo-query {
-  font-family: 'Lora', Georgia, serif; font-size:var(--text-base); font-style: italic;
+  font-family: 'Lora', serif; font-size:var(--text-base); font-style: italic;
   color: var(--text); padding: 16px 24px 16px;
   min-height: 56px; line-height: 1.6;
   border-bottom: 1px solid var(--border);
@@ -384,17 +286,8 @@ body { background: var(--bg-alt); }
 }
 .strip-stat {
   text-align: center; padding: 20px 12px;
-  background: rgba(255,255,255,0.45);
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
-  border-radius: var(--r-md);
-  border: 1px solid rgba(255,255,255,0.5);
-  box-shadow: 0 1px 8px rgba(0,0,0,0.04);
-}
-[data-theme="dark"] .strip-stat {
-  background: rgba(255,255,255,0.04);
-  border-color: rgba(255,255,255,0.08);
-  backdrop-filter: blur(16px) saturate(120%);
+  background: var(--bg); border-radius: var(--r-md);
+  border: 1px solid rgba(139,104,32,0.06);
 }
 .strip-stat-n { font-family:'JetBrains Mono',monospace; font-size:var(--text-xl); font-weight:300; color:var(--text); line-height:1; margin-bottom:6px; }
 .strip-stat-l { font-family:'Cinzel',serif; font-size:var(--text-xs); letter-spacing:.15em; color:var(--gold); text-transform:uppercase; }
@@ -442,7 +335,7 @@ body { background: var(--bg-alt); }
 .man-label { font-family: 'Cinzel', serif; font-size:var(--text-sm); letter-spacing: .36em; color: var(--gold); text-transform: uppercase; margin-bottom: 32px; display: flex; align-items: center; gap: 14px; }
 .man-label::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
 .man-pullquote {
-  font-family: 'Lora', Georgia, serif; font-size: clamp(28px, 4vw, 48px); font-style: italic;
+  font-family: 'Lora', serif; font-size: clamp(28px, 4vw, 48px); font-style: italic;
   font-weight: 400; line-height: 1.35; color: var(--text); letter-spacing: -.01em;
 }
 .man-pullquote em { color: var(--gold); font-style: normal; }
@@ -460,7 +353,7 @@ body { background: var(--bg-alt); }
 .corpus-left .corpus-label { font-family: 'Cinzel', serif; font-size:var(--text-sm); letter-spacing: .36em; color: var(--gold); text-transform: uppercase; margin-bottom: 24px; display: flex; align-items: center; gap: 14px; }
 .corpus-left .corpus-label::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
 .corpus-h { font-family: 'Cinzel', serif; font-size: clamp(28px, 3.5vw, 46px); font-weight: 700; letter-spacing: .02em; margin-bottom: 20px; line-height: 1.15; }
-.corpus-h em { font-style: italic; color: var(--gold); font-family: 'Lora', Georgia, serif; }
+.corpus-h em { font-style: italic; color: var(--gold); font-family: 'Lora', serif; }
 .corpus-desc { font-size:var(--text-base); color: var(--soft); line-height: 1.85; }
 .corpus-right { display: flex; flex-direction: column; gap: 1px; border: 1px solid var(--border); border-radius:var(--r-md); overflow: hidden; }
 .corpus-row { background: var(--bg-card); padding: 22px 24px; display: flex; align-items: center; gap: 16px; transition: background .2s; }
@@ -480,7 +373,7 @@ body { background: var(--bg-alt); }
 .products-label { font-family: 'Cinzel', serif; font-size:var(--text-sm); letter-spacing: .36em; color: var(--gold); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; }
 .products-label::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
 .products-h { font-family: 'Cinzel', serif; font-size: clamp(26px, 3.2vw, 42px); font-weight: 700; letter-spacing: .02em; margin-bottom: 48px; }
-.products-h em { font-style: italic; color: var(--gold); font-family: 'Lora', Georgia, serif; }
+.products-h em { font-style: italic; color: var(--gold); font-family: 'Lora', serif; }
 .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }
 .tool-card { background: var(--bg-card); border: 1px solid var(--border); border-radius:var(--r-md); padding: 28px 24px; display: flex; flex-direction: column; gap: 12px; transition: all .3s; cursor: pointer; position: relative; overflow: hidden; }
 .tool-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--border); transition:background .3s; }
@@ -502,7 +395,7 @@ body { background: var(--bg-alt); }
 .atlas-banner-left { flex: 1; }
 .atlas-banner-label { font-family: 'Cinzel', serif; font-size:var(--text-xs); letter-spacing: .28em; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; }
 .atlas-banner-name { font-family: 'Cinzel', serif; font-size: 24px; font-weight: 700; letter-spacing: .02em; color: var(--text); margin-bottom: 10px; }
-.atlas-banner-name em { font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 400; color: var(--gold); }
+.atlas-banner-name em { font-family: 'Lora', serif; font-style: italic; font-weight: 400; color: var(--gold); }
 .atlas-banner-desc { font-size:var(--text-base); color: var(--muted); line-height: 1.75; }
 .atlas-banner-cta { font-family: 'Cinzel', serif; font-size:var(--text-xs); letter-spacing: .2em; color: var(--gold); background: none; border: none; cursor: pointer; padding: 0; transition: opacity .2s; white-space: nowrap; flex-shrink: 0; text-decoration: none; }
 .atlas-banner-cta:hover { opacity: .7; }
@@ -516,7 +409,7 @@ body { background: var(--bg-alt); }
 .proof-label-eyebrow { font-family: 'Cinzel', serif; font-size:var(--text-sm); letter-spacing: .36em; color: var(--gold); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; }
 .proof-label-eyebrow::before { content:''; display:block; width:24px; height:1px; background:var(--gold); }
 .proof-h { font-family: 'Cinzel', serif; font-size: clamp(34px, 5vw, 64px); font-weight: 700; letter-spacing: .02em; line-height: 1.1; margin-bottom: 16px; }
-.proof-h em { font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 400; color: var(--gold); }
+.proof-h em { font-family: 'Lora', serif; font-style: italic; font-weight: 400; color: var(--gold); }
 .proof-sub { font-size:var(--text-lg); color: var(--soft); line-height: 1.85; max-width: 680px; }
 .proof-body { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius:var(--r-md); overflow: hidden; }
 .proof-left { background: var(--bg-raised); padding: 48px; position: relative; }
@@ -539,7 +432,7 @@ body { background: var(--bg-alt); }
 footer {
   padding: 80px max(24px, calc((100vw - 1080px)/2 + 48px)) 40px;
   position: relative; z-index: 1;
-  background: var(--bg-verde-dk);  color: #F0ECE4;
+  background: #EDE3CC;
 }
 [data-theme="dark"] footer { background: #0A0A08; }
 .f-top {
@@ -547,24 +440,24 @@ footer {
   margin-bottom: 48px;
 }
 .f-brand {}
-.f-logo { font-family:'Cinzel',serif; font-size:var(--text-lg); letter-spacing:.3em; color:#F0ECE4; font-weight:700; margin-bottom:16px; }
+.f-logo { font-family:'Cinzel',serif; font-size:var(--text-lg); letter-spacing:.3em; color:var(--text); font-weight:700; margin-bottom:16px; }
 .f-logo span { color:var(--gold); }
-.f-tagline { font-family:'Lora',serif; font-size:var(--text-base); font-style:italic; color:rgba(240,236,228,0.5); line-height:1.7; margin-bottom:20px; max-width:240px; }
-.f-contact-link { font-family:'Cinzel',serif; font-size:var(--text-xs); letter-spacing:.12em; color:var(--gold-lt); text-decoration:none; text-transform:uppercase; transition:opacity .2s; }
+.f-tagline { font-family:'Lora',serif; font-size:var(--text-base); font-style:italic; color:var(--muted); line-height:1.7; margin-bottom:20px; max-width:240px; }
+.f-contact-link { font-family:'Cinzel',serif; font-size:var(--text-xs); letter-spacing:.12em; color:var(--gold); text-decoration:none; text-transform:uppercase; transition:opacity .2s; }
 .f-contact-link:hover { opacity:.7; }
 .f-col {}
-.f-col-title { font-family:'Cinzel',serif; font-size:var(--text-xs); letter-spacing:.2em; text-transform:uppercase; color:var(--gold-lt); font-weight:700; margin-bottom:16px; }
-.f-col a { display:block; font-family:'Lora',serif; font-size: 13px; color:rgba(240,236,228,0.6); text-decoration:none; padding:4px 0; transition:color .2s; }
+.f-col-title { font-family:'Cinzel',serif; font-size:var(--text-xs); letter-spacing:.2em; text-transform:uppercase; color:var(--text); font-weight:700; margin-bottom:16px; }
+.f-col a { display:block; font-family:'Lora',serif; font-size:var(--text-base); color:var(--muted); text-decoration:none; padding:4px 0; transition:color .2s; }
 .f-col a:hover { color:var(--gold); }
 .f-bottom {
-  border-top:1px solid rgba(240,236,228,0.1); padding-top:24px;
+  border-top:1px solid var(--border); padding-top:24px;
   display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;
 }
 .f-copy { font-size:var(--text-sm); color:var(--dim); font-style:italic; }
 .f-legal { display:flex; gap:20px; flex-wrap:wrap; }
-.f-legal a { font-family:'Cinzel',serif; font-size: 11px; letter-spacing:.1em; color:rgba(240,236,228,0.5); text-decoration:none; text-transform:uppercase; transition:color .2s; }
+.f-legal a { font-family:'Cinzel',serif; font-size:var(--text-xs); letter-spacing:.1em; color:var(--muted); text-decoration:none; text-transform:uppercase; transition:color .2s; }
 .f-legal a:hover { color:var(--gold); }
-.f-disclaimer { width:100%; font-size:var(--text-xs); color:rgba(240,236,228,0.3); line-height:1.7; font-style:italic; margin-top:20px; max-width:720px; }
+.f-disclaimer { width:100%; font-size:var(--text-xs); color:var(--dim); line-height:1.7; font-style:italic; margin-top:20px; max-width:720px; }
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px) {
@@ -669,7 +562,7 @@ footer {
 }
 .jd-search-icon { color:var(--gold); font-size:var(--text-lg); flex-shrink:0; }
 .jd-search-input {
-  font-family:'Lora',serif; font-size:var(--text-base); font-style:italic; color:var(--text); flex:1;
+  font-family:'Lora',serif; font-size:var(--text-base); color:var(--text); flex:1;
   min-height:24px;
 }
 .jd-search-input .demo-cursor { display:inline-block; width:2px; height:16px; background:var(--gold); vertical-align:text-bottom; animation:blink 1s step-end infinite; }
@@ -731,7 +624,7 @@ footer {
 /* ── ETHICAL LINE ── */
 .ethical { text-align:center; padding:80px 24px; border-top:1px solid var(--rule); background:var(--bg-raised); }
 [data-theme="dark"] .ethical { background:var(--bg-card); }
-.ethical-text { font-family:'Cinzel',serif; font-style:italic; font-size:clamp(20px,3vw,28px); color:var(--gold); line-height:1.5; max-width:640px; margin:0 auto; }
+.ethical-text { font-family:'Lora',serif; font-style:italic; font-size:clamp(20px,3vw,28px); color:var(--gold); line-height:1.5; max-width:640px; margin:0 auto; }
 
 /* ── GLOW CARDS ── */
 [data-glow]{
@@ -812,7 +705,7 @@ footer {
 .mm-flag { font-size:var(--text-lg); flex-shrink:0; margin-top:1px; }
 .mm-rbody { flex:1; }
 .mm-rart { font-family:'Cinzel',serif; font-size:var(--text-xs); color:var(--gold); letter-spacing:.05em; font-weight:600; margin-bottom:2px; }
-.mm-rtxt { font-family:'Lora',serif; font-size:var(--text-sm); color:var(--soft); line-height:1.5; }
+.mm-rtxt { font-size:var(--text-sm); color:var(--soft); line-height:1.5; }
 .mm-rscore { font-family:'JetBrains Mono',monospace; font-size:var(--text-xs); color:var(--verde); opacity:.8; flex-shrink:0; align-self:center; }
 /* zoom effect */
 .magnus-mock .mm-zoom { transition:transform .6s cubic-bezier(.4,0,.2,1), opacity .3s; transform-origin:center center; }
@@ -837,7 +730,7 @@ footer {
   flex-shrink:0;
 }
 .law-scroll-name {
-  font-family:'Cinzel',serif; font-size:var(--text-base); color:var(--text);
+  font-family:'Lora',serif; font-size:var(--text-base); color:var(--text);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .law-scroll-badge {
@@ -858,7 +751,7 @@ footer {
 .features-h {
   font-family:'Cinzel',serif; font-size:clamp(22px,3vw,32px); font-weight:700; line-height:1.2;
 }
-.features-h em { font-family:'Cinzel',serif; font-style:italic; color:var(--gold); }
+.features-h em { font-family:'Lora',serif; font-style:italic; color:var(--gold); }
 .features-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: 0;
   max-width: 900px; margin: 0 auto;
@@ -866,50 +759,21 @@ footer {
 .feat-item {
   display: flex; align-items: flex-start; gap: 14px;
   padding: 18px 24px;
-  font-family: 'Lora', Georgia, serif; font-size: 14px; font-weight: 400; line-height: 1.6;
+  font-family: 'Lora', serif; font-size:var(--text-base); line-height: 1.6;
   color: var(--soft); border-bottom: 1px solid var(--rule);
 }
 .feat-item:nth-last-child(-n+2) { border-bottom: none; }
 .feat-check {
   flex-shrink: 0; width: 20px; height: 20px; margin-top: 2px;
-  border-radius: 50%; background: var(--gold-dim); border: 1px solid var(--gold-brd);
+  border-radius: 50%; background: var(--verde-dim); border: 1px solid var(--verde-brd);
   display: flex; align-items: center; justify-content: center;
-  color: var(--gold); font-size:var(--text-sm); font-weight: 700;
+  color: var(--verde); font-size:var(--text-sm); font-weight: 700;
 }
 
 /* ── CTA BLOCK ── */
 .cta-block{text-align:center;padding:48px 24px}
-.cta-block-h{font-family:'Lora',serif;font-style:italic;font-size:clamp(20px,3vw,28px);font-weight:400;margin-bottom:12px;color:var(--text)}
-.cta-block-sub{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:24px;letter-spacing:.06em}
-
-/* ── FAQ ── */
-.faq {
-  padding: 80px max(24px, calc((100vw - 800px)/2));
-}
-.faq-label {
-  font-family:'Cinzel',serif; font-size:11px; letter-spacing:.3em;
-  text-transform:uppercase; color:var(--gold); margin-bottom:40px;
-  text-align:center;
-}
-.faq-item {
-  border-bottom: 1px solid var(--border); overflow:hidden;
-}
-.faq-q {
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding:20px 0; cursor:pointer; width:100%; background:none; border:none;
-  font-family:'Cinzel',serif; font-size:15px; font-weight:600;
-  color:var(--text); text-align:left; transition:color .2s;
-}
-.faq-q:hover { color:var(--gold); }
-.faq-arrow {
-  font-size:18px; color:var(--muted); transition:transform .3s; flex-shrink:0;
-}
-.faq-item.open .faq-arrow { transform:rotate(45deg); }
-.faq-a {
-  max-height:0; overflow:hidden; transition:max-height .4s ease, padding .4s ease;
-  font-family:'Lora',serif; font-size:14px; line-height:1.8; color:var(--soft);
-}
-.faq-item.open .faq-a { max-height:300px; padding:0 0 20px; }
+.cta-block-h{font-family:'Cinzel',serif;font-size:clamp(16px,2.5vw,22px);font-weight:700;margin-bottom:12px}
+.cta-block-sub{font-family:'Lora',serif;font-size:var(--text-base);color:var(--muted);margin-bottom:24px}
 .cta-btn{font-family:'Cinzel',serif;font-size:var(--text-xs);letter-spacing:.18em;text-transform:uppercase;background:var(--gold);color:#fff;padding:13px 32px;border-radius:8px;text-decoration:none;font-weight:700;transition:background .2s;display:inline-block}
 .cta-btn:hover{background:var(--gold-lt)}
 
@@ -953,10 +817,10 @@ footer {
 
 <!-- NAV -->
 <nav>
-  <a href="/mx/" class="n-logo">LEGAL<span>ATLAS</span></a>
+  <a href="/cz/" class="n-logo">LEGAL<span>ATLAS</span></a>
   <ul class="n-links">
-    <li><a href="/abogado.html?lang=cs">Biblioteca</a></li>
-    <li><a href="/jurisprudencia.html">Jurisprudencia</a></li>
+    <li><a href="/abogado.html?lang=cs">Knihovna</a></li>
+    <li><a href="/jurisprudencia.html">Judikatura</a></li>
     <li><a href="/magnus.html?lang=cs" class="n-pro">Magnus</a></li>
     <li><a href="/atlas.html?lang=cs">Atlas</a></li>
     <li><a href="/cuenta.html?lang=cs">Můj účet</a></li>
@@ -973,12 +837,12 @@ footer {
 <div class="m-overlay" id="m-overlay" onclick="closeSidebar()"></div>
 <aside class="m-sidebar" id="m-sidebar">
   <div class="m-sidebar-head">
-    <a href="/mx/" class="n-logo">LEGAL<span>ATLAS</span></a>
+    <a href="/cz/" class="n-logo">LEGAL<span>ATLAS</span></a>
     <button class="m-sidebar-close" onclick="closeSidebar()">✕</button>
   </div>
   <nav class="m-sidebar-nav">
-    <a href="/abogado.html?lang=cs" onclick="closeSidebar()">Biblioteca</a>
-    <a href="/jurisprudencia.html" onclick="closeSidebar()">Jurisprudencia</a>
+    <a href="/abogado.html?lang=cs" onclick="closeSidebar()">Knihovna</a>
+    <a href="/jurisprudencia.html" onclick="closeSidebar()">Judikatura</a>
     <a href="/magnus.html?lang=cs" onclick="closeSidebar()">Magnus</a>
     <a href="/atlas.html?lang=cs" onclick="closeSidebar()">Atlas</a>
     <a href="/cuenta.html?lang=cs" onclick="closeSidebar()">Můj účet</a>
@@ -990,25 +854,20 @@ footer {
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-bg">
-      <div class="hero-streak"></div>
-      <div class="hero-streak"></div>
-      <div class="hero-streak"></div>
-      <div class="hero-dots"></div>
-    </div>
-    <div class="hero-eyebrow">Motor jurídico</div>
+    <div class="hero-bg">§ § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § § §</div>
+    <div class="hero-eyebrow">Mozek právní praxe</div>
     <h1 class="hero-h">LEGAL <span>ATLAS</span></h1>
-    <p class="hero-tagline">Encuentra el artículo exacto <em>en minutos</em></p>
+    <p class="hero-tagline">Najděte přesný § <em>za pár minut</em></p>
     <div class="hero-sub">
-      <span>7 leyes · 32 estados</span> · Constitución, Código Civil de 32 estados, leyes federales · <span>Cero alucinaciones AI</span> · Cita del artículo exacto en cada respuesta
+      <span>97 zákonů</span> · Kompletní a aktuální sbírka českých zákonů · <span>Nulové halucinace AI</span> · Citace konkrétního paragrafu u každé odpovědi
     </div>
 
     <!-- DEMO ANIMATION -->
     <div class="hero-demo-wrap">
       <div class="hero-demo">
         <div class="demo-top">
-          <span class="demo-label">Legal Atlas · Análisis</span>
-          <span class="demo-country">🇲🇽 México</span>
+          <span class="demo-label">Legal Atlas · Analýza</span>
+          <span class="demo-country">🇨🇿 Česko</span>
         </div>
         <div class="demo-query" id="demo-query"><span class="demo-cursor"></span></div>
         <div class="demo-analyze"><button class="demo-analyze-btn" id="demo-btn">Analyzovat →</button></div>
@@ -1030,7 +889,7 @@ footer {
             <span class="demo-result-score">91%</span>
           </div>
           <div class="demo-result" id="dr3">
-            <span class="demo-result-tag tag-juris">Jurisprudencia</span>
+            <span class="demo-result-tag tag-juris">Judikatura</span>
             <div class="demo-result-body">
               <div class="demo-result-art">I. ÚS 3512/11 · Ústavní soud</div>
               <div class="demo-result-text">Princip ochrany dobré víry nabyvatele nemovitosti zapsaného v katastru nemovitostí.</div>
@@ -1044,7 +903,7 @@ footer {
         </div>
       </div>
       <div class="demo-cta-row">
-        <a href="/mx/magnus.html" class="demo-cta">Probar gratis →</a>
+        <a href="/cz/magnus.html" class="demo-cta">Vyzkoušet zdarma →</a>
       </div>
     </div>
   </section>
@@ -1072,111 +931,91 @@ footer {
   </div>
 
   <!-- FEATURES CHECKLIST -->
-  <section class="features-section reveal">
+  <section class="features-section reveal bg-alt">
     <div class="features-header">
-      <div class="features-eyebrow">Qué puede hacer Legal Atlas</div>
-      <h2 class="features-h">Todo lo que necesitas para <em>investigación jurídica.</em></h2>
+      <div class="features-eyebrow">Co Legal Atlas umí</div>
+      <h2 class="features-h">Vše, co potřebujete pro <em>právní výzkum.</em></h2>
     </div>
     <div class="features-grid">
-      <div class="feat-item"><span class="feat-check">✓</span>Busca en 7 leyes y 32 códigos civiles en tiempo real — en segundos</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Cita el artículo exacto con texto completo en cada respuesta</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Compara hasta 3 sistemas jurídicos simultáneamente en una consulta</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Encuentra las resoluciones judiciales más relevantes para tu caso</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Pregunta sobre tu caso — la AI consulta toda la legislación aplicable</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Pregunta en español, respuestas también del derecho checo, alemán o francés</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Acceso a 94 937 artículos verificados en la base de datos</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Cero alucinaciones — cada respuesta es verificable en la fuente</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Navega la ley jerárquicamente — libro, título, capítulo, artículo</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Generación de diagramas de proceso desde la estructura legal</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Prohledá 97 zákonů v reálném čase — za sekundy, ne hodiny</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Cituje přesný § s plným zněním u každé odpovědi</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Porovná až 3 právní řády současně v jednom dotazu</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Najde nejrelevantnější soudní rozhodnutí k vašemu případu</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Zeptejte se na svůj případ — AI konzultuje celou legislativu</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Ptejte se v češtině, odpovědi i z německého či španělského práva</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Přístup k 1 465 rozhodnutím Ústavního a Nejvyššího soudu</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Nulové halucinace — každá odpověď je ověřitelná u zdroje</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Procházejte zákon hierarchicky — část, hlava, díl, paragraf</div>
+      <div class="feat-item"><span class="feat-check">✓</span>Generování procesních diagramů z právní struktury</div>
     </div>
   </section>
 
   <!-- PROOF -->
-  <section class="proof reveal card-verde">
+  <section class="proof reveal bg-beige">
     <div class="proof-header">
-      <div class="proof-label-eyebrow">Magnus en acción</div>
-      <h2 class="proof-h">Caso real.<br><em>45 segundos.</em></h2>
-      <p class="proof-sub">Un caso que requiere derecho laboral mexicano, código civil estatal y la Constitución — simultáneamente. Magnus lo resuelve todo de una vez.</p>
+      <div class="proof-label-eyebrow">Magnus v akci</div>
+      <h2 class="proof-h">Skutečný případ.<br><em>45 sekund.</em></h2>
+      <p class="proof-sub">Případ vyžadující české pracovní právo, španělské pracovní právo, mezinárodní právo soukromé EU — a precedenty Ústavního soudu. Magnus zvládá vše najednou.</p>
     </div>
     <div class="proof-body">
       <div class="proof-left">
         <div class="proof-label">Případ</div>
         <div class="case-box">„Španělský architekt, 5 let v Praze, propuštěn bez výpovědi českým zaměstnavatelem. Tři týdny nevyplacené mzdy. Plánuje se vrátit do Španělska — chce žalovat před odjezdem.“</div>
-        <div class="sel-label">México · Ley Federal del Trabajo</div>
-        <div class="verdict">HALLAZGO CRÍTICO: El Art. 518 de la LFT establece un plazo de 2 meses para impugnar el despido. Dejar pasar el plazo = derrota. Magnus lo encontró en 45 segundos.</div>
+        <div class="sel-label">Česká republika · Španělsko</div>
+        <div class="verdict">KRITICKÉ ZJIŠTĚNÍ: Český § 72 stanoví 2měsíční lhůtu pro napadení platnosti výpovědi. Španělské právo umožňuje 1 rok. Záměna lhůty = prohra. Magnus to zjistil za 45 sekund.</div>
       </div>
       <div class="proof-right">
-        <div class="proof-label">Lo que Magnus encontró · artículos relevantes</div>
+        <div class="proof-label">Co Magnus nalezl · 24 článků · 2 jurisdikce</div>
         <div class="finding">
-          <div class="find-flag">🇲🇽</div>
+          <div class="find-flag">🇨🇿</div>
           <div class="find-body">
-            <div class="find-art">Art. 47 · Ley Federal del Trabajo</div>
-            <div class="find-text">Causales de rescisión sin responsabilidad para el patrón.</div>
+            <div class="find-art">§ 72 · Zákoník práce</div>
+            <div class="find-text">2měsíční lhůta pro napadení platnosti výpovědi. Již běží.</div>
           </div>
-          <div class="find-score">
-            <div style="width:48px;height:3px;background:var(--border);border-radius:2px;margin-bottom:3px">
-              <div style="width:91%;height:100%;background:var(--verde);border-radius:2px"></div>
-            </div>
-            <span>91%</span>
-          </div>
+          <div class="find-score">91%</div>
         </div>
         <div class="finding">
-          <div class="find-flag">🇲🇽</div>
+          <div class="find-flag">🇨🇿</div>
           <div class="find-body">
-            <div class="find-art">Art. 48 · Ley Federal del Trabajo</div>
-            <div class="find-text">Reinstalación o indemnización a elección del trabajador.</div>
+            <div class="find-art">§ 141 · Zákoník práce</div>
+            <div class="find-text">Mzda splatná bez ohledu na způsob ukončení pracovního poměru.</div>
           </div>
-          <div class="find-score">
-            <div style="width:48px;height:3px;background:var(--border);border-radius:2px;margin-bottom:3px">
-              <div style="width:87%;height:100%;background:var(--verde);border-radius:2px"></div>
-            </div>
-            <span>87%</span>
-          </div>
+          <div class="find-score">87%</div>
         </div>
         <div class="finding">
-          <div class="find-flag">🇲🇽</div>
+          <div class="find-flag">🇪🇸</div>
           <div class="find-body">
-            <div class="find-art">Art. 518 · Ley Federal del Trabajo</div>
-            <div class="find-text">Prescripción: 2 meses para acciones por despido.</div>
+            <div class="find-art">čl. 56 · Estatuto de los Trabajadores</div>
+            <div class="find-text">Neoprávněné propuštění: 33 dnů za každý rok trvání poměru.</div>
           </div>
-          <div class="find-score">
-            <div style="width:48px;height:3px;background:var(--border);border-radius:2px;margin-bottom:3px">
-              <div style="width:82%;height:100%;background:var(--verde);border-radius:2px"></div>
-            </div>
-            <span>82%</span>
-          </div>
+          <div class="find-score">82%</div>
         </div>
         <div class="finding">
-          <div class="find-flag">🇲🇽</div>
+          <div class="find-flag">🇪🇺</div>
           <div class="find-body">
-            <div class="find-art">Art. 123 · Constitución Política</div>
-            <div class="find-text">Derecho al trabajo digno. Tribunal: Junta de Conciliación y Arbitraje.</div>
+            <div class="find-art">Řím I čl. 8 · Brusel I bis čl. 21</div>
+            <div class="find-text">Rozhodné právo: české. Příslušný soud: český. Vykonatelné ve Španělsku.</div>
           </div>
-          <div class="find-score">
-            <div style="width:48px;height:3px;background:var(--border);border-radius:2px;margin-bottom:3px">
-              <div style="width:79%;height:100%;background:var(--verde);border-radius:2px"></div>
-            </div>
-            <span>79%</span>
-          </div>
+          <div class="find-score">79%</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ═══ FEATURE 1 — MAGNUS ═══ -->
-  <div class="feat-row reveal">
+  <div class="feat-row reveal bg-alt">
     <div class="feat-text">
       <div class="feat-badge">Magnus</div>
-      <h2 class="feat-h">Describe tu caso.<br>Magnus encuentra <em>el derecho.</em></h2>
-      <p class="feat-desc">El único sistema de AI que busca en <strong>múltiples sistemas jurídicos simultáneamente</strong>. Describe tu caso en cualquier idioma, selecciona hasta 3 jurisdicciones — Magnus encuentra los artículos verificados y construye un análisis comparativo.</p>
-      <a href="/mx/magnus.html" class="feat-cta">Abrir Magnus →</a>
+      <h2 class="feat-h">Popište případ.<br>Magnus najde <em>právo.</em></h2>
+      <p class="feat-desc">Jediný AI systém, který prohledá <strong>více právních systémů současně</strong>. Popište případ v libovolném jazyce, vyberte až 3 jurisdikce — Magnus dohledá ověřené články a sestaví srovnávací analýzu. Včetně kolize právních řádů.</p>
+      <a href="/cz/magnus.html" class="feat-cta">Otevřít Magnus →</a>
     </div>
     <div class="magnus-mock" id="magnus-mock" style="position:relative">
       <div class="mm-header">
         <span class="mm-logo">Magnus</span>
         <div class="mm-pills">
-          <span class="mm-pill" id="mm-cz">🇲🇽 México</span>
-          <span class="mm-pill" id="mm-es">🇨🇿 Česko</span>
+          <span class="mm-pill" id="mm-cz">🇨🇿 Česko</span>
+          <span class="mm-pill" id="mm-es">🇪🇸 España</span>
         </div>
       </div>
       <div class="mm-input-area mm-zoom" id="mm-input-wrap">
@@ -1189,15 +1028,15 @@ footer {
         <div class="mm-result" id="mr0">
           <span class="mm-flag">🇨🇿</span>
           <div class="mm-rbody">
-            <div class="mm-rart">Art. 48 · Ley Federal del Trabajo</div>
-            <div class="mm-rtxt">El trabajador podrá solicitar ante la Autoridad Conciliadora que se le reinstale o indemnice.</div>
+            <div class="mm-rart">§ 708 · Občanský zákoník</div>
+            <div class="mm-rtxt">To, co manželům náleží, má majetkovou hodnotu a není vyloučeno z právních poměrů, je součástí společného jmění manželů.</div>
           </div>
           <span class="mm-rscore">94%</span>
         </div>
         <div class="mm-result" id="mr1">
           <span class="mm-flag">🇨🇿</span>
           <div class="mm-rbody">
-            <div class="mm-rart">Art. 50 · Ley Federal del Trabajo</div>
+            <div class="mm-rart">§ 49 · Zákon o mezinárodním právu soukromém</div>
             <div class="mm-rtxt">Osobní poměry manželů se řídí právním řádem státu, jehož jsou oba občany.</div>
           </div>
           <span class="mm-rscore">91%</span>
@@ -1205,7 +1044,7 @@ footer {
         <div class="mm-result" id="mr2">
           <span class="mm-flag">🇪🇸</span>
           <div class="mm-rbody">
-            <div class="mm-rart">Art. 123 · Constitución Política</div>
+            <div class="mm-rart">Art. 9 · Código Civil</div>
             <div class="mm-rtxt">La ley personal correspondiente a las personas físicas es la determinada por su nacionalidad.</div>
           </div>
           <span class="mm-rscore">88%</span>
@@ -1213,8 +1052,8 @@ footer {
         <div class="mm-result" id="mr3">
           <span class="mm-flag">🇪🇸</span>
           <div class="mm-rbody">
-            <div class="mm-rart">Art. 518 · Ley Federal del Trabajo</div>
-            <div class="mm-rtxt">Prescriben en dos meses las acciones de los trabajadores que sean separados del trabajo.</div>
+            <div class="mm-rart">Art. 1316 · Código Civil</div>
+            <div class="mm-rtxt">A falta de capitulaciones o cuando éstas sean ineficaces, el régimen será el de la sociedad de gananciales.</div>
           </div>
           <span class="mm-rscore">85%</span>
         </div>
@@ -1227,10 +1066,10 @@ footer {
   </div>
 
   <!-- ═══ FEATURE — JUDIKATURA (centered) ═══ -->
-  <section class="juris-feat reveal card-verde" id="juris-feat" style="background:var(--bg-verde-lt)">
-    <div class="juris-badge">Jurisprudencia</div>
-    <h2 class="juris-h">94 937 artículos.<br><em>Encuentra el tuyo.</em></h2>
-    <p class="juris-sub">Describe tu caso. La AI encuentra los artículos más relevantes de la Constitución, códigos civiles y leyes federales — por contenido, no palabras clave.</p>
+  <section class="juris-feat reveal bg-beige" id="juris-feat">
+    <div class="juris-badge">Judikatura</div>
+    <h2 class="juris-h">29 491 rozhodnutí.<br><em>Najděte to své.</em></h2>
+    <p class="juris-sub">Popište svůj případ. AI najde nejrelevantnější nálezy Ústavního soudu a rozhodnutí Nejvyššího soudu — podle obsahu, ne klíčových slov.</p>
 
     <div class="juris-demo" id="juris-demo">
       <div class="jd-search">
@@ -1239,51 +1078,51 @@ footer {
       </div>
       <div class="jd-results" id="jd-results">
         <div class="jd-result" id="jr0">
-          <div class="jd-caso">Art. 47 · LFT</div>
-          <div class="jd-tribunal">Ley Federal del Trabajo</div>
-          <div class="jd-ratio">Son causas de rescisión de la relación de trabajo, sin responsabilidad para el patrón.</div>
+          <div class="jd-caso">21 Cdo 2152/2004</div>
+          <div class="jd-tribunal">Nejvyšší soud</div>
+          <div class="jd-ratio">Posudek o pracovní činnosti může obsahovat kromě hodnocení práce zaměstnance rovněž jakékoliv další skutečnosti, jestliže mají vztah k výkonu práce.</div>
           <div class="jd-score">93%</div>
         </div>
         <div class="jd-result" id="jr1">
-          <div class="jd-caso">Art. 48 · LFT</div>
-          <div class="jd-tribunal">Ley Federal del Trabajo</div>
-          <div class="jd-ratio">El trabajador podrá solicitar que se le reinstale en el trabajo o que se le indemnice.</div>
+          <div class="jd-caso">31 Cdo 2955/2023</div>
+          <div class="jd-tribunal">Nejvyšší soud</div>
+          <div class="jd-ratio">Zaměstnavatel může odstoupit od konkurenční doložky po dobu trvání pracovního poměru zaměstnance i na základě smluvního ujednání.</div>
           <div class="jd-score">89%</div>
         </div>
         <div class="jd-result" id="jr2">
-          <div class="jd-caso">Art. 123 · CPEUM</div>
-          <div class="jd-tribunal">Constitución Política</div>
-          <div class="jd-ratio">Toda persona tiene derecho al trabajo digno y socialmente útil.</div>
+          <div class="jd-caso">III.ÚS 84/25</div>
+          <div class="jd-tribunal">Ústavní soud · Sala IV</div>
+          <div class="jd-ratio">Nerespektování závěrů kasačního nálezu Ústavního soudu ve věci exekuce na majetek zaměstnance.</div>
           <div class="jd-score">85%</div>
         </div>
       </div>
     </div>
 
-    <a href="/mx/jurisprudencia.html" class="feat-cta">Buscar artículos →</a>
+    <a href="/cz/jurisprudencia.html" class="feat-cta">Prohledat judikaturu →</a>
   </section>
 
   <!-- ═══ FEATURE 2 — KNIHOVNA ═══ -->
-  <div class="feat-row reverse reveal">
+  <div class="feat-row reverse reveal bg-alt">
     <div class="feat-text">
-      <div class="feat-badge" style="color:var(--verde)">Biblioteca</div>
-      <h2 class="feat-h">La ley completa.<br><em>Artículo por artículo.</em></h2>
-      <p class="feat-desc">7 leyes en texto completo. Navega jerárquicamente — libro, título, capítulo, artículo. En cada artículo <strong>chat con AI</strong> que entiende el contexto de toda la ley. Generación de diagramas con un clic.</p>
-      <a href="/mx/abogado.html" class="feat-cta">Abrir Biblioteca →</a>
+      <div class="feat-badge" style="color:var(--verde)">Knihovna</div>
+      <h2 class="feat-h">Celý zákon.<br><em>Článek po článku.</em></h2>
+      <p class="feat-desc">97 zákonů v plném znění. Procházejte hierarchicky — část, hlava, díl, paragraf. Na každém článku <strong>chat s AI</strong>, který rozumí kontextu celého zákona. Generování procesních diagramů jedním kliknutím.</p>
+      <a href="/cz/abogado.html" class="feat-cta">Otevřít Knihovnu →</a>
     </div>
     <div class="kn-demo" id="kn-demo">
       <!-- Phase 1: law list -->
       <div class="kn-phase" id="kn-phase1">
-        <div class="kn-phase-head"><span class="kn-phase-label">Biblioteca</span><span class="kn-phase-sub">7 leyes</span></div>
+        <div class="kn-phase-head"><span class="kn-phase-label">Knihovna</span><span class="kn-phase-sub">97 zákonů</span></div>
         <div class="kn-list-scroll"><div class="kn-list-inner" id="kn-list"></div></div>
       </div>
       <!-- Phase 2: articles -->
       <div class="kn-phase kn-hidden" id="kn-phase2">
-        <div class="kn-phase-head"><span class="kn-phase-label">Občanský zákoník</span><span class="kn-phase-sub">1 150 arts</span></div>
+        <div class="kn-phase-head"><span class="kn-phase-label">Občanský zákoník</span><span class="kn-phase-sub">3 079 §</span></div>
         <div class="kn-arts-scroll" id="kn-arts"></div>
       </div>
       <!-- Phase 3: chat -->
       <div class="kn-phase kn-hidden" id="kn-phase3">
-        <div class="kn-phase-head"><span class="kn-phase-label">Chat · Art. 47</span><span class="kn-phase-sub">Občanský zákoník</span></div>
+        <div class="kn-phase-head"><span class="kn-phase-label">Chat · § 2128</span><span class="kn-phase-sub">Občanský zákoník</span></div>
         <div class="kn-chat-msgs" id="kn-chat-msgs"></div>
       </div>
       <!-- Cursor -->
@@ -1294,83 +1133,30 @@ footer {
   </div>
 
   <!-- ═══ FEATURE 3 — ATLAS ═══ -->
-  <div class="feat-row reveal" style="background:#E8E5E0;border-radius:var(--r-lg);margin:16px max(16px, calc((100vw - 1200px)/2 + 16px))">
+  <div class="feat-row reveal bg-beige">
     <div class="feat-text">
       <div class="feat-badge">Atlas</div>
-      <h2 class="feat-h">Tesis vs. <em>antítesis.</em><br>Visual.</h2>
-      <p class="feat-desc">Cada artículo que apoya tu caso — y cada uno que lo contradice. Atlas construye un <strong>mapa dialéctico</strong> del caso completo y lo visualiza como sistema solar 3D. Ves las debilidades antes que tu oponente.</p>
-      <a href="/mx/atlas.html" class="feat-cta">Explorar Atlas →</a>
+      <h2 class="feat-h">Teze vs. <em>antiteze.</em><br>Vizuálně.</h2>
+      <p class="feat-desc">Každý § který váš případ podporuje — a každý, který mu odporuje. Atlas sestaví <strong>dialektickou mapu</strong> celého případu a vizualizuje ji jako 3D sluneční soustavu právní gravitace. Vidíte slabiny dříve než oponent.</p>
+      <a href="/cz/atlas.html" class="feat-cta">Prozkoumat Atlas →</a>
     </div>
     <div class="atlas-dial" id="atlas-dial">
       <div class="dial-col">
-        <div class="dial-header dial-header-t">Tesis — a tu favor</div>
+        <div class="dial-header dial-header-t">Teze — pro vás</div>
         <div class="dial-items" id="dial-teze"></div>
       </div>
       <div class="dial-col dial-col-anti">
-        <div class="dial-header dial-header-a">Antítesis — en tu contra</div>
+        <div class="dial-header dial-header-a">Antiteze — proti vám</div>
         <div class="dial-items" id="dial-anti"></div>
       </div>
       <div class="dial-divider">⚖</div>
     </div>
   </div>
 
-  <!-- ═══ FAQ ═══ -->
-  <section class="faq reveal">
-    <div class="faq-label">Často kladené otázky</div>
-
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-        Jak často se aktualizují zákony?
-        <span class="faq-arrow">+</span>
-      </button>
-      <div class="faq-a">Paralelně běží dva systémy. Týdenní automatická kontrola porovnává naši databázi se Sbírkou zákonů a detekuje novely. Druhý systém pracuje s alertami — při každé legislativní změně publikované ve Sbírce zákonů se spouští aktualizace do 48 hodin.</div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-        Jsou texty zákonů ověřené?
-        <span class="faq-arrow">+</span>
-      </button>
-      <div class="faq-a">Ano. Každý text pochází přímo ze Sbírky zákonů České republiky. Nepracujeme s parafrázemi ani se shrnutími. Databáze obsahuje 97 zákonů, 19 772 paragrafů a 1 465 soudních rozhodnutí — vše v plném znění.</div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-        Může AI halucinovat nebo si vymýšlet?
-        <span class="faq-arrow">+</span>
-      </button>
-      <div class="faq-a">Legal Atlas nepracuje s pamětí modelu. Každá odpověď je výsledkem vyhledávání v ověřeném legislativním korpusu (RAG — Retrieval-Augmented Generation). AI nikdy negeneruje text z paměti — vždy cituje konkrétní § s plným zněním. Pokud odpověď nenajde, řekne to.</div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-        Kolik jurisdikcí mohu porovnat najednou?
-        <span class="faq-arrow">+</span>
-      </button>
-      <div class="faq-a">Magnus umožňuje porovnat až 3 právní systémy v jednom dotazu. Aktuálně pokrýváme Česko, Mexiko, Německo, Francii, Španělsko, Švýcarsko a Monako — celkem 7 jurisdikcí a více než 153 000 ověřených článků.</div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-        Nahrazuje Legal Atlas právníka?
-        <span class="faq-arrow">+</span>
-      </button>
-      <div class="faq-a">Ne. Legal Atlas je nástroj pro právní výzkum, ne právní poradenství. Pomáhá právníkům, advokátům a justičním pracovníkům najít relevantní ustanovení rychleji a přesněji. Konečné rozhodnutí vždy zůstává na kvalifikovaném právním profesionálovi.</div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-        V jakém jazyce mohu klást dotazy?
-        <span class="faq-arrow">+</span>
-      </button>
-      <div class="faq-a">V jakémkoli. Systém rozumí češtině, angličtině, španělštině, němčině a francouzštině. Můžete se zeptat česky a dostat výsledky ze španělského nebo německého práva — Magnus odpovídá v jazyce vašeho dotazu.</div>
-    </div>
-  </section>
-
-  <div class="cta-block">
-    <h3 class="cta-block-h">Ningún otro sistema de AI lo hace.</h3>
-    <p class="cta-block-sub">7 leyes · 94 937 artículos · Texto completo · Citación · Cero alucinaciones · Gratis</p>
-    <a href="/mx/magnus.html" class="cta-btn">Probar gratis →</a>
+  <div class="cta-block bg-alt">
+    <h3 class="cta-block-h">Žádný jiný AI systém to nedělá.</h3>
+    <p class="cta-block-sub">97 zákonů · 19 772 § · Plný text · Citace · Nulové halucinace · Zdarma</p>
+    <a href="/cz/magnus.html" class="cta-btn">Vyzkoušet zdarma →</a>
   </div>
 
   <footer>
@@ -1381,45 +1167,45 @@ footer {
         <a href="mailto:contact@legalatlas.io" class="f-contact-link">contact@legalatlas.io →</a>
       </div>
       <div class="f-col">
-        <div class="f-col-title">Herramientas</div>
-        <a href="/mx/magnus.html">Magnus</a>
-        <a href="/mx/abogado.html">Biblioteca</a>
-        <a href="/mx/jurisprudencia.html">Jurisprudencia</a>
-        <a href="/mx/atlas.html">Atlas</a>
-        <a href="/mx/selector.html">Selector</a>
+        <div class="f-col-title">Nástroje</div>
+        <a href="/cz/magnus.html">Magnus</a>
+        <a href="/cz/abogado.html">Knihovna</a>
+        <a href="/cz/jurisprudencia.html">Judikatura</a>
+        <a href="/cz/atlas.html">Atlas</a>
+        <a href="/cz/selector.html">Selector</a>
       </div>
       <div class="f-col">
-        <div class="f-col-title">Jurisdicciones</div>
-        <a href="/mx/">🇨🇿 Česko</a>
+        <div class="f-col-title">Jurisdikce</div>
+        <a href="/cz/">🇨🇿 Česko</a>
         <a href="/mx/">🇲🇽 México</a>
         <a href="#">🇩🇪 Deutschland</a>
         <a href="#">🇫🇷 France</a>
         <a href="#">🇪🇸 España</a>
       </div>
       <div class="f-col">
-        <div class="f-col-title">Base de datos</div>
-        <a href="#">7 leyes</a>
-        <a href="#">94 937 artículos</a>
-        <a href="#">32 estados</a>
-        <a href="#">7 jurisdicciones</a>
+        <div class="f-col-title">Databáze</div>
+        <a href="#">97 zákonů</a>
+        <a href="#">19 772 paragrafů</a>
+        <a href="#">29 491 rozhodnutí</a>
+        <a href="#">7 jurisdikcí</a>
       </div>
       <div class="f-col">
-        <div class="f-col-title">Empresa</div>
+        <div class="f-col-title">Společnost</div>
         <a href="/">English version</a>
-        <a href="/pricing.html">Precios</a>
-        <a href="https://a.co/d/01mnKTlj" target="_blank">Libro (EN)</a>
-        <a href="https://a.co/d/0aHW2roS" target="_blank">Libro (ES)</a>
+        <a href="/pricing.html">Ceník</a>
+        <a href="https://a.co/d/01mnKTlj" target="_blank">Kniha (EN)</a>
+        <a href="https://a.co/d/0aHW2roS" target="_blank">Kniha (ES)</a>
       </div>
     </div>
     <div class="f-bottom">
-      <div class="f-copy">© Legal Atlas Engineering 2026 · Ciudad de México, México</div>
+      <div class="f-copy">© Legal Atlas Engineering 2026 · Praha, Česko</div>
       <div class="f-legal">
-        <a href="/terms.html">Términos</a>
-        <a href="/privacy.html">Privacidad</a>
-        <a href="/acceptable.html">Uso aceptable</a>
+        <a href="/terms.html">Podmínky</a>
+        <a href="/privacy.html">Ochrana údajů</a>
+        <a href="/acceptable.html">Pravidla užívání</a>
       </div>
     </div>
-    <p class="f-disclaimer">Legal Atlas es una herramienta de investigación jurídica para profesionales del derecho. Genera contenido con ayuda de AI con referencias normativas verificadas. No constituye asesoría legal ni sustituye el juicio profesional independiente.</p>
+    <p class="f-disclaimer">Legal Atlas je nástroj pro právní výzkum určený právním profesionálům. Generuje obsah s pomocí AI s ověřenými normativními odkazy. Nepředstavuje právní poradenství ani náhradu za nezávislý odborný úsudek.</p>
   </footer>
 
 </div>
@@ -1455,27 +1241,27 @@ document.getElementById('burger').addEventListener('click', openSidebar)
 // DEMO ANIMATION — 3 rotating queries
 ;(function runDemo() {
   const demos = [{
-      query: 'Mi patrón me despidió sin justificación después de 5 años. ¿Cuáles son mis derechos?',
+      query: 'Soused prodal nemovitost, ale já mám předkupní právo. Jaká jsou moje práva?',
       results: [
-        { tag:'Constitución', cls:'tag-ustava', art:'Art. 123 · Constitución Política', text:'Toda persona tiene derecho al trabajo digno y socialmente útil; se promoverán la creación de empleos y la organización social de trabajo.', score:'94%' },
-        { tag:'Ley Federal del Trabajo', cls:'tag-civil', art:'Art. 48 · Ley Federal del Trabajo', text:'El trabajador podrá solicitar ante la Autoridad Conciliadora que se le reinstale en el trabajo o que se le indemnice con el importe de tres meses de salario.', score:'91%' },
-        { tag:'Ley Federal del Trabajo', cls:'tag-civil', art:'Art. 518 · Ley Federal del Trabajo', text:'Prescriben en dos meses las acciones de los trabajadores que sean separados del trabajo.', score:'87%' }
+        { tag:'Listina', cls:'tag-ustava', art:'Čl. 11 · Listina základních práv a svobod', text:'Každý má právo vlastnit majetek. Vlastnické právo všech vlastníků má stejný zákonný obsah a ochranu. Dědění se zaručuje.', score:'94%' },
+        { tag:'Občanský zákoník', cls:'tag-civil', art:'§ 2140 · Občanský zákoník', text:'Ujedná-li si předkupník k věci předkupní právo, vzniká dlužníku povinnost nabídnout věc předkupníkovi ke koupi, pokud by ji chtěl prodat třetí osobě (koupěchtivému).', score:'91%' },
+        { tag:'Občanský zákoník', cls:'tag-civil', art:'§ 2144 · Občanský zákoník', text:'Je-li předkupní právo zřízeno jako právo věcné, opravňuje předkupníka domáhat se vůči nástupci druhé strany, jenž věc nabyl koupí, aby mu věc za příslušnou úplatu převedl.', score:'87%' }
       ]
     },
     {
-      query: 'El arrendador quiere aumentar la renta un 40%. ¿Es legal en CDMX?',
+      query: 'Zaměstnavatel mi nevyplatil mzdu za poslední 2 měsíce. Co můžu dělat?',
       results: [
-        { tag:'Código Civil CDMX', cls:'tag-civil', art:'Art. 2448-D · Código Civil CDMX', text:'La renta debe ser fijada en cantidad líquida. Su incremento anual no podrá exceder del porcentaje de inflación reportado por el Banco de México.', score:'95%' },
-        { tag:'Código Civil CDMX', cls:'tag-civil', art:'Art. 2448-C · Código Civil CDMX', text:'La duración mínima de todo contrato de arrendamiento de fincas urbanas destinadas a la habitación será de un año.', score:'88%' },
-        { tag:'Constitución', cls:'tag-ustava', art:'Art. 4 · Constitución Política', text:'Toda familia tiene derecho a disfrutar de vivienda digna y decorosa. La Ley establecerá los instrumentos y apoyos necesarios.', score:'82%' }
+        { tag:'Zákoník práce', cls:'tag-civil', art:'§ 141 · Zákoník práce', text:'Mzda nebo plat jsou splatné po vykonání práce, a to nejpozději v kalendářním měsíci následujícím po měsíci, ve kterém vzniklo zaměstnanci právo na mzdu nebo plat.', score:'96%' },
+        { tag:'Zákoník práce', cls:'tag-civil', art:'§ 56 · Zákoník práce', text:'Zaměstnanec může pracovní poměr okamžitě zrušit jen, jestliže mu zaměstnavatel nevyplatil mzdu nebo plat nebo náhradu mzdy nebo platu anebo jakoukoli jejich část do 15 dnů po uplynutí období splatnosti.', score:'93%' },
+        { tag:'Zákoník práce', cls:'tag-civil', art:'§ 142 · Zákoník práce', text:'Mzdu nebo plat je zaměstnavatel povinen zaměstnanci vyplácet v zákonných penězích. Mzda nebo plat se zaokrouhlují na celé koruny směrem nahoru.', score:'85%' }
       ]
     },
     {
-      query: 'Me vendieron un carro con vicios ocultos. ¿Puedo anular la compraventa?',
+      query: 'Pronajímatel mi chce zvýšit nájem o 40 %. Je to legální?',
       results: [
-        { tag:'Código de Comercio', cls:'tag-civil', art:'Art. 383 · Código de Comercio', text:'Las ventas mercantiles no se rescindirán por causa de lesión; pero al perjudicado se le concederá acción para reclamar daños y perjuicios.', score:'93%' },
-        { tag:'Código Civil CDMX', cls:'tag-civil', art:'Art. 2142 · Código Civil CDMX', text:'La acción redhibitoria tiene lugar cuando la cosa vendida tiene vicios o defectos graves que la hagan impropia para los usos a que se la destina.', score:'89%' },
-        { tag:'Ley de Amparo', cls:'tag-juris', art:'Art. 1 · Ley de Amparo', text:'El juicio de amparo tiene por objeto resolver toda controversia que se suscite por normas generales, actos u omisiones de autoridad que violen derechos humanos.', score:'84%' }
+        { tag:'Občanský zákoník', cls:'tag-civil', art:'§ 2249 · Občanský zákoník', text:'Pronajímatel může navrhnout nájemci zvýšení nájemného až do výše srovnatelného nájemného obvyklého v daném místě, pokud navržené zvýšení spolu s tím, k němuž již došlo v posledních třech letech, nepřesáhne dvacet procent.', score:'95%' },
+        { tag:'Občanský zákoník', cls:'tag-civil', art:'§ 2250 · Občanský zákoník', text:'Provede-li pronajímatel stavební úpravy, které trvale zlepšují užitnou hodnotu pronajatého bytu, může se s nájemci dohodnout o zvýšení nájemného, nejvýše však o deset procent z účelně vynaložených nákladů.', score:'88%' },
+        { tag:'Občanský zákoník', cls:'tag-civil', art:'§ 2248 · Občanský zákoník', text:'Strany si mohou ujednat každoroční zvyšování nájemného.', score:'82%' }
       ]
     }
   ]
@@ -1613,7 +1399,7 @@ document.getElementById('burger').addEventListener('click', openSidebar)
   const arrow = document.getElementById('mm-arrow')
   if (!mock) return
 
-  const query = 'Trabajador mexicano despedido sin justificación después de 5 años. El patrón no le pagó las últimas 3 semanas. ¿Qué derechos tiene?'
+  const query = 'Český manžel a česká manželka vlastní nemovitost ve Španělsku. Rozvádí se v Praze. Jaké právo se použije na majetek?'
 
   function wait(ms) { return new Promise(r => setTimeout(r, ms)) }
   function moveArr(l, t) { arrow.style.left = l + 'px'; arrow.style.top = t + 'px'; }
@@ -1729,7 +1515,7 @@ document.getElementById('burger').addEventListener('click', openSidebar)
   const input = document.getElementById('jd-input')
   if (!demo) return
 
-  const query = 'Patrón despidió al trabajador sin causa justificada, derecho a indemnización'
+  const query = 'Zaměstnavatel propustil zaměstnance bez udání důvodu, nárok na odškodnění'
 
   function wait(ms) { return new Promise(r => setTimeout(r, ms)) }
 
@@ -1800,41 +1586,60 @@ document.getElementById('burger').addEventListener('click', openSidebar)
   const cursor = document.getElementById('kn-cursor')
   if (!demo) return
 
-  const laws = ['Constitución Política','Ley Federal del Trabajo',
-    'Código de Comercio','Codigo Penal Federal',
-    'Ley de Amparo','Ley General de Títulos y Operaciones de Crédito',
-    'Código Civil · Aguascalientes','Código Civil · Baja California',
-    'Código Civil · Baja California Sur','Código Civil · Campeche',
-    'Código Civil · Chiapas','Código Civil · Chihuahua',
-    'Código Civil · Ciudad de México','Código Civil · Coahuila',
-    'Código Civil · Colima','Código Civil · Durango',
-    'Código Civil · Estado de México','Código Civil · Guanajuato',
-    'Código Civil · Guerrero','Código Civil · Hidalgo',
-    'Código Civil · Jalisco',
-    'Ley Federal del Trabajo',
-    'Código Civil · Michoacán',
-    'Código Civil · Morelos','Código Civil · Nayarit',
-    'Código Civil · Nuevo León','Código Civil · Oaxaca',
-    'Código Civil · Puebla','Código Civil · Querétaro',
-    'Código Civil · Quintana Roo','Código Civil · San Luis Potosí',
-    'Código Civil · Sinaloa','Código Civil · Sonora',
-    'Código Civil · Tabasco','Código Civil · Tamaulipas',
-    'Código Civil · Tlaxcala','Código Civil · Veracruz',
-    'Código Civil · Yucatán','Código Civil · Zacatecas'
+  const laws = ['Autorský zákon','Daňový řád','Energetický zákon','Exekuční řád',
+    'Insolvenční zákon','Listina základních práv a svobod','Notářský řád',
+    'Občanský soudní řád','Školský zákon','Správní řád','Stavební zákon',
+    'Trestní řád','Trestní zákoník','Ústava České republiky',
+    'Zákon o advokacii','Zákon o archivnictví','Zákon o auditorech',
+    'Zákon o azylu','Zákon o bankách','Zákon o cenách',
+    'Zákon o cestovních dokladech','Zákon o církvích',
+    'Zákon o civilním letectví',
+    'Občanský zákoník',
+    'Zákon o dani z nemovitých věcí',
+    'Zákon o dani z přidané hodnoty','Zákon o daních z příjmů',
+    'Zákon o dětské skupině','Zákon o dráhách',
+    'Zákon o důchodovém pojištění','Zákon o elektronických komunikacích',
+    'Zákon o hazardních hrách','Zákon o hlavním městě Praze',
+    'Zákon o katastru nemovitostí','Zákon o krajích',
+    'Zákon o kybernetické bezpečnosti','Zákon o léčivech',
+    'Zákon o lesích','Zákon o matrikách','Zákon o mediaci',
+    'Zákon o mezinárodním právu soukromém',
+    'Zákon o nemocenském pojištění',
+    'Zákon o obchodních korporacích','Zákon o obcích',
+    'Zákon o ochraně hospodářské soutěže','Zákon o ochraně ovzduší',
+    'Zákon o ochraně přírody a krajiny','Zákon o ochraně spotřebitele',
+    'Zákon o ochranných známkách','Zákon o odpadech',
+    'Zákon o platebním styku','Zákon o pobytu cizinců',
+    'Zákon o podnikání na kapitálovém trhu','Zákon o pojišťovnictví',
+    'Zákon o Policii ČR','Zákon o pozemních komunikacích',
+    'Zákon o přestupcích','Zákon o rozhodčím řízení',
+    'Zákon o silničním provozu','Zákon o sociálních službách',
+    'Zákon o soudech a soudcích','Zákon o spotřebitelském úvěru',
+    'Zákon o státní službě','Zákon o účetnictví',
+    'Zákon o Ústavním soudu','Zákon o územním plánování',
+    'Zákon o veřejném ochránci práv','Zákon o veřejném zdravotním pojištění',
+    'Zákon o veřejných dražbách','Zákon o veřejných rejstřících',
+    'Zákon o vlastnictví bytů','Zákon o vodách',
+    'Zákon o volbách do Parlamentu ČR','Zákon o vynálezech',
+    'Zákon o vysokých školách','Zákon o zadávání veřejných zakázek',
+    'Zákon o zaměstnanosti','Zákon o zbraních',
+    'Zákon o zdravotních službách','Zákon o znalcích',
+    'Zákon o zpracování osobních údajů',
+    'Zákoník práce','Živnostenský zákon'
   ]
-  const TARGET = 'Ley Federal del Trabajo'
+  const TARGET = 'Občanský zákoník'
   const TARGET_IDX = laws.indexOf(TARGET)
 
-  const articles = [{ num:'Art. 1', txt:'La presente Ley es de observancia general en toda la República y rige las relaciones de trabajo.' },
-    { num:'Art. 2', txt:'Las normas del trabajo tienden a conseguir el equilibrio entre los factores de la producción y la justicia social.' },
-    { num:'Art. 47', txt:'Son causas de rescisión de la relación de trabajo, sin responsabilidad para el patrón.', target:true },
-    { num:'Art. 48', txt:'El trabajador podrá solicitar que se le reinstale en el trabajo o que se le indemnice con tres meses de salario.' },
-    { num:'Art. 50', txt:'Las indemnizaciones consistirán en una cantidad igual al importe de los salarios correspondientes.' },
-    { num:'Art. 518', txt:'Prescriben en dos meses las acciones de los trabajadores que sean separados del trabajo.' },
+  const articles = [{ num:'§ 2079', txt:'Kupní smlouvou se prodávající zavazuje, že kupujícímu odevzdá věc, která je předmětem koupě, a umožní mu nabýt vlastnické právo k ní.' },
+    { num:'§ 2080', txt:'Kupní cena je ujednána dostatečně určitě, je-li ujednán alespoň způsob jejího určení.' },
+    { num:'§ 2128', txt:'Při prodeji a koupi nemovité věci vyžaduje kupní smlouva formu podle § 560.', target:true },
+    { num:'§ 2129', txt:'Kupující má právo na přiměřenou slevu z kupní ceny, nemá-li pozemek výměru určenou v kupní smlouvě.' },
+    { num:'§ 2130', txt:'Ujednají-li strany, kdy má kupující nemovitou věc převzít, náleží kupujícímu od ujednané doby převzetí plody a užitky nemovité věci.' },
+    { num:'§ 2131', txt:'V ostatním se na smlouvu o koupi nemovité věci použijí přiměřeně ustanovení o koupi movitých věcí.' },
   ]
 
-  const userQ = '¿Puede el patrón despedir a un trabajador sin indemnización si no hay causa justificada?'
-  const aiResp = 'Según el <span class="kn-art">Art. 48 de la LFT</span>, el trabajador podrá solicitar la reinstalación o la indemnización de tres meses de salario. El <span class="kn-art">Art. 50 LFT</span> establece que las indemnizaciones consistirán en el importe de los salarios correspondientes más veinte días por cada año de servicios. El plazo para demandar es de dos meses según el Art. 518.'
+  const userQ = 'Je kupní smlouva na nemovitost platná bez notářského ověření podpisů?'
+  const aiResp = 'Podle <span class="kn-art">§ 2128 OZ</span> vyžaduje kupní smlouva na nemovitost písemnou formu podle § 560. Zároveň <span class="kn-art">§ 561 odst. 1 OZ</span> stanoví, že k platnosti písemného jednání se vyžaduje podpis jednajícího. U převodu nemovitosti musí být podpisy úředně ověřeny — jinak katastrální úřad vklad vlastnického práva nezapíše.'
 
   function wait(ms) { return new Promise(r => setTimeout(r, ms)) }
   function moveCur(l, t) { cursor.style.left = l + 'px'; cursor.style.top = t + 'px'; }
@@ -1968,7 +1773,7 @@ document.getElementById('burger').addEventListener('click', openSidebar)
     await wait(400)
     const spinner = document.createElement('div')
     spinner.className = 'kn-spinner'
-    spinner.innerHTML = '<div class="kn-spin-icon"></div> Analizando ley………'
+    spinner.innerHTML = '<div class="kn-spin-icon"></div> Analyzuji zákon……'
     msgsEl.appendChild(spinner)
     await wait(1800)
     spinner.remove()
@@ -2003,15 +1808,15 @@ document.getElementById('burger').addEventListener('click', openSidebar)
 
 // ATLAS TEZE vs ANTITEZE ANIMATION
 ;(function atlasDial(){
-  const teze = [{ art:'Art. 48 · LFT', txt:'El trabajador podrá solicitar reinstalación o indemnización de tres meses de salario.' },
-    { art:'Art. 50 · LFT', txt:'Las indemnizaciones consistirán en una cantidad igual al importe de los salarios.' },
-    { art:'Art. 518 · LFT', txt:'Prescriben en dos meses las acciones de los trabajadores separados del trabajo.' },
-    { art:'Art. 123 · CPEUM', txt:'Toda persona tiene derecho al trabajo digno y socialmente útil.' },
-    { art:'Art. 113 · LFT', txt:'Los salarios devengados en el último año y las indemnizaciones son preferentes sobre cualquier otro crédito.' },
+  const teze = [{ art:'§ 52 · Zákoník práce', txt:'Zaměstnavatel může dát výpověď jen z taxativně stanovených důvodů.' },
+    { art:'§ 67 · Zákoník práce', txt:'Zaměstnanci náleží odstupné při výpovědi z organizačních důvodů.' },
+    { art:'§ 69 · Zákoník práce', txt:'Dal-li zaměstnavatel neplatnou výpověď, přísluší zaměstnanci náhrada mzdy.' },
+    { art:'§ 72 · Zákoník práce', txt:'Neplatnost výpovědi lze napadnout u soudu do 2 měsíců.' },
+    { art:'Čl. 26 · Listina', txt:'Každý má právo na svobodnou volbu povolání a právo podnikat.' },
   ]
-  const anti = [{ art:'Art. 47 Fracc. II · LFT', txt:'Incurrir el trabajador en faltas de probidad u honradez, en actos de violencia contra el patrón.' },
-    { art:'Art. 47 Fracc. X · LFT', txt:'Tener el trabajador más de tres faltas de asistencia en un período de treinta días sin causa justificada.' },
-    { art:'Art. 134 Fracc. IV · LFT', txt:'Ejecutar el trabajo con la intensidad, cuidado y esmero apropiados en la forma, tiempo y lugar convenidos.' },
+  const anti = [{ art:'§ 55 · Zákoník práce', txt:'Zaměstnavatel může pracovní poměr okamžitě zrušit při zvlášť hrubém porušení povinností.' },
+    { art:'§ 58 · Zákoník práce', txt:'Pro porušení povinnosti lze dát výpověď do 2 měsíců ode dne, kdy se o něm zaměstnavatel dozvěděl.' },
+    { art:'§ 301 · Zákoník práce', txt:'Zaměstnanci jsou povinni pracovat řádně, plnit pokyny nadřízených a dodržovat pracovní kázeň.' },
   ]
 
   const tezeEl = document.getElementById('dial-teze')
@@ -2122,22 +1927,11 @@ document.getElementById('burger').addEventListener('click', openSidebar)
   el.innerHTML = html + html
 })()
 
-// SCROLL REVEAL — bidirectional (appears/disappears on scroll)
+// SCROLL REVEAL
 const revealObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1'
-      e.target.style.transform = 'translateY(0)'
-    } else {
-      e.target.style.opacity = '0'
-      e.target.style.transform = 'translateY(16px)'
-    }
-  })
-}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' })
-document.querySelectorAll('.reveal').forEach(el => {
-  el.style.cssText += 'opacity:0;transform:translateY(16px);transition:opacity 0.5s cubic-bezier(.4,0,.2,1),transform 0.5s cubic-bezier(.4,0,.2,1)'
-  revealObs.observe(el)
-})
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') })
+}, { threshold: 0.15 })
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el))
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>

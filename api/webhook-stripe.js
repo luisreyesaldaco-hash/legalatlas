@@ -164,7 +164,7 @@ async function anonimizarYGuardar(documentoHtml, tipoDocumento, estado, precioMx
         model:   'models/gemini-embedding-001',
         content: { parts: [{ text: textoLimpio }] },
         taskType: 'RETRIEVAL_DOCUMENT',
-        outputDimensionality: 1536
+        outputDimensionality: 768
       })
     }
   )

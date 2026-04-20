@@ -1,5 +1,4 @@
-
-    {
+{
       query: 'Soused prodal nemovitost, ale já mám předkupní právo. Jaká jsou moje práva?',
       results: [
         { tag:'Listina', cls:'tag-ustava', art:'Čl. 11 · Listina základních práv a svobod', text:'Každý má právo vlastnit majetek. Vlastnické právo všech vlastníků má stejný zákonný obsah a ochranu. Dědění se zaručuje.', score:'94%' },
