@@ -884,6 +884,24 @@
     }
     .msg-usuario .msg-sender { color: var(--text-muted); }
 
+    .chat-diagrama {
+      margin: 10px 0 6px;
+      background: rgba(0,0,0,0.12);
+      border: 1px solid rgba(196,154,60,0.18);
+      border-radius: 10px;
+      padding: 12px;
+      overflow: hidden;
+    }
+    .chat-diagrama svg { display: block; width: 100%; height: auto; }
+    .chat-diagrama-cap {
+      font-size: 10.5px;
+      color: rgba(245,237,216,0.5);
+      letter-spacing: 0.04em;
+      margin-top: 4px;
+    }
+    :root:not([data-theme="dark"]) .chat-diagrama { background: rgba(139,104,32,0.04); }
+    :root:not([data-theme="dark"]) .chat-diagrama-cap { color: var(--text-muted); }
+
     .typing-dots {
       display: flex;
       gap: 4px;
@@ -2326,12 +2344,8 @@
     //  EXPLAIN SECTION — desde vista de sección (sin artículo activo)
     // ═══════════════════════════════════════════════════════════
     async function explicarSeccion(nombre, capitulo, titulo) {
-      mostrarWhiteboard();
-      document.getElementById('wb-titulo').textContent = nombre;
-      document.getElementById('wb-frame').innerHTML = `
-        <div class="wb-loading"><div class="wb-spinner"></div>Generando diagrama de flujo…</div>`;
-      document.getElementById('wb-caption').textContent = 'Generando…';
-
+      const typingId = 'dia-typing-' + Date.now();
+      agregarMensaje('apolo-typing', '', typingId);
       try {
         const res = await fetch('/api/diagrama', {
           method: 'POST',
@@ -2339,13 +2353,12 @@
           body: JSON.stringify({ nivel_secundario: capitulo || titulo, estado: estadoActivo, ley: leyActiva, idioma: localStorage.getItem('atlas_lang') || 'es' })
         });
         const json = await res.json();
+        eliminarMensaje(typingId);
         if (!json.svg) throw new Error(json.error || 'Sin SVG');
-        document.getElementById('wb-frame').innerHTML = json.svg;
-        const caption = document.getElementById('wb-caption');
-        caption.className = 'wb-caption gold';
-        caption.textContent = json.cached ? 'Diagrama en caché · APOLO' : 'Generado por APOLO';
+        agregarMensaje('apolo', renderDiagramaChat(nombre, json.svg, json.cached));
       } catch (err) {
-        document.getElementById('wb-frame').innerHTML = `<div class="wb-loading" style="color:rgba(245,237,216,0.3)">Error al generar el diagrama</div>`;
+        eliminarMensaje(typingId);
+        agregarMensaje('apolo', 'No pude generar el diagrama de esta sección. Intenta de nuevo en un momento.');
         console.error('[explicarSeccion]', err);
       }
     }
@@ -2355,47 +2368,36 @@
     // ═══════════════════════════════════════════════════════════
     async function explicarCapitulo() {
       if (!articuloActivo) return;
-
       const { titulo, estado, ley } = articuloActivo;
       if (!titulo) {
         agregarMensaje('apolo', 'Este artículo no tiene capítulo asignado para generar un diagrama.');
         return;
       }
-
-      // Show whiteboard with loading
-      mostrarWhiteboard();
-      document.getElementById('wb-titulo').textContent = titulo;
-      document.getElementById('wb-frame').innerHTML = `
-        <div class="wb-loading">
-          <div class="wb-spinner"></div>
-          Generando diagrama de flujo…
-        </div>`;
-      document.getElementById('wb-caption').className = 'wb-caption';
-      document.getElementById('wb-caption').textContent = 'Generando…';
-
+      const typingId = 'dia-typing-' + Date.now();
+      agregarMensaje('apolo-typing', '', typingId);
       try {
-        const res  = await fetch('/api/diagrama', {
+        const res = await fetch('/api/diagrama', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nivel_secundario: titulo, estado, ley, idioma: localStorage.getItem('atlas_lang') || 'es' })
         });
         const json = await res.json();
-
+        eliminarMensaje(typingId);
         if (!json.svg) throw new Error(json.error || 'Sin SVG en respuesta');
-
-        document.getElementById('wb-frame').innerHTML = json.svg;
-        const caption = document.getElementById('wb-caption');
-        caption.className = 'wb-caption gold';
-        caption.textContent = json.cached ? 'Diagrama en caché · APOLO' : 'Generado por APOLO';
-
+        agregarMensaje('apolo', renderDiagramaChat(titulo, json.svg, json.cached));
       } catch (err) {
-        document.getElementById('wb-frame').innerHTML = `
-          <div class="wb-loading" style="color:rgba(245,237,216,0.3)">
-            Error al generar el diagrama
-          </div>`;
-        document.getElementById('wb-caption').textContent = err.message;
+        eliminarMensaje(typingId);
+        agregarMensaje('apolo', 'No pude generar el diagrama de este capítulo. ' + (err.message || 'Intenta de nuevo.'));
         console.error('[explicarCapitulo]', err);
       }
+    }
+
+    function renderDiagramaChat(titulo, svg, cached) {
+      const safeTitulo = (titulo || '').replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
+      const nota = cached ? 'Diagrama en caché.' : 'Diagrama generado.';
+      return `<div>Este es el flujo del capítulo <strong>${safeTitulo}</strong>:</div>
+        <div class="chat-diagrama">${svg}</div>
+        <div class="chat-diagrama-cap">${nota}</div>`;
     }
 
     function volverAlArticulo() {
