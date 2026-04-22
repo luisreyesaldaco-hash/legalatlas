@@ -121,8 +121,8 @@
   "marco.motor.ley.hint": "Select a law so Apolo can explain the applicable procedure step by step.",
   "marco.motor.ley.vacia": "No specific process — only analyzes WHAT the law says",
 
-  "footer.coords": "Legal Atlas · Normative analysis",
-  "footer.copy": "Legal Atlas Engineering © 2026",
+  "footer.coords": "Tesseum · Normative analysis",
+  "footer.copy": "Tesseum Engineering © 2026",
 
   "materia.civil": "Civil",
   "materia.penal": "Criminal",
@@ -154,7 +154,7 @@
   "auditor.validas": "✅ Valid",
   "auditor.riesgo": "⚠️ Risk",
   "auditor.invalidas": "❌ Invalid",
-  "auditor.aviso": "This analysis is indicative and does not replace review by a qualified lawyer. Legal Atlas cites real verified articles from the legislative corpus.",
+  "auditor.aviso": "This analysis is indicative and does not replace review by a qualified lawyer. Tesseum cites real verified articles from the legislative corpus.",
 
   "abogado.banner": "Launch period · Free access until May 7",
   "abogado.acceso.cta": "Request access →",

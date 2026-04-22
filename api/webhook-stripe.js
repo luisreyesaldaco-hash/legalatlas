@@ -55,7 +55,7 @@ export default async function handler(req, res) {
             typeof v === 'string' && v.length > 2 && v.split(' ').length >= 2
           ) || 'Cliente'
           const tipoDoc = (borrador.tipo_documento || 'documento').replace(/_/g, ' ')
-          const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://www.legalatlas.io'
+          const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://www.tesseum.com'
 
           const resendRes = await fetch('https://api.resend.com/emails', {
             method:  'POST',
@@ -64,12 +64,12 @@ export default async function handler(req, res) {
               'Content-Type':  'application/json'
             },
             body: JSON.stringify({
-              from:    'Legal Atlas <documentos@legalatlas.io>',
+              from:    'Tesseum <documentos@tesseum.com>',
               to:      [borrador.email],
-              subject: `Tu ${tipoDoc} está listo — Legal Atlas`,
+              subject: `Tu ${tipoDoc} está listo — Tesseum`,
               html: `
                 <div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;padding:32px;background:#f5edd8;color:#1a1508;">
-                  <h2 style="font-family:Georgia,serif;color:#8a6820;letter-spacing:0.1em;margin-bottom:8px;">LEGAL ATLAS</h2>
+                  <h2 style="font-family:Georgia,serif;color:#8a6820;letter-spacing:0.1em;margin-bottom:8px;">TESSEUM</h2>
                   <p style="color:#5a4a28;font-size:13px;margin-bottom:24px;letter-spacing:0.05em;">APOLO · Asistente Legal</p>
                   <p>Hola <strong>${nombreUsuario}</strong>,</p>
                   <p>Tu <strong>${tipoDoc}</strong> ha sido generado exitosamente. Puedes descargarlo en cualquier momento desde el siguiente enlace:</p>

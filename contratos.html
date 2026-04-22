@@ -9,34 +9,34 @@
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Legal Atlas — Contratos</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <title>Tesseum — Contratos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <style>
     :root {
-      --bg-deep:        #F3EAD5;
-      --bg-card:        #FAF2E0;
-      --bg-elevated:    #EBE0C8;
-      --bg-input:       #FAF2E0;
-      --text-primary:   #1A1410;
-      --text-secondary: #3D342A;
-      --text-muted:     #7A6E60;
-      --gold:           #8B6820;
-      --gold-light:     #C49A3C;
-      --gold-dim:       rgba(139,104,32,0.08);
-      --gold-border:    rgba(139,104,32,0.22);
-      --border:         #DDD0B4;
-      --border-hover:   #C9BFB0;
-      --shadow-sm:      0 1px 4px rgba(26,20,16,0.07);
-      --shadow-md:      0 4px 20px rgba(26,20,16,0.10);
-      --shadow-lg:      0 8px 40px rgba(26,20,16,0.13);
+      --bg-deep:        #F4EFE4;
+      --bg-card:        #ECE5D4;
+      --bg-elevated:    #E4DCC5;
+      --bg-input:       #ECE5D4;
+      --text-primary:   #0A0A09;
+      --text-secondary: #1A1815;
+      --text-muted:     #3A3530;
+      --gold:           #8F6A2A;
+      --gold-light:     #B8893D;
+      --gold-dim:       rgba(143,106,42,0.08);
+      --gold-border:    rgba(143,106,42,0.22);
+      --border:         #D8CFBA;
+      --border-hover:   #C4B79E;
+      --shadow-sm:      0 1px 4px rgba(10,10,9,0.07);
+      --shadow-md:      0 4px 20px rgba(10,10,9,0.10);
+      --shadow-lg:      0 8px 40px rgba(10,10,9,0.13);
       /* compat aliases — mantener los que ya existen */
       --bg-raised:      var(--bg-elevated);
       --text:           var(--text-primary);
       --text-soft:      var(--text-secondary);
       --border-hov:     var(--border-hover);
       --accent:         var(--gold);
-      --gold-glow:      rgba(139,104,32,0.25);
+      --gold-glow:      rgba(143,106,42,0.25);
     }
     :root[data-theme="dark"] {
       --bg-deep:        #0C0C0A;
@@ -46,10 +46,10 @@
       --text-primary:   #F0ECE4;
       --text-secondary: #D0C4B4;
       --text-muted:     #9C9082;
-      --gold:           #C49A3C;
-      --gold-light:     #D4AE58;
-      --gold-dim:       rgba(196,154,60,0.10);
-      --gold-border:    rgba(196,154,60,0.20);
+      --gold:           #B8893D;
+      --gold-light:     #D4A55C;
+      --gold-dim:       rgba(184,137,61,0.10);
+      --gold-border:    rgba(184,137,61,0.20);
       --border:         #2A2A26;
       --border-hover:   #3D3D38;
       --shadow-sm:      0 1px 4px rgba(0,0,0,0.25);
@@ -60,14 +60,14 @@
       --text-soft:      var(--text-secondary);
       --border-hov:     var(--border-hover);
       --accent:         var(--gold);
-      --gold-glow:      rgba(196,154,60,0.35);
+      --gold-glow:      rgba(184,137,61,0.35);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Lora', Georgia, serif;
+      font-family: 'Fraunces', Georgia, serif;
       background: var(--bg-deep);
       color: var(--text-primary);
       min-height: 100vh;
@@ -92,18 +92,18 @@
     }
     .ambient-orb-1 {
       width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(196,154,60,0.12) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(184,137,61,0.12) 0%, transparent 70%);
       top: -200px; left: -100px;
     }
     .ambient-orb-2 {
       width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(196,154,60,0.08) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(184,137,61,0.08) 0%, transparent 70%);
       bottom: -150px; right: -100px;
       animation-delay: -10s;
     }
     .ambient-orb-3 {
       width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(196,154,60,0.06) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(184,137,61,0.06) 0%, transparent 70%);
       top: 40%; left: 60%;
       animation-delay: -5s;
     }
@@ -130,7 +130,7 @@
       z-index: 100;
     }
     .topbar-logo {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 15px;
       font-weight: 700;
       letter-spacing: 0.25em;
@@ -140,7 +140,7 @@
     .topbar-logo span { color: var(--gold); font-weight: 400; }
     .topbar-nav { display: flex; gap: 32px; }
     .topbar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0.07em;
@@ -168,7 +168,7 @@
       gap: 6px;
     }
     .pro-badge {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8px;
       font-weight: 700;
       letter-spacing: 0.15em;
@@ -182,7 +182,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.2em;
       color: var(--text-muted);
@@ -218,7 +218,7 @@
     }
     .section-line.right { background: linear-gradient(90deg, var(--border-hover), transparent); }
     .section-label {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 10px;
       letter-spacing: 0.5em;
       color: var(--text-muted);
@@ -228,9 +228,9 @@
 
     /* ═══ FOOTER ═══ */
     .footer { text-align: center; padding: 48px 40px 40px; border-top: 1px solid var(--border); position: relative; z-index: 1; }
-    .footer-copy { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.25em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
+    .footer-copy { font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: 0.25em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
     .footer-disclaimer { font-size: 12px; color: var(--text-muted); line-height: 1.75; max-width: 640px; margin: 0 auto 18px; opacity: 0.85; }
-    .footer-links { display: flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; }
+    .footer-links { display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; }
     .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
     .footer-links a:hover { color: var(--gold); }
     .footer-links span { margin: 0 14px; color: var(--border); }
@@ -256,7 +256,7 @@
       text-align: center;
     }
     .contratos-eyebrow {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 10px;
       letter-spacing: 0.6em;
       color: var(--gold);
@@ -266,7 +266,7 @@
       animation: fadeUp 0.8s ease forwards;
     }
     .contratos-titulo {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: clamp(36px, 7vw, 72px);
       font-weight: 700;
       letter-spacing: 0.08em;
@@ -319,12 +319,12 @@
     .camino:hover {
       border-color: var(--border-hover);
       transform: translateY(-8px);
-      box-shadow: 0 20px 60px rgba(196,154,60,0.12);
+      box-shadow: 0 20px 60px rgba(184,137,61,0.12);
     }
     .camino:hover::before { opacity: 1; }
     .camino-badge {
       display: inline-block;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.3em;
       text-transform: uppercase;
@@ -335,7 +335,7 @@
       margin-bottom: 20px;
     }
     .camino-titulo {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 22px;
       font-weight: 600;
       margin-bottom: 14px;
@@ -348,7 +348,7 @@
       margin-bottom: 32px;
     }
     .camino-precio {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 11px;
       color: var(--gold);
       letter-spacing: 0.15em;
@@ -358,7 +358,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 11px;
       letter-spacing: 0.2em;
       color: var(--text-muted);
@@ -397,7 +397,7 @@
       min-height: 60px;
     }
     .divisor-text {
-      font-family: 'Lora', serif;
+      font-family: 'Fraunces', serif;
       font-style: italic;
       font-size: 13px;
       color: var(--text-muted);
@@ -421,7 +421,7 @@
     }
     .tree-step { flex: 1; min-width: 200px; }
     .tree-step-label {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.4em;
       text-transform: uppercase;
@@ -434,7 +434,7 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 14px 18px;
-      font-family: 'Lora', serif;
+      font-family: 'Fraunces', serif;
       font-size: 15px;
       color: var(--text-primary);
       cursor: pointer;
@@ -470,7 +470,7 @@
       background: var(--gold-dim);
     }
     .tipo-chip-nombre {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 13px;
       font-weight: 600;
       color: var(--text-primary);
@@ -489,7 +489,7 @@
       border: none;
       border-radius: 12px;
       padding: 16px 40px;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.1em;
@@ -500,7 +500,7 @@
     .tree-continuar:hover {
       background: var(--gold-light);
       transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(196,154,60,0.25);
+      box-shadow: 0 8px 30px rgba(184,137,61,0.25);
     }
 
     /* ═══ UPLOAD PANEL (camino B) ═══ */
@@ -531,7 +531,7 @@
       stroke: var(--gold);
     }
     .upload-titulo {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 16px;
       font-weight: 600;
       margin-bottom: 8px;
@@ -548,18 +548,18 @@
       border: 1px solid var(--border-hover);
       border-radius: 10px;
       padding: 12px 28px;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 11px;
       letter-spacing: 0.2em;
       color: var(--gold);
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    .upload-btn:hover { background: rgba(196,154,60,0.2); }
+    .upload-btn:hover { background: rgba(184,137,61,0.2); }
     #file-input { display: none; }
     .upload-precio {
       margin-top: 20px;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 10px;
       letter-spacing: 0.3em;
       color: var(--text-muted);
@@ -597,7 +597,7 @@
     }
     .topbar-logo { color: var(--text-primary); }
     .topbar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0.07em;
@@ -701,24 +701,24 @@
     }
     .tema-btn:hover { color: var(--gold); border-color: var(--gold-border); }
     .lang-dropdown { display: none; }
-    select option { background: #FDFAF5 !important; color: #1A1410 !important; }
-    select:focus option { background: #F0EBE0 !important; color: #1A1410 !important; }
+    select option { background: #FDFAF5 !important; color: #0A0A09 !important; }
+    select:focus option { background: #F0EBE0 !important; color: #0A0A09 !important; }
     /* ── Mobile sidebar ── */
     .topbar-right { display: flex; align-items: center; gap: 4px; }
     .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
-    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #3D342A); border-radius: 2px; transition: background 0.2s; }
-    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(26,20,16,0.45); z-index: 199; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #1A1815); border-radius: 2px; transition: background 0.2s; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(10,10,9,0.45); z-index: 199; }
     .sidebar-overlay.open { display: block; }
-    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(26,20,16,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
+    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(10,10,9,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
     .sidebar.open { right: 0; }
     .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border, #E5DDD0); }
-    .sidebar-logo { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #1A1410); text-decoration: none; }
-    .sidebar-logo span { color: var(--gold, #8B6820); }
-    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #7A6E60); font-size: 18px; padding: 4px; line-height: 1; }
-    .sidebar-close:hover { color: var(--text-primary, #1A1410); }
+    .sidebar-logo { font-family: 'Fraunces', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #0A0A09); text-decoration: none; }
+    .sidebar-logo span { color: var(--gold, #8F6A2A); }
+    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #3A3530); font-size: 18px; padding: 4px; line-height: 1; }
+    .sidebar-close:hover { color: var(--text-primary, #0A0A09); }
     .sidebar-nav { flex: 1; display: flex; flex-direction: column; padding: 16px 0; overflow-y: auto; }
     .sidebar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.14em;
@@ -732,20 +732,20 @@
     transition: all 0.2s;
     border-left: 2px solid transparent;
   }
-    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8B6820); background: rgba(139,104,32,0.06); border-left-color: var(--gold, #8B6820); }
+    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8F6A2A); background: rgba(143,106,42,0.06); border-left-color: var(--gold, #8F6A2A); }
     .sidebar-link .pro-badge { font-size: 7px; }
     @media (max-width: 680px) { .hamburger { display: flex; } .topbar-nav { display: none !important; } .topbar-status, .apolo-badge { display: none !important; } }
 
     /* ═══ AUDITOR DE CONTRATOS ═══ */
-    .auditor-eyebrow { font-family:'Cinzel',serif; font-size:9px; letter-spacing:.35em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
-    .auditor-titulo { font-family:'Cinzel',serif; font-size:26px; font-weight:700; color:var(--text-primary); margin-bottom:12px; }
+    .auditor-eyebrow { font-family:'Fraunces',serif; font-size:9px; letter-spacing:.35em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+    .auditor-titulo { font-family:'Fraunces',serif; font-size:26px; font-weight:700; color:var(--text-primary); margin-bottom:12px; }
     .auditor-desc { font-size:14px; color:var(--text-muted); margin-bottom:32px; line-height:1.7; }
 
     .pais-select {
       width:100%; margin-top:16px;
       background:var(--bg-elevated); border:1px solid var(--border);
       border-radius:12px; padding:12px 16px;
-      font-family:'Lora',serif; font-size:14px; color:var(--text-primary);
+      font-family:'Fraunces',serif; font-size:14px; color:var(--text-primary);
       cursor:pointer; appearance:none;
       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c49a3c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
       background-repeat:no-repeat; background-position:right 14px center;
@@ -756,7 +756,7 @@
       display:block; width:100%; margin-top:16px;
       background:var(--text-primary); color:var(--bg-deep);
       border:none; border-radius:12px;
-      padding:16px 24px; font-family:'Cinzel',serif;
+      padding:16px 24px; font-family:'Fraunces',serif;
       font-size:12px; letter-spacing:.15em; font-weight:700;
       cursor:pointer; transition:all .2s;
     }
@@ -778,21 +778,21 @@
       background:var(--bg-card); border:1px solid var(--border);
       border-radius:16px; padding:28px 24px; margin-bottom:24px;
     }
-    .resumen-tipo { font-family:'Cinzel',serif; font-size:10px; letter-spacing:.2em; color:var(--gold); margin-bottom:8px; }
+    .resumen-tipo { font-family:'Fraunces',serif; font-size:10px; letter-spacing:.2em; color:var(--gold); margin-bottom:8px; }
     .resumen-texto { font-size:14px; line-height:1.75; color:var(--text-secondary); }
     .contadores { display:flex; gap:12px; margin-top:20px; }
     .contador { flex:1; text-align:center; padding:16px 8px; border-radius:12px; background:var(--bg-elevated); }
-    .contador span { font-family:'Cinzel',serif; font-size:28px; font-weight:700; display:block; color:var(--text-primary); }
+    .contador span { font-family:'Fraunces',serif; font-size:28px; font-weight:700; display:block; color:var(--text-primary); }
     .contador small { font-size:11px; color:var(--text-muted); margin-top:4px; display:block; }
 
     .clausula-card { border-radius:12px; padding:20px; margin-bottom:10px; border-left:3px solid var(--border); background:var(--bg-card); }
     .clausula-card.estado-invalida { border-left-color:#ef4444; background:rgba(239,68,68,.04); }
     .clausula-card.estado-riesgo   { border-left-color:#f59e0b; background:rgba(245,158,11,.04); }
     .clausula-card.estado-valida   { border-left-color:#10b981; background:rgba(16,185,129,.04); }
-    .clausula-header { display:flex; align-items:center; gap:8px; margin-bottom:10px; font-family:'Cinzel',serif; font-size:11px; letter-spacing:.05em; }
-    .clausula-titulo-txt { color:var(--text-muted); font-family:'Lora',serif; font-size:12px; font-weight:400; letter-spacing:0; }
+    .clausula-header { display:flex; align-items:center; gap:8px; margin-bottom:10px; font-family:'Fraunces',serif; font-size:11px; letter-spacing:.05em; }
+    .clausula-titulo-txt { color:var(--text-muted); font-family:'Fraunces',serif; font-size:12px; font-weight:400; letter-spacing:0; }
     .clausula-analisis { font-size:14px; line-height:1.7; color:var(--text-secondary); margin:0 0 10px; }
-    .clausula-articulo { font-size:12px; color:var(--gold); font-family:'Lora',serif; margin-bottom:8px; }
+    .clausula-articulo { font-size:12px; color:var(--gold); font-family:'Fraunces',serif; margin-bottom:8px; }
     .ref-badge { display:inline-block; font-size:10px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:20px; padding:2px 8px; margin:3px 3px 0 0; color:var(--text-muted); }
     .aviso-legal { font-size:11px; color:var(--text-muted); margin-top:32px; text-align:center; line-height:1.6; }
 
@@ -802,7 +802,7 @@
 <body>
 
 <!-- COMING SOON BANNER -->
-<div style="background:rgba(196,154,60,0.12);border-bottom:1px solid rgba(196,154,60,0.3);padding:10px 24px;text-align:center;font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.15em;color:#C49A3C">
+<div style="background:rgba(184,137,61,0.12);border-bottom:1px solid rgba(184,137,61,0.3);padding:10px 24px;text-align:center;font-family:'Fraunces',serif;font-size:11px;letter-spacing:0.15em;color:#B8893D">
   ⚠ &nbsp;Tento nástroj je momentálně v přípravě. Brzy k dispozici. &nbsp;·&nbsp; Este módulo está en preparación. Próximamente disponible.
 </div>
 
@@ -1011,7 +1011,7 @@
         <div id="clausulas-lista"></div>
 
         <p class="aviso-legal" data-i18n="auditor.aviso">
-          Este análisis es orientativo y no sustituye la revisión de un abogado calificado. Legal Atlas cita artículos reales verificados del corpus legislativo.
+          Este análisis es orientativo y no sustituye la revisión de un abogado calificado. Tesseum cita artículos reales verificados del corpus legislativo.
         </p>
       </div>
 
@@ -1021,8 +1021,8 @@
 </main>
 
 <footer class="footer">
-  <p class="footer-copy">© Legal Atlas 2026 · All rights reserved</p>
-  <p class="footer-disclaimer">Legal Atlas is a legal research tool designed for legal professionals. It generates AI-assisted content with verified normative references. It does not constitute legal advice, legal diagnosis, or a substitute for independent professional judgment or verification of primary sources.</p>
+  <p class="footer-copy">© Tesseum 2026 · All rights reserved</p>
+  <p class="footer-disclaimer">Tesseum is a legal research tool designed for legal professionals. It generates AI-assisted content with verified normative references. It does not constitute legal advice, legal diagnosis, or a substitute for independent professional judgment or verification of primary sources.</p>
   <div class="footer-links">
     <a href="/terms.html">Terms of Service</a>
     <span>|</span>
@@ -1171,10 +1171,10 @@ function closeSidebar() {
 </script>
 
 <div id="overlay-registro" style="position:fixed;inset:0;background:rgba(253,250,245,0.97);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px">
-  <p style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;color:var(--gold);margin-bottom:16px" data-i18n="overlay.acceso">ACCESO REQUERIDO</p>
-  <h2 style="font-family:'Cinzel',serif;font-size:28px;margin-bottom:12px" data-i18n="overlay.registro">Regístrate para continuar</h2>
+  <p style="font-family:'Fraunces',serif;font-size:10px;letter-spacing:0.3em;color:var(--gold);margin-bottom:16px" data-i18n="overlay.acceso">ACCESO REQUERIDO</p>
+  <h2 style="font-family:'Fraunces',serif;font-size:28px;margin-bottom:12px" data-i18n="overlay.registro">Regístrate para continuar</h2>
   <p style="color:var(--text-muted);font-size:14px;margin-bottom:32px;max-width:400px;line-height:1.7" data-i18n="overlay.desc.contratos">El Auditor de Contratos requiere una cuenta. Acceso gratuito hasta el 7 de mayo.</p>
-  <button onclick="loginConGoogle()" style="display:flex;align-items:center;gap:10px;padding:14px 24px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-family:'Lora',serif;font-size:14px;cursor:pointer;transition:all 0.2s">
+  <button onclick="loginConGoogle()" style="display:flex;align-items:center;gap:10px;padding:14px 24px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-family:'Fraunces',serif;font-size:14px;cursor:pointer;transition:all 0.2s">
     <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2.01c-.72.48-1.63.77-2.7.77a4.9 4.9 0 01-4.62-3.38H1.68v2.07A8 8 0 008.98 17z"/><path fill="#FBBC05" d="M4.36 10.44A4.9 4.9 0 014.1 9c0-.5.09-1 .26-1.44V5.49H1.68a8 8 0 000 7.02l2.68-2.07z"/><path fill="#EA4335" d="M8.98 3.58c1.32 0 2.5.45 3.44 1.35l2.54-2.54A8 8 0 001.68 5.49l2.68 2.07a4.9 4.9 0 014.62-3.98z"/></svg>
     Continuar con Google
   </button>

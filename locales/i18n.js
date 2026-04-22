@@ -1,5 +1,5 @@
 /**
- * Legal Atlas — i18n loader
+ * Tesseum — i18n loader
  * Detecta idioma del navegador → carga JSON → aplica data-i18n attrs
  * Expone: window.t(key, vars?, fallback?) y window.setLang(lang)
  */

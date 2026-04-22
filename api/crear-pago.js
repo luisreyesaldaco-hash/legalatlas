@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 
     if (borradorErr) throw borradorErr
 
-    const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://www.legalatlas.io'
+    const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://www.tesseum.com'
 
     // 2. Crear sesión Stripe — solo borrador_id en metadata, sin datos sensibles
     const session = await stripe.checkout.sessions.create({
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
           currency: 'mxn',
           product_data: {
             name: titulo || receta_id.replace(/_/g, ' '),
-            description: `Generado por APOLO · Legal Atlas${estado ? ' · ' + estado : ''}`
+            description: `Generado por APOLO · Tesseum${estado ? ' · ' + estado : ''}`
           },
           unit_amount: precio_mxn * 100
         },

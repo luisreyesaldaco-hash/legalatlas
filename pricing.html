@@ -9,34 +9,34 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Legal Atlas — Planes y Precios</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<title>Tesseum — Planes y Precios</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
 :root {
-  --bg-deep:        #F3EAD5;
-  --bg-card:        #FAF2E0;
-  --bg-elevated:    #EBE0C8;
-  --bg-input:       #FAF2E0;
-  --text-primary:   #1A1410;
-  --text-secondary: #3D342A;
-  --text-muted:     #7A6E60;
-  --gold:           #8B6820;
-  --gold-light:     #C49A3C;
-  --gold-dim:       rgba(139,104,32,0.08);
-  --gold-border:    rgba(139,104,32,0.22);
-  --border:         #DDD0B4;
-  --border-hover:   #C9BFB0;
-  --shadow-sm:      0 1px 4px rgba(26,20,16,0.07);
-  --shadow-md:      0 4px 20px rgba(26,20,16,0.10);
-  --shadow-lg:      0 8px 40px rgba(26,20,16,0.13);
+  --bg-deep:        #F4EFE4;
+  --bg-card:        #ECE5D4;
+  --bg-elevated:    #E4DCC5;
+  --bg-input:       #ECE5D4;
+  --text-primary:   #0A0A09;
+  --text-secondary: #1A1815;
+  --text-muted:     #3A3530;
+  --gold:           #8F6A2A;
+  --gold-light:     #B8893D;
+  --gold-dim:       rgba(143,106,42,0.08);
+  --gold-border:    rgba(143,106,42,0.22);
+  --border:         #D8CFBA;
+  --border-hover:   #C4B79E;
+  --shadow-sm:      0 1px 4px rgba(10,10,9,0.07);
+  --shadow-md:      0 4px 20px rgba(10,10,9,0.10);
+  --shadow-lg:      0 8px 40px rgba(10,10,9,0.13);
   /* compat aliases — mantener los que ya existen */
   --bg-raised:      var(--bg-elevated);
   --text:           var(--text-primary);
   --text-soft:      var(--text-secondary);
   --border-hov:     var(--border-hover);
   --accent:         var(--gold);
-  --gold-glow:      rgba(139,104,32,0.25);
+  --gold-glow:      rgba(143,106,42,0.25);
 }
 :root[data-theme="dark"] {
   --bg-deep:        #0C0C0A;
@@ -46,10 +46,10 @@
   --text-primary:   #F0ECE4;
   --text-secondary: #D0C4B4;
   --text-muted:     #9C9082;
-  --gold:           #C49A3C;
-  --gold-light:     #D4AE58;
-  --gold-dim:       rgba(196,154,60,0.10);
-  --gold-border:    rgba(196,154,60,0.20);
+  --gold:           #B8893D;
+  --gold-light:     #D4A55C;
+  --gold-dim:       rgba(184,137,61,0.10);
+  --gold-border:    rgba(184,137,61,0.20);
   --border:         #2A2A26;
   --border-hover:   #3D3D38;
   --shadow-sm:      0 1px 4px rgba(0,0,0,0.25);
@@ -60,14 +60,14 @@
   --text-soft:      var(--text-secondary);
   --border-hov:     var(--border-hover);
   --accent:         var(--gold);
-  --gold-glow:      rgba(196,154,60,0.35);
+  --gold-glow:      rgba(184,137,61,0.35);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Lora', Georgia, serif;
+  font-family: 'Fraunces', Georgia, serif;
   background: var(--bg-deep);
   color: var(--text-primary);
   min-height: 100vh;
@@ -92,18 +92,18 @@ body {
 }
 .ambient-orb-1 {
   width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(196,154,60,0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(184,137,61,0.12) 0%, transparent 70%);
   top: -200px; left: -100px;
 }
 .ambient-orb-2 {
   width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(196,154,60,0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(184,137,61,0.08) 0%, transparent 70%);
   bottom: -150px; right: -100px;
   animation-delay: -10s;
 }
 .ambient-orb-3 {
   width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(196,154,60,0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(184,137,61,0.06) 0%, transparent 70%);
   top: 40%; left: 60%;
   animation-delay: -5s;
 }
@@ -130,7 +130,7 @@ body {
   z-index: 100;
 }
 .topbar-logo {
-  font-family: 'Cinzel', serif;
+  font-family: 'Fraunces', serif;
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.25em;
@@ -140,7 +140,7 @@ body {
 .topbar-logo span { color: var(--gold); font-weight: 400; }
 .topbar-nav { display: flex; gap: 32px; }
 .topbar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0.07em;
@@ -168,7 +168,7 @@ body {
   gap: 6px;
     }
 .pro-badge {
-  font-family: 'Cinzel', serif;
+  font-family: 'Fraunces', serif;
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -182,7 +182,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: 'Cinzel', serif;
+  font-family: 'Fraunces', serif;
   font-size: 9px;
   letter-spacing: 0.2em;
   color: var(--text-muted);
@@ -204,9 +204,9 @@ body {
 
 /* ═══ FOOTER ═══ */
 .footer { text-align: center; padding: 48px 40px 40px; border-top: 1px solid var(--border); position: relative; z-index: 1; }
-.footer-copy { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.25em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
+.footer-copy { font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: 0.25em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
 .footer-disclaimer { font-size: 12px; color: var(--text-muted); line-height: 1.75; max-width: 640px; margin: 0 auto 18px; opacity: 0.85; }
-.footer-links { display: flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; }
+.footer-links { display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; }
 .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
 .footer-links a:hover { color: var(--gold); }
 .footer-links span { margin: 0 14px; color: var(--border); }
@@ -240,7 +240,7 @@ body {
     }
     .topbar-logo { color: var(--text-primary); }
     .topbar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0.07em;
@@ -346,19 +346,19 @@ body {
     /* ── Mobile sidebar ── */
     .topbar-right { display: flex; align-items: center; gap: 4px; }
     .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
-    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #3D342A); border-radius: 2px; transition: background 0.2s; }
-    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(26,20,16,0.45); z-index: 199; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #1A1815); border-radius: 2px; transition: background 0.2s; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(10,10,9,0.45); z-index: 199; }
     .sidebar-overlay.open { display: block; }
-    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(26,20,16,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
+    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(10,10,9,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
     .sidebar.open { right: 0; }
     .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border, #E5DDD0); }
-    .sidebar-logo { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #1A1410); text-decoration: none; }
-    .sidebar-logo span { color: var(--gold, #8B6820); }
-    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #7A6E60); font-size: 18px; padding: 4px; line-height: 1; }
-    .sidebar-close:hover { color: var(--text-primary, #1A1410); }
+    .sidebar-logo { font-family: 'Fraunces', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #0A0A09); text-decoration: none; }
+    .sidebar-logo span { color: var(--gold, #8F6A2A); }
+    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #3A3530); font-size: 18px; padding: 4px; line-height: 1; }
+    .sidebar-close:hover { color: var(--text-primary, #0A0A09); }
     .sidebar-nav { flex: 1; display: flex; flex-direction: column; padding: 16px 0; overflow-y: auto; }
     .sidebar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.14em;
@@ -372,7 +372,7 @@ body {
     transition: all 0.2s;
     border-left: 2px solid transparent;
   }
-    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8B6820); background: rgba(139,104,32,0.06); border-left-color: var(--gold, #8B6820); }
+    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8F6A2A); background: rgba(143,106,42,0.06); border-left-color: var(--gold, #8F6A2A); }
     .sidebar-link .pro-badge { font-size: 7px; }
     @media (max-width: 680px) { .hamburger { display: flex; } .topbar-nav { display: none !important; } .topbar-status, .apolo-badge { display: none !important; } }
   </style>
@@ -431,10 +431,10 @@ body {
 <main class="main">
   <section style="padding: 80px 24px; max-width: 900px; margin: 0 auto; text-align: center;">
 
-    <p style="font-family:'Cinzel',serif; font-size:10px; letter-spacing:0.5em; color:var(--gold); margin-bottom:20px; text-transform:uppercase;">
+    <p style="font-family:'Fraunces',serif; font-size:10px; letter-spacing:0.5em; color:var(--gold); margin-bottom:20px; text-transform:uppercase;">
       Acceso Profesional
     </p>
-    <h1 style="font-family:'Cinzel',serif; font-size:clamp(32px,6vw,56px); font-weight:700; margin-bottom:16px;">
+    <h1 style="font-family:'Fraunces',serif; font-size:clamp(32px,6vw,56px); font-weight:700; margin-bottom:16px;">
       PLANES Y PRECIOS
     </h1>
     <p style="font-size:16px; color:var(--text-secondary); max-width:500px; margin:0 auto 60px; line-height:1.8;">
@@ -448,9 +448,9 @@ body {
       <!-- Plan Gratuito -->
       <div style="background:var(--bg-card); border:1px solid var(--border);
                   border-radius:16px; padding:32px 24px;">
-        <p style="font-family:'Cinzel',serif; font-size:11px; letter-spacing:0.3em;
+        <p style="font-family:'Fraunces',serif; font-size:11px; letter-spacing:0.3em;
                   color:var(--text-muted); margin-bottom:16px; text-transform:uppercase;">Gratuito</p>
-        <p style="font-family:'Cinzel',serif; font-size:36px; font-weight:700;
+        <p style="font-family:'Fraunces',serif; font-size:36px; font-weight:700;
                   margin-bottom:8px;">$0</p>
         <p style="font-size:12px; color:var(--text-muted); margin-bottom:32px;">Para siempre</p>
         <ul style="list-style:none; padding:0; margin:0 0 32px; text-align:left;">
@@ -466,7 +466,7 @@ body {
         <a href="ciudadano.html"
            style="display:block; text-align:center; padding:12px;
                   border:1px solid var(--border); border-radius:10px;
-                  font-family:'Cinzel',serif; font-size:11px;
+                  font-family:'Fraunces',serif; font-size:11px;
                   letter-spacing:0.1em; color:var(--text-muted);
                   text-decoration:none; transition: border-color 0.2s, color 0.2s;">
           Empezar gratis
@@ -478,13 +478,13 @@ body {
                   border-radius:16px; padding:32px 24px; position:relative;">
         <div style="position:absolute; top:-12px; left:50%; transform:translateX(-50%);
                     background:var(--gold); color:var(--bg-deep);
-                    font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.2em;
+                    font-family:'Fraunces',serif; font-size:9px; letter-spacing:0.2em;
                     padding:4px 14px; border-radius:20px; white-space:nowrap;">
           MÁS POPULAR
         </div>
-        <p style="font-family:'Cinzel',serif; font-size:11px; letter-spacing:0.3em;
+        <p style="font-family:'Fraunces',serif; font-size:11px; letter-spacing:0.3em;
                   color:var(--gold); margin-bottom:16px; text-transform:uppercase;">Independiente</p>
-        <p style="font-family:'Cinzel',serif; font-size:36px; font-weight:700;
+        <p style="font-family:'Fraunces',serif; font-size:36px; font-weight:700;
                   margin-bottom:4px; color:var(--gold);">$999</p>
         <p style="font-size:12px; color:var(--text-muted); margin-bottom:32px;">MXN / mes</p>
         <ul style="list-style:none; padding:0; margin:0 0 32px; text-align:left;">
@@ -499,10 +499,10 @@ body {
           <li style="font-size:13px; color:var(--text-secondary); padding:8px 0;">
                      ✓ Contratos ilimitados</li>
         </ul>
-        <a href="mailto:hola@legalatlas.io?subject=Quiero%20suscribirme%20al%20plan%20Independiente"
+        <a href="mailto:hola@tesseum.com?subject=Quiero%20suscribirme%20al%20plan%20Independiente"
            style="display:block; text-align:center; padding:14px;
                   background:var(--gold); color:var(--bg-deep);
-                  border-radius:10px; font-family:'Cinzel',serif;
+                  border-radius:10px; font-family:'Fraunces',serif;
                   font-size:11px; font-weight:700; letter-spacing:0.1em;
                   text-decoration:none;">
           Suscribirse
@@ -512,9 +512,9 @@ body {
       <!-- Plan Despacho -->
       <div style="background:var(--bg-card); border:1px solid var(--border);
                   border-radius:16px; padding:32px 24px;">
-        <p style="font-family:'Cinzel',serif; font-size:11px; letter-spacing:0.3em;
+        <p style="font-family:'Fraunces',serif; font-size:11px; letter-spacing:0.3em;
                   color:var(--text-muted); margin-bottom:16px; text-transform:uppercase;">Despacho</p>
-        <p style="font-family:'Cinzel',serif; font-size:36px; font-weight:700;
+        <p style="font-family:'Fraunces',serif; font-size:36px; font-weight:700;
                   margin-bottom:4px;">$2,990</p>
         <p style="font-size:12px; color:var(--text-muted); margin-bottom:32px;">MXN / mes · hasta 5 usuarios</p>
         <ul style="list-style:none; padding:0; margin:0 0 32px; text-align:left;">
@@ -527,10 +527,10 @@ body {
           <li style="font-size:13px; color:var(--text-secondary); padding:8px 0;">
                      ✓ Soporte prioritario</li>
         </ul>
-        <a href="mailto:hola@legalatlas.io?subject=Quiero%20el%20plan%20Despacho"
+        <a href="mailto:hola@tesseum.com?subject=Quiero%20el%20plan%20Despacho"
            style="display:block; text-align:center; padding:12px;
                   border:1px solid var(--border); border-radius:10px;
-                  font-family:'Cinzel',serif; font-size:11px;
+                  font-family:'Fraunces',serif; font-size:11px;
                   letter-spacing:0.1em; color:var(--text-secondary);
                   text-decoration:none;">
           Contactar
@@ -542,7 +542,7 @@ body {
     <!-- Comparación con vLex -->
     <p style="margin-top:48px; font-size:13px; color:var(--text-muted);">
       vLex / Vincent AI cobra $399 USD/mes (~$8,000 MXN) por usuario.
-      Legal Atlas: $999 MXN/mes con corpus verificado de México y Europa.
+      Tesseum: $999 MXN/mes con corpus verificado de México y Europa.
     </p>
 
   </section>
@@ -550,8 +550,8 @@ body {
 
 <!-- FOOTER -->
 <footer class="footer">
-  <p class="footer-copy">© Legal Atlas 2026 · Todos los derechos reservados</p>
-  <p class="footer-disclaimer">Legal Atlas es una herramienta de investigación jurídica diseñada para profesionales del derecho. Genera contenido asistido por IA con referencias normativas verificadas. No constituye asesoría jurídica, diagnóstico legal ni sustituto del juicio profesional independiente ni de la verificación de fuentes primarias.</p>
+  <p class="footer-copy">© Tesseum 2026 · Todos los derechos reservados</p>
+  <p class="footer-disclaimer">Tesseum es una herramienta de investigación jurídica diseñada para profesionales del derecho. Genera contenido asistido por IA con referencias normativas verificadas. No constituye asesoría jurídica, diagnóstico legal ni sustituto del juicio profesional independiente ni de la verificación de fuentes primarias.</p>
   <div class="footer-links">
     <a href="/terms.html">Terms of Service</a>
     <span>|</span>

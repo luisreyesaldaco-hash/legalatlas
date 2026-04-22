@@ -9,25 +9,25 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Legal Atlas · Staff</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<title>Tesseum · Staff</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
 :root {
-  --bg-deep:        #F3EAD5;
-  --bg-card:        #FAF2E0;
-  --bg-elevated:    #EBE0C8;
-  --text-primary:   #1A1410;
-  --text-secondary: #3D342A;
-  --text-muted:     #7A6E60;
-  --gold:           #8B6820;
-  --gold-light:     #C49A3C;
-  --gold-dim:       rgba(139,104,32,0.08);
-  --gold-border:    rgba(139,104,32,0.22);
-  --border:         #DDD0B4;
-  --border-hover:   #C9BFB0;
-  --shadow-sm:      0 1px 4px rgba(26,20,16,0.07);
-  --shadow-md:      0 4px 20px rgba(26,20,16,0.10);
+  --bg-deep:        #F4EFE4;
+  --bg-card:        #ECE5D4;
+  --bg-elevated:    #E4DCC5;
+  --text-primary:   #0A0A09;
+  --text-secondary: #1A1815;
+  --text-muted:     #3A3530;
+  --gold:           #8F6A2A;
+  --gold-light:     #B8893D;
+  --gold-dim:       rgba(143,106,42,0.08);
+  --gold-border:    rgba(143,106,42,0.22);
+  --border:         #D8CFBA;
+  --border-hover:   #C4B79E;
+  --shadow-sm:      0 1px 4px rgba(10,10,9,0.07);
+  --shadow-md:      0 4px 20px rgba(10,10,9,0.10);
 }
 :root[data-theme="dark"] {
   --bg-deep:        #0C0C0A;
@@ -36,10 +36,10 @@
   --text-primary:   #F0ECE4;
   --text-secondary: #D0C4B4;
   --text-muted:     #9C9082;
-  --gold:           #C49A3C;
-  --gold-light:     #D4AE58;
-  --gold-dim:       rgba(196,154,60,0.10);
-  --gold-border:    rgba(196,154,60,0.20);
+  --gold:           #B8893D;
+  --gold-light:     #D4A55C;
+  --gold-dim:       rgba(184,137,61,0.10);
+  --gold-border:    rgba(184,137,61,0.20);
   --border:         #2A2A26;
   --border-hover:   #3D3D38;
   --shadow-sm:      0 1px 4px rgba(0,0,0,0.25);
@@ -47,7 +47,7 @@
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { font-family: 'Lora', Georgia, serif; background: var(--bg-deep); color: var(--text-primary); min-height: 100vh; }
+body { font-family: 'Fraunces', Georgia, serif; background: var(--bg-deep); color: var(--text-primary); min-height: 100vh; }
 
 /* TOPBAR */
 .topbar {
@@ -56,7 +56,7 @@ body { font-family: 'Lora', Georgia, serif; background: var(--bg-deep); color: v
   background: var(--bg-elevated); border-bottom: 1px solid var(--border);
   position: sticky; top: 0; z-index: 50;
 }
-.topbar-logo { font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.3em; color: var(--text-primary); text-decoration: none; }
+.topbar-logo { font-family: 'Fraunces', serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.3em; color: var(--text-primary); text-decoration: none; }
 .topbar-logo span { color: var(--gold); }
 .topbar-right { display: flex; align-items: center; gap: 10px; }
 .tema-btn { background: none; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 15px; color: var(--text-muted); padding: 3px 10px; line-height: 1.4; transition: all 0.2s; }
@@ -65,7 +65,7 @@ body { font-family: 'Lora', Georgia, serif; background: var(--bg-deep); color: v
 /* MAIN */
 .main { padding-top: 60px; }
 
-.cuenta-eyebrow { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.cuenta-eyebrow { font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
 
 /* GRID DE MÉTRICAS */
 .staff-grid {
@@ -85,26 +85,26 @@ body { font-family: 'Lora', Georgia, serif; background: var(--bg-deep); color: v
   text-align: center;
   box-shadow: var(--shadow-sm);
 }
-.metric-n { font-family: 'Cinzel', serif; font-size: 32px; font-weight: 700; color: var(--gold); display: block; }
+.metric-n { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 700; color: var(--gold); display: block; }
 .metric-l { font-size: 11px; color: var(--text-muted); letter-spacing: 0.05em; margin-top: 4px; display: block; }
 
 /* TABLAS */
 .staff-tabla { max-width: 900px; margin: 0 auto 48px; padding: 0 24px; }
-.staff-titulo { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.staff-titulo { font-family: 'Fraunces', serif; font-size: 11px; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
 .tabla-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 thead { background: var(--bg-elevated); }
-th { text-align: left; padding: 10px 12px; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.2em; color: var(--text-muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+th { text-align: left; padding: 10px 12px; font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: 0.2em; color: var(--text-muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
 td { padding: 10px 12px; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
 tr:last-child td { border-bottom: none; }
 tbody tr:hover td { background: var(--gold-dim); }
 .badge-pais { font-size: 10px; background: var(--gold-dim); color: var(--gold); padding: 2px 8px; border-radius: 20px; border: 1px solid var(--gold-border); }
-.btn-enviar { font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--gold-border); background: transparent; color: var(--gold); text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+.btn-enviar { font-family: 'Fraunces', serif; font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 8px; border: 1px solid var(--gold-border); background: transparent; color: var(--gold); text-decoration: none; transition: all 0.2s; white-space: nowrap; }
 .btn-enviar:hover { background: var(--gold-dim); border-color: var(--gold); }
 .loading-txt { text-align: center; color: var(--text-muted); font-style: italic; padding: 20px; }
-.pivot-sel { font-family:'Lora',serif; font-size:13px; padding:7px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-primary); cursor:pointer; min-width:130px; }
+.pivot-sel { font-family:'Fraunces',serif; font-size:13px; padding:7px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-primary); cursor:pointer; min-width:130px; }
 .pivot-sel:focus { outline:none; border-color:var(--gold-border); }
-.pivot-th-row { font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; white-space:nowrap; }
+.pivot-th-row { font-family:'Fraunces',serif; font-size:9px; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase; white-space:nowrap; }
 .pivot-td-label { font-weight:600; color:var(--text-primary); white-space:nowrap; }
 .pivot-td-val { text-align:right; color:var(--text-secondary); font-variant-numeric:tabular-nums; }
 .pivot-td-val.pivot-zero { color:var(--border); }
@@ -123,10 +123,10 @@ tbody tr:hover td { background: var(--gold-dim); }
 .pivot-filter-group { margin-bottom:14px; }
 .pivot-filter-group:last-child { margin-bottom:0; }
 .pivot-filter-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-.pivot-filter-title { font-family:'Cinzel',serif; font-size:9px; letter-spacing:0.22em; color:var(--gold); text-transform:uppercase; }
+.pivot-filter-title { font-family:'Fraunces',serif; font-size:9px; letter-spacing:0.22em; color:var(--gold); text-transform:uppercase; }
 .pivot-filter-actions { display:flex; gap:4px; }
 .pivot-filter-btn {
-  font-family:'Cinzel',serif; font-size:7px; letter-spacing:0.1em; padding:2px 7px;
+  font-family:'Fraunces',serif; font-size:7px; letter-spacing:0.1em; padding:2px 7px;
   border-radius:6px; border:1px solid var(--border); background:transparent;
   color:var(--text-muted); cursor:pointer; transition:all 0.15s;
 }
@@ -152,7 +152,7 @@ tbody tr:hover td { background: var(--gold-dim); }
 <header class="topbar">
   <a href="index.html" class="topbar-logo">LEGAL<span>ATLAS</span></a>
   <div class="topbar-right">
-    <span style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;color:var(--gold);">STAFF · INTERNO</span>
+    <span style="font-family:'Fraunces',serif;font-size:10px;letter-spacing:0.3em;color:var(--gold);">STAFF · INTERNO</span>
     <button class="tema-btn" onclick="toggleTema()">◑</button>
   </div>
 </header>
@@ -161,7 +161,7 @@ tbody tr:hover td { background: var(--gold-dim); }
 
   <div style="max-width:900px;margin:0 auto;padding:40px 24px 20px;text-align:center;">
     <p class="cuenta-eyebrow">Panel interno</p>
-    <h1 style="font-family:'Cinzel',serif;font-size:32px;margin-bottom:40px;color:var(--text-primary);">CORPUS &amp; USUARIOS</h1>
+    <h1 style="font-family:'Fraunces',serif;font-size:32px;margin-bottom:40px;color:var(--text-primary);">CORPUS &amp; USUARIOS</h1>
   </div>
 
   <!-- Métricas globales -->
@@ -190,7 +190,7 @@ tbody tr:hover td { background: var(--gold-dim); }
       <div class="pivot-main">
         <div class="pivot-controls">
           <div style="display:flex;flex-direction:column;gap:4px;">
-            <label style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;">Filas</label>
+            <label style="font-family:'Fraunces',serif;font-size:8px;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;">Filas</label>
             <select id="pivot-rows" class="pivot-sel" onchange="renderPivot()">
               <option value="pais">País</option>
               <option value="materia">Materia</option>
@@ -198,7 +198,7 @@ tbody tr:hover td { background: var(--gold-dim); }
             </select>
           </div>
           <div style="display:flex;flex-direction:column;gap:4px;">
-            <label style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;">Columnas</label>
+            <label style="font-family:'Fraunces',serif;font-size:8px;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;">Columnas</label>
             <select id="pivot-cols" class="pivot-sel" onchange="renderPivot()">
               <option value="materia">Materia</option>
               <option value="pais">País</option>
@@ -206,7 +206,7 @@ tbody tr:hover td { background: var(--gold-dim); }
             </select>
           </div>
           <div style="display:flex;flex-direction:column;gap:4px;">
-            <label style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;">Valor</label>
+            <label style="font-family:'Fraunces',serif;font-size:8px;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;">Valor</label>
             <select id="pivot-val" class="pivot-sel" onchange="renderPivot()">
               <option value="articulos">Artículos</option>
               <option value="leyes">Leyes</option>
@@ -290,7 +290,7 @@ async function cargar() {
         <td>${u.email}</td>
         <td><span class="badge-pais">${FLAG_PAISES[u.pais]||''} ${u.pais||'—'}</span></td>
         <td>${u.is_pro?'⭐ Pro':'Gratuito'}</td>
-        <td><a class="btn-enviar" href="mailto:${u.email}?subject=Acceso%20Legal%20Atlas&body=Hola%20${encodeURIComponent(u.nombre||'')}%2C%20tu%20acceso%20ha%20sido%20activado.%0Ahttps%3A%2F%2Flegalatlas.io">Enviar acceso →</a></td>
+        <td><a class="btn-enviar" href="mailto:${u.email}?subject=Acceso%20Legal%20Atlas&body=Hola%20${encodeURIComponent(u.nombre||'')}%2C%20tu%20acceso%20ha%20sido%20activado.%0Ahttps%3A%2F%2Ftesseum.com">Enviar acceso →</a></td>
       </tr>`).join('')
     : '<tr><td colspan="6" class="loading-txt">Sin usuarios aún</td></tr>';
 
@@ -304,7 +304,7 @@ async function cargar() {
         <td>${u.nombre||'—'}</td>
         <td>${u.email}</td>
         <td style="color:${u.es_nuevo?'var(--gold)':'var(--text-muted)'}">${u.es_nuevo?'✦ Nuevo':'Recurrente'}</td>
-        <td><a class="btn-enviar" href="mailto:${u.email}?subject=Bienvenido%20a%20Legal%20Atlas&body=Hola%20${encodeURIComponent(u.nombre||'')}%2C%20gracias%20por%20unirte%20a%20Legal%20Atlas.%0Ahttps%3A%2F%2Flegalatlas.io">Email →</a></td>
+        <td><a class="btn-enviar" href="mailto:${u.email}?subject=Bienvenido%20a%20Legal%20Atlas&body=Hola%20${encodeURIComponent(u.nombre||'')}%2C%20gracias%20por%20unirte%20a%20Legal%20Atlas.%0Ahttps%3A%2F%2Ftesseum.com">Email →</a></td>
       </tr>`).join('')
     : '<tr><td colspan="5" class="loading-txt">Sin logins hoy</td></tr>';
 }

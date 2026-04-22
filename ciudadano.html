@@ -16,35 +16,35 @@
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Legal Atlas — Apolo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <title>Tesseum — Apolo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
   <script src="/locales/i18n.js"></script>
   <script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
   <style>
     :root {
-      --bg-deep:        #F3EAD5;
-      --bg-card:        #FAF2E0;
-      --bg-elevated:    #EBE0C8;
-      --bg-input:       #FAF2E0;
-      --text-primary:   #1A1410;
-      --text-secondary: #3D342A;
-      --text-muted:     #7A6E60;
-      --gold:           #8B6820;
-      --gold-light:     #C49A3C;
-      --gold-dim:       rgba(139,104,32,0.08);
-      --gold-border:    rgba(139,104,32,0.22);
-      --border:         #DDD0B4;
-      --border-hover:   #C9BFB0;
-      --shadow-sm:      0 1px 4px rgba(26,20,16,0.07);
-      --shadow-md:      0 4px 20px rgba(26,20,16,0.10);
-      --shadow-lg:      0 8px 40px rgba(26,20,16,0.13);
+      --bg-deep:        #F4EFE4;
+      --bg-card:        #ECE5D4;
+      --bg-elevated:    #E4DCC5;
+      --bg-input:       #ECE5D4;
+      --text-primary:   #0A0A09;
+      --text-secondary: #1A1815;
+      --text-muted:     #3A3530;
+      --gold:           #8F6A2A;
+      --gold-light:     #B8893D;
+      --gold-dim:       rgba(143,106,42,0.08);
+      --gold-border:    rgba(143,106,42,0.22);
+      --border:         #D8CFBA;
+      --border-hover:   #C4B79E;
+      --shadow-sm:      0 1px 4px rgba(10,10,9,0.07);
+      --shadow-md:      0 4px 20px rgba(10,10,9,0.10);
+      --shadow-lg:      0 8px 40px rgba(10,10,9,0.13);
       /* compat aliases — mantener los que ya existen */
       --bg-raised:      var(--bg-elevated);
       --text:           var(--text-primary);
       --text-soft:      var(--text-secondary);
       --border-hov:     var(--border-hover);
       --accent:         var(--gold);
-      --gold-glow:      rgba(139,104,32,0.25);
+      --gold-glow:      rgba(143,106,42,0.25);
     }
     :root[data-theme="dark"] {
       --bg-deep:        #0C0C0A;
@@ -54,10 +54,10 @@
       --text-primary:   #F0ECE4;
       --text-secondary: #D0C4B4;
       --text-muted:     #9C9082;
-      --gold:           #C49A3C;
-      --gold-light:     #D4AE58;
-      --gold-dim:       rgba(196,154,60,0.10);
-      --gold-border:    rgba(196,154,60,0.20);
+      --gold:           #B8893D;
+      --gold-light:     #D4A55C;
+      --gold-dim:       rgba(184,137,61,0.10);
+      --gold-border:    rgba(184,137,61,0.20);
       --border:         #2A2A26;
       --border-hover:   #3D3D38;
       --shadow-sm:      0 1px 4px rgba(0,0,0,0.25);
@@ -68,13 +68,13 @@
       --text-soft:      var(--text-secondary);
       --border-hov:     var(--border-hover);
       --accent:         var(--gold);
-      --gold-glow:      rgba(196,154,60,0.35);
+      --gold-glow:      rgba(184,137,61,0.35);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Lora', Georgia, serif;
+      font-family: 'Fraunces', Georgia, serif;
       background: var(--bg-deep);
       color: var(--text);
       height: 100vh;
@@ -101,7 +101,7 @@
       z-index: 50;
     }
     .topbar-logo {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.3em;
@@ -113,7 +113,7 @@
       align-items: center;
       gap: 8px;
       margin-left: auto;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -131,7 +131,7 @@
       50%       { opacity: 0.7; transform: scale(0.88); }
     }
     .topbar-back {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.15em;
       color: var(--text-muted);
@@ -142,7 +142,7 @@
     .topbar-back:hover { color: var(--gold); }
     .topbar-nav { display: flex; gap: 24px; }
     .topbar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0.07em;
@@ -159,7 +159,7 @@
       gap: 6px;
     }
     .pro-badge {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8px;
       font-weight: 700;
       letter-spacing: 0.15em;
@@ -173,10 +173,10 @@
     /* ── Selection bar ── */
     .selection-bar {
       flex-shrink: 0;
-      background: rgba(26,20,16,0.92);
+      background: rgba(10,10,9,0.92);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(196,154,60,0.18);
+      border-bottom: 1px solid rgba(184,137,61,0.18);
       padding: 10px 28px;
       display: flex;
       align-items: center;
@@ -189,7 +189,7 @@
       gap: 8px;
     }
     .sel-label {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8px;
       letter-spacing: 0.25em;
       color: rgba(245,237,216,0.45);
@@ -202,7 +202,7 @@
       flex-wrap: wrap;
     }
     .burbuja {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -215,17 +215,17 @@
       transition: all 0.2s ease;
     }
     .burbuja:hover {
-      border-color: rgba(196,154,60,0.6);
-      color: #C49A3C;
-      background: rgba(196,154,60,0.1);
+      border-color: rgba(184,137,61,0.6);
+      color: #B8893D;
+      background: rgba(184,137,61,0.1);
     }
     .burbuja.activa {
-      background: #C49A3C;
+      background: #B8893D;
       color: #0E0A06;
-      border-color: #C49A3C;
+      border-color: #B8893D;
     }
     .selector-estado {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.1em;
       color: rgba(245,237,216,0.75);
@@ -239,7 +239,7 @@
       -webkit-appearance: none;
       transition: border-color 0.2s;
     }
-    .selector-estado:focus { border-color: rgba(196,154,60,0.6); }
+    .selector-estado:focus { border-color: rgba(184,137,61,0.6); }
     .selector-estado option { background: #1a1410; color: #F5EDD8; }
 
     /* ── Mensajes ── */
@@ -254,16 +254,16 @@
     }
     #mensajes::-webkit-scrollbar { width: 4px; }
     #mensajes::-webkit-scrollbar-track { background: transparent; }
-    #mensajes::-webkit-scrollbar-thumb { background: rgba(196,154,60,0.2); border-radius: 2px; }
+    #mensajes::-webkit-scrollbar-thumb { background: rgba(184,137,61,0.2); border-radius: 2px; }
 
     .msg {
       max-width: 75%;
       font-size: 14px;
       line-height: 1.8;
-      font-family: 'Lora', serif;
+      font-family: 'Fraunces', serif;
     }
     .msg-sender {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       font-weight: 700;
       letter-spacing: 0.25em;
@@ -299,12 +299,12 @@
       padding-left: 4px;
     }
     .art-tag {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.1em;
       padding: 3px 10px;
       border-radius: 20px;
-      border: 1px solid rgba(196,154,60,0.3);
+      border: 1px solid rgba(184,137,61,0.3);
       background: var(--gold-dim);
       color: var(--gold);
     }
@@ -344,17 +344,17 @@
     .input-row {
       display: flex;
       background: rgba(235,224,200,0.7);
-      border: 1px solid rgba(139,104,32,0.18);
+      border: 1px solid rgba(143,106,42,0.18);
       border-radius: 14px;
       padding: 4px;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: inset 0 2px 8px rgba(26,20,16,0.08), 0 4px 20px rgba(26,20,16,0.10);
+      box-shadow: inset 0 2px 8px rgba(10,10,9,0.08), 0 4px 20px rgba(10,10,9,0.10);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
     .input-row:focus-within {
       border-color: var(--gold-border);
-      box-shadow: inset 0 2px 8px rgba(26,20,16,0.08), 0 6px 28px rgba(26,20,16,0.14);
+      box-shadow: inset 0 2px 8px rgba(10,10,9,0.08), 0 6px 28px rgba(10,10,9,0.14);
     }
     .input-row input {
       flex: 1;
@@ -362,14 +362,14 @@
       background: rgba(250,242,224,0.85);
       padding: 11px 16px;
       font-size: 14px;
-      font-family: 'Lora', serif;
+      font-family: 'Fraunces', serif;
       color: var(--text);
       outline: none;
       border-radius: 10px;
     }
     [data-theme="dark"] .input-row {
       background: rgba(28,28,25,0.75);
-      border-color: rgba(196,154,60,0.18);
+      border-color: rgba(184,137,61,0.18);
       box-shadow: inset 0 2px 8px rgba(0,0,0,0.25), 0 4px 20px rgba(0,0,0,0.35);
     }
     [data-theme="dark"] .input-row input {
@@ -402,7 +402,7 @@
       gap: 12px;
     }
     .btn-modo-redaccion {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -420,7 +420,7 @@
     /* alias para JS que usa .activo en btn-redactar-inline */
     #btn-modo-redaccion.activo { background: var(--gold-dim); border-color: var(--gold-border); color: var(--gold); }
     .input-disclaimer {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8px;
       letter-spacing: 0.12em;
       color: var(--text-muted);
@@ -432,7 +432,7 @@
     /* ── Modo Redacción ── */
     .recetas-wrap { display: flex; gap: 6px; flex-wrap: wrap; }
     .btn-generar {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 11px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
@@ -446,10 +446,10 @@
       margin-top: 10px;
       display: inline-block;
     }
-    .btn-generar:hover:not(:disabled) { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(196,154,60,0.25); }
+    .btn-generar:hover:not(:disabled) { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(184,137,61,0.25); }
     .btn-generar:disabled { opacity: 0.45; cursor: not-allowed; }
     .btn-docx {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 10px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -457,7 +457,7 @@
       border-radius: 12px;
       background: transparent;
       color: var(--gold);
-      border: 1px solid rgba(196,154,60,0.35);
+      border: 1px solid rgba(184,137,61,0.35);
       cursor: pointer;
       transition: all 0.2s ease;
       margin-top: 10px;
@@ -470,7 +470,7 @@
       border-radius: 12px;
       padding: 28px 32px;
       color: #1c1c18;
-      font-family: 'Lora', serif;
+      font-family: 'Fraunces', serif;
       font-size: 14px;
       line-height: 1.8;
     }
@@ -489,10 +489,10 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) rotate(-30deg);
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 18px;
       letter-spacing: 0.2em;
-      color: rgba(196,154,60,0.55);
+      color: rgba(184,137,61,0.55);
       white-space: nowrap;
       pointer-events: none;
       text-align: center;
@@ -505,7 +505,7 @@
       margin-top: 10px;
       padding: 10px 14px;
       border-radius: 8px;
-      border-left: 2px solid rgba(196,154,60,0.4);
+      border-left: 2px solid rgba(184,137,61,0.4);
       background: var(--gold-dim);
     }
   
@@ -524,7 +524,7 @@
     }
     .topbar-logo { color: var(--text-primary); }
     .topbar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0.07em;
@@ -627,24 +627,24 @@
       margin-left: 8px;
     }
     .tema-btn:hover { color: var(--gold); border-color: var(--gold-border); }
-    select option { background: #FDFAF5 !important; color: #1A1410 !important; }
-    select:focus option { background: #F0EBE0 !important; color: #1A1410 !important; }
+    select option { background: #FDFAF5 !important; color: #0A0A09 !important; }
+    select:focus option { background: #F0EBE0 !important; color: #0A0A09 !important; }
     /* ── Mobile sidebar ── */
     .topbar-right { display: flex; align-items: center; gap: 4px; }
     .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
-    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #3D342A); border-radius: 2px; transition: background 0.2s; }
-    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(26,20,16,0.45); z-index: 199; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #1A1815); border-radius: 2px; transition: background 0.2s; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(10,10,9,0.45); z-index: 199; }
     .sidebar-overlay.open { display: block; }
-    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(26,20,16,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
+    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(10,10,9,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
     .sidebar.open { right: 0; }
     .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border, #E5DDD0); }
-    .sidebar-logo { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #1A1410); text-decoration: none; }
-    .sidebar-logo span { color: var(--gold, #8B6820); }
-    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #7A6E60); font-size: 18px; padding: 4px; line-height: 1; }
-    .sidebar-close:hover { color: var(--text-primary, #1A1410); }
+    .sidebar-logo { font-family: 'Fraunces', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #0A0A09); text-decoration: none; }
+    .sidebar-logo span { color: var(--gold, #8F6A2A); }
+    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #3A3530); font-size: 18px; padding: 4px; line-height: 1; }
+    .sidebar-close:hover { color: var(--text-primary, #0A0A09); }
     .sidebar-nav { flex: 1; display: flex; flex-direction: column; padding: 16px 0; overflow-y: auto; }
     .sidebar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.14em;
@@ -658,7 +658,7 @@
     transition: all 0.2s;
     border-left: 2px solid transparent;
   }
-    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8B6820); background: rgba(139,104,32,0.06); border-left-color: var(--gold, #8B6820); }
+    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8F6A2A); background: rgba(143,106,42,0.06); border-left-color: var(--gold, #8F6A2A); }
     .sidebar-link .pro-badge { font-size: 7px; }
     @media (max-width: 680px) { .hamburger { display: flex; } .topbar-nav { display: none !important; } .topbar-status, .apolo-badge { display: none !important; } }
   </style>
@@ -722,7 +722,7 @@
     <div class="sel-group" id="grupo-recetas" style="display:none">
       <span class="sel-label">Documento</span>
       <div class="recetas-wrap" id="recetas-wrap">
-        <span style="font-family:'Cinzel',serif;font-size:9px;color:rgba(196,154,60,0.4);letter-spacing:0.1em;">Cargando...</span>
+        <span style="font-family:'Fraunces',serif;font-size:9px;color:rgba(184,137,61,0.4);letter-spacing:0.1em;">Cargando...</span>
       </div>
     </div>
   </div>
@@ -1142,7 +1142,7 @@
           recetasWrap.appendChild(btn);
         });
       } catch (e) {
-        recetasWrap.innerHTML = '<span style="font-family:Cinzel,serif;font-size:9px;color:rgba(196,154,60,0.4);">Error cargando documentos</span>';
+        recetasWrap.innerHTML = '<span style="font-family:Fraunces,serif;font-size:9px;color:rgba(184,137,61,0.4);">Error cargando documentos</span>';
       }
     }
 
@@ -1335,8 +1335,8 @@
             '<div class="doc-watermark">VISTA PREVIA<br>PENDIENTE DE PAGO</div>' +
           '</div>' +
           (data.nota ? '<div class="nota-legal">' + data.nota + '</div>' : '') +
-          (data.nota_upsell ? '<div class="nota-legal" style="border-left-color:rgba(196,154,60,0.6);margin-top:6px;">✦ ' + data.nota_upsell + '</div>' : '') +
-          '<p style="font-family:\'Cinzel\',serif;font-size:11px;letter-spacing:0.1em;color:#c49a3c;margin:12px 0 6px;">Precio: <strong>$' + precio + ' MXN</strong></p>' +
+          (data.nota_upsell ? '<div class="nota-legal" style="border-left-color:rgba(184,137,61,0.6);margin-top:6px;">✦ ' + data.nota_upsell + '</div>' : '') +
+          '<p style="font-family:\'Fraunces\',serif;font-size:11px;letter-spacing:0.1em;color:#B8893D;margin:12px 0 6px;">Precio: <strong>$' + precio + ' MXN</strong></p>' +
           '<button class="btn-generar" id="btn-pagar">💳 Pagar y Desbloquear Documento</button>';
         mensajesEl.appendChild(div);
         mensajesEl.scrollTop = mensajesEl.scrollHeight;

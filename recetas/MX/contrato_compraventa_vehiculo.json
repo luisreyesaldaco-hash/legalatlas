@@ -77,7 +77,7 @@
     }
   ],
   "nota_al_usuario": "Este contrato protege tanto al vendedor como al comprador. Te recomendamos firmar dos ejemplares originales — uno para cada parte. Si el vehículo vale más de $150,000 MXN considera ratificar las firmas ante notario.",
-  "nota_upsell": "¿Quieres que un abogado revise este contrato antes de firmarlo? Tenemos especialistas disponibles en Legal Atlas.",
+  "nota_upsell": "¿Quieres que un abogado revise este contrato antes de firmarlo? Tenemos especialistas disponibles en Tesseum.",
   "jurisdiccion": {
     "requiere_estado": true,
     "acepta_federal": true

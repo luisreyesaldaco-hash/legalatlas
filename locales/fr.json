@@ -117,8 +117,8 @@
   "marco.motor.ley.hint": "Sélectionnez une loi pour qu'Apolo explique la procédure applicable étape par étape.",
   "marco.motor.ley.vacia": "Sans procédure spécifique — analyse uniquement CE QUE dit la loi",
 
-  "footer.coords": "Legal Atlas · Analyse normative",
-  "footer.copy": "Legal Atlas Engineering © 2026",
+  "footer.coords": "Tesseum · Analyse normative",
+  "footer.copy": "Tesseum Engineering © 2026",
 
   "materia.civil": "Civil",
   "materia.penal": "Pénal",
@@ -150,7 +150,7 @@
   "auditor.validas": "✅ Valides",
   "auditor.riesgo": "⚠️ Risque",
   "auditor.invalidas": "❌ Invalides",
-  "auditor.aviso": "Cette analyse est indicative et ne remplace pas l'avis d'un avocat qualifié. Legal Atlas cite de véritables articles vérifiés du corpus législatif.",
+  "auditor.aviso": "Cette analyse est indicative et ne remplace pas l'avis d'un avocat qualifié. Tesseum cite de véritables articles vérifiés du corpus législatif.",
 
   "abogado.banner": "Période de lancement · Accès gratuit jusqu'au 7 mai",
   "abogado.acceso.cta": "Demander l'accès →",

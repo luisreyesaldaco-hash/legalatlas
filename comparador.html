@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Legal Atlas vs IA Genérica — La Diferencia</title>
+<title>Tesseum vs IA Genérica — La Diferencia</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -422,11 +422,11 @@
 <body>
 
 <header>
-  <div class="eyebrow">Demostración · Legal Atlas</div>
+  <div class="eyebrow">Demostración · Tesseum</div>
   <h1>
     <span class="dim">IA Genérica</span>
     <span class="gold"> vs </span>
-    Legal Atlas
+    Tesseum
   </h1>
   <p class="subtitle">La diferencia entre una respuesta que suena bien y una que cita el artículo exacto de la ley vigente.</p>
 </header>
@@ -468,10 +468,10 @@
 
   <div class="divider"></div>
 
-  <!-- Legal Atlas -->
+  <!-- Tesseum -->
   <div class="contestant atlas">
     <div class="contestant-header">
-      <div class="contestant-label">Legal Atlas</div>
+      <div class="contestant-label">Tesseum</div>
       <div class="contestant-name">Apolo · Motor Jurídico</div>
       <div class="contestant-desc">// corpus verificado · 153K+ artículos · MX · CZ · EU</div>
     </div>
@@ -521,7 +521,7 @@
 </div>
 
 <div class="footer-note">
-  Legal Atlas · legalatlas.io · Corpus verificado al 31 mar 2026 · 153,105 artículos · MX · CZ · FR · DE · ES · CH · MC
+  Tesseum · tesseum.com · Corpus verificado al 31 mar 2026 · 153,105 artículos · MX · CZ · FR · DE · ES · CH · MC
 </div>
 
 <script>
@@ -616,7 +616,7 @@
       checkDone();
     });
 
-    // Call Legal Atlas (Apolo)
+    // Call Tesseum (Apolo)
     fetch('/api/asesoria', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -646,7 +646,7 @@
     .catch(err => {
       atlasTime = Date.now() - t0;
       boxAtlas.classList.remove('loading');
-      boxAtlas.innerHTML = `<span style="color:var(--red)">Error conectando con Legal Atlas: ${err.message}</span>`;
+      boxAtlas.innerHTML = `<span style="color:var(--red)">Error conectando con Tesseum: ${err.message}</span>`;
       atlasDone = true;
       checkDone();
     });

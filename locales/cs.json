@@ -1,6 +1,6 @@
 {
   "abogado.saludo": "Dobrý den. Jsem <strong>APOLO</strong>, váš profesionální právní asistent. Vyberte článek z navigátoru a zahájíme analýzu.",
-  "atlas.eyebrow": "Hegelova dialektika · Legal Atlas",
+  "atlas.eyebrow": "Hegelova dialektika · Tesseum",
   "atlas.btn.analizar": "ATLAS ⚡ — ANALYZOVAT",
   "atlas.analizando": "ANALYZUJI",
   "atlas.placeholder": "Popište případ. Př: Zaměstnavatel mi okamžitě zrušil pracovní smlouvu bez výpovědní doby a nevyplatil poslední 3 týdny mzdy. Jaká jsou moje práva?",
@@ -140,8 +140,8 @@
   "marco.motor.ley.hint": "Vyberte zákon, aby Apolo vysvětlil příslušný postup krok za krokem.",
   "marco.motor.ley.vacia": "Bez konkrétního řízení — analyzuje pouze CO říká zákon",
 
-  "footer.coords": "Legal Atlas · Legal Engine",
-  "footer.copy": "Legal Atlas Engineering © 2026",
+  "footer.coords": "Tesseum · Legal Engine",
+  "footer.copy": "Tesseum Engineering © 2026",
 
   "materia.civil": "Občanské",
   "materia.penal": "Trestní",
@@ -173,7 +173,7 @@
   "auditor.validas": "✅ Platné",
   "auditor.riesgo": "⚠️ Riziko",
   "auditor.invalidas": "❌ Neplatné",
-  "auditor.aviso": "Tato analýza je orientační a nenahrazuje posouzení kvalifikovaného právníka. Legal Atlas cituje ověřené skutečné články z legislativního korpusu.",
+  "auditor.aviso": "Tato analýza je orientační a nenahrazuje posouzení kvalifikovaného právníka. Tesseum cituje ověřené skutečné články z legislativního korpusu.",
 
   "abogado.banner": "Zkušební období · Bezplatný přístup do 7. května",
   "abogado.acceso.cta": "Požádat o přístup →",

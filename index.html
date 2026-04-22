@@ -3,29 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Legal Atlas — The law has geometry.</title>
+<title>Tesseum — The law has geometry.</title>
 <meta name="description" content="153,105 verified legal provisions across seven jurisdictions. Every article is a line of code. Every constitution is an operating system.">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Barlow:wght@300;400;500;600&family=Cinzel:wght@400;600;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Barlow:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 <script src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js" defer></script>
 <style>
 :root {
-  --bg:      #F3EAD5;
+  --bg:      #F4EFE4;
   --bg-dark: #070604;
-  --text:    #1A1410;
+  --text:    #0A0A09;
   --text-lt: #e8e0d0;
-  --soft:    #3D342A;
+  --soft:    #1A1815;
   --soft-lt: #bfb5a2;
-  --muted:   #7A6E60;
+  --muted:   #3A3530;
   --muted-lt:#7a7060;
   --gold:    #c8a84b;
   --gold-lt: #d4b65c;
-  --gold-dk: #8B6820;
+  --gold-dk: #8F6A2A;
   --gold-dim:rgba(200,168,75,0.08);
-  --rule:    rgba(139,104,32,0.18);
+  --rule:    rgba(143,106,42,0.18);
   --rule-lt: rgba(200,168,75,0.15);
-  --border:  #DDD0B4;
+  --border:  #D8CFBA;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,19 +39,19 @@ nav {
   padding: 0 48px; height: 64px;
   background: rgba(243,234,213,0.92); backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
-  box-shadow: 0 1px 4px rgba(26,20,16,0.07);
+  box-shadow: 0 1px 4px rgba(10,10,9,0.07);
 }
-.n-logo { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700; letter-spacing: .28em; color: var(--text); text-decoration: none; flex-shrink: 0; margin-right: 40px; }
+.n-logo { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700; letter-spacing: .28em; color: var(--text); text-decoration: none; flex-shrink: 0; margin-right: 40px; }
 .n-logo span { color: var(--gold-dk); font-weight: 400; }
 .n-links { display: flex; align-items: center; gap: 32px; list-style: none; }
-.n-links a { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--soft); text-decoration: none; transition: color .2s; position: relative; white-space: nowrap; }
+.n-links a { font-family: 'Fraunces', serif; font-size: 12px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--soft); text-decoration: none; transition: color .2s; position: relative; white-space: nowrap; }
 .n-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:1px; background:var(--gold-dk); transition:width .25s; }
 .n-links a:hover { color: var(--gold-dk); }
 .n-links a:hover::after { width: 100%; }
 /* Dropdown */
 .n-dropdown-wrap { position: relative; }
 .n-dropdown-btn {
-  font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600;
+  font-family: 'Fraunces', serif; font-size: 12px; font-weight: 600;
   letter-spacing: .07em; text-transform: uppercase; color: var(--soft);
   background: none; border: none; cursor: pointer; transition: color .2s;
   display: flex; align-items: center; gap: 4px;
@@ -62,18 +62,18 @@ nav {
 .n-dropdown {
   display: none; position: absolute; top: calc(100% + 12px); left: 50%; transform: translateX(-50%);
   background: #fff; border: 1px solid var(--border); border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(26,20,16,0.12); padding: 6px; min-width: 160px; z-index: 110;
+  box-shadow: 0 8px 32px rgba(10,10,9,0.12); padding: 6px; min-width: 160px; z-index: 110;
 }
 .n-dropdown-wrap.open .n-dropdown { display: block; }
 .n-dropdown a {
   display: block; padding: 10px 16px; border-radius: 8px;
-  font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .08em;
+  font-family: 'Fraunces', serif; font-size: 11px; letter-spacing: .08em;
   color: var(--text); text-decoration: none; transition: all .15s; white-space: nowrap;
 }
-.n-dropdown a:hover { background: rgba(139,104,32,0.06); color: var(--gold-dk); }
+.n-dropdown a:hover { background: rgba(143,106,42,0.06); color: var(--gold-dk); }
 
 .n-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: auto; }
-.n-cta { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; background: var(--text); color: var(--bg); padding: 9px 22px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: background .2s; }
+.n-cta { font-family: 'Fraunces', serif; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; background: var(--text); color: var(--bg); padding: 9px 22px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: background .2s; }
 .n-cta:hover { background: var(--gold-dk); }
 .n-burger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
 .n-burger span { display: block; width: 22px; height: 2px; background: var(--soft); border-radius: 2px; transition: all .25s; }
@@ -82,15 +82,15 @@ nav {
 .n-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ── MOBILE SIDEBAR ── */
-.m-overlay { display:none; position:fixed; inset:0; background:rgba(26,20,16,.45); z-index:199; }
+.m-overlay { display:none; position:fixed; inset:0; background:rgba(10,10,9,.45); z-index:199; }
 .m-overlay.open { display:block; }
 .m-sidebar { position:fixed; top:0; right:-280px; width:260px; height:100vh; background:var(--bg); border-left:1px solid var(--border); z-index:200; transition:right .3s; display:flex; flex-direction:column; }
 .m-sidebar.open { right:0; }
 .m-sidebar-head { display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--border); }
 .m-sidebar-close { background:none; border:none; cursor:pointer; color:var(--muted); font-size:18px; }
 .m-sidebar-nav { flex:1; padding:16px 0; display:flex; flex-direction:column; }
-.m-sidebar-nav a { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--soft); text-decoration:none; padding:13px 24px; border-left:2px solid transparent; transition:all .2s; }
-.m-sidebar-nav a:hover { color:var(--gold-dk); background:rgba(139,104,32,0.06); border-left-color:var(--gold-dk); }
+.m-sidebar-nav a { font-family:'Fraunces',serif; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--soft); text-decoration:none; padding:13px 24px; border-left:2px solid transparent; transition:all .2s; }
+.m-sidebar-nav a:hover { color:var(--gold-dk); background:rgba(143,106,42,0.06); border-left-color:var(--gold-dk); }
 
 /* ── LAYOUT ── */
 .page { position: relative; z-index: 1; padding-top: 64px; }
@@ -112,7 +112,7 @@ nav {
   padding: 64px 24px 40px;
 }
 .hero-banner-text {
-  font-family: 'Cinzel', serif;
+  font-family: 'Fraunces', serif;
   font-size: clamp(18px, 3vw, 28px);
   font-weight: 700;
   letter-spacing: .35em;
@@ -192,13 +192,13 @@ nav {
   display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
 }
 .hero-cta-row .btn-primary {
-  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+  font-family: 'Fraunces', serif; font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
   background: var(--gold); color: var(--bg-dark); padding: 13px 32px; border-radius: 6px;
   text-decoration: none; font-weight: 700; transition: background .2s;
 }
 .hero-cta-row .btn-primary:hover { background: var(--gold-lt); }
 .hero-cta-row .btn-ghost {
-  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+  font-family: 'Fraunces', serif; font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
   border: 1px solid rgba(200,168,75,0.25); color: var(--muted-lt); padding: 13px 32px; border-radius: 6px;
   text-decoration: none; transition: all .2s;
 }
@@ -213,7 +213,7 @@ nav {
   text-align: center;
 }
 .entropy-label {
-  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .5em;
+  font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: .5em;
   color: var(--gold); text-transform: uppercase; margin-bottom: 20px;
 }
 .entropy-h {
@@ -238,13 +238,13 @@ nav {
   pointer-events: none;
 }
 .entropy-tag {
-  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .2em;
+  font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: .2em;
   text-transform: uppercase; color: var(--gold); opacity: .6;
 }
 
 /* ── WHY WE BUILT THIS ── */
 .why-label {
-  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .5em;
+  font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: .5em;
   color: var(--gold-dk); text-transform: uppercase; margin-bottom: 64px;
   display: flex; align-items: center; gap: 16px;
 }
@@ -280,7 +280,7 @@ nav {
 
 /* ── THE BOOK ── */
 .book-label {
-  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .5em;
+  font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: .5em;
   color: var(--gold-dk); text-transform: uppercase; margin-bottom: 48px;
   display: flex; align-items: center; gap: 16px;
 }
@@ -314,7 +314,7 @@ nav {
 }
 .book-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
 .book-ctas a {
-  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+  font-family: 'Fraunces', serif; font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
   padding: 11px 24px; border-radius: 6px; text-decoration: none; transition: all .2s;
 }
 .book-cta-primary { background: var(--text); color: var(--bg); font-weight: 600; }
@@ -324,7 +324,7 @@ nav {
 
 /* ── INSTRUMENTS ── */
 .inst-label {
-  font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .5em;
+  font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: .5em;
   color: var(--gold-dk); text-transform: uppercase; margin-bottom: 48px;
   display: flex; align-items: center; gap: 16px;
 }
@@ -361,7 +361,7 @@ nav {
   max-width: 460px;
 }
 .inst-cta {
-  font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+  font-family: 'Fraunces', serif; font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
   color: var(--gold-dk); text-decoration: none; white-space: nowrap;
   transition: opacity .2s; flex-shrink: 0; align-self: center;
 }
@@ -374,11 +374,11 @@ footer {
   display: flex; justify-content: space-between; align-items: center;
   flex-wrap: wrap; gap: 20px; border-top: 1px solid var(--rule);
 }
-.f-logo { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .3em; color: var(--text); font-weight: 700; }
+.f-logo { font-family: 'Fraunces', serif; font-size: 11px; letter-spacing: .3em; color: var(--text); font-weight: 700; }
 .f-logo span { color: var(--gold-dk); }
 .f-copy { font-family: 'Barlow', sans-serif; font-size: 11px; color: var(--muted); font-weight: 300; }
 .f-links { display: flex; gap: 24px; }
-.f-links a { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .12em; color: var(--muted); text-decoration: none; transition: color .2s; text-transform: uppercase; }
+.f-links a { font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: .12em; color: var(--muted); text-decoration: none; transition: color .2s; text-transform: uppercase; }
 .f-links a:hover { color: var(--gold-dk); }
 .f-disclaimer {
   width: 100%;
@@ -466,10 +466,10 @@ footer {
   <div id="cz-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(7,6,4,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
     <div style="background:#141210;border:1px solid rgba(200,168,75,0.15);border-radius:18px;max-width:480px;width:90%;padding:48px 44px 40px;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,0.5);">
       <div style="font-size:52px;line-height:1;margin-bottom:20px;">🇨🇿</div>
-      <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;">Vítejte v Legal Atlas</div>
+      <div style="font-family:'Fraunces',serif;font-size:11px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;">Vítejte v Tesseum</div>
       <h2 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:var(--text);margin:0 0 14px;line-height:1.25;">Jste z České republiky.</h2>
       <p style="font-family:'Barlow',sans-serif;font-size:15px;color:var(--soft);line-height:1.7;margin:0 0 32px;font-weight:300;">Máme pro vás verzi v češtině — s&nbsp;českou legislativou, judikaturou a právními předpisy přímo pro vaši jurisdikci.</p>
-      <button onclick="czGoLocal()" style="display:block;width:100%;background:var(--gold);color:#070604;border:none;border-radius:10px;padding:16px 24px;font-family:'Cinzel',serif;font-size:13px;letter-spacing:.12em;font-weight:700;cursor:pointer;margin-bottom:14px;transition:opacity .2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Přejít na Legal Atlas CZ →</button>
+      <button onclick="czGoLocal()" style="display:block;width:100%;background:var(--gold);color:#070604;border:none;border-radius:10px;padding:16px 24px;font-family:'Fraunces',serif;font-size:13px;letter-spacing:.12em;font-weight:700;cursor:pointer;margin-bottom:14px;transition:opacity .2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Přejít na Tesseum CZ →</button>
       <button onclick="czStayGlobal()" style="background:none;border:none;color:var(--muted);font-family:'Barlow',sans-serif;font-size:12px;cursor:pointer;padding:4px 0;text-decoration:underline;text-underline-offset:3px;">Continue in English</button>
     </div>
   </div>
@@ -478,20 +478,20 @@ footer {
   <div id="mx-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(7,6,4,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
     <div style="background:#141210;border:1px solid rgba(200,168,75,0.15);border-radius:18px;max-width:480px;width:90%;padding:48px 44px 40px;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,0.5);">
       <div style="font-size:52px;line-height:1;margin-bottom:20px;">🇲🇽</div>
-      <div style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;">Legal Atlas México</div>
+      <div style="font-family:'Fraunces',serif;font-size:11px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;">Tesseum México</div>
       <h2 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:var(--text);margin:0 0 14px;line-height:1.25;">Estás en México.</h2>
       <p style="font-family:'Barlow',sans-serif;font-size:15px;color:var(--soft);line-height:1.7;margin:0 0 32px;font-weight:300;">Tenemos una versión en español con la legislación mexicana completa — Constitución, Código Civil de 32 estados y leyes federales.</p>
-      <button onclick="mxGoLocal()" style="display:block;width:100%;background:var(--gold);color:#070604;border:none;border-radius:10px;padding:16px 24px;font-family:'Cinzel',serif;font-size:13px;letter-spacing:.12em;font-weight:700;cursor:pointer;margin-bottom:14px;transition:opacity .2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Ir a Legal Atlas México →</button>
+      <button onclick="mxGoLocal()" style="display:block;width:100%;background:var(--gold);color:#070604;border:none;border-radius:10px;padding:16px 24px;font-family:'Fraunces',serif;font-size:13px;letter-spacing:.12em;font-weight:700;cursor:pointer;margin-bottom:14px;transition:opacity .2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Ir a Tesseum México →</button>
       <button onclick="mxStayGlobal()" style="background:none;border:none;color:var(--muted);font-family:'Barlow',sans-serif;font-size:12px;cursor:pointer;padding:4px 0;text-decoration:underline;text-underline-offset:3px;">Continue in English</button>
     </div>
   </div>
 
   <!-- Sticky geo ribbon (bottom, persistent pressure) -->
-  <div id="geo-sticky" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:8888;background:var(--bg,#F3EAD5);border-top:1px solid var(--border,#DDD0B4);padding:11px 32px;align-items:center;gap:16px;box-shadow:0 -4px 20px rgba(26,20,16,0.1);font-family:'Barlow',sans-serif;">
+  <div id="geo-sticky" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:8888;background:var(--bg,#F4EFE4);border-top:1px solid var(--border,#D8CFBA);padding:11px 32px;align-items:center;gap:16px;box-shadow:0 -4px 20px rgba(10,10,9,0.1);font-family:'Barlow',sans-serif;">
     <span id="geo-sticky-flag" style="font-size:20px;"></span>
-    <span id="geo-sticky-text" style="font-size:13px;color:var(--soft,#3D342A);"></span>
-    <button id="geo-sticky-btn" style="background:var(--text,#1A1410);color:var(--bg,#F3EAD5);border:none;border-radius:7px;padding:8px 18px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;font-weight:700;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='#8B6820'" onmouseout="this.style.background='var(--text,#1A1410)'"></button>
-    <button onclick="dismissSticky()" style="background:none;border:none;color:var(--muted,#7A6E60);cursor:pointer;font-size:20px;margin-left:auto;padding:0;line-height:1;">×</button>
+    <span id="geo-sticky-text" style="font-size:13px;color:var(--soft,#1A1815);"></span>
+    <button id="geo-sticky-btn" style="background:var(--text,#0A0A09);color:var(--bg,#F4EFE4);border:none;border-radius:7px;padding:8px 18px;font-family:'Fraunces',serif;font-size:10px;letter-spacing:.1em;font-weight:700;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='#8F6A2A'" onmouseout="this.style.background='var(--text,#0A0A09)'"></button>
+    <button onclick="dismissSticky()" style="background:none;border:none;color:var(--muted,#3A3530);cursor:pointer;font-size:20px;margin-left:auto;padding:0;line-height:1;">×</button>
   </div>
 
   <script>
@@ -517,8 +517,8 @@ footer {
     if (sessionStorage.getItem('geo-sticky-dismissed')) return;
     var bar = document.getElementById('geo-sticky');
     var cfg = {
-      CZ: { flag:'🇨🇿', text:'Česká verze Legal Atlas je k\u00a0dispozici.', btn:'Přejít na CZ →', go: czGoLocal },
-      MX: { flag:'🇲🇽', text:'La versión mexicana de Legal Atlas está disponible.', btn:'Ir a MX →', go: mxGoLocal }
+      CZ: { flag:'🇨🇿', text:'Česká verze Tesseum je k\u00a0dispozici.', btn:'Přejít na CZ →', go: czGoLocal },
+      MX: { flag:'🇲🇽', text:'La versión mexicana de Tesseum está disponible.', btn:'Ir a MX →', go: mxGoLocal }
     };
     var c = cfg[country];
     if (!c) return;
@@ -661,7 +661,7 @@ footer {
 
       <div class="why-block reveal">
         <p class="why-principle">"Justice is a human need."</p>
-        <p class="why-body">We did not build Legal Atlas to optimize a workflow. We built it because access to accurate legal knowledge is a condition of justice — and that condition has never been universal.</p>
+        <p class="why-body">We did not build Tesseum to optimize a workflow. We built it because access to accurate legal knowledge is a condition of justice — and that condition has never been universal.</p>
       </div>
 
       <div class="why-rule"></div>
@@ -675,7 +675,7 @@ footer {
 
       <div class="why-block reveal">
         <p class="why-principle">"Access to law is justice itself."</p>
-        <p class="why-body">A person who cannot read the law that governs them is not free. Legal Atlas does not make the law simpler. It makes the search more precise — so lawyers, jurists, and citizens find what they need, when they need it, without hallucination.</p>
+        <p class="why-body">A person who cannot read the law that governs them is not free. Tesseum does not make the law simpler. It makes the search more precise — so lawyers, jurists, and citizens find what they need, when they need it, without hallucination.</p>
       </div>
 
     </div>
@@ -688,7 +688,7 @@ footer {
   <section class="entropy-section dark-box reveal" id="entropy">
     <div class="entropy-label">How it works</div>
     <h2 class="entropy-h">Structure meets query.</h2>
-    <p class="entropy-sub">On the left, the legal corpus — 153,105 articles in ordered hierarchy. On the right, your question — unstructured, in natural language. Legal Atlas finds the connections in real time.</p>
+    <p class="entropy-sub">On the left, the legal corpus — 153,105 articles in ordered hierarchy. On the right, your question — unstructured, in natural language. Tesseum finds the connections in real time.</p>
     <div class="entropy-wrap">
       <canvas id="entropy-canvas"></canvas>
       <div class="entropy-labels">
@@ -709,7 +709,7 @@ footer {
     <div class="center-text">
       <h2 class="book-title">La epigénesis biológica del derecho</h2>
       <p class="book-pub">Published 2026 · Available on Amazon</p>
-      <p class="book-desc">The book that preceded Legal Atlas. A 170-page argument that law emerges from biology, language, and the human need for resolution — not from the state, not from reason alone.</p>
+      <p class="book-desc">The book that preceded Tesseum. A 170-page argument that law emerges from biology, language, and the human need for resolution — not from the state, not from reason alone.</p>
       <div class="book-ctas">
         <a href="https://a.co/d/01mnKTlj" target="_blank" rel="noopener" class="book-cta-primary">English edition →</a>
         <a href="https://a.co/d/0aHW2roS" target="_blank" rel="noopener" class="book-cta-primary">Edición en español →</a>
@@ -720,15 +720,15 @@ footer {
 
   <footer>
     <div class="f-logo">LEGAL<span>ATLAS</span></div>
-    <div class="f-copy">© 2026 Legal Atlas Engineering · 153,105 provisions · 7 jurisdictions</div>
+    <div class="f-copy">© 2026 Tesseum Engineering · 153,105 provisions · 7 jurisdictions</div>
     <div class="f-links">
       <a href="magnus.html">Magnus</a>
       <a href="cz/">CZ</a>
       <a href="mx/">MX</a>
       <a href="pricing.html">Pricing</a>
-      <a href="mailto:contact@legalatlas.io">Contact</a>
+      <a href="mailto:contact@tesseum.com">Contact</a>
     </div>
-    <p class="f-disclaimer">Legal Atlas is a legal research tool for legal professionals. It generates AI-assisted content with verified normative references. It does not constitute legal advice nor replace independent professional judgment.</p>
+    <p class="f-disclaimer">Tesseum is a legal research tool for legal professionals. It generates AI-assisted content with verified normative references. It does not constitute legal advice nor replace independent professional judgment.</p>
   </footer>
 
 </div>
