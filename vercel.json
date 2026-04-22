@@ -4,5 +4,19 @@
       "memory": 1024,
       "maxDuration": 800
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/((?!api/).*)",
+      "has": [{ "type": "host", "value": "legalatlas.io" }],
+      "destination": "https://www.tesseum.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/((?!api/).*)",
+      "has": [{ "type": "host", "value": "www.legalatlas.io" }],
+      "destination": "https://www.tesseum.com/$1",
+      "permanent": true
+    }
+  ]
 }

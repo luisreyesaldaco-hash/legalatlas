@@ -899,9 +899,11 @@ document.addEventListener('click', e => {
   globeGroup.add(createArc(j[1], j[4])) // MX-ES
   globeGroup.add(createArc(j[2], j[3])) // FR-DE
 
-  // ── Animate ──
+  // ── Animate (paused when off-screen) ──
   let time = 0
+  let globeRunning = true
   function animate() {
+    if (!globeRunning) return
     requestAnimationFrame(animate)
     globeGroup.rotation.y += 0.001
 
@@ -916,6 +918,12 @@ document.addEventListener('click', e => {
 
     renderer.render(scene, camera)
   }
+  const globeIO = new IntersectionObserver(([e]) => {
+    const was = globeRunning
+    globeRunning = e.isIntersecting
+    if (!was && globeRunning) animate()
+  }, { threshold: 0 })
+  globeIO.observe(canvas)
   animate()
 
   window.addEventListener('resize', () => {
@@ -1072,8 +1080,15 @@ document.addEventListener('click', e => {
     ctx.stroke()
     ctx.setLineDash([])
 
-    requestAnimationFrame(draw)
+    if (entropyRunning) requestAnimationFrame(draw)
   }
+  let entropyRunning = true
+  const entropyIO = new IntersectionObserver(([e]) => {
+    const was = entropyRunning
+    entropyRunning = e.isIntersecting
+    if (!was && entropyRunning) draw()
+  }, { threshold: 0 })
+  entropyIO.observe(canvas)
   draw()
 
   window.addEventListener('resize', () => {
