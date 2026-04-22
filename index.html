@@ -41,8 +41,8 @@ nav {
   border-bottom: 1px solid var(--border);
   box-shadow: 0 1px 4px rgba(10,10,9,0.07);
 }
-.n-logo { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700; letter-spacing: .28em; color: var(--text); text-decoration: none; flex-shrink: 0; margin-right: 40px; }
-.n-logo span { color: var(--gold-dk); font-weight: 400; }
+.n-logo { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 500; letter-spacing: .25em; color: var(--text); text-decoration: none; flex-shrink: 0; margin-right: 40px; display: inline-flex; align-items: center; gap: 10px; }
+.n-logo .logo-mark { width: 22px; height: 22px; flex-shrink: 0; }
 .n-links { display: flex; align-items: center; gap: 32px; list-style: none; }
 .n-links a { font-family: 'Fraunces', serif; font-size: 12px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--soft); text-decoration: none; transition: color .2s; position: relative; white-space: nowrap; }
 .n-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:1px; background:var(--gold-dk); transition:width .25s; }
@@ -374,8 +374,8 @@ footer {
   display: flex; justify-content: space-between; align-items: center;
   flex-wrap: wrap; gap: 20px; border-top: 1px solid var(--rule);
 }
-.f-logo { font-family: 'Fraunces', serif; font-size: 11px; letter-spacing: .3em; color: var(--text); font-weight: 700; }
-.f-logo span { color: var(--gold-dk); }
+.f-logo { font-family: 'Fraunces', serif; font-size: 12px; letter-spacing: .25em; color: var(--text); font-weight: 500; display: inline-flex; align-items: center; gap: 10px; }
+.f-logo .logo-mark { width: 20px; height: 20px; flex-shrink: 0; }
 .f-copy { font-family: 'Barlow', sans-serif; font-size: 11px; color: var(--muted); font-weight: 300; }
 .f-links { display: flex; gap: 24px; }
 .f-links a { font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: .12em; color: var(--muted); text-decoration: none; transition: color .2s; text-transform: uppercase; }
@@ -423,7 +423,7 @@ footer {
 
 <!-- NAV -->
 <nav>
-  <a href="/" class="n-logo">LEGAL<span>ATLAS</span></a>
+  <a href="/" class="n-logo"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-root-n" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-root-n)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESSEUM</a>
   <ul class="n-links">
     <li><a href="#why">Manifesto</a></li>
     <li><a href="#research">El libro</a></li>
@@ -445,7 +445,7 @@ footer {
 <div class="m-overlay" id="m-overlay" onclick="closeSidebar()"></div>
 <aside class="m-sidebar" id="m-sidebar">
   <div class="m-sidebar-head">
-    <a href="/" class="n-logo">LEGAL<span>ATLAS</span></a>
+    <a href="/" class="n-logo"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-root-n" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-root-n)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESSEUM</a>
     <button class="m-sidebar-close" onclick="closeSidebar()">✕</button>
   </div>
   <div class="m-sidebar-nav">
@@ -719,7 +719,7 @@ footer {
   </section>
 
   <footer>
-    <div class="f-logo">LEGAL<span>ATLAS</span></div>
+    <div class="f-logo"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-root-f" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-root-f)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESSEUM</div>
     <div class="f-copy">© 2026 Tesseum Engineering · 153,105 provisions · 7 jurisdictions</div>
     <div class="f-links">
       <a href="magnus.html">Magnus</a>
