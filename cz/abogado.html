@@ -9,34 +9,34 @@
 </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Legal Atlas — Apolo Pro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <title>Tesseum — Apolo Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <style>
     :root {
-      --bg-deep:        #F3EAD5;
-      --bg-card:        #FAF2E0;
-      --bg-elevated:    #EBE0C8;
-      --bg-input:       #FAF2E0;
-      --text-primary:   #1A1410;
-      --text-secondary: #3D342A;
-      --text-muted:     #7A6E60;
-      --gold:           #8B6820;
-      --gold-light:     #C49A3C;
-      --gold-dim:       rgba(139,104,32,0.08);
-      --gold-border:    rgba(139,104,32,0.22);
-      --border:         #DDD0B4;
-      --border-hover:   #C9BFB0;
-      --shadow-sm:      0 1px 4px rgba(26,20,16,0.07);
-      --shadow-md:      0 4px 20px rgba(26,20,16,0.10);
-      --shadow-lg:      0 8px 40px rgba(26,20,16,0.13);
+      --bg-deep:        #F4EFE4;
+      --bg-card:        #ECE5D4;
+      --bg-elevated:    #E4DCC5;
+      --bg-input:       #ECE5D4;
+      --text-primary:   #0A0A09;
+      --text-secondary: #1A1815;
+      --text-muted:     #3A3530;
+      --gold:           #8F6A2A;
+      --gold-light:     #B8893D;
+      --gold-dim:       rgba(143,106,42,0.08);
+      --gold-border:    rgba(143,106,42,0.22);
+      --border:         #D8CFBA;
+      --border-hover:   #C4B79E;
+      --shadow-sm:      0 1px 4px rgba(10,10,9,0.07);
+      --shadow-md:      0 4px 20px rgba(10,10,9,0.10);
+      --shadow-lg:      0 8px 40px rgba(10,10,9,0.13);
       /* compat aliases — mantener los que ya existen */
       --bg-raised:      var(--bg-elevated);
       --text:           var(--text-primary);
       --text-soft:      var(--text-secondary);
       --border-hov:     var(--border-hover);
       --accent:         var(--gold);
-      --gold-glow:      rgba(139,104,32,0.25);
+      --gold-glow:      rgba(143,106,42,0.25);
     }
     :root[data-theme="dark"] {
       --bg-deep:        #0C0C0A;
@@ -46,10 +46,10 @@
       --text-primary:   #F0ECE4;
       --text-secondary: #D0C4B4;
       --text-muted:     #9C9082;
-      --gold:           #C49A3C;
-      --gold-light:     #D4AE58;
-      --gold-dim:       rgba(196,154,60,0.10);
-      --gold-border:    rgba(196,154,60,0.20);
+      --gold:           #B8893D;
+      --gold-light:     #D4A55C;
+      --gold-dim:       rgba(184,137,61,0.10);
+      --gold-border:    rgba(184,137,61,0.20);
       --border:         #2A2A26;
       --border-hover:   #3D3D38;
       --shadow-sm:      0 1px 4px rgba(0,0,0,0.25);
@@ -60,7 +60,7 @@
       --text-soft:      var(--text-secondary);
       --border-hov:     var(--border-hover);
       --accent:         var(--gold);
-      --gold-glow:      rgba(196,154,60,0.35);
+      --gold-glow:      rgba(184,137,61,0.35);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -71,7 +71,7 @@
     }
 
     body {
-      font-family: 'Lora', Georgia, serif;
+      font-family: 'Fraunces', Georgia, serif;
       background: var(--bg-deep);
       color: var(--text);
       display: flex;
@@ -82,10 +82,10 @@
     ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb {
-      background: rgba(196,154,60,0.25);
+      background: rgba(184,137,61,0.25);
       border-radius: 2px;
     }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(196,154,60,0.45); }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(184,137,61,0.45); }
 
     /* ═══ TOPBAR ═══ */
     .topbar {
@@ -105,8 +105,15 @@
       z-index: 100;
     }
 
+    /* Tesseum logo mark */
+    .topbar-logo, .sidebar-logo { display: inline-flex; align-items: center; gap: 10px; }
+    .logo-mark { width: 22px; height: 22px; flex-shrink: 0; }
+    .topbar-logo em, .sidebar-logo em { font-style: italic; font-weight: 300; color: var(--gold); }
+    /* Grain overlay — parchment texture */
+    body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.32; mix-blend-mode: multiply; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+    :root[data-theme="dark"] body::before { opacity: 0.18; mix-blend-mode: screen; }
     .topbar-logo {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 0.85rem;
       font-weight: 700;
       letter-spacing: 0.3em;
@@ -116,7 +123,7 @@
     .topbar-logo span { color: var(--gold); font-weight: 400; }
 
     .topbar-back {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.15em;
       color: var(--text-muted);
@@ -127,7 +134,7 @@
     .topbar-back:hover { color: var(--gold); }
     .topbar-nav { display: flex; gap: 24px; }
     .topbar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0.07em;
@@ -144,7 +151,7 @@
       gap: 6px;
     }
     .pro-badge {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8px;
       font-weight: 700;
       letter-spacing: 0.15em;
@@ -160,7 +167,7 @@
       align-items: center;
       gap: 8px;
       margin-left: auto;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -212,17 +219,17 @@
     }
 
     .nav-label {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 7.5px;
       letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: rgba(196,154,60,0.45);
+      color: rgba(184,137,61,0.45);
       margin-bottom: 4px;
     }
 
     .nav-select {
       width: 100%;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 10px;
       letter-spacing: 0.08em;
       color: var(--text-soft);
@@ -246,7 +253,7 @@
     }
     .search-input {
       flex: 1;
-      font-family: 'Lora', serif;
+      font-family: 'Fraunces', serif;
       font-size: 12px;
       color: var(--text);
       background: var(--bg-raised);
@@ -259,7 +266,7 @@
     .search-input::placeholder { color: var(--text-muted); font-style: italic; }
     .search-input:focus { border-color: var(--gold); }
     .btn-search {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.1em;
       color: #08080a;
@@ -281,7 +288,7 @@
       gap: 4px;
     }
     .search-result-item {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.06em;
       color: var(--text-soft);
@@ -312,7 +319,7 @@
     }
 
     .nav-placeholder {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.15em;
       color: var(--text-muted);
@@ -323,10 +330,10 @@
     }
 
     .nav-loading {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.15em;
-      color: rgba(196,154,60,0.5);
+      color: rgba(184,137,61,0.5);
       text-transform: uppercase;
       padding: 12px 16px;
     }
@@ -346,7 +353,7 @@
       border: 1px solid transparent;
       cursor: pointer;
       transition: all 0.2s;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9.5px;
       font-weight: 600;
       letter-spacing: 0.08em;
@@ -362,7 +369,7 @@
     }
     .acord-header.open {
       background: var(--gold-dim);
-      border-color: rgba(196,154,60,0.25);
+      border-color: rgba(184,137,61,0.25);
       color: var(--gold);
     }
     .acord-arrow {
@@ -395,7 +402,7 @@
       border: 1px solid transparent;
       cursor: pointer;
       transition: all 0.2s;
-      font-family: 'Lora', serif;
+      font-family: 'Fraunces', serif;
       font-size: 11px;
       font-style: italic;
       color: var(--text-muted);
@@ -403,12 +410,12 @@
       text-align: left;
     }
     .sub-acord-header:hover {
-      background: rgba(196,154,60,0.08);
+      background: rgba(184,137,61,0.08);
       border-color: var(--border);
       color: var(--text-soft);
     }
     .sub-acord-header.open {
-      background: rgba(196,154,60,0.08);
+      background: rgba(184,137,61,0.08);
       border-color: var(--border);
       color: var(--text-soft);
     }
@@ -436,7 +443,7 @@
       display: block;
       padding: 7px 12px;
       border-radius: 10px;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.06em;
       color: rgba(245,237,216,0.70);
@@ -448,7 +455,7 @@
     .art-link:hover {
       color: var(--gold);
       background: var(--gold-dim);
-      border-left-color: rgba(196,154,60,0.4);
+      border-left-color: rgba(184,137,61,0.4);
     }
     .art-link.activo {
       color: var(--gold);
@@ -481,7 +488,7 @@
       max-width: 760px;
       width: 100%;
       margin: 0 auto;
-      font-family: 'Lora', Georgia, serif;
+      font-family: 'Fraunces', Georgia, serif;
       font-size: 14px;
       line-height: 1.85;
       color: var(--text-primary);
@@ -492,32 +499,32 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 10px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(196,154,60,0.5);
+      color: rgba(184,137,61,0.5);
     }
     .ley-libro h2 {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 11px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--gold);
-      border-bottom: 1px solid rgba(139,104,32,0.2);
+      border-bottom: 1px solid rgba(143,106,42,0.2);
       padding-bottom: 8px;
       margin: 48px 0 20px;
     }
     .ley-titulo h3 {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 10px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: rgba(139,104,32,0.55);
+      color: rgba(143,106,42,0.55);
       margin: 28px 0 12px;
     }
     .ley-capitulo h4 {
-      font-family: 'Lora', serif;
+      font-family: 'Fraunces', serif;
       font-size: 11px;
       font-style: italic;
       color: var(--text-muted);
@@ -529,7 +536,7 @@
       padding: 2px 0;
     }
     .ley-art-num {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.06em;
@@ -541,7 +548,7 @@
       color: var(--text-primary);
     }
     .ley-art-zruseno {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 10px;
       color: var(--text-muted);
       opacity: 0.35;
@@ -549,7 +556,7 @@
       scroll-margin-top: 80px;
     }
     .ley-articulo.activo {
-      background: rgba(139,104,32,0.06);
+      background: rgba(143,106,42,0.06);
       border-left: 2px solid var(--gold);
       padding-left: 14px;
       border-radius: 2px;
@@ -558,13 +565,13 @@
     .ley-ref {
       color: var(--gold);
       text-decoration: none;
-      border-bottom: 1px dashed rgba(139,104,32,0.4);
+      border-bottom: 1px dashed rgba(143,106,42,0.4);
       transition: color 0.2s;
     }
     .ley-ref:hover { color: var(--gold-light); border-bottom-color: var(--gold-light); }
     /* Dark mode overrides */
     [data-theme="dark"] #ley-container { color: var(--text-primary); }
-    [data-theme="dark"] .ley-articulo.activo { background: rgba(196,154,60,0.07); border-left-color: var(--gold); }
+    [data-theme="dark"] .ley-articulo.activo { background: rgba(184,137,61,0.07); border-left-color: var(--gold); }
     :root:not([data-theme="dark"]) #ley-container { background: #f5edd8; }
 
     /* Empty state */
@@ -586,13 +593,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 28px;
       color: rgba(138,104,32,0.4);
       background: rgba(138,104,32,0.06);
     }
     .vacio-title {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 11px;
       letter-spacing: 0.25em;
       text-transform: uppercase;
@@ -604,7 +611,7 @@
       display: none;
     }
     .breadcrumb {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -619,7 +626,7 @@
     .breadcrumb span:last-child { color: #8a6820; }
 
     .art-numero {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 52px;
       font-weight: 700;
       color: #8a6820;
@@ -628,7 +635,7 @@
       letter-spacing: -0.01em;
     }
     .art-ley-info {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -636,7 +643,7 @@
       margin-bottom: 28px;
     }
     .art-texto {
-      font-family: 'Lora', Georgia, serif;
+      font-family: 'Fraunces', Georgia, serif;
       font-size: 15px;
       line-height: 1.9;
       color: #1a1508;
@@ -652,7 +659,7 @@
       flex-wrap: wrap;
     }
     .btn-accion {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 10px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -689,7 +696,7 @@
       padding: 28px 32px;
     }
     .seccion-header {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       color: #8a6820;
       font-size: 13px;
       font-weight: 600;
@@ -706,7 +713,7 @@
     }
     .art-card:hover { opacity: 0.65; }
     .art-card-numero {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       color: #8a6820;
       font-size: 11px;
       font-weight: 600;
@@ -714,7 +721,7 @@
       margin-bottom: 6px;
     }
     .art-card-preview {
-      font-family: 'Lora', Georgia, serif;
+      font-family: 'Fraunces', Georgia, serif;
       color: #1a1508;
       font-size: 14px;
       line-height: 1.75;
@@ -734,7 +741,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -749,7 +756,7 @@
     .wb-back:hover { color: var(--gold); }
 
     .wb-titulo {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 11px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
@@ -774,18 +781,18 @@
       height: auto;
     }
     .wb-loading {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 10px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(196,154,60,0.5);
+      color: rgba(184,137,61,0.5);
       display: flex;
       align-items: center;
       gap: 10px;
     }
     .wb-spinner {
       width: 16px; height: 16px;
-      border: 2px solid rgba(196,154,60,0.2);
+      border: 2px solid rgba(184,137,61,0.2);
       border-top-color: var(--gold);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
@@ -793,14 +800,14 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .wb-caption {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8.5px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--text-muted);
       text-align: center;
     }
-    .wb-caption.gold { color: rgba(196,154,60,0.6); }
+    .wb-caption.gold { color: rgba(184,137,61,0.6); }
 
     /* ═══ RIGHT COLUMN — CHAT ═══ */
     .col-chat {
@@ -821,7 +828,7 @@
       justify-content: space-between;
     }
     .chat-header-title {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.3em;
@@ -830,7 +837,7 @@
       margin-bottom: 6px;
     }
     .chat-context {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8px;
       letter-spacing: 0.12em;
       color: var(--text-muted);
@@ -838,7 +845,7 @@
       min-height: 14px;
       transition: color 0.3s;
     }
-    .chat-context.activo { color: rgba(196,154,60,0.6); }
+    .chat-context.activo { color: rgba(184,137,61,0.6); }
 
     #chat-mensajes {
       flex: 1;
@@ -853,10 +860,10 @@
     .msg {
       font-size: 13px;
       line-height: 1.75;
-      font-family: 'Lora', serif;
+      font-family: 'Fraunces', serif;
     }
     .msg-sender {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8px;
       font-weight: 700;
       letter-spacing: 0.25em;
@@ -864,8 +871,8 @@
       margin-bottom: 6px;
     }
     .msg-apolo {
-      background: rgba(196,154,60,0.07);
-      border: 1px solid rgba(196,154,60,0.18);
+      background: rgba(184,137,61,0.07);
+      border: 1px solid rgba(184,137,61,0.18);
       border-radius: 4px 16px 16px 16px;
       padding: 12px 14px;
       align-self: flex-start;
@@ -874,9 +881,9 @@
     }
     .msg-apolo .msg-sender { color: var(--gold); }
     .msg-usuario {
-      background: rgba(196,154,60,0.1);
+      background: rgba(184,137,61,0.1);
       color: var(--text);
-      border: 1px solid rgba(196,154,60,0.2);
+      border: 1px solid rgba(184,137,61,0.2);
       border-radius: 16px 4px 16px 16px;
       padding: 10px 14px;
       align-self: flex-end;
@@ -887,7 +894,7 @@
     .chat-diagrama {
       margin: 10px 0 6px;
       background: rgba(0,0,0,0.12);
-      border: 1px solid rgba(196,154,60,0.18);
+      border: 1px solid rgba(184,137,61,0.18);
       border-radius: 10px;
       padding: 12px;
       overflow: hidden;
@@ -899,7 +906,7 @@
       letter-spacing: 0.04em;
       margin-top: 4px;
     }
-    :root:not([data-theme="dark"]) .chat-diagrama { background: rgba(139,104,32,0.04); }
+    :root:not([data-theme="dark"]) .chat-diagrama { background: rgba(143,106,42,0.04); }
     :root:not([data-theme="dark"]) .chat-diagrama-cap { color: var(--text-muted); }
 
     .typing-dots {
@@ -945,7 +952,7 @@
       background: transparent;
       padding: 9px 12px;
       font-size: 13px;
-      font-family: 'Lora', serif;
+      font-family: 'Fraunces', serif;
       color: var(--text);
       outline: none;
       border-radius: 11px;
@@ -978,16 +985,16 @@
       align-items: center;
       gap: 8px;
       padding: 9px 14px;
-      border-bottom: 1px solid rgba(196,154,60,0.15);
+      border-bottom: 1px solid rgba(184,137,61,0.15);
     }
     .ctx-segment {
       display: flex;
-      border: 1px solid rgba(196,154,60,0.22);
+      border: 1px solid rgba(184,137,61,0.22);
       border-radius: 8px;
       overflow: hidden;
     }
     .ctx-btn {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8px;
       letter-spacing: 0.1em;
       padding: 5px 11px;
@@ -997,14 +1004,14 @@
       transition: all 0.18s;
       white-space: nowrap;
       border: none;
-      border-right: 1px solid rgba(196,154,60,0.22);
+      border-right: 1px solid rgba(184,137,61,0.22);
       line-height: 1.4;
       text-transform: uppercase;
     }
     .ctx-btn:last-child { border-right: none; }
     .ctx-btn.activo {
-      background: rgba(196,154,60,0.16);
-      color: #C49A3C;
+      background: rgba(184,137,61,0.16);
+      color: #B8893D;
     }
     .ctx-btn.deshabilitado {
       opacity: 0.22;
@@ -1020,10 +1027,10 @@
     .chat-modo-btn {
       margin-left: auto;
       background: none;
-      border: 1px solid rgba(196,154,60,0.22);
+      border: 1px solid rgba(184,137,61,0.22);
       border-radius: 8px;
       padding: 5px 10px;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -1035,7 +1042,7 @@
     .chat-modo-btn:hover, .chat-modo-btn.activo {
       border-color: var(--gold);
       color: var(--gold);
-      background: rgba(196,154,60,0.1);
+      background: rgba(184,137,61,0.1);
     }
 
     /* Article tags in chat */
@@ -1046,12 +1053,12 @@
       margin-top: 6px;
     }
     .art-tag {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8px;
       letter-spacing: 0.08em;
       padding: 3px 8px;
       border-radius: 20px;
-      border: 1px solid rgba(196,154,60,0.3);
+      border: 1px solid rgba(184,137,61,0.3);
       background: var(--gold-dim);
       color: var(--gold);
     }
@@ -1065,15 +1072,15 @@
 
     /* Optgroup styling */
     .nav-select optgroup {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: rgba(196,154,60,0.5);
+      color: rgba(184,137,61,0.5);
       background: #0d0d0f;
     }
     .nav-select option {
-      font-family: 'Lora', serif;
+      font-family: 'Fraunces', serif;
       font-size: 12px;
       background: #0d0d0f;
       color: rgba(245,237,216,0.88);
@@ -1088,7 +1095,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8px;
       letter-spacing: 0.3em;
       text-transform: uppercase;
@@ -1109,13 +1116,13 @@
       padding: 6px 10px;
       border-radius: 10px;
       background: var(--gold-dim);
-      border: 1px solid rgba(196,154,60,0.2);
+      border: 1px solid rgba(184,137,61,0.2);
       cursor: pointer;
       transition: all 0.2s;
     }
-    .bookmark-chip:hover { background: rgba(196,154,60,0.22); border-color: var(--gold); }
+    .bookmark-chip:hover { background: rgba(184,137,61,0.22); border-color: var(--gold); }
     .bookmark-chip-label {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8.5px;
       letter-spacing: 0.08em;
       color: var(--text-soft);
@@ -1190,7 +1197,7 @@
       padding: 10px 8px;
       cursor: pointer;
       color: var(--gold);
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 8px;
       letter-spacing: 0.2em;
       writing-mode: vertical-rl;
@@ -1229,7 +1236,7 @@
     }
     .topbar-logo { color: var(--text-primary); }
     .topbar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0.07em;
@@ -1333,8 +1340,8 @@
     }
     .tema-btn:hover { color: var(--gold); border-color: var(--gold-border); }
     .lang-dropdown { display: none; }
-    select option { background: #FDFAF5 !important; color: #1A1410 !important; }
-    select:focus option { background: #F0EBE0 !important; color: #1A1410 !important; }
+    select option { background: #FDFAF5 !important; color: #0A0A09 !important; }
+    select:focus option { background: #F0EBE0 !important; color: #0A0A09 !important; }
 
     /* ═══ BANNER ACCESO ═══ */
     .acceso-banner {
@@ -1344,16 +1351,16 @@
       justify-content: center;
       gap: 20px;
       padding: 9px 28px;
-      background: rgba(196,154,60,0.10);
-      border-bottom: 1px solid rgba(196,154,60,0.22);
-      font-family: 'Cinzel', serif;
+      background: rgba(184,137,61,0.10);
+      border-bottom: 1px solid rgba(184,137,61,0.22);
+      font-family: 'Fraunces', serif;
       font-size: 9.5px;
       letter-spacing: 0.12em;
       color: var(--gold);
       flex-wrap: wrap;
     }
     .acceso-btn {
-      font-family: 'Cinzel', serif;
+      font-family: 'Fraunces', serif;
       font-size: 9px;
       letter-spacing: 0.15em;
       color: var(--bg-deep);
@@ -1396,7 +1403,7 @@
     /* Chat derecho */
     :root:not([data-theme="dark"]) .ctx-segment     { border-color: var(--border); }
     :root:not([data-theme="dark"]) .ctx-btn         { color: var(--text-secondary); border-right-color: var(--border); }
-    :root:not([data-theme="dark"]) .ctx-btn:hover:not(.deshabilitado):not(.activo) { color: var(--text-primary); background: rgba(139,104,32,0.08); }
+    :root:not([data-theme="dark"]) .ctx-btn:hover:not(.deshabilitado):not(.activo) { color: var(--text-primary); background: rgba(143,106,42,0.08); }
     :root:not([data-theme="dark"]) .chat-modo-btn   { color: var(--text-secondary); }
     :root:not([data-theme="dark"]) .chat-context    { color: var(--text-secondary); }
     :root:not([data-theme="dark"]) .msg-apolo       { background: var(--border); border-color: var(--border-hover); color: var(--text-primary); }
@@ -1416,7 +1423,7 @@
        MODO OSCURO — todos los textos muy claros
        ══════════════════════════════════════════ */
     /* Nav izquierdo */
-    [data-theme="dark"] .nav-label         { color: rgba(196,154,60,0.75); }
+    [data-theme="dark"] .nav-label         { color: rgba(184,137,61,0.75); }
     [data-theme="dark"] .nav-select        { color: var(--text-primary); }
     [data-theme="dark"] .search-input      { color: var(--text-primary); }
     [data-theme="dark"] .nav-placeholder   { color: var(--text-secondary); }
@@ -1437,19 +1444,19 @@
     /* ── Mobile sidebar ── */
     .topbar-right { display: flex; align-items: center; gap: 4px; }
     .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
-    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #3D342A); border-radius: 2px; transition: background 0.2s; }
-    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(26,20,16,0.45); z-index: 199; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #1A1815); border-radius: 2px; transition: background 0.2s; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(10,10,9,0.45); z-index: 199; }
     .sidebar-overlay.open { display: block; }
-    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(26,20,16,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
+    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(10,10,9,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
     .sidebar.open { right: 0; }
     .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border, #E5DDD0); }
-    .sidebar-logo { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #1A1410); text-decoration: none; }
-    .sidebar-logo span { color: var(--gold, #8B6820); }
-    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #7A6E60); font-size: 18px; padding: 4px; line-height: 1; }
-    .sidebar-close:hover { color: var(--text-primary, #1A1410); }
+    .sidebar-logo { font-family: 'Fraunces', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #0A0A09); text-decoration: none; }
+    .sidebar-logo span { color: var(--gold, #8F6A2A); }
+    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #3A3530); font-size: 18px; padding: 4px; line-height: 1; }
+    .sidebar-close:hover { color: var(--text-primary, #0A0A09); }
     .sidebar-nav { flex: 1; display: flex; flex-direction: column; padding: 16px 0; overflow-y: auto; }
     .sidebar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.14em;
@@ -1463,7 +1470,7 @@
     transition: all 0.2s;
     border-left: 2px solid transparent;
   }
-    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8B6820); background: rgba(139,104,32,0.06); border-left-color: var(--gold, #8B6820); }
+    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8F6A2A); background: rgba(143,106,42,0.06); border-left-color: var(--gold, #8F6A2A); }
     .sidebar-link .pro-badge { font-size: 7px; }
     @media (max-width: 680px) { .hamburger { display: flex; } .topbar-nav { display: none !important; } .topbar-status, .apolo-badge { display: none !important; } }
   </style>
@@ -1472,7 +1479,7 @@
 
   <!-- ═══ TOPBAR ═══ -->
   <header class="topbar">
-    <a class="topbar-logo" href="/cz/">LEGAL<span>ATLAS</span></a>
+    <a class="topbar-logo" href="/cz/"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-t" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-t)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESS<em>EUM</em></a>
     <nav class="topbar-nav">
       <a href="/cz/abogado.html" class="topbar-link active">Knihovna</a>
       <a href="/cz/jurisprudencia.html" class="topbar-link ">Judikatura</a>
@@ -1500,7 +1507,7 @@
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
   <aside class="sidebar" id="la-sidebar">
     <div class="sidebar-header">
-      <a href="/cz/" class="sidebar-logo">LEGAL<span>ATLAS</span></a>
+      <a href="/cz/" class="sidebar-logo"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-t" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-t)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESS<em>EUM</em></a>
       <button class="sidebar-close" onclick="closeSidebar()" aria-label="Cerrar menú">✕</button>
     </div>
     <nav class="sidebar-nav">
@@ -2507,7 +2514,7 @@
 
           if (data.ok) {
             const capInfo = data.capitulos_encontrados
-              ?.map(c => `<span style="font-family:'Cinzel',serif;font-size:9px;color:var(--gold);background:var(--gold-dim);border-radius:20px;padding:2px 8px;margin-right:4px;">${c.capitulo}</span>`)
+              ?.map(c => `<span style="font-family:'Fraunces',serif;font-size:9px;color:var(--gold);background:var(--gold-dim);border-radius:20px;padding:2px 8px;margin-right:4px;">${c.capitulo}</span>`)
               .join('') || '';
             const html = `<div style="margin-bottom:10px;">${capInfo}</div>${data.flujo.replace(/\n/g, '<br>')}`;
             agregarMensaje('apolo', html, null, []);
@@ -2785,10 +2792,10 @@ function closeSidebar() {
 </script>
 
 <div id="overlay-registro" style="position:fixed;inset:0;background:rgba(253,250,245,0.97);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px">
-  <p style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.3em;color:var(--gold);margin-bottom:16px" data-i18n="overlay.acceso">ACCESO REQUERIDO</p>
-  <h2 style="font-family:'Cinzel',serif;font-size:28px;margin-bottom:12px" data-i18n="overlay.registro">Regístrate para continuar</h2>
+  <p style="font-family:'Fraunces',serif;font-size:10px;letter-spacing:0.3em;color:var(--gold);margin-bottom:16px" data-i18n="overlay.acceso">ACCESO REQUERIDO</p>
+  <h2 style="font-family:'Fraunces',serif;font-size:28px;margin-bottom:12px" data-i18n="overlay.registro">Regístrate para continuar</h2>
   <p style="color:var(--text-muted);font-size:14px;margin-bottom:32px;max-width:400px;line-height:1.7" data-i18n="overlay.desc.abogado">El Biblioteca requiere una cuenta. Acceso gratuito hasta el 7 de mayo.</p>
-  <button onclick="loginConGoogle()" style="display:flex;align-items:center;gap:10px;padding:14px 24px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-family:'Lora',serif;font-size:14px;cursor:pointer;transition:all 0.2s">
+  <button onclick="loginConGoogle()" style="display:flex;align-items:center;gap:10px;padding:14px 24px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-family:'Fraunces',serif;font-size:14px;cursor:pointer;transition:all 0.2s">
     <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2.01c-.72.48-1.63.77-2.7.77a4.9 4.9 0 01-4.62-3.38H1.68v2.07A8 8 0 008.98 17z"/><path fill="#FBBC05" d="M4.36 10.44A4.9 4.9 0 014.1 9c0-.5.09-1 .26-1.44V5.49H1.68a8 8 0 000 7.02l2.68-2.07z"/><path fill="#EA4335" d="M8.98 3.58c1.32 0 2.5.45 3.44 1.35l2.54-2.54A8 8 0 001.68 5.49l2.68 2.07a4.9 4.9 0 014.62-3.98z"/></svg>
     Continuar con Google
   </button>

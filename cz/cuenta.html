@@ -9,34 +9,34 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Legal Atlas — Mi Cuenta</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<title>Tesseum — Mi Cuenta</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
 :root {
-  --bg-deep:        #F3EAD5;
-  --bg-card:        #FAF2E0;
-  --bg-elevated:    #EBE0C8;
-  --bg-input:       #FAF2E0;
-  --text-primary:   #1A1410;
-  --text-secondary: #3D342A;
-  --text-muted:     #7A6E60;
-  --gold:           #8B6820;
-  --gold-light:     #C49A3C;
-  --gold-dim:       rgba(139,104,32,0.08);
-  --gold-border:    rgba(139,104,32,0.22);
-  --border:         #DDD0B4;
-  --border-hover:   #C9BFB0;
-  --shadow-sm:      0 1px 4px rgba(26,20,16,0.07);
-  --shadow-md:      0 4px 20px rgba(26,20,16,0.10);
-  --shadow-lg:      0 8px 40px rgba(26,20,16,0.13);
+  --bg-deep:        #F4EFE4;
+  --bg-card:        #ECE5D4;
+  --bg-elevated:    #E4DCC5;
+  --bg-input:       #ECE5D4;
+  --text-primary:   #0A0A09;
+  --text-secondary: #1A1815;
+  --text-muted:     #3A3530;
+  --gold:           #8F6A2A;
+  --gold-light:     #B8893D;
+  --gold-dim:       rgba(143,106,42,0.08);
+  --gold-border:    rgba(143,106,42,0.22);
+  --border:         #D8CFBA;
+  --border-hover:   #C4B79E;
+  --shadow-sm:      0 1px 4px rgba(10,10,9,0.07);
+  --shadow-md:      0 4px 20px rgba(10,10,9,0.10);
+  --shadow-lg:      0 8px 40px rgba(10,10,9,0.13);
   /* compat aliases — mantener los que ya existen */
   --bg-raised:      var(--bg-elevated);
   --text:           var(--text-primary);
   --text-soft:      var(--text-secondary);
   --border-hov:     var(--border-hover);
   --accent:         var(--gold);
-  --gold-glow:      rgba(139,104,32,0.25);
+  --gold-glow:      rgba(143,106,42,0.25);
 }
 :root[data-theme="dark"] {
   --bg-deep:        #0C0C0A;
@@ -46,10 +46,10 @@
   --text-primary:   #F0ECE4;
   --text-secondary: #D0C4B4;
   --text-muted:     #9C9082;
-  --gold:           #C49A3C;
-  --gold-light:     #D4AE58;
-  --gold-dim:       rgba(196,154,60,0.10);
-  --gold-border:    rgba(196,154,60,0.20);
+  --gold:           #B8893D;
+  --gold-light:     #D4A55C;
+  --gold-dim:       rgba(184,137,61,0.10);
+  --gold-border:    rgba(184,137,61,0.20);
   --border:         #2A2A26;
   --border-hover:   #3D3D38;
   --shadow-sm:      0 1px 4px rgba(0,0,0,0.25);
@@ -60,14 +60,14 @@
   --text-soft:      var(--text-secondary);
   --border-hov:     var(--border-hover);
   --accent:         var(--gold);
-  --gold-glow:      rgba(196,154,60,0.35);
+  --gold-glow:      rgba(184,137,61,0.35);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Lora', Georgia, serif;
+  font-family: 'Fraunces', Georgia, serif;
   background: var(--bg-deep);
   color: var(--text-primary);
   min-height: 100vh;
@@ -92,18 +92,18 @@ body {
 }
 .ambient-orb-1 {
   width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(196,154,60,0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(184,137,61,0.12) 0%, transparent 70%);
   top: -200px; left: -100px;
 }
 .ambient-orb-2 {
   width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(196,154,60,0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(184,137,61,0.08) 0%, transparent 70%);
   bottom: -150px; right: -100px;
   animation-delay: -10s;
 }
 .ambient-orb-3 {
   width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(196,154,60,0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(184,137,61,0.06) 0%, transparent 70%);
   top: 40%; left: 60%;
   animation-delay: -5s;
 }
@@ -129,8 +129,15 @@ body {
   box-shadow: var(--shadow-sm);
   z-index: 100;
 }
-.topbar-logo {
-  font-family: 'Cinzel', serif;
+/* Tesseum logo mark */
+    .topbar-logo, .sidebar-logo { display: inline-flex; align-items: center; gap: 10px; }
+    .logo-mark { width: 22px; height: 22px; flex-shrink: 0; }
+    .topbar-logo em, .sidebar-logo em { font-style: italic; font-weight: 300; color: var(--gold); }
+    /* Grain overlay — parchment texture */
+    body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.32; mix-blend-mode: multiply; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+    :root[data-theme="dark"] body::before { opacity: 0.18; mix-blend-mode: screen; }
+    .topbar-logo {
+  font-family: 'Fraunces', serif;
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.25em;
@@ -140,7 +147,7 @@ body {
 .topbar-logo span { color: var(--gold); font-weight: 400; }
 .topbar-nav { display: flex; gap: 32px; }
 .topbar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0.07em;
@@ -168,7 +175,7 @@ body {
   gap: 6px;
     }
 .pro-badge {
-  font-family: 'Cinzel', serif;
+  font-family: 'Fraunces', serif;
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -182,7 +189,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-family: 'Cinzel', serif;
+  font-family: 'Fraunces', serif;
   font-size: 9px;
   letter-spacing: 0.2em;
   color: var(--text-muted);
@@ -210,7 +217,7 @@ body {
   text-align: center;
 }
 .cuenta-eyebrow {
-  font-family: 'Cinzel', serif;
+  font-family: 'Fraunces', serif;
   font-size: 10px;
   letter-spacing: 0.5em;
   color: var(--gold);
@@ -218,7 +225,7 @@ body {
   margin-bottom: 20px;
 }
 .cuenta-titulo {
-  font-family: 'Cinzel', serif;
+  font-family: 'Fraunces', serif;
   font-size: clamp(28px, 5vw, 48px);
   font-weight: 700;
   margin-bottom: 48px;
@@ -239,7 +246,7 @@ body {
   padding: 28px;
 }
 .cuenta-card-titulo {
-  font-family: 'Cinzel', serif;
+  font-family: 'Fraunces', serif;
   font-size: 11px;
   letter-spacing: 0.3em;
   color: var(--gold);
@@ -257,11 +264,11 @@ body {
 .cuenta-dato:last-of-type { border-bottom: none; }
 .cuenta-dato-label { color: var(--text-muted); }
 .cuenta-dato-valor { color: var(--text-primary); font-weight: 500; }
-.cuenta-dato-gold { color: var(--gold); font-family: 'Cinzel', serif; }
+.cuenta-dato-gold { color: var(--gold); font-family: 'Fraunces', serif; }
 
 .plan-badge {
   display: inline-block;
-  font-family: 'Cinzel', serif;
+  font-family: 'Fraunces', serif;
   font-size: 9px;
   letter-spacing: 0.2em;
   padding: 4px 12px;
@@ -286,7 +293,7 @@ body {
   padding: 12px;
   text-align: center;
   border-radius: 10px;
-  font-family: 'Cinzel', serif;
+  font-family: 'Fraunces', serif;
   font-size: 11px;
   letter-spacing: 0.1em;
   cursor: pointer;
@@ -307,7 +314,7 @@ body {
 }
 .btn-secondary:hover { border-color: var(--border-hover); color: var(--text-primary); }
 .btn-logout {
-  font-family: 'Lora', serif;
+  font-family: 'Fraunces', serif;
   font-size: 13px;
   padding: 10px 20px;
   border-radius: 10px;
@@ -319,7 +326,7 @@ body {
 }
 .btn-logout:hover { border-color: #ef4444; color: #ef4444; }
 .btn-cambiar {
-  font-family: 'Lora', serif;
+  font-family: 'Fraunces', serif;
   font-size: 13px;
   padding: 10px 20px;
   border-radius: 10px;
@@ -356,7 +363,7 @@ body {
   border: 1px solid var(--border-hover);
   border-radius: 12px;
   padding: 14px 28px;
-  font-family: 'Lora', serif;
+  font-family: 'Fraunces', serif;
   font-size: 14px;
   color: var(--text-primary);
   cursor: pointer;
@@ -371,9 +378,9 @@ body {
 
 /* ═══ FOOTER ═══ */
 .footer { text-align: center; padding: 48px 40px 40px; border-top: 1px solid var(--border); position: relative; z-index: 1; }
-.footer-copy { font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.25em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
+.footer-copy { font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: 0.25em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 16px; }
 .footer-disclaimer { font-size: 12px; color: var(--text-muted); line-height: 1.75; max-width: 640px; margin: 0 auto 18px; opacity: 0.85; }
-.footer-links { display: flex; align-items: center; justify-content: center; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; }
+.footer-links { display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; }
 .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
 .footer-links a:hover { color: var(--gold); }
 .footer-links span { margin: 0 14px; color: var(--border); }
@@ -405,7 +412,7 @@ body {
     }
     .topbar-logo { color: var(--text-primary); }
     .topbar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 11.5px;
     font-weight: 600;
     letter-spacing: 0.07em;
@@ -512,19 +519,19 @@ body {
     /* ── Mobile sidebar ── */
     .topbar-right { display: flex; align-items: center; gap: 4px; }
     .hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
-    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #3D342A); border-radius: 2px; transition: background 0.2s; }
-    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(26,20,16,0.45); z-index: 199; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary, #1A1815); border-radius: 2px; transition: background 0.2s; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(10,10,9,0.45); z-index: 199; }
     .sidebar-overlay.open { display: block; }
-    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(26,20,16,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
+    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card, #FDFAF5); border-left: 1px solid var(--border, #E5DDD0); box-shadow: -8px 0 32px rgba(10,10,9,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
     .sidebar.open { right: 0; }
     .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border, #E5DDD0); }
-    .sidebar-logo { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #1A1410); text-decoration: none; }
-    .sidebar-logo span { color: var(--gold, #8B6820); }
-    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #7A6E60); font-size: 18px; padding: 4px; line-height: 1; }
-    .sidebar-close:hover { color: var(--text-primary, #1A1410); }
+    .sidebar-logo { font-family: 'Fraunces', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.25em; color: var(--text-primary, #0A0A09); text-decoration: none; }
+    .sidebar-logo span { color: var(--gold, #8F6A2A); }
+    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted, #3A3530); font-size: 18px; padding: 4px; line-height: 1; }
+    .sidebar-close:hover { color: var(--text-primary, #0A0A09); }
     .sidebar-nav { flex: 1; display: flex; flex-direction: column; padding: 16px 0; overflow-y: auto; }
     .sidebar-link {
-    font-family: 'Cinzel', serif;
+    font-family: 'Fraunces', serif;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.14em;
@@ -538,7 +545,7 @@ body {
     transition: all 0.2s;
     border-left: 2px solid transparent;
   }
-    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8B6820); background: rgba(139,104,32,0.06); border-left-color: var(--gold, #8B6820); }
+    .sidebar-link:hover, .sidebar-link.active { color: var(--gold, #8F6A2A); background: rgba(143,106,42,0.06); border-left-color: var(--gold, #8F6A2A); }
     .sidebar-link .pro-badge { font-size: 7px; }
     @media (max-width: 680px) { .hamburger { display: flex; } .topbar-nav { display: none !important; } .topbar-status, .apolo-badge { display: none !important; } }
   </style>
@@ -554,7 +561,7 @@ body {
 
 <!-- TOPBAR -->
 <header class="topbar">
-  <a href="/cz/" class="topbar-logo" id="logo-link">LEGAL<span>ATLAS</span></a>
+  <a href="/cz/" class="topbar-logo" id="logo-link"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-t" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-t)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESS<em>EUM</em></a>
   <nav class="topbar-nav">
       <a href="/cz/abogado.html" class="topbar-link ">Knihovna</a>
       <a href="/cz/jurisprudencia.html" class="topbar-link ">Judikatura</a>
@@ -582,7 +589,7 @@ body {
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 <aside class="sidebar" id="la-sidebar">
   <div class="sidebar-header">
-    <a href="/cz/" class="sidebar-logo" id="sidebar-logo-link">LEGAL<span>ATLAS</span></a>
+    <a href="/cz/" class="sidebar-logo" id="sidebar-logo-link"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-t" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-t)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESS<em>EUM</em></a>
     <button class="sidebar-close" onclick="closeSidebar()" aria-label="Cerrar menú">✕</button>
   </div>
   <nav class="sidebar-nav">
@@ -605,7 +612,7 @@ body {
   <!-- Estado SIN LOGIN -->
   <div id="sin-login" class="sin-login">
     <p class="cuenta-eyebrow" data-i18n="cuenta.acceso.eyebrow">Acceso</p>
-    <h2 style="font-family:'Cinzel',serif;font-size:24px;margin-bottom:8px;color:var(--text-primary);">Legal Atlas</h2>
+    <h2 style="font-family:'Fraunces',serif;font-size:24px;margin-bottom:8px;color:var(--text-primary);">Tesseum</h2>
     <p style="font-size:14px;color:var(--text-muted);margin-bottom:32px;line-height:1.7;" data-i18n-html="cuenta.acceso.desc">
       Período de lanzamiento · Acceso gratuito<br>hasta el 7 de mayo de 2026
     </p>
@@ -702,8 +709,8 @@ body {
 
 <!-- FOOTER -->
 <footer class="footer">
-  <p class="footer-copy">© Legal Atlas 2026 · All rights reserved</p>
-  <p class="footer-disclaimer">Legal Atlas is a legal research tool designed for legal professionals. It generates AI-assisted content with verified normative references. It does not constitute legal advice, legal diagnosis, or a substitute for independent professional judgment or verification of primary sources.</p>
+  <p class="footer-copy">© Tesseum 2026 · All rights reserved</p>
+  <p class="footer-disclaimer">Tesseum is a legal research tool designed for legal professionals. It generates AI-assisted content with verified normative references. It does not constitute legal advice, legal diagnosis, or a substitute for independent professional judgment or verification of primary sources.</p>
   <div class="footer-links">
     <a href="/terms.html">Terms of Service</a>
     <span>|</span>

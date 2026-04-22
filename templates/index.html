@@ -98,8 +98,9 @@ nav {
   -webkit-backdrop-filter: blur(20px) saturate(160%);
 }
 [data-theme="dark"] nav { background: rgba(12,12,10,0.7); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border-bottom: 0.5px solid rgba(184,137,61,0.08); }
-.n-logo { font-family: 'Fraunces', serif; font-size:var(--text-lg); font-weight: 700; letter-spacing: .35em; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-right: 40px; }
-.n-logo span { color: var(--gold); font-weight: 300; }
+.n-logo { font-family: 'Fraunces', serif; font-size:var(--text-lg); font-weight: 500; letter-spacing: .25em; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-right: 40px; }
+.n-logo .logo-mark { width: 24px; height: 24px; flex-shrink: 0; }
+.n-logo em { font-style: italic; font-weight: 300; color: var(--gold); }
 .n-links { display: flex; align-items: center; gap: 32px; list-style: none; }
 .n-links a { font-family: 'Fraunces', serif; font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--soft); text-decoration: none; transition: color .2s; position: relative; white-space: nowrap; }
 .n-links a::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:1px; background:var(--gold); transition:width .25s; }
@@ -120,7 +121,7 @@ nav {
 .n-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ── MOBILE SIDEBAR ── */
-.m-overlay { display:none; position:fixed; inset:0; background:rgba(26,20,16,.5); z-index:199; }
+.m-overlay { display:none; position:fixed; inset:0; background:rgba(10,10,9,.5); z-index:199; }
 .m-overlay.open { display:block; }
 .m-sidebar { position:fixed; top:0; right:-280px; width:260px; height:100vh; background:var(--bg-card); border-left:1px solid var(--border); z-index:200; transition:right .3s; display:flex; flex-direction:column; }
 .m-sidebar.open { right:0; }
@@ -312,7 +313,7 @@ body { background: var(--bg-alt); }
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius:var(--r-md);
-  box-shadow: 0 8px 40px rgba(26,20,16,0.13);
+  box-shadow: 0 8px 40px rgba(10,10,9,0.13);
   overflow: hidden;
 }
 [data-theme="dark"] .hero-demo { box-shadow: 0 8px 40px rgba(0,0,0,0.4); }
@@ -549,8 +550,9 @@ footer {
   margin-bottom: 48px;
 }
 .f-brand {}
-.f-logo { font-family:'Fraunces',serif; font-size:var(--text-lg); letter-spacing:.3em; color:#F0ECE4; font-weight:700; margin-bottom:16px; }
-.f-logo span { color:var(--gold); }
+.f-logo { font-family:'Fraunces',serif; font-size:var(--text-lg); letter-spacing:.25em; color:#F4EFE4; font-weight:500; margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+.f-logo .logo-mark { width:22px; height:22px; flex-shrink:0; }
+.f-logo em { font-style:italic; font-weight:300; color:var(--gold); }
 .f-tagline { font-family:'Fraunces',serif; font-size:var(--text-base); font-style:italic; color:rgba(240,236,228,0.5); line-height:1.7; margin-bottom:20px; max-width:240px; }
 .f-contact-link { font-family:'Fraunces',serif; font-size:var(--text-xs); letter-spacing:.12em; color:var(--gold-lt); text-decoration:none; text-transform:uppercase; transition:opacity .2s; }
 .f-contact-link:hover { opacity:.7; }
@@ -955,7 +957,7 @@ footer {
 
 <!-- NAV -->
 <nav>
-  <a href="{{HOME}}" class="n-logo">TESS<span>EUM</span></a>
+  <a href="{{HOME}}" class="n-logo"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-n" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-n)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESS<em>EUM</em></a>
   <ul class="n-links">
     <li><a href="/abogado.html?lang=cs">{{NAV_BIBLIOTECA}}</a></li>
     <li><a href="/jurisprudencia.html">{{NAV_JUDIKATURA}}</a></li>
@@ -976,7 +978,7 @@ footer {
 <div class="m-overlay" id="m-overlay" onclick="closeSidebar()"></div>
 <aside class="m-sidebar" id="m-sidebar">
   <div class="m-sidebar-head">
-    <a href="{{HOME}}" class="n-logo">TESS<span>EUM</span></a>
+    <a href="{{HOME}}" class="n-logo"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-n" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-n)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESS<em>EUM</em></a>
     <button class="m-sidebar-close" onclick="closeSidebar()">✕</button>
   </div>
   <nav class="m-sidebar-nav">
@@ -1011,7 +1013,7 @@ footer {
     <div class="hero-demo-wrap">
       <div class="hero-demo">
         <div class="demo-top">
-          <span class="demo-label">Legal Atlas · {{DEMO_LABEL}}</span>
+          <span class="demo-label">Tesseum · {{DEMO_LABEL}}</span>
           <span class="demo-country">{{DEMO_COUNTRY_PILL}}</span>
         </div>
         <div class="demo-query" id="demo-query"><span class="demo-cursor"></span></div>
@@ -1343,7 +1345,7 @@ footer {
         Může AI halucinovat nebo si vymýšlet?
         <span class="faq-arrow">+</span>
       </button>
-      <div class="faq-a">Legal Atlas nepracuje s pamětí modelu. Každá odpověď je výsledkem vyhledávání v ověřeném legislativním korpusu (RAG — Retrieval-Augmented Generation). AI nikdy negeneruje text z paměti — vždy cituje konkrétní § s plným zněním. Pokud odpověď nenajde, řekne to.</div>
+      <div class="faq-a">Tesseum nepracuje s pamětí modelu. Každá odpověď je výsledkem vyhledávání v ověřeném legislativním korpusu (RAG — Retrieval-Augmented Generation). AI nikdy negeneruje text z paměti — vždy cituje konkrétní § s plným zněním. Pokud odpověď nenajde, řekne to.</div>
     </div>
 
     <div class="faq-item">
@@ -1356,10 +1358,10 @@ footer {
 
     <div class="faq-item">
       <button class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-        Nahrazuje Legal Atlas právníka?
+        Nahrazuje Tesseum právníka?
         <span class="faq-arrow">+</span>
       </button>
-      <div class="faq-a">Ne. Legal Atlas je nástroj pro právní výzkum, ne právní poradenství. Pomáhá právníkům, advokátům a justičním pracovníkům najít relevantní ustanovení rychleji a přesněji. Konečné rozhodnutí vždy zůstává na kvalifikovaném právním profesionálovi.</div>
+      <div class="faq-a">Ne. Tesseum je nástroj pro právní výzkum, ne právní poradenství. Pomáhá právníkům, advokátům a justičním pracovníkům najít relevantní ustanovení rychleji a přesněji. Konečné rozhodnutí vždy zůstává na kvalifikovaném právním profesionálovi.</div>
     </div>
 
     <div class="faq-item">
@@ -1380,7 +1382,7 @@ footer {
   <footer>
     <div class="f-top">
       <div class="f-brand">
-        <div class="f-logo">TESS<span>EUM</span></div>
+        <div class="f-logo"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-f" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-f)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESS<em>EUM</em></div>
         <p class="f-tagline">Právní motor pro profesionály. Postaveno s&nbsp;respektem k&nbsp;právu.</p>
         <a href="mailto:contact@legalatlas.io" class="f-contact-link">contact@legalatlas.io →</a>
       </div>
@@ -1416,7 +1418,7 @@ footer {
       </div>
     </div>
     <div class="f-bottom">
-      <div class="f-copy">© Legal Atlas Engineering 2026 · {{FOOTER_CITY}}</div>
+      <div class="f-copy">© Tesseum Engineering 2026 · {{FOOTER_CITY}}</div>
       <div class="f-legal">
         <a href="/terms.html">{{FOOTER_TERMS}}</a>
         <a href="/privacy.html">{{FOOTER_PRIVACY}}</a>
