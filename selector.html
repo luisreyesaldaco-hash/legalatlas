@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="cs" data-theme="dark">
+<head>
+<script>
+(function(){
+  var t = localStorage.getItem('la-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tesseum — Selector</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --bg-deep:#F4EFE4; --bg-card:#ECE5D4; --bg-elevated:#E4DCC5; --bg-input:#ECE5D4;
+    --text-primary:#0A0A09; --text-secondary:#1A1815; --text-muted:#3A3530;
+    --gold:#8F6A2A; --gold-light:#B8893D; --gold-dim:rgba(143,106,42,0.08); --gold-border:rgba(143,106,42,0.22);
+    --border:#D8CFBA; --border-hover:#C4B79E;
+    --shadow-sm:0 1px 4px rgba(10,10,9,0.07); --shadow-md:0 4px 20px rgba(10,10,9,0.10);
+  }
+  :root[data-theme="dark"] {
+    --bg-deep:#0C0C0A; --bg-card:#141412; --bg-elevated:#1C1C19; --bg-input:#1C1C19;
+    --text-primary:#F0ECE4; --text-secondary:#D0C4B4; --text-muted:#9C9082;
+    --gold:#B8893D; --gold-light:#D4A55C; --gold-dim:rgba(184,137,61,0.10); --gold-border:rgba(184,137,61,0.20);
+    --border:#2A2A26; --border-hover:#3D3D38;
+    --shadow-sm:0 1px 4px rgba(0,0,0,0.25); --shadow-md:0 4px 20px rgba(0,0,0,0.35);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{font-family:'Fraunces',Georgia,serif;background:var(--bg-deep);color:var(--text-primary);display:flex;flex-direction:column}
+
+  /* Topbar */
+  .topbar{height:58px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:16px;background:var(--bg-card);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);z-index:100}
+  [data-theme="dark"] .topbar{background:rgba(20,20,18,0.96);backdrop-filter:blur(20px)}
+  /* Tesseum logo mark */
+  .topbar-logo{font-family:'Fraunces',serif;font-size:.85rem;font-weight:500;letter-spacing:.25em;color:var(--text-primary);text-decoration:none;display:inline-flex;align-items:center;gap:10px}
+  .logo-mark{width:22px;height:22px;flex-shrink:0}
+  .topbar-logo em{font-style:italic;font-weight:300;color:var(--gold)}
+  /* Grain overlay — parchment texture */
+  body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.32;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0.15 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  :root[data-theme="dark"] body::before{opacity:.18;mix-blend-mode:screen}
+  .topbar-nav{display:flex;gap:24px}
+  .topbar-link{font-family:'Fraunces',serif;font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-secondary);text-decoration:none;transition:color .2s}
+  .topbar-link:hover,.topbar-link.active{color:var(--gold)}
+  .pro-badge{font-family:'Fraunces',serif;font-size:8px;font-weight:700;letter-spacing:.15em;color:var(--bg-deep);background:var(--gold);padding:2px 6px;border-radius:4px;margin-left:4px}
+
+  /* Panel layout */
+  .panel{display:grid;grid-template-columns:320px 1fr 1fr;height:calc(100vh - 58px);overflow:hidden}
+
+  /* Col 1 — Selector */
+  .col-select{background:var(--bg-card);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+  .col-header{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
+  .col-title{font-family:'Fraunces',serif;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .law-search{width:100%;font-family:'Fraunces',serif;font-size:12px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg-input);color:var(--text-primary);outline:none;transition:border-color .2s}
+  .law-search:focus{border-color:var(--gold)}
+  .law-search::placeholder{color:var(--text-muted);font-style:italic}
+  .law-list{flex:1;overflow-y:auto;padding:8px}
+  .law-group{margin-bottom:16px}
+  .law-group-label{font-family:'Fraunces',serif;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);padding:8px 12px;opacity:.7}
+  .law-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all .2s;font-size:12px;color:var(--text-secondary);gap:8px}
+  .law-item:hover{background:var(--gold-dim);color:var(--text-primary)}
+  .law-item.selected{background:var(--gold-dim);border:1px solid var(--gold-border);color:var(--gold)}
+  .law-item-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .law-item-count{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);flex-shrink:0}
+  .selected-laws{padding:12px 20px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+  .selected-chip{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--gold-dim);border:1px solid var(--gold-border);border-radius:10px;font-family:'Fraunces',serif;font-size:10px;letter-spacing:.06em;color:var(--gold)}
+  .selected-chip button{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;padding:0 4px}
+  .selected-chip button:hover{color:var(--gold)}
+
+  /* Col 2 — Question */
+  .col-question{display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--bg-deep)}
+  .token-bar-wrap{padding:16px 20px;border-bottom:1px solid var(--border)}
+  .token-label{font-family:'Fraunces',serif;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;display:flex;justify-content:space-between}
+  .token-bar{height:6px;border-radius:3px;background:var(--border);overflow:hidden}
+  .token-fill{height:100%;border-radius:3px;transition:width .4s,background .4s}
+  .token-fill.green{background:#22C55E} .token-fill.yellow{background:#EAB308} .token-fill.red{background:#EF4444}
+  .question-area{flex:1;display:flex;flex-direction:column;padding:20px}
+  .question-label{font-family:'Fraunces',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .question-input{flex:1;font-family:'Fraunces',serif;font-size:14px;line-height:1.8;padding:16px;border:1px solid var(--border);border-radius:12px;background:var(--bg-card);color:var(--text-primary);outline:none;resize:none;transition:border-color .2s}
+  .question-input:focus{border-color:var(--gold)}
+  .question-input::placeholder{color:var(--text-muted);font-style:italic}
+  .question-actions{padding:16px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:12px}
+  .btn-analyze{font-family:'Fraunces',serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;background:var(--gold);color:#fff;padding:12px 28px;border:none;border-radius:10px;cursor:pointer;font-weight:700;transition:background .2s}
+  .btn-analyze:hover{background:var(--gold-light)}
+  .btn-analyze:disabled{opacity:.4;cursor:not-allowed}
+  .token-warning{padding:12px 16px;background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.3);border-radius:10px;font-size:12px;color:#EAB308;margin-bottom:12px;display:none}
+
+  /* Col 3 — Response */
+  .col-response{display:flex;flex-direction:column;background:var(--bg-card);overflow:hidden}
+  .response-header{padding:16px 20px;border-bottom:1px solid var(--border);font-family:'Fraunces',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+  .response-scroll{flex:1;overflow-y:auto;padding:24px 20px}
+  .response-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;color:var(--text-muted);text-align:center}
+  .response-empty-icon{font-size:40px;opacity:.3}
+  .response-empty-text{font-family:'Fraunces',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+  .response-text{font-family:'Fraunces',serif;font-size:14px;line-height:1.9;color:var(--text-primary)}
+  .response-text strong{color:var(--text-primary);font-weight:600}
+  /* Highlight § references in gold */
+  .art-ref{color:var(--gold);font-weight:600}
+
+  /* Scrollbar */
+  ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-track{background:transparent} ::-webkit-scrollbar-thumb{background:rgba(184,137,61,0.25);border-radius:2px}
+
+  /* Responsive */
+  @media(max-width:1024px){.panel{grid-template-columns:280px 1fr}}
+  @media(max-width:768px){.panel{grid-template-columns:1fr;grid-template-rows:auto 1fr}.col-select{max-height:40vh}.col-response{display:none}}
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a class="topbar-logo" href="/cz/"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-t" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-t)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESSEUM</a>
+    <nav class="topbar-nav">
+      <a href="/cz/abogado.html" class="topbar-link">Knihovna</a>
+      <a href="/cz/jurisprudencia.html" class="topbar-link">Judikatura</a>
+      <a href="/cz/selector.html" class="topbar-link active">Selector<span class="pro-badge">PRO</span></a>
+      <a href="/cz/magnus.html" class="topbar-link">Magnus</a>
+      <a href="/cz/atlas.html" class="topbar-link">Atlas</a>
+      <a href="/cz/cuenta.html" class="topbar-link">Můj účet</a>
+    </nav>
+  </div>
+
+  <div class="panel">
+
+    <!-- COL 1: Law selector -->
+    <aside class="col-select">
+      <div class="col-header">
+        <div class="col-title">Vyberte zákon (max. 2)</div>
+        <input type="text" class="law-search" id="law-search" placeholder="Hledat zákon…">
+      </div>
+      <div class="law-list" id="law-list"></div>
+      <div class="selected-laws" id="selected-laws"></div>
+    </aside>
+
+    <!-- COL 2: Token counter + Question -->
+    <div class="col-question">
+      <div class="token-bar-wrap">
+        <div class="token-label">
+          <span>Odhadované tokeny</span>
+          <span id="token-count">0 / 200 000</span>
+        </div>
+        <div class="token-bar"><div class="token-fill green" id="token-fill" style="width:0%"></div></div>
+      </div>
+      <div class="question-area">
+        <div class="question-label">Vaše otázka</div>
+        <div class="token-warning" id="token-warning">⚠ Překročeno 150 000 tokenů. Analýza může být pomalejší. Pokračovat?</div>
+        <textarea class="question-input" id="question" placeholder="Jaká jsou práva zaměstnance při výpovědi? Jaké jsou lhůty?"></textarea>
+      </div>
+      <div class="question-actions">
+        <button class="btn-analyze" id="btn-analyze" onclick="analyze()" disabled>Analyzovat →</button>
+      </div>
+    </div>
+
+    <!-- COL 3: Response -->
+    <div class="col-response">
+      <div class="response-header">Odpověď · Selector</div>
+      <div class="response-scroll" id="response">
+        <div class="response-empty">
+          <div class="response-empty-icon">⚖</div>
+          <div class="response-empty-text">Vyberte zákon a položte otázku</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let allLaws = []
+let selectedLaws = [] // max 2: [{pais, ley, total_articulos}]
+let estimatedTokens = 0
+
+// ═══════════════════════════════════════════
+// LOAD LAWS
+// ═══════════════════════════════════════════
+;(async function loadLaws() {
+  try {
+    const res = await fetch('/api/selector')
+    const data = await res.json()
+    allLaws = data.leyes || []
+    renderLawList(allLaws)
+  } catch(e) { console.error('[selector] load laws:', e) }
+})()
+
+const FLAGS = {CZ:'🇨🇿',MX:'🇲🇽',DE:'🇩🇪',FR:'🇫🇷',ES:'🇪🇸',CH:'🇨🇭',MC:'🇲🇨'}
+
+function renderLawList(laws) {
+  const container = document.getElementById('law-list')
+  const groups = {}
+  laws.forEach(l => {
+    if (!groups[l.pais]) groups[l.pais] = []
+    groups[l.pais].push(l)
+  })
+
+  container.innerHTML = ''
+  Object.keys(groups).sort().forEach(pais => {
+    const grp = document.createElement('div')
+    grp.className = 'law-group'
+    grp.innerHTML = `<div class="law-group-label">${FLAGS[pais]||''} ${pais}</div>`
+    groups[pais].forEach(l => {
+      const item = document.createElement('div')
+      item.className = 'law-item'
+      const isSelected = selectedLaws.some(s => s.pais === l.pais && s.ley === l.ley)
+      if (isSelected) item.classList.add('selected')
+      item.innerHTML = `<span class="law-item-name">${l.ley}</span><span class="law-item-count">${l.total_articulos} §</span>`
+      item.addEventListener('click', () => toggleLaw(l))
+      grp.appendChild(item)
+    })
+    container.appendChild(grp)
+  })
+}
+
+function toggleLaw(law) {
+  const idx = selectedLaws.findIndex(s => s.pais === law.pais && s.ley === law.ley)
+  if (idx >= 0) {
+    selectedLaws.splice(idx, 1)
+  } else {
+    if (selectedLaws.length >= 2) return // max 2
+    selectedLaws.push(law)
+  }
+  renderLawList(filterLaws())
+  renderSelectedChips()
+  updateTokenEstimate()
+}
+
+function renderSelectedChips() {
+  const container = document.getElementById('selected-laws')
+  container.innerHTML = selectedLaws.map((l, i) =>
+    `<div class="selected-chip">
+      <span>${FLAGS[l.pais]||''} ${l.ley} · ${l.total_articulos} §</span>
+      <button onclick="removeLaw(${i})">✕</button>
+    </div>`
+  ).join('')
+  document.getElementById('btn-analyze').disabled = selectedLaws.length === 0
+}
+
+function removeLaw(i) {
+  selectedLaws.splice(i, 1)
+  renderLawList(filterLaws())
+  renderSelectedChips()
+  updateTokenEstimate()
+}
+
+// Search filter
+document.getElementById('law-search').addEventListener('input', e => {
+  renderLawList(filterLaws())
+})
+
+function filterLaws() {
+  const q = document.getElementById('law-search').value.toLowerCase()
+  if (!q) return allLaws
+  return allLaws.filter(l => l.ley.toLowerCase().includes(q) || l.pais.toLowerCase().includes(q))
+}
+
+// ═══════════════════════════════════════════
+// TOKEN ESTIMATION
+// ═══════════════════════════════════════════
+function updateTokenEstimate() {
+  // Rough estimate: avg ~200 chars per article, /4 for tokens
+  estimatedTokens = selectedLaws.reduce((sum, l) => sum + (l.total_articulos * 200 / 4), 0)
+  const pct = Math.min(100, (estimatedTokens / 200000) * 100)
+  const fill = document.getElementById('token-fill')
+  fill.style.width = pct + '%'
+  fill.className = 'token-fill ' + (estimatedTokens < 50000 ? 'green' : estimatedTokens < 100000 ? 'yellow' : 'red')
+  document.getElementById('token-count').textContent = Math.round(estimatedTokens).toLocaleString() + ' / 200 000'
+  document.getElementById('token-warning').style.display = estimatedTokens > 150000 ? 'block' : 'none'
+}
+
+// ═══════════════════════════════════════════
+// ANALYZE — streaming SSE
+// ═══════════════════════════════════════════
+async function analyze() {
+  const pregunta = document.getElementById('question').value.trim()
+  if (!pregunta || selectedLaws.length === 0) return
+
+  const btn = document.getElementById('btn-analyze')
+  btn.disabled = true; btn.textContent = 'Analyzuji…'
+
+  const respEl = document.getElementById('response')
+  respEl.innerHTML = '<div class="response-text" id="response-text"></div>'
+  const textEl = document.getElementById('response-text')
+
+  try {
+    const res = await fetch('/api/selector', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        leyes: selectedLaws.map(l => ({ ley: l.ley, pais: l.pais })),
+        pregunta
+      })
+    })
+
+    if (!res.ok) {
+      const err = await res.json()
+      throw new Error(err.error || 'Error')
+    }
+
+    // SSE streaming
+    const reader = res.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+    let fullText = ''
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      buffer += decoder.decode(value, { stream: true })
+
+      const lines = buffer.split('\n')
+      buffer = lines.pop() || ''
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue
+        try {
+          const data = JSON.parse(line.slice(6))
+          if (data.type === 'delta') {
+            fullText += data.text
+            textEl.innerHTML = highlightRefs(fullText)
+          }
+        } catch(_) {}
+      }
+    }
+  } catch(e) {
+    respEl.innerHTML = `<div class="response-empty"><div class="response-empty-icon">⚠</div><div class="response-empty-text">${e.message}</div></div>`
+  } finally {
+    btn.disabled = false; btn.textContent = 'Analyzovat →'
+  }
+}
+
+// Highlight § references
+function highlightRefs(text) {
+  return text
+    .replace(/\n/g, '<br>')
+    .replace(/§\s*(\d+[a-z]*)/g, '<span class="art-ref">§ $1</span>')
+    .replace(/Art\.\s*(\d+)/g, '<span class="art-ref">Art. $1</span>')
+}
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

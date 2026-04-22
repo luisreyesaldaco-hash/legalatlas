@@ -28,7 +28,10 @@ body{font-family:'Fraunces',Georgia,serif;background:var(--bg-deep);color:var(--
 
 /* TOPBAR */
 .topbar{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;background:var(--bg-card);border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);z-index:100}
-.topbar-logo{font-family:'Fraunces',serif;font-size:15px;font-weight:700;letter-spacing:0.25em;color:var(--text-primary);text-decoration:none}
+/* Tesseum logo mark */
+    .topbar-logo, .sidebar-logo { display: inline-flex !important; align-items: center; gap: 10px; font-weight: 500 !important; letter-spacing: .25em !important; }
+    .topbar-logo .logo-mark, .sidebar-logo .logo-mark { width: 22px; height: 22px; flex-shrink: 0; }
+    .topbar-logo {font-family:'Fraunces',serif;font-size:15px;font-weight:700;letter-spacing:0.25em;color:var(--text-primary);text-decoration:none}
 .topbar-logo span{color:var(--gold);font-weight:400}
 .topbar-nav{display:flex;gap:28px}
 .topbar-link {
@@ -186,7 +189,7 @@ body{font-family:'Fraunces',Georgia,serif;background:var(--bg-deep);color:var(--
 
 <!-- TOPBAR -->
 <header class="topbar">
-  <a href="index.html" class="topbar-logo" style="text-decoration:none;">LEGAL<span>ATLAS</span></a>
+  <a href="index.html" class="topbar-logo" style="text-decoration:none;"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-nav-con1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-nav-con1)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESSEUM</a>
   <nav class="topbar-nav">
       <a href="abogado.html" class="topbar-link ">Biblioteca</a>
       <a href="jurisprudencia.html" class="topbar-link ">Judikatura</a>
@@ -207,7 +210,7 @@ body{font-family:'Fraunces',Georgia,serif;background:var(--bg-deep);color:var(--
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 <aside class="sidebar" id="la-sidebar">
   <div class="sidebar-header">
-    <a href="index.html" class="sidebar-logo">LEGAL<span>ATLAS</span></a>
+    <a href="index.html" class="sidebar-logo"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-nav-con2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-nav-con2)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESSEUM</a>
     <button class="sidebar-close" onclick="closeSidebar()" aria-label="Close menu">✕</button>
   </div>
   <nav class="sidebar-nav">
@@ -340,7 +343,7 @@ body{font-family:'Fraunces',Georgia,serif;background:var(--bg-deep);color:var(--
 <!-- FOOTER -->
 <footer class="footer">
   <div class="footer-brand">
-    <span class="footer-logo-text">LEGAL<span style="color:var(--gold);font-weight:400;">ATLAS</span></span>
+    <span class="footer-logo-text">TESSEUM</span>
     <p class="footer-tagline-text">Praha, Czech Republic · 153,105 verified legal articles<br>Covering civil law jurisdictions worldwide</p>
   </div>
   <nav class="footer-nav-links">
