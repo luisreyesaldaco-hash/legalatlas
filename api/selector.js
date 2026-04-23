@@ -45,7 +45,7 @@ const TOOLS = [
         pais: { type: 'string' },
         ley: { type: 'string', description: 'Law name exactly as in the index header.' },
         estado: { type: 'string' },
-        consulta: { type: 'string', description: 'Spanish-language keywords or short phrase to search for (e.g. "arrendamiento requisitos forma escrita"). Does NOT need to be a full sentence.' },
+        consulta: { type: 'string', description: 'Spanish-language keywords — BE CONCRETE and USE 1-2 TERMS, not sentences. Examples: "arrendamiento", "despido injustificado", "patria potestad". Text search uses OR semantics across terms, so more words = broader match, not stricter.' },
         limite: { type: 'integer', description: 'Max articles to return (default 8, cap 15).' }
       },
       required: ['pais', 'ley', 'consulta']
@@ -185,7 +185,7 @@ async function executeBuscarTexto({ pais, ley, estado, consulta, limite }) {
     .eq('pais', pais)
     .eq('ley', ley)
     .not('texto_original', 'is', null)
-    .textSearch('texto_original', consulta, { type: 'plain', config: 'spanish' })
+    .textSearch('texto_original', consulta, { type: 'websearch', config: 'spanish' })
     .limit(lim * 3) // pull a bit extra before dedup
 
   if (estado && estado !== 'Nacional') {
