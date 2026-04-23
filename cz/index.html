@@ -251,11 +251,16 @@ body { background: var(--bg-alt); }
 .bg-alt { background: var(--bg-alt); }
 .hero-rule { position:absolute; top:0; bottom:0; width:1px; background:linear-gradient(to bottom, transparent, var(--rule) 20%, var(--rule) 80%, transparent); pointer-events:none; }
 .hero-eyebrow {
-  font-family: 'Fraunces', serif; font-size: 11px; letter-spacing: .25em;
-  color: #F0ECE4; text-transform: uppercase; margin-bottom: 32px;
-  display: inline-flex; align-items: center; justify-content: center;
-  align-self: center;
-  background: var(--bg-verde); padding: 8px 20px; border-radius: 8px;
+  font-family: 'Fraunces', serif;
+  font-variation-settings: "opsz" 60;
+  font-style: italic; font-weight: 300;
+  font-size: clamp(16px, 2vw, 22px);
+  letter-spacing: 0;
+  color: var(--soft);
+  margin-bottom: 28px;
+  text-align: center;
+  max-width: 640px; margin-left: auto; margin-right: auto;
+  line-height: 1.4;
   opacity: 0; animation: up .9s ease .1s forwards;
 }
 .hero-eyebrow::before { display:none; }
