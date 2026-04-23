@@ -9,7 +9,7 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 export const config = { api: { bodyParser: true }, maxDuration: 180 }
 
-const MAX_TOOL_LOOPS = 8
+const MAX_TOOL_LOOPS = 10
 
 const TOOLS = [
   {
@@ -231,9 +231,10 @@ ${indicesText}
 2. **Strict: always use the law name and estado EXACTLY as they appear in the index header** (between the ═══ separators). Do not invent "Código Civil de Guanajuato" when the header just says "Código Civil · Guanajuato" — use \`ley: "Código Civil"\` and \`estado: "Guanajuato"\`.
 3. Scan the indices to identify relevant articles. If the index lists ranges for the topic (e.g. "Arts. 2398-2496 Arrendamiento"), call \`fetch_articulos\` with those rangos.
 4. **If the index does NOT list the topic** (some indices are incomplete — they may not have a dedicated arrendamiento / matrimonio / etc. section even though the law regulates it), use \`buscar_texto\` with keywords from the question to discover the relevant articles.
-5. Tool calls should be efficient: 1-2 per law, batch rangos. Avoid re-querying the same range with slight variants.
-6. As soon as you have relevant article text, **write the final answer**. Do not keep fetching speculatively.
-7. If a tool returns 0 or very few articles, try \`buscar_texto\` as a fallback once, then synthesize with what you have. Never claim you "cannot respond" if you have at least some article text.
+5. **HARD BUDGET: 1 tool call per law.** Only call a second tool on the same law if the first one returned an obvious error or 0 articles. Never call a 3rd on the same law. Never re-query the same range with minor variants.
+6. As soon as you have article text — even partial — **write the final answer**. Do NOT do speculative extra calls "to be thorough". A shorter grounded answer beats an empty one.
+7. If a \`fetch_articulos\` returns 0 articles, ONE buscar_texto with a single concrete keyword (e.g. "arrendamiento") is allowed. If that also returns 0, move on and note it in the final answer — do not keep trying variants.
+8. When the user asks the same thing across N laws, produce a section per law in the final answer, even if you only have strong data on some of them. Be explicit about which you have evidence for.
 
 # Output rules
 
@@ -347,8 +348,18 @@ async function handlePost(req, res) {
       messages.push({ role: 'user', content: toolResults })
     }
 
-    // Hit tool loop cap without an end_turn — synthesize a closing message
-    sseWrite(res, 'delta', { text: '\n\n[Analýza zastavena: příliš mnoho iterací nástrojů]' })
+    // Hit tool loop cap without end_turn → force synthesis with tools removed.
+    // Claude has enough context from prior tool results; drop the tools so it
+    // must write the answer instead of calling more tools.
+    const forcedStream = anthropic.messages.stream({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 4096,
+      system: [{ type: 'text', text: systemPrompt + '\n\n# FINAL TURN — TOOLS DISABLED\nYou have used all your tool calls. Write the final answer NOW based on the article text already retrieved in previous tool_results. Do not mention the tool limit. Synthesize whatever you have — partial answers are acceptable as long as you ground them in retrieved articles.', cache_control: { type: 'ephemeral' } }],
+      messages
+      // NOTE: no tools — forces Claude to produce text only
+    })
+    forcedStream.on('text', (text) => { sseWrite(res, 'delta', { text }) })
+    await forcedStream.finalMessage()
     sseWrite(res, 'done', {})
     return res.end()
 
