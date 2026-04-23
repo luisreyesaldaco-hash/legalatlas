@@ -47,27 +47,33 @@
   .pro-badge{font-family:'Fraunces',serif;font-size:8px;font-weight:700;letter-spacing:.15em;color:var(--bg-deep);background:var(--gold);padding:2px 6px;border-radius:4px;margin-left:4px}
 
   /* Panel layout */
-  .panel{display:grid;grid-template-columns:320px 1fr 1fr;height:calc(100vh - 58px);overflow:hidden}
+  .panel{display:grid;grid-template-columns:360px 1fr 1fr;height:calc(100vh - 58px);overflow:hidden}
 
-  /* Col 1 — Selector */
+  /* Col 1 — Selector (drop-box + add controls) */
   .col-select{background:var(--bg-card);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
-  .col-header{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
-  .col-title{font-family:'Fraunces',serif;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
-  .law-search{width:100%;font-family:'Fraunces',serif;font-size:12px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg-input);color:var(--text-primary);outline:none;transition:border-color .2s}
-  .law-search:focus{border-color:var(--gold)}
-  .law-search::placeholder{color:var(--text-muted);font-style:italic}
-  .law-list{flex:1;overflow-y:auto;padding:8px}
-  .law-group{margin-bottom:16px}
-  .law-group-label{font-family:'Fraunces',serif;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);padding:8px 12px;opacity:.7}
-  .law-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;cursor:pointer;transition:all .2s;font-size:12px;color:var(--text-secondary);gap:8px}
-  .law-item:hover{background:var(--gold-dim);color:var(--text-primary)}
-  .law-item.selected{background:var(--gold-dim);border:1px solid var(--gold-border);color:var(--gold)}
-  .law-item-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .law-item-count{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-muted);flex-shrink:0}
-  .selected-laws{padding:12px 20px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
-  .selected-chip{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--gold-dim);border:1px solid var(--gold-border);border-radius:10px;font-family:'Fraunces',serif;font-size:10px;letter-spacing:.06em;color:var(--gold)}
-  .selected-chip button{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;padding:0 4px}
+  .col-header{padding:20px 20px 14px;border-bottom:1px solid var(--border)}
+  .col-title{font-family:'Fraunces',serif;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+  .col-sub{font-family:'Fraunces',Georgia,serif;font-size:11px;color:var(--text-muted);font-style:italic}
+
+  /* Drop-box — selected laws */
+  .selected-box{flex:1;padding:16px 20px;display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+  .selected-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-family:'Fraunces',serif;font-style:italic;font-size:12px;text-align:center;padding:24px 8px;border:1.5px dashed var(--border);border-radius:12px;min-height:120px}
+  .selected-chip{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--gold-dim);border:1px solid var(--gold-border);border-radius:10px;font-family:'Fraunces',serif;font-size:11px;letter-spacing:.02em;color:var(--text-primary);gap:8px}
+  .selected-chip-body{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+  .selected-chip-ley{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+  .selected-chip-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-muted);letter-spacing:.04em}
+  .selected-chip button{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;padding:0 4px;flex-shrink:0;line-height:1}
   .selected-chip button:hover{color:var(--gold)}
+
+  /* Add controls */
+  .add-controls{padding:16px 20px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:10px;background:var(--bg-elevated)}
+  .add-controls .ctrl-label{font-family:'Fraunces',serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+  .add-select{width:100%;font-family:'Fraunces',serif;font-size:12px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg-input);color:var(--text-primary);outline:none;cursor:pointer;transition:border-color .2s}
+  .add-select:focus{border-color:var(--gold)}
+  .add-select:disabled{opacity:.4;cursor:not-allowed}
+  .btn-add{font-family:'Fraunces',serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;background:var(--gold);color:#fff;padding:11px 16px;border:none;border-radius:10px;cursor:pointer;font-weight:600;transition:background .2s}
+  .btn-add:hover:not(:disabled){background:var(--gold-light)}
+  .btn-add:disabled{opacity:.4;cursor:not-allowed}
 
   /* Col 2 — Question */
   .col-question{display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--bg-deep)}
@@ -123,14 +129,25 @@
 
   <div class="panel">
 
-    <!-- COL 1: Law selector -->
+    <!-- COL 1: Drop-box (top) + add controls (bottom) -->
     <aside class="col-select">
       <div class="col-header">
-        <div class="col-title">Vyberte zákon (max. 2)</div>
-        <input type="text" class="law-search" id="law-search" placeholder="Hledat zákon…">
+        <div class="col-title">Vybrané zákony</div>
+        <div class="col-sub">Přidejte zákony z libovolných jurisdikcí</div>
       </div>
-      <div class="law-list" id="law-list"></div>
-      <div class="selected-laws" id="selected-laws"></div>
+      <div class="selected-box" id="selected-box">
+        <div class="selected-empty" id="selected-empty">Zatím nic.<br>Vyberte zemi a zákon dole ↓</div>
+      </div>
+      <div class="add-controls">
+        <div class="ctrl-label">Přidat zákon</div>
+        <select class="add-select" id="add-pais">
+          <option value="">— Země —</option>
+        </select>
+        <select class="add-select" id="add-ley" disabled>
+          <option value="">— Nejprve zvolte zemi —</option>
+        </select>
+        <button class="btn-add" id="btn-add" onclick="addSelectedLaw()" disabled>+ Přidat</button>
+      </div>
     </aside>
 
     <!-- COL 2: Token counter + Question -->
@@ -169,9 +186,14 @@
 // ═══════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════
-let allLaws = []
-let selectedLaws = [] // max 2: [{pais, ley, total_articulos}]
-let estimatedTokens = 0
+let allLaws = []             // [{pais, ley, estado, total_articulos, tokens_indice, tokens_completo}]
+let lawsByPais = {}          // pais → [laws]
+let selectedLaws = []        // selected list (no hard limit — softly capped by token budget)
+let indexTokens = 0          // Σ tokens_indice (what Claude sees in Pass 1)
+const TOKEN_BUDGET = 200000  // Claude Sonnet context window target
+
+const FLAGS = {CZ:'🇨🇿',MX:'🇲🇽',DE:'🇩🇪',FR:'🇫🇷',ES:'🇪🇸',CH:'🇨🇭',MC:'🇲🇨'}
+const COUNTRY_NAMES = {CZ:'Česko',MX:'México',DE:'Deutschland',FR:'France',ES:'España',CH:'Schweiz',MC:'Monaco'}
 
 // ═══════════════════════════════════════════
 // LOAD LAWS
@@ -181,92 +203,119 @@ let estimatedTokens = 0
     const res = await fetch('/api/selector')
     const data = await res.json()
     allLaws = data.leyes || []
-    renderLawList(allLaws)
+    // Group by country
+    lawsByPais = {}
+    for (const l of allLaws) {
+      if (!lawsByPais[l.pais]) lawsByPais[l.pais] = []
+      lawsByPais[l.pais].push(l)
+    }
+    populatePaisDropdown()
   } catch(e) { console.error('[selector] load laws:', e) }
 })()
 
-const FLAGS = {CZ:'🇨🇿',MX:'🇲🇽',DE:'🇩🇪',FR:'🇫🇷',ES:'🇪🇸',CH:'🇨🇭',MC:'🇲🇨'}
-
-function renderLawList(laws) {
-  const container = document.getElementById('law-list')
-  const groups = {}
-  laws.forEach(l => {
-    if (!groups[l.pais]) groups[l.pais] = []
-    groups[l.pais].push(l)
+function populatePaisDropdown() {
+  const sel = document.getElementById('add-pais')
+  const paises = Object.keys(lawsByPais).sort()
+  paises.forEach(p => {
+    const opt = document.createElement('option')
+    opt.value = p
+    opt.textContent = `${FLAGS[p]||''} ${COUNTRY_NAMES[p]||p} (${lawsByPais[p].length})`
+    sel.appendChild(opt)
   })
-
-  container.innerHTML = ''
-  Object.keys(groups).sort().forEach(pais => {
-    const grp = document.createElement('div')
-    grp.className = 'law-group'
-    grp.innerHTML = `<div class="law-group-label">${FLAGS[pais]||''} ${pais}</div>`
-    groups[pais].forEach(l => {
-      const item = document.createElement('div')
-      item.className = 'law-item'
-      const isSelected = selectedLaws.some(s => s.pais === l.pais && s.ley === l.ley)
-      if (isSelected) item.classList.add('selected')
-      item.innerHTML = `<span class="law-item-name">${l.ley}</span><span class="law-item-count">${l.total_articulos} §</span>`
-      item.addEventListener('click', () => toggleLaw(l))
-      grp.appendChild(item)
-    })
-    container.appendChild(grp)
-  })
+  sel.addEventListener('change', onPaisChange)
+  document.getElementById('add-ley').addEventListener('change', onLeyChange)
 }
 
-function toggleLaw(law) {
-  const idx = selectedLaws.findIndex(s => s.pais === law.pais && s.ley === law.ley)
-  if (idx >= 0) {
-    selectedLaws.splice(idx, 1)
-  } else {
-    if (selectedLaws.length >= 2) return // max 2
-    selectedLaws.push(law)
+function onPaisChange(e) {
+  const pais = e.target.value
+  const selLey = document.getElementById('add-ley')
+  selLey.innerHTML = ''
+  if (!pais) {
+    selLey.innerHTML = '<option value="">— Nejprve zvolte zemi —</option>'
+    selLey.disabled = true
+    document.getElementById('btn-add').disabled = true
+    return
   }
-  renderLawList(filterLaws())
-  renderSelectedChips()
-  updateTokenEstimate()
+  const laws = lawsByPais[pais] || []
+  selLey.innerHTML = '<option value="">— Zákon —</option>' +
+    laws.map(l => {
+      const isSelected = selectedLaws.some(s => s.pais === l.pais && s.ley === l.ley && (s.estado||'') === (l.estado||''))
+      const key = JSON.stringify({ley: l.ley, estado: l.estado||''})
+      const suffix = l.estado && l.estado !== 'Nacional' ? ` · ${l.estado}` : ''
+      const disabled = isSelected ? ' disabled' : ''
+      const marker = isSelected ? '✓ ' : ''
+      return `<option value='${key}'${disabled}>${marker}${l.ley}${suffix}</option>`
+    }).join('')
+  selLey.disabled = false
+  document.getElementById('btn-add').disabled = true
 }
 
-function renderSelectedChips() {
-  const container = document.getElementById('selected-laws')
-  container.innerHTML = selectedLaws.map((l, i) =>
-    `<div class="selected-chip">
-      <span>${FLAGS[l.pais]||''} ${l.ley} · ${l.total_articulos} §</span>
-      <button onclick="removeLaw(${i})">✕</button>
-    </div>`
-  ).join('')
-  document.getElementById('btn-analyze').disabled = selectedLaws.length === 0
+function onLeyChange(e) {
+  document.getElementById('btn-add').disabled = !e.target.value
+}
+
+// ═══════════════════════════════════════════
+// ADD / REMOVE LAWS
+// ═══════════════════════════════════════════
+function addSelectedLaw() {
+  const pais = document.getElementById('add-pais').value
+  const leyRaw = document.getElementById('add-ley').value
+  if (!pais || !leyRaw) return
+  const { ley, estado } = JSON.parse(leyRaw)
+  const law = (lawsByPais[pais] || []).find(l => l.ley === ley && (l.estado||'') === (estado||''))
+  if (!law) return
+  if (selectedLaws.some(s => s.pais === law.pais && s.ley === law.ley && (s.estado||'') === (law.estado||''))) return
+  selectedLaws.push(law)
+  renderSelectedBox()
+  updateTokenEstimate()
+  // Refresh the ley dropdown so the just-added entry is marked as ✓
+  onPaisChange({target: {value: pais}})
 }
 
 function removeLaw(i) {
   selectedLaws.splice(i, 1)
-  renderLawList(filterLaws())
-  renderSelectedChips()
+  renderSelectedBox()
   updateTokenEstimate()
+  // Refresh the ley dropdown if the user still has a pais selected
+  const currentPais = document.getElementById('add-pais').value
+  if (currentPais) onPaisChange({target: {value: currentPais}})
 }
 
-// Search filter
-document.getElementById('law-search').addEventListener('input', e => {
-  renderLawList(filterLaws())
-})
-
-function filterLaws() {
-  const q = document.getElementById('law-search').value.toLowerCase()
-  if (!q) return allLaws
-  return allLaws.filter(l => l.ley.toLowerCase().includes(q) || l.pais.toLowerCase().includes(q))
+function renderSelectedBox() {
+  const container = document.getElementById('selected-box')
+  const empty = document.getElementById('selected-empty')
+  if (selectedLaws.length === 0) {
+    container.innerHTML = ''
+    container.appendChild(empty)
+    document.getElementById('btn-analyze').disabled = true
+    return
+  }
+  container.innerHTML = selectedLaws.map((l, i) => {
+    const tk = (l.tokens_indice || 0).toLocaleString()
+    const estado = l.estado && l.estado !== 'Nacional' ? ` · ${l.estado}` : ''
+    return `<div class="selected-chip">
+      <div class="selected-chip-body">
+        <div class="selected-chip-ley">${FLAGS[l.pais]||''} ${l.ley}${estado}</div>
+        <div class="selected-chip-meta">${l.total_articulos} § · ${tk} tok</div>
+      </div>
+      <button onclick="removeLaw(${i})" title="Odebrat">×</button>
+    </div>`
+  }).join('')
+  document.getElementById('btn-analyze').disabled = false
 }
 
 // ═══════════════════════════════════════════
-// TOKEN ESTIMATION
+// TOKEN ESTIMATION — based on markdown indices (Pass 1 cost)
 // ═══════════════════════════════════════════
 function updateTokenEstimate() {
-  // Rough estimate: avg ~200 chars per article, /4 for tokens
-  estimatedTokens = selectedLaws.reduce((sum, l) => sum + (l.total_articulos * 200 / 4), 0)
-  const pct = Math.min(100, (estimatedTokens / 200000) * 100)
+  indexTokens = selectedLaws.reduce((sum, l) => sum + (l.tokens_indice || 0), 0)
+  const pct = Math.min(100, (indexTokens / TOKEN_BUDGET) * 100)
   const fill = document.getElementById('token-fill')
   fill.style.width = pct + '%'
-  fill.className = 'token-fill ' + (estimatedTokens < 50000 ? 'green' : estimatedTokens < 100000 ? 'yellow' : 'red')
-  document.getElementById('token-count').textContent = Math.round(estimatedTokens).toLocaleString() + ' / 200 000'
-  document.getElementById('token-warning').style.display = estimatedTokens > 150000 ? 'block' : 'none'
+  fill.className = 'token-fill ' + (indexTokens < 60000 ? 'green' : indexTokens < 130000 ? 'yellow' : 'red')
+  document.getElementById('token-count').textContent =
+    `${indexTokens.toLocaleString()} / ${TOKEN_BUDGET.toLocaleString()} tokens (indexy)`
+  document.getElementById('token-warning').style.display = indexTokens > 150000 ? 'block' : 'none'
 }
 
 // ═══════════════════════════════════════════
