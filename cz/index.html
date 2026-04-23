@@ -870,16 +870,30 @@ footer {
 }
 .features-h em { font-family:'Fraunces',serif; font-style:italic; color:var(--gold); }
 .features-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
-  max-width: 900px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+  max-width: 1120px; margin: 0 auto;
 }
-.feat-item {
-  display: flex; align-items: flex-start; gap: 14px;
-  padding: 18px 24px;
-  font-family: 'Fraunces', Georgia, serif; font-size: 14px; font-weight: 400; line-height: 1.6;
-  color: var(--soft); border-bottom: 1px solid var(--rule);
+@media (max-width: 860px) { .features-grid { grid-template-columns: 1fr; gap: 20px; } }
+.feat-card {
+  padding: 28px 26px;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  display: flex; flex-direction: column; gap: 14px;
+  transition: border-color .2s, transform .2s;
 }
-.feat-item:nth-last-child(-n+2) { border-bottom: none; }
+.feat-card:hover { border-color: var(--gold-brd); transform: translateY(-2px); }
+.feat-card-head { display: flex; align-items: flex-start; gap: 12px; }
+.feat-card-title {
+  font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500;
+  line-height: 1.3; color: var(--text); margin: 0;
+  font-variation-settings: "opsz" 60;
+}
+.feat-card-desc {
+  font-family: 'Fraunces', Georgia, serif; font-size: 14px; font-weight: 400;
+  line-height: 1.7; color: var(--soft); margin: 0;
+}
+.feat-card-desc strong { color: var(--text); font-weight: 500; }
 .feat-check {
   flex-shrink: 0; width: 20px; height: 20px; margin-top: 2px;
   border-radius: 50%; background: var(--gold-dim); border: 1px solid var(--gold-brd);
@@ -1090,16 +1104,18 @@ footer {
       <h2 class="features-h">Vše, co potřebujete pro <em>právní výzkum.</em></h2>
     </div>
     <div class="features-grid">
-      <div class="feat-item"><span class="feat-check">✓</span>Prohledá 97 zákonů v reálném čase — za sekundy, ne hodiny</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Cituje přesný § s plným zněním u každé odpovědi</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Porovná až 3 právní řády současně v jednom dotazu</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Najde nejrelevantnější soudní rozhodnutí k vašemu případu</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Zeptejte se na svůj případ — AI konzultuje celou legislativu</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Ptejte se v češtině, odpovědi i z německého či španělského práva</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Přístup k 1 465 rozhodnutím Ústavního a Nejvyššího soudu</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Nulové halucinace — každá odpověď je ověřitelná u zdroje</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Procházejte zákon hierarchicky — část, hlava, díl, paragraf</div>
-      <div class="feat-item"><span class="feat-check">✓</span>Generování procesních diagramů z právní struktury</div>
+      <div class="feat-card">
+        <div class="feat-card-head"><span class="feat-check">✓</span><h3 class="feat-card-title">Inteligentní analýza bez halucinací</h3></div>
+        <p class="feat-card-desc">Namísto hodin ručního hledání získáte odpověď během vteřin. Magnus prohledává aktuální znění zákonů i tisíce judikátů a každé své tvrzení doloží přesnou citací paragrafu. <strong>100% fakta, 0% výmyslů.</strong></p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-head"><span class="feat-check">✓</span><h3 class="feat-card-title">Expert na mezinárodní právo</h3></div>
+        <p class="feat-card-desc">Ptejte se v češtině na situace v Německu, Španělsku nebo na unijní nařízení. Magnus dokáže simultánně porovnávat <strong>až 3 právní řády</strong> v jednom dotazu a překonávat jazykovou bariéru v reálném čase.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-head"><span class="feat-check">✓</span><h3 class="feat-card-title">Procesní vizualizace a kontext</h3></div>
+        <p class="feat-card-desc">Právo nejsou jen texty. Naše AI dokáže generovat procesní diagramy z právních struktur a najít skrytá rozhodnutí Ústavního či Nejvyššího soudu, která jsou pro váš případ klíčová.</p>
+      </div>
     </div>
   </section>
 
