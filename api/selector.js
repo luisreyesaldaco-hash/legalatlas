@@ -87,15 +87,21 @@ async function executeFetchArticulos({ pais, ley, estado, rangos }) {
   const parsed = parseRangos(rangos)
   if (!parsed.length) return []
 
-  const orParts = []
+  // Expand parsed rangos into candidate numero_articulo strings.
+  // DB stores values like "§ 560", "Art. 123", plain "123" — cover all common formats.
+  const PREFIXES = ['', '§ ', 'Art. ', 'art. ', 'Article ', 'čl. ', 'článek ']
+  const candidates = new Set()
   for (const p of parsed) {
     if (p.type === 'exact') {
-      orParts.push(`numero_articulo.eq.${p.val}`)
-      orParts.push(`numero_articulo.ilike.% ${p.val}`)
-      orParts.push(`numero_articulo.ilike.§ ${p.val}`)
-      orParts.push(`numero_articulo.ilike.Art. ${p.val}`)
-    } else {
-      orParts.push(`and(numero_articulo.gte.${p.from},numero_articulo.lte.${p.to})`)
+      for (const pr of PREFIXES) candidates.add(pr + p.val)
+    } else if (p.type === 'range') {
+      const from = parseInt(p.from, 10)
+      const to   = parseInt(p.to, 10)
+      if (!isNaN(from) && !isNaN(to) && to >= from && to - from <= 300) {
+        for (let n = from; n <= to; n++) {
+          for (const pr of PREFIXES) candidates.add(pr + n)
+        }
+      }
     }
   }
 
@@ -105,11 +111,11 @@ async function executeFetchArticulos({ pais, ley, estado, rangos }) {
     .eq('pais', pais)
     .eq('ley', ley)
     .not('texto_original', 'is', null)
+    .in('numero_articulo', [...candidates])
     .order('orden_lectura', { ascending: true, nullsFirst: false })
-    .limit(120)
+    .limit(200)
 
   if (estado && estado !== 'Nacional') q = q.eq('estado', estado)
-  if (orParts.length) q = q.or(orParts.join(','))
 
   const { data, error } = await q
   if (error) throw new Error(`Supabase: ${error.message}`)
