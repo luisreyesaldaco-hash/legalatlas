@@ -86,6 +86,10 @@ function coerceRangos(rangos) {
   return []
 }
 
+function stripAccents(s) {
+  return String(s || '').normalize('NFD').replace(/\p{Diacritic}/gu, '')
+}
+
 async function executeFetchArticulos({ pais, ley, estado, rangos }) {
   rangos = coerceRangos(rangos)
   if (!pais || !ley || !rangos.length) {
@@ -94,40 +98,56 @@ async function executeFetchArticulos({ pais, ley, estado, rangos }) {
   const parsed = parseRangos(rangos)
   if (!parsed.length) return []
 
-  // Expand parsed rangos into candidate numero_articulo strings.
-  // DB stores values like "§ 560", "Art. 123", plain "123" — cover all common formats.
-  const PREFIXES = ['', '§ ', 'Art. ', 'art. ', 'Article ', 'čl. ', 'článek ']
-  const candidates = new Set()
+  // Build target set — numeric values to match against the number extracted
+  // from numero_articulo (works regardless of "§ 2128", "Artículo 1000.-",
+  // "ARTÍCULO 574.-", "Artículo 1949." etc.)
+  const targetNums = new Set()
+  const ranges = []
   for (const p of parsed) {
     if (p.type === 'exact') {
-      for (const pr of PREFIXES) candidates.add(pr + p.val)
+      const n = parseInt(p.val, 10)
+      if (!isNaN(n)) targetNums.add(n)
     } else if (p.type === 'range') {
       const from = parseInt(p.from, 10)
       const to   = parseInt(p.to, 10)
-      if (!isNaN(from) && !isNaN(to) && to >= from && to - from <= 300) {
-        for (let n = from; n <= to; n++) {
-          for (const pr of PREFIXES) candidates.add(pr + n)
-        }
+      if (!isNaN(from) && !isNaN(to) && to >= from && to - from <= 400) {
+        ranges.push([from, to])
       }
     }
   }
+  if (!targetNums.size && !ranges.length) return []
 
+  // Estado: include both accented and unaccented variants since articulos
+  // sometimes stores "Estado de Mexico" while leyes_indices has "Estado de México".
   let q = supabase
     .from('articulos')
-    .select('numero_articulo, texto_original, capitulo, titulo, orden_lectura')
+    .select('numero_articulo, texto_original, capitulo, titulo, orden_lectura, estado')
     .eq('pais', pais)
     .eq('ley', ley)
     .not('texto_original', 'is', null)
-    .in('numero_articulo', [...candidates])
     .order('orden_lectura', { ascending: true, nullsFirst: false })
-    .limit(200)
+    .limit(10000)
 
-  if (estado && estado !== 'Nacional') q = q.eq('estado', estado)
+  if (estado && estado !== 'Nacional') {
+    const variants = [...new Set([estado, stripAccents(estado)])]
+    q = q.in('estado', variants)
+  }
 
   const { data, error } = await q
   if (error) throw new Error(`Supabase: ${error.message}`)
 
-  return (data || []).map(a => ({
+  // JS-side filter: extract first integer from numero_articulo, match against
+  // targetNums ∪ ranges.
+  const matched = (data || []).filter(a => {
+    const m = /(\d+)/.exec(String(a.numero_articulo || ''))
+    if (!m) return false
+    const n = parseInt(m[1], 10)
+    if (targetNums.has(n)) return true
+    for (const [from, to] of ranges) { if (n >= from && n <= to) return true }
+    return false
+  }).slice(0, 200)
+
+  return matched.map(a => ({
     numero: a.numero_articulo,
     texto: a.texto_original,
     capitulo: a.capitulo || null,
