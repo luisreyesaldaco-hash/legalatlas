@@ -108,6 +108,11 @@ function stripAccents(s) {
   return String(s || '').normalize('NFD').replace(/\p{Diacritic}/gu, '')
 }
 
+function extractArtNum(str) {
+  const m = /(\d+)/.exec(String(str || ''))
+  return m ? parseInt(m[1], 10) : null
+}
+
 async function executeFetchArticulos({ pais, ley, estado, rangos }) {
   rangos = coerceRangos(rangos)
   if (!pais || !ley || !rangos.length) {
@@ -116,11 +121,8 @@ async function executeFetchArticulos({ pais, ley, estado, rangos }) {
   const parsed = parseRangos(rangos)
   if (!parsed.length) return []
 
-  // Build target set — numeric values to match against the number extracted
-  // from numero_articulo (works regardless of "§ 2128", "Artículo 1000.-",
-  // "ARTÍCULO 574.-", "Artículo 1949." etc.)
   const targetNums = new Set()
-  const ranges = []
+  const numRanges = []
   for (const p of parsed) {
     if (p.type === 'exact') {
       const n = parseInt(p.val, 10)
@@ -129,17 +131,15 @@ async function executeFetchArticulos({ pais, ley, estado, rangos }) {
       const from = parseInt(p.from, 10)
       const to   = parseInt(p.to, 10)
       if (!isNaN(from) && !isNaN(to) && to >= from && to - from <= 400) {
-        ranges.push([from, to])
+        numRanges.push([from, to])
       }
     }
   }
-  if (!targetNums.size && !ranges.length) return []
+  if (!targetNums.size && !numRanges.length) return []
 
-  // Estado: include both accented and unaccented variants since articulos
-  // sometimes stores "Estado de Mexico" while leyes_indices has "Estado de México".
   let q = supabase
     .from('articulos')
-    .select('numero_articulo, texto_original, capitulo, titulo, orden_lectura, estado')
+    .select('numero_articulo, texto_original, capitulo, titulo, orden_lectura')
     .eq('pais', pais)
     .eq('ley', ley)
     .not('texto_original', 'is', null)
@@ -147,23 +147,46 @@ async function executeFetchArticulos({ pais, ley, estado, rangos }) {
     .limit(10000)
 
   if (estado && estado !== 'Nacional') {
-    const variants = [...new Set([estado, stripAccents(estado)])]
-    q = q.in('estado', variants)
+    q = q.in('estado', [...new Set([estado, stripAccents(estado)])])
   }
 
   const { data, error } = await q
   if (error) throw new Error(`Supabase: ${error.message}`)
+  const all = data || []
+  if (!all.length) return []
 
-  // JS-side filter: extract first integer from numero_articulo, match against
-  // targetNums ∪ ranges.
-  const matched = (data || []).filter(a => {
-    const m = /(\d+)/.exec(String(a.numero_articulo || ''))
-    if (!m) return false
-    const n = parseInt(m[1], 10)
-    if (targetNums.has(n)) return true
-    for (const [from, to] of ranges) { if (n >= from && n <= to) return true }
-    return false
-  }).slice(0, 200)
+  // Translate numeric rangos → orden_lectura spans using anchor articles.
+  // This captures Bis/Ter suffixes, derogados without obvious numbers, and
+  // anything the law inserted between two numbered articles.
+  const matchedOrdens = new Set()
+
+  for (const target of targetNums) {
+    // Any article whose extracted number equals target (covers N, N-Bis, N-Ter...)
+    for (const a of all) {
+      if (extractArtNum(a.numero_articulo) === target) matchedOrdens.add(a.orden_lectura)
+    }
+  }
+
+  for (const [from, to] of numRanges) {
+    // Find first orden_lectura where extracted num >= from
+    // and last orden_lectura where extracted num <= to
+    let firstOrden = null, lastOrden = null
+    for (const a of all) {
+      const n = extractArtNum(a.numero_articulo)
+      if (n === null) continue
+      if (n >= from && firstOrden === null) firstOrden = a.orden_lectura
+      if (n <= to) lastOrden = a.orden_lectura
+    }
+    if (firstOrden !== null && lastOrden !== null && lastOrden >= firstOrden) {
+      for (const a of all) {
+        if (a.orden_lectura >= firstOrden && a.orden_lectura <= lastOrden) {
+          matchedOrdens.add(a.orden_lectura)
+        }
+      }
+    }
+  }
+
+  const matched = all.filter(a => matchedOrdens.has(a.orden_lectura)).slice(0, 250)
 
   return matched.map(a => ({
     numero: a.numero_articulo,
