@@ -118,6 +118,24 @@
   .page-title { font-family: 'Fraunces', serif; font-size: clamp(24px, 4vw, 36px); font-weight: 700; letter-spacing: 0.05em; color: var(--text-primary); margin-bottom: 8px; line-height: 1.2; }
   .page-subtitle { font-size: 15px; color: var(--text-muted); line-height: 1.6; margin-bottom: 36px; max-width: 600px; }
 
+  /* ── Country switcher ── */
+  .country-toggle {
+    display: inline-flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .country-btn {
+    font-family: 'Fraunces', serif; font-size: 11px; letter-spacing: 0.08em;
+    padding: 8px 16px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--bg-card);
+    color: var(--text-muted); cursor: pointer; transition: all .2s;
+  }
+  .country-btn:hover { color: var(--text-primary); border-color: var(--gold-border); }
+  .country-btn.active {
+    background: var(--gold-dim); border-color: var(--gold); color: var(--gold);
+    box-shadow: var(--shadow-sm);
+  }
+
   /* ── Mode toggle ── */
   .mode-toggle {
     display: inline-flex;
@@ -378,6 +396,13 @@
     <h1 class="page-title">Judikatura</h1>
     <p class="page-subtitle">Prohledejte rozhodnutí Ústavního soudu a Nejvyššího soudu. Klasickým filtrem nebo popisem situace.</p>
 
+    <!-- Country switcher -->
+    <div class="country-toggle">
+      <button class="country-btn" data-pais="CZ" onclick="setPais('CZ')">🇨🇿 Česko</button>
+      <button class="country-btn" data-pais="ES" onclick="setPais('ES')">🇪🇸 España</button>
+      <button class="country-btn" data-pais="MX" onclick="setPais('MX')">🇲🇽 México</button>
+    </div>
+
     <!-- Mode toggle -->
     <div class="mode-toggle">
       <button class="mode-btn active" id="btn-mode-classic" onclick="setMode('classic')">
@@ -475,7 +500,29 @@
     let _modoActual   = 'classic'
     let _currentPage  = 0
     let _totalResults = 0
+    let _paisActual   = 'MX' // CZ | ES | MX por default según la ruta
     const PER_PAGE    = 20
+
+    // ── Country switcher ─────────────────────────────────────────────────────
+    function setPais(pais) {
+      _paisActual = pais
+      document.querySelectorAll('.country-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.pais === pais)
+      })
+      // Reset filtros y resultados al cambiar de país
+      limpiarClassic()
+      const semInput = document.getElementById('sem-input')
+      if (semInput) semInput.value = ''
+      resetResultados()
+    }
+    // Marca activo al cargar
+    ;(() => {
+      const initial = ['CZ','ES','MX'].includes(_paisActual) ? _paisActual : 'CZ'
+      _paisActual = initial
+      document.querySelectorAll('.country-btn').forEach(b => {
+        if (b.dataset.pais === initial) b.classList.add('active')
+      })
+    })()
 
     // ── Poblar selects de año ────────────────────────────────────────────────
     ;(function poblarAniosSelects() {
@@ -540,7 +587,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             mode:       'classic',
-            pais:       'CZ',
+            pais:       _paisActual,
             caso:       document.getElementById('f-caso').value,
             tribunal:   document.getElementById('f-tribunal').value,
             sala:       document.getElementById('f-sala').value,
@@ -575,7 +622,7 @@
         const res = await fetch('/api/jurisprudencia', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ mode: 'semantic', pais: 'CZ', query, match_count: 15 })
+          body: JSON.stringify({ mode: 'semantic', pais: _paisActual, query, match_count: 15 })
         })
         const data = await res.json()
         if (!res.ok) throw new Error(data.error || 'Error')

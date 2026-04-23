@@ -40,40 +40,19 @@ function buildLawText(articles, ley, pais) {
   return header + body
 }
 
-/* ── GET: listar leyes disponibles ───────────────────────────────── */
+/* ── GET: listar leyes disponibles (solo las que tienen índice markdown) ─── */
 
 async function handleGet(req, res) {
   try {
-    const PAGE = 1000
-    let all = []
-    let from = 0
-    while (true) {
-      const { data, error } = await supabase
-        .from('articulos')
-        .select('pais, ley')
-        .range(from, from + PAGE - 1)
-      if (error) throw error
-      if (!data || data.length === 0) break
-      all = all.concat(data)
-      if (data.length < PAGE) break
-      from += PAGE
-    }
+    const { data, error } = await supabase
+      .from('leyes_indices')
+      .select('pais, ley, estado, total_articulos, tokens_indice, tokens_completo')
+      .order('pais', { ascending: true })
+      .order('ley', { ascending: true })
 
-    // Aggregate in JS — Supabase JS client doesn't support GROUP BY natively
-    const map = {}
-    for (const row of all) {
-      const key = `${row.pais}|||${row.ley}`
-      map[key] = (map[key] || 0) + 1
-    }
+    if (error) throw error
 
-    const result = Object.entries(map)
-      .map(([key, count]) => {
-        const [pais, ley] = key.split('|||')
-        return { pais, ley, total_articulos: count }
-      })
-      .sort((a, b) => a.pais.localeCompare(b.pais) || a.ley.localeCompare(b.ley))
-
-    return res.status(200).json(result)
+    return res.status(200).json({ leyes: data || [] })
   } catch (err) {
     console.error('GET /api/selector error:', err)
     return res.status(500).json({ error: err.message })
