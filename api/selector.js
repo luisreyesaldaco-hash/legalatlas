@@ -185,7 +185,7 @@ async function executeBuscarTexto({ pais, ley, estado, consulta, limite }) {
     .eq('pais', pais)
     .eq('ley', ley)
     .not('texto_original', 'is', null)
-    .textSearch('texto_para_embedding', consulta, { type: 'plain', config: 'spanish' })
+    .textSearch('texto_original', consulta, { type: 'plain', config: 'spanish' })
     .limit(lim * 3) // pull a bit extra before dedup
 
   if (estado && estado !== 'Nacional') {
