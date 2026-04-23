@@ -9,7 +9,7 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 export const config = { api: { bodyParser: true }, maxDuration: 180 }
 
-const MAX_TOOL_LOOPS = 4
+const MAX_TOOL_LOOPS = 8
 
 const TOOLS = [
   {
@@ -73,15 +73,22 @@ function parseRangos(rangos) {
   return out
 }
 
-async function executeFetchArticulos({ pais, ley, estado, rangos }) {
-  // Coerce rangos to array — Claude sometimes sends a string or JSON-string
+function coerceRangos(rangos) {
+  if (Array.isArray(rangos)) return rangos.map(r => String(r).replace(/^["']|["']$/g, '').trim()).filter(Boolean)
   if (typeof rangos === 'string') {
     try {
       const maybe = JSON.parse(rangos)
-      rangos = Array.isArray(maybe) ? maybe : [rangos]
-    } catch { rangos = rangos.split(/[,;]\s*/).filter(Boolean) }
+      if (Array.isArray(maybe)) return maybe.map(r => String(r).trim()).filter(Boolean)
+    } catch {}
+    // CSV fallback — strip quotes around each piece
+    return rangos.split(/[,;]\s*/).map(r => r.replace(/^["']|["']$/g, '').trim()).filter(Boolean)
   }
-  if (!pais || !ley || !Array.isArray(rangos) || !rangos.length) {
+  return []
+}
+
+async function executeFetchArticulos({ pais, ley, estado, rangos }) {
+  rangos = coerceRangos(rangos)
+  if (!pais || !ley || !rangos.length) {
     throw new Error('fetch_articulos requires pais, ley, rangos (non-empty array).')
   }
   const parsed = parseRangos(rangos)
@@ -144,8 +151,10 @@ ${indicesText}
 
 1. Read the user's question carefully.
 2. Scan the indices to identify which articles from which law(s) are likely relevant.
-3. Use the \`fetch_articulos\` tool to retrieve the full text of those articles. You may call the tool multiple times (different laws, different rangos). Prefer fetching focused ranges (3-15 articles per call) over huge ranges.
-4. Once you have the text you need, produce a comprehensive answer.
+3. Make your tool calls **efficiently**: 1–2 \`fetch_articulos\` calls per law is usually enough. Batch the articles you need in a single call (e.g. rangos: ["560-575", "2128-2135"]). Avoid splitting a single law into many tiny calls.
+4. As soon as you have the article text, WRITE THE FINAL ANSWER. Do not keep fetching variants if the first fetch already returned relevant provisions.
+5. If a range returned no articles, try ONE broader range before giving up.
+6. Use pass numeric ranges like "560-575" — the backend accepts "§ 560", "Art. 560", or "560", all equivalent.
 
 # Output rules
 
@@ -224,9 +233,9 @@ async function handlePost(req, res) {
       const toolResults = []
       for (const block of finalMessage.content) {
         if (block.type !== 'tool_use') continue
-        const { pais, ley, estado, rangos } = block.input || {}
-        const rangosArr = Array.isArray(rangos) ? rangos : (typeof rangos === 'string' ? [rangos] : [])
-        const label = `${pais}/${ley}${estado && estado !== 'Nacional' ? ' · ' + estado : ''} · §§ ${rangosArr.join(', ')}`
+        const { pais, ley, estado } = block.input || {}
+        const rangosArr = coerceRangos(block.input?.rangos)
+        const label = `${pais}/${ley}${estado && estado !== 'Nacional' ? ' · ' + estado : ''} · ${rangosArr.join(', ')}`
         sseWrite(res, 'tool', { text: `Čtu ${label}` })
         try {
           const articulos = await executeFetchArticulos(block.input || {})
