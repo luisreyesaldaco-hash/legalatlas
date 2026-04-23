@@ -5,32 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tesseum — The law has geometry.</title>
 <meta name="description" content="153,105 verified legal provisions across seven jurisdictions. Every article is a line of code. Every constitution is an operating system.">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Barlow:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 <script src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js" defer></script>
 <style>
 :root {
   --bg:      #F4EFE4;
-  --bg-dark: #070604;
+  --bg-dark: #0A0A09;
   --text:    #0A0A09;
   --text-lt: #e8e0d0;
   --soft:    #1A1815;
   --soft-lt: #bfb5a2;
   --muted:   #3A3530;
   --muted-lt:#7a7060;
-  --gold:    #c8a84b;
-  --gold-lt: #d4b65c;
+  --gold:    #B8893D;
+  --gold-lt: #D4A55C;
   --gold-dk: #8F6A2A;
-  --gold-dim:rgba(200,168,75,0.08);
+  --gold-dim:rgba(184,137,61,0.08);
   --rule:    rgba(143,106,42,0.18);
-  --rule-lt: rgba(200,168,75,0.15);
+  --rule-lt: rgba(184,137,61,0.15);
   --border:  #D8CFBA;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; }
+body { font-family: 'Fraunces', Georgia, serif; background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; }
 
 /* ── NAV ── */
 nav {
@@ -158,7 +158,7 @@ nav {
 }
 #globe-canvas { width: 100% !important; height: 100% !important; display: block; }
 .hero-hook {
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Fraunces', Georgia, serif;
   font-weight: 400;
   font-size: 15px;
   color: var(--gold);
@@ -167,7 +167,7 @@ nav {
   max-width: 480px;
 }
 .hero-quote {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Fraunces', serif;
   font-size: clamp(18px, 2.2vw, 24px);
   font-weight: 400;
   line-height: 1.85;
@@ -178,7 +178,7 @@ nav {
 .hero-quote em { font-style: italic; color: var(--gold); }
 
 .hero-obs {
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Fraunces', Georgia, serif;
   font-weight: 300;
   font-size: clamp(14px, 1.6vw, 17px);
   line-height: 1.9;
@@ -199,7 +199,7 @@ nav {
 .hero-cta-row .btn-primary:hover { background: var(--gold-lt); }
 .hero-cta-row .btn-ghost {
   font-family: 'Fraunces', serif; font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
-  border: 1px solid rgba(200,168,75,0.25); color: var(--muted-lt); padding: 13px 32px; border-radius: 6px;
+  border: 1px solid rgba(184,137,61,0.25); color: var(--muted-lt); padding: 13px 32px; border-radius: 6px;
   text-decoration: none; transition: all .2s;
 }
 .hero-cta-row .btn-ghost:hover { color: var(--gold); border-color: var(--gold); }
@@ -217,19 +217,19 @@ nav {
   color: var(--gold); text-transform: uppercase; margin-bottom: 20px;
 }
 .entropy-h {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Fraunces', serif;
   font-size: clamp(22px, 3vw, 32px);
   font-weight: 600; margin-bottom: 12px; color: var(--text-lt);
 }
 .entropy-sub {
-  font-family: 'Barlow', sans-serif; font-weight: 300;
+  font-family: 'Fraunces', Georgia, serif; font-weight: 300;
   font-size: 15px; color: var(--soft-lt); margin-bottom: 48px; line-height: 1.7;
   max-width: 540px; margin-left: auto; margin-right: auto;
 }
 .entropy-wrap {
   position: relative; width: 100%; max-width: 700px; margin: 0 auto;
   aspect-ratio: 7/4; border-radius: 12px; overflow: hidden;
-  border: 1px solid rgba(200,168,75,0.1);
+  border: 1px solid rgba(184,137,61,0.1);
 }
 #entropy-canvas { width: 100%; height: 100%; display: block; cursor: crosshair; }
 .entropy-labels {
@@ -254,7 +254,7 @@ nav {
 .why-block:last-child { margin-bottom: 0; }
 
 .why-principle {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Fraunces', serif;
   font-style: italic;
   font-size: clamp(22px, 3vw, 32px);
   font-weight: 400;
@@ -264,7 +264,7 @@ nav {
 }
 
 .why-body {
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Fraunces', Georgia, serif;
   font-weight: 300;
   font-size: 16px;
   line-height: 1.8;
@@ -287,7 +287,7 @@ nav {
 .book-label::before { content:''; display:block; width:32px; height:1px; background:var(--gold-dk); }
 
 .book-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Fraunces', serif;
   font-style: italic;
   font-size: clamp(20px, 2.8vw, 28px);
   font-weight: 400;
@@ -296,7 +296,7 @@ nav {
   margin-bottom: 8px;
 }
 .book-pub {
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Fraunces', Georgia, serif;
   font-weight: 300;
   font-size: 13px;
   color: var(--muted);
@@ -304,7 +304,7 @@ nav {
   margin-bottom: 32px;
 }
 .book-desc {
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Fraunces', Georgia, serif;
   font-weight: 300;
   font-size: 16px;
   line-height: 1.8;
@@ -331,7 +331,7 @@ nav {
 .inst-label::before { content:''; display:block; width:32px; height:1px; background:var(--gold-dk); }
 
 .inst-h {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Fraunces', serif;
   font-size: clamp(24px, 3vw, 36px);
   font-weight: 600;
   margin-bottom: 64px;
@@ -346,14 +346,14 @@ nav {
 .inst-item:last-child { padding-bottom: 0; }
 
 .inst-name {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Fraunces', serif;
   font-size: 24px;
   font-weight: 600;
   color: var(--text);
   margin-bottom: 8px;
 }
 .inst-desc {
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Fraunces', Georgia, serif;
   font-weight: 300;
   font-size: 15px;
   line-height: 1.7;
@@ -376,13 +376,13 @@ footer {
 }
 .f-logo { font-family: 'Fraunces', serif; font-size: 12px; letter-spacing: .25em; color: var(--text); font-weight: 500; display: inline-flex; align-items: center; gap: 10px; }
 .f-logo .logo-mark { width: 20px; height: 20px; flex-shrink: 0; }
-.f-copy { font-family: 'Barlow', sans-serif; font-size: 11px; color: var(--muted); font-weight: 300; }
+.f-copy { font-family: 'Fraunces', Georgia, serif; font-size: 11px; color: var(--muted); font-weight: 300; }
 .f-links { display: flex; gap: 24px; }
 .f-links a { font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: .12em; color: var(--muted); text-decoration: none; transition: color .2s; text-transform: uppercase; }
 .f-links a:hover { color: var(--gold-dk); }
 .f-disclaimer {
   width: 100%;
-  font-family: 'Barlow', sans-serif;
+  font-family: 'Fraunces', Georgia, serif;
   font-size: 11px;
   font-weight: 300;
   color: var(--muted);
@@ -464,30 +464,30 @@ footer {
 
   <!-- CZ overlay -->
   <div id="cz-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(7,6,4,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
-    <div style="background:#141210;border:1px solid rgba(200,168,75,0.15);border-radius:18px;max-width:480px;width:90%;padding:48px 44px 40px;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,0.5);">
+    <div style="background:#141210;border:1px solid rgba(184,137,61,0.15);border-radius:18px;max-width:480px;width:90%;padding:48px 44px 40px;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,0.5);">
       <div style="font-size:52px;line-height:1;margin-bottom:20px;">🇨🇿</div>
       <div style="font-family:'Fraunces',serif;font-size:11px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;">Vítejte v Tesseum</div>
-      <h2 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:var(--text);margin:0 0 14px;line-height:1.25;">Jste z České republiky.</h2>
-      <p style="font-family:'Barlow',sans-serif;font-size:15px;color:var(--soft);line-height:1.7;margin:0 0 32px;font-weight:300;">Máme pro vás verzi v češtině — s&nbsp;českou legislativou, judikaturou a právními předpisy přímo pro vaši jurisdikci.</p>
-      <button onclick="czGoLocal()" style="display:block;width:100%;background:var(--gold);color:#070604;border:none;border-radius:10px;padding:16px 24px;font-family:'Fraunces',serif;font-size:13px;letter-spacing:.12em;font-weight:700;cursor:pointer;margin-bottom:14px;transition:opacity .2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Přejít na Tesseum CZ →</button>
-      <button onclick="czStayGlobal()" style="background:none;border:none;color:var(--muted);font-family:'Barlow',sans-serif;font-size:12px;cursor:pointer;padding:4px 0;text-decoration:underline;text-underline-offset:3px;">Continue in English</button>
+      <h2 style="font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--text);margin:0 0 14px;line-height:1.25;">Jste z České republiky.</h2>
+      <p style="font-family:'Fraunces',Georgia,serif;font-size:15px;color:var(--soft);line-height:1.7;margin:0 0 32px;font-weight:300;">Máme pro vás verzi v češtině — s&nbsp;českou legislativou, judikaturou a právními předpisy přímo pro vaši jurisdikci.</p>
+      <button onclick="czGoLocal()" style="display:block;width:100%;background:var(--gold);color:#0A0A09;border:none;border-radius:10px;padding:16px 24px;font-family:'Fraunces',serif;font-size:13px;letter-spacing:.12em;font-weight:700;cursor:pointer;margin-bottom:14px;transition:opacity .2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Přejít na Tesseum CZ →</button>
+      <button onclick="czStayGlobal()" style="background:none;border:none;color:var(--muted);font-family:'Fraunces',Georgia,serif;font-size:12px;cursor:pointer;padding:4px 0;text-decoration:underline;text-underline-offset:3px;">Continue in English</button>
     </div>
   </div>
 
   <!-- MX overlay -->
   <div id="mx-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(7,6,4,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
-    <div style="background:#141210;border:1px solid rgba(200,168,75,0.15);border-radius:18px;max-width:480px;width:90%;padding:48px 44px 40px;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,0.5);">
+    <div style="background:#141210;border:1px solid rgba(184,137,61,0.15);border-radius:18px;max-width:480px;width:90%;padding:48px 44px 40px;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,0.5);">
       <div style="font-size:52px;line-height:1;margin-bottom:20px;">🇲🇽</div>
       <div style="font-family:'Fraunces',serif;font-size:11px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;">Tesseum México</div>
-      <h2 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:var(--text);margin:0 0 14px;line-height:1.25;">Estás en México.</h2>
-      <p style="font-family:'Barlow',sans-serif;font-size:15px;color:var(--soft);line-height:1.7;margin:0 0 32px;font-weight:300;">Tenemos una versión en español con la legislación mexicana completa — Constitución, Código Civil de 32 estados y leyes federales.</p>
-      <button onclick="mxGoLocal()" style="display:block;width:100%;background:var(--gold);color:#070604;border:none;border-radius:10px;padding:16px 24px;font-family:'Fraunces',serif;font-size:13px;letter-spacing:.12em;font-weight:700;cursor:pointer;margin-bottom:14px;transition:opacity .2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Ir a Tesseum México →</button>
-      <button onclick="mxStayGlobal()" style="background:none;border:none;color:var(--muted);font-family:'Barlow',sans-serif;font-size:12px;cursor:pointer;padding:4px 0;text-decoration:underline;text-underline-offset:3px;">Continue in English</button>
+      <h2 style="font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:var(--text);margin:0 0 14px;line-height:1.25;">Estás en México.</h2>
+      <p style="font-family:'Fraunces',Georgia,serif;font-size:15px;color:var(--soft);line-height:1.7;margin:0 0 32px;font-weight:300;">Tenemos una versión en español con la legislación mexicana completa — Constitución, Código Civil de 32 estados y leyes federales.</p>
+      <button onclick="mxGoLocal()" style="display:block;width:100%;background:var(--gold);color:#0A0A09;border:none;border-radius:10px;padding:16px 24px;font-family:'Fraunces',serif;font-size:13px;letter-spacing:.12em;font-weight:700;cursor:pointer;margin-bottom:14px;transition:opacity .2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Ir a Tesseum México →</button>
+      <button onclick="mxStayGlobal()" style="background:none;border:none;color:var(--muted);font-family:'Fraunces',Georgia,serif;font-size:12px;cursor:pointer;padding:4px 0;text-decoration:underline;text-underline-offset:3px;">Continue in English</button>
     </div>
   </div>
 
   <!-- Sticky geo ribbon (bottom, persistent pressure) -->
-  <div id="geo-sticky" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:8888;background:var(--bg,#F4EFE4);border-top:1px solid var(--border,#D8CFBA);padding:11px 32px;align-items:center;gap:16px;box-shadow:0 -4px 20px rgba(10,10,9,0.1);font-family:'Barlow',sans-serif;">
+  <div id="geo-sticky" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:8888;background:var(--bg,#F4EFE4);border-top:1px solid var(--border,#D8CFBA);padding:11px 32px;align-items:center;gap:16px;box-shadow:0 -4px 20px rgba(10,10,9,0.1);font-family:'Fraunces',Georgia,serif;">
     <span id="geo-sticky-flag" style="font-size:20px;"></span>
     <span id="geo-sticky-text" style="font-size:13px;color:var(--soft,#1A1815);"></span>
     <button id="geo-sticky-btn" style="background:var(--text,#0A0A09);color:var(--bg,#F4EFE4);border:none;border-radius:7px;padding:8px 18px;font-family:'Fraunces',serif;font-size:10px;letter-spacing:.1em;font-weight:700;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='#8F6A2A'" onmouseout="this.style.background='var(--text,#0A0A09)'"></button>
@@ -784,12 +784,12 @@ document.addEventListener('click', e => {
 
   // Subtle wireframe sphere (very faint grid)
   const gridGeo = new THREE.SphereGeometry(0.995, 36, 24)
-  const gridMat = new THREE.MeshBasicMaterial({ color: 0xc8a84b, wireframe: true, transparent: true, opacity: 0.1 })
+  const gridMat = new THREE.MeshBasicMaterial({ color: 0xB8893D, wireframe: true, transparent: true, opacity: 0.1 })
   globeGroup.add(new THREE.Mesh(gridGeo, gridMat))
 
   // Atmosphere glow ring
   const glowGeo = new THREE.RingGeometry(1.0, 1.04, 80)
-  const glowMat = new THREE.MeshBasicMaterial({ color: 0xc8a84b, side: THREE.DoubleSide, transparent: true, opacity: 0.15 })
+  const glowMat = new THREE.MeshBasicMaterial({ color: 0xB8893D, side: THREE.DoubleSide, transparent: true, opacity: 0.15 })
   const glow = new THREE.Mesh(glowGeo, glowMat)
   glow.lookAt(camera.position)
   scene.add(glow) // stays facing camera
@@ -821,7 +821,7 @@ document.addEventListener('click', e => {
     .then(r => r.json())
     .then(world => {
       const land = topojson.feature(world, world.objects.land)
-      const lineMat = new THREE.LineBasicMaterial({ color: 0xd4b65c, transparent: true, opacity: 0.65 })
+      const lineMat = new THREE.LineBasicMaterial({ color: 0xD4A55C, transparent: true, opacity: 0.65 })
 
       land.features.forEach(feature => {
         const geom = feature.geometry
@@ -838,7 +838,7 @@ document.addEventListener('click', e => {
       // Also draw country borders (fainter)
       if (world.objects.countries) {
         const countries = topojson.feature(world, world.objects.countries)
-        const borderMat = new THREE.LineBasicMaterial({ color: 0xc8a84b, transparent: true, opacity: 0.3 })
+        const borderMat = new THREE.LineBasicMaterial({ color: 0xB8893D, transparent: true, opacity: 0.3 })
         countries.features.forEach(feature => {
           const geom = feature.geometry
           if (!geom) return
@@ -876,7 +876,7 @@ document.addEventListener('click', e => {
     dot.position.copy(pos)
     globeGroup.add(dot)
 
-    const pMat = new THREE.MeshBasicMaterial({ color: 0xc8a84b, transparent: true, opacity: 0.3 })
+    const pMat = new THREE.MeshBasicMaterial({ color: 0xB8893D, transparent: true, opacity: 0.3 })
     const pulse = new THREE.Mesh(pulseGeo, pMat)
     pulse.position.copy(pos)
     globeGroup.add(pulse)
@@ -890,7 +890,7 @@ document.addEventListener('click', e => {
     const mid = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5).normalize().multiplyScalar(1.3)
     const curve = new THREE.QuadraticBezierCurve3(p1, mid, p2)
     const geo = new THREE.BufferGeometry().setFromPoints(curve.getPoints(40))
-    const mat = new THREE.LineBasicMaterial({ color: 0xd4b65c, transparent: true, opacity: 0.35 })
+    const mat = new THREE.LineBasicMaterial({ color: 0xD4A55C, transparent: true, opacity: 0.35 })
     return new THREE.Line(geo, mat)
   }
   const j = jurisdictions
@@ -958,7 +958,7 @@ document.addEventListener('click', e => {
   }
 
   let { w, h } = resize()
-  const GOLD = '#c8a84b'
+  const GOLD = '#B8893D'
 
   class Particle {
     constructor(x, y, ordered) {
@@ -1045,7 +1045,7 @@ document.addEventListener('click', e => {
           const alpha = 0.18 * (1 - d / 55)
           // Gold connections across boundary
           if (a.ordered !== b.ordered) {
-            ctx.strokeStyle = `rgba(200,168,75,${alpha * 2.5})`
+            ctx.strokeStyle = `rgba(184,137,61,${alpha * 2.5})`
             ctx.lineWidth = 1.2
           } else {
             ctx.strokeStyle = `rgba(232,224,208,${alpha})`
@@ -1063,7 +1063,7 @@ document.addEventListener('click', e => {
     particles.forEach(p => {
       const alpha = p.ordered ? 0.7 - p.influence * 0.4 : 0.65
       ctx.fillStyle = p.ordered
-        ? `rgba(200,168,75,${alpha})`
+        ? `rgba(184,137,61,${alpha})`
         : `rgba(232,224,208,${alpha})`
       ctx.beginPath()
       ctx.arc(p.x, p.y, 2, 0, Math.PI * 2)
@@ -1071,7 +1071,7 @@ document.addEventListener('click', e => {
     })
 
     // Center divider
-    ctx.strokeStyle = 'rgba(200,168,75,0.12)'
+    ctx.strokeStyle = 'rgba(184,137,61,0.12)'
     ctx.lineWidth = 0.5
     ctx.setLineDash([4, 6])
     ctx.beginPath()
