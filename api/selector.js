@@ -265,7 +265,9 @@ async function handlePost(req, res) {
     return res.end()
 
   } catch (err) {
-    console.error('POST /api/selector v2 error:', err)
+    // Compact but information-dense log — survives Vercel's log truncation per line
+    console.error('[selector v2] FAIL:', err.message)
+    if (err.stack) console.error('[selector v2] stack:', err.stack.split('\n').slice(0, 5).join(' | '))
     if (res.headersSent) {
       sseWrite(res, 'error', { text: err.message })
       return res.end()
