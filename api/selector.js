@@ -15,22 +15,40 @@ const TOOLS = [
   {
     name: 'fetch_articulos',
     description:
-      'Fetch the full text of specific articles from one of the selected laws. ' +
-      'Use this whenever you need to read the exact wording of articles referenced in the index. ' +
-      'You may call this multiple times across different laws during the same turn.',
+      'Fetch the full text of specific articles by number/range from one of the selected laws. ' +
+      'Use this when the index tells you the exact articles you want (e.g. "Arts. 2398-2496 Arrendamiento").',
     input_schema: {
       type: 'object',
       properties: {
         pais: { type: 'string', description: 'ISO code of the country. Must be one of the selected laws (CZ, MX, FR, DE, ES, CH, MC).' },
-        ley: { type: 'string', description: 'Law name, exactly as listed in the index header.' },
-        estado: { type: 'string', description: 'Optional sub-jurisdiction (e.g. Mexican state). Omit or use "Nacional" for federal/national laws.' },
+        ley: { type: 'string', description: 'Law name, EXACTLY as it appears in the index header between ═══ separators (e.g. "Código Civil", "Občanský zákoník"). Do NOT invent variant names.' },
+        estado: { type: 'string', description: 'Sub-jurisdiction EXACTLY as in the index header (e.g. "Ciudad de México", "Nacional").' },
         rangos: {
           type: 'array',
           items: { type: 'string' },
-          description: 'Article identifiers or ranges. Examples: "§ 2128", "2130", "2130-2135", "art. 49". Max 20 items per call.'
+          description: 'Article numbers or ranges. Examples: "2128", "2130-2135", "2398-2496". Numeric only; prefixes like §/Art. are stripped. Max 20 items per call.'
         }
       },
       required: ['pais', 'ley', 'rangos']
+    }
+  },
+  {
+    name: 'buscar_texto',
+    description:
+      'Full-text search within one of the selected laws. Use this as a FALLBACK when ' +
+      'the index does not list the topic you need — for example, if the user asks about ' +
+      '"arrendamiento" but the index for that law has no such section, search for the ' +
+      'relevant keywords here. Returns up to 10 top-ranked articles.',
+    input_schema: {
+      type: 'object',
+      properties: {
+        pais: { type: 'string' },
+        ley: { type: 'string', description: 'Law name exactly as in the index header.' },
+        estado: { type: 'string' },
+        consulta: { type: 'string', description: 'Spanish-language keywords or short phrase to search for (e.g. "arrendamiento requisitos forma escrita"). Does NOT need to be a full sentence.' },
+        limite: { type: 'integer', description: 'Max articles to return (default 8, cap 15).' }
+      },
+      required: ['pais', 'ley', 'consulta']
     }
   }
 ]
@@ -155,6 +173,46 @@ async function executeFetchArticulos({ pais, ley, estado, rangos }) {
   }))
 }
 
+async function executeBuscarTexto({ pais, ley, estado, consulta, limite }) {
+  if (!pais || !ley || !consulta) {
+    throw new Error('buscar_texto requires pais, ley, consulta.')
+  }
+  const lim = Math.min(Math.max(parseInt(limite, 10) || 8, 1), 15)
+
+  let q = supabase
+    .from('articulos')
+    .select('numero_articulo, texto_original, capitulo, titulo')
+    .eq('pais', pais)
+    .eq('ley', ley)
+    .not('texto_original', 'is', null)
+    .textSearch('texto_para_embedding', consulta, { type: 'plain', config: 'spanish' })
+    .limit(lim * 3) // pull a bit extra before dedup
+
+  if (estado && estado !== 'Nacional') {
+    const variants = [...new Set([estado, stripAccents(estado)])]
+    q = q.in('estado', variants)
+  }
+
+  const { data, error } = await q
+  if (error) throw new Error(`Supabase: ${error.message}`)
+
+  // Deduplicate by numero_articulo and cap
+  const seen = new Set()
+  const out = []
+  for (const a of (data || [])) {
+    if (seen.has(a.numero_articulo)) continue
+    seen.add(a.numero_articulo)
+    out.push({
+      numero: a.numero_articulo,
+      texto: a.texto_original,
+      capitulo: a.capitulo || null,
+      titulo: a.titulo || null
+    })
+    if (out.length >= lim) break
+  }
+  return out
+}
+
 function buildSystemPrompt(indices) {
   const indicesText = indices.map(i => {
     const estadoSuffix = i.estado && i.estado !== 'Nacional' ? ` · ${i.estado}` : ''
@@ -170,11 +228,12 @@ ${indicesText}
 # How to work
 
 1. Read the user's question carefully.
-2. Scan the indices to identify which articles from which law(s) are likely relevant.
-3. Make your tool calls **efficiently**: 1–2 \`fetch_articulos\` calls per law is usually enough. Batch the articles you need in a single call (e.g. rangos: ["560-575", "2128-2135"]). Avoid splitting a single law into many tiny calls.
-4. As soon as you have the article text, WRITE THE FINAL ANSWER. Do not keep fetching variants if the first fetch already returned relevant provisions.
-5. If a range returned no articles, try ONE broader range before giving up.
-6. Use pass numeric ranges like "560-575" — the backend accepts "§ 560", "Art. 560", or "560", all equivalent.
+2. **Strict: always use the law name and estado EXACTLY as they appear in the index header** (between the ═══ separators). Do not invent "Código Civil de Guanajuato" when the header just says "Código Civil · Guanajuato" — use \`ley: "Código Civil"\` and \`estado: "Guanajuato"\`.
+3. Scan the indices to identify relevant articles. If the index lists ranges for the topic (e.g. "Arts. 2398-2496 Arrendamiento"), call \`fetch_articulos\` with those rangos.
+4. **If the index does NOT list the topic** (some indices are incomplete — they may not have a dedicated arrendamiento / matrimonio / etc. section even though the law regulates it), use \`buscar_texto\` with keywords from the question to discover the relevant articles.
+5. Tool calls should be efficient: 1-2 per law, batch rangos. Avoid re-querying the same range with slight variants.
+6. As soon as you have relevant article text, **write the final answer**. Do not keep fetching speculatively.
+7. If a tool returns 0 or very few articles, try \`buscar_texto\` as a fallback once, then synthesize with what you have. Never claim you "cannot respond" if you have at least some article text.
 
 # Output rules
 
@@ -253,21 +312,30 @@ async function handlePost(req, res) {
       const toolResults = []
       for (const block of finalMessage.content) {
         if (block.type !== 'tool_use') continue
-        const { pais, ley, estado } = block.input || {}
-        const rangosArr = coerceRangos(block.input?.rangos)
-        const label = `${pais}/${ley}${estado && estado !== 'Nacional' ? ' · ' + estado : ''} · ${rangosArr.join(', ')}`
-        sseWrite(res, 'tool', { text: label })
+        const input = block.input || {}
+        const { pais, ley, estado } = input
+        let label
         try {
-          const articulos = await executeFetchArticulos(block.input || {})
+          let articulos
+          if (block.name === 'buscar_texto') {
+            label = `${pais}/${ley}${estado && estado !== 'Nacional' ? ' · ' + estado : ''} · «${input.consulta}»`
+            articulos = await executeBuscarTexto(input)
+          } else {
+            const rangosArr = coerceRangos(input.rangos)
+            label = `${pais}/${ley}${estado && estado !== 'Nacional' ? ' · ' + estado : ''} · ${rangosArr.join(', ')}`
+            articulos = await executeFetchArticulos(input)
+          }
+          sseWrite(res, 'tool', { text: label })
           toolResults.push({
             type: 'tool_result',
             tool_use_id: block.id,
             content: articulos.length
               ? JSON.stringify(articulos)
-              : JSON.stringify({ articulos: [], note: 'No matching articles for the provided rangos.' })
+              : JSON.stringify({ articulos: [], note: 'No matching articles found. If using fetch_articulos, consider buscar_texto as fallback.' })
           })
         } catch (err) {
           console.error('[selector] tool exec:', err.message)
+          sseWrite(res, 'tool', { text: label || `${pais}/${ley} · error` })
           toolResults.push({
             type: 'tool_result',
             tool_use_id: block.id,
