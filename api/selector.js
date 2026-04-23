@@ -74,6 +74,13 @@ function parseRangos(rangos) {
 }
 
 async function executeFetchArticulos({ pais, ley, estado, rangos }) {
+  // Coerce rangos to array — Claude sometimes sends a string or JSON-string
+  if (typeof rangos === 'string') {
+    try {
+      const maybe = JSON.parse(rangos)
+      rangos = Array.isArray(maybe) ? maybe : [rangos]
+    } catch { rangos = rangos.split(/[,;]\s*/).filter(Boolean) }
+  }
   if (!pais || !ley || !Array.isArray(rangos) || !rangos.length) {
     throw new Error('fetch_articulos requires pais, ley, rangos (non-empty array).')
   }
@@ -212,7 +219,8 @@ async function handlePost(req, res) {
       for (const block of finalMessage.content) {
         if (block.type !== 'tool_use') continue
         const { pais, ley, estado, rangos } = block.input || {}
-        const label = `${pais}/${ley}${estado && estado !== 'Nacional' ? ' · ' + estado : ''} · §§ ${(rangos || []).join(', ')}`
+        const rangosArr = Array.isArray(rangos) ? rangos : (typeof rangos === 'string' ? [rangos] : [])
+        const label = `${pais}/${ley}${estado && estado !== 'Nacional' ? ' · ' + estado : ''} · §§ ${rangosArr.join(', ')}`
         sseWrite(res, 'tool', { text: `Čtu ${label}` })
         try {
           const articulos = await executeFetchArticulos(block.input || {})
