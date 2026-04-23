@@ -236,7 +236,7 @@ async function handlePost(req, res) {
         const { pais, ley, estado } = block.input || {}
         const rangosArr = coerceRangos(block.input?.rangos)
         const label = `${pais}/${ley}${estado && estado !== 'Nacional' ? ' · ' + estado : ''} · ${rangosArr.join(', ')}`
-        sseWrite(res, 'tool', { text: `Čtu ${label}` })
+        sseWrite(res, 'tool', { text: label })
         try {
           const articulos = await executeFetchArticulos(block.input || {})
           toolResults.push({

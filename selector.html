@@ -314,7 +314,7 @@ function updateTokenEstimate() {
   fill.style.width = pct + '%'
   fill.className = 'token-fill ' + (indexTokens < 60000 ? 'green' : indexTokens < 130000 ? 'yellow' : 'red')
   document.getElementById('token-count').textContent =
-    `${indexTokens.toLocaleString()} / ${TOKEN_BUDGET.toLocaleString()} tokens (indexy)`
+    `${indexTokens.toLocaleString()} / ${TOKEN_BUDGET.toLocaleString()} tokeny (indexy)`
   document.getElementById('token-warning').style.display = indexTokens > 150000 ? 'block' : 'none'
 }
 
@@ -375,7 +375,7 @@ async function analyze() {
               el.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--text-muted);margin-bottom:12px;padding:8px 12px;background:var(--gold-dim);border-radius:8px'
               respEl.insertBefore(el, respEl.firstChild); return el
             })()
-            toolEl.textContent = '⟳ ' + (data.text || 'Čtu články…')
+            toolEl.textContent = '⟳ Čtu ' + (data.text || '…')
           } else if (data.type === 'error') {
             throw new Error(data.text || 'Error')
           }

@@ -132,21 +132,21 @@
     <!-- COL 1: Drop-box (top) + add controls (bottom) -->
     <aside class="col-select">
       <div class="col-header">
-        <div class="col-title">Vybrané zákony</div>
-        <div class="col-sub">Přidejte zákony z libovolných jurisdikcí</div>
+        <div class="col-title">{{SEL_TITLE}}</div>
+        <div class="col-sub">{{SEL_SUB}}</div>
       </div>
       <div class="selected-box" id="selected-box">
-        <div class="selected-empty" id="selected-empty">Zatím nic.<br>Vyberte zemi a zákon dole ↓</div>
+        <div class="selected-empty" id="selected-empty">{{SEL_EMPTY}}</div>
       </div>
       <div class="add-controls">
-        <div class="ctrl-label">Přidat zákon</div>
+        <div class="ctrl-label">{{SEL_ADD_LABEL}}</div>
         <select class="add-select" id="add-pais">
-          <option value="">— Země —</option>
+          <option value="">{{SEL_OPT_PAIS}}</option>
         </select>
         <select class="add-select" id="add-ley" disabled>
-          <option value="">— Nejprve zvolte zemi —</option>
+          <option value="">{{SEL_OPT_LEY_FIRST}}</option>
         </select>
-        <button class="btn-add" id="btn-add" onclick="addSelectedLaw()" disabled>+ Přidat</button>
+        <button class="btn-add" id="btn-add" onclick="addSelectedLaw()" disabled>{{SEL_BTN_ADD}}</button>
       </div>
     </aside>
 
@@ -154,28 +154,28 @@
     <div class="col-question">
       <div class="token-bar-wrap">
         <div class="token-label">
-          <span>Odhadované tokeny</span>
+          <span>{{SEL_TOKEN_LABEL}}</span>
           <span id="token-count">0 / 200 000</span>
         </div>
         <div class="token-bar"><div class="token-fill green" id="token-fill" style="width:0%"></div></div>
       </div>
       <div class="question-area">
-        <div class="question-label">Vaše otázka</div>
-        <div class="token-warning" id="token-warning">⚠ Překročeno 150 000 tokenů. Analýza může být pomalejší. Pokračovat?</div>
-        <textarea class="question-input" id="question" placeholder="Jaká jsou práva zaměstnance při výpovědi? Jaké jsou lhůty?"></textarea>
+        <div class="question-label">{{SEL_Q_LABEL}}</div>
+        <div class="token-warning" id="token-warning">{{SEL_TOKEN_WARN}}</div>
+        <textarea class="question-input" id="question" placeholder="{{SEL_Q_PLACEHOLDER}}"></textarea>
       </div>
       <div class="question-actions">
-        <button class="btn-analyze" id="btn-analyze" onclick="analyze()" disabled>Analyzovat →</button>
+        <button class="btn-analyze" id="btn-analyze" onclick="analyze()" disabled>{{SEL_BTN_ANALYZE}}</button>
       </div>
     </div>
 
     <!-- COL 3: Response -->
     <div class="col-response">
-      <div class="response-header">Odpověď · Selector</div>
+      <div class="response-header">{{SEL_RESPONSE_HEADER}}</div>
       <div class="response-scroll" id="response">
         <div class="response-empty">
           <div class="response-empty-icon">⚖</div>
-          <div class="response-empty-text">Vyberte zákon a položte otázku</div>
+          <div class="response-empty-text">{{SEL_RESPONSE_EMPTY}}</div>
         </div>
       </div>
     </div>
@@ -231,13 +231,13 @@ function onPaisChange(e) {
   const selLey = document.getElementById('add-ley')
   selLey.innerHTML = ''
   if (!pais) {
-    selLey.innerHTML = '<option value="">— Nejprve zvolte zemi —</option>'
+    selLey.innerHTML = '<option value="">{{SEL_OPT_LEY_FIRST}}</option>'
     selLey.disabled = true
     document.getElementById('btn-add').disabled = true
     return
   }
   const laws = lawsByPais[pais] || []
-  selLey.innerHTML = '<option value="">— Zákon —</option>' +
+  selLey.innerHTML = '<option value="">{{SEL_OPT_LEY}}</option>' +
     laws.map(l => {
       const isSelected = selectedLaws.some(s => s.pais === l.pais && s.ley === l.ley && (s.estado||'') === (l.estado||''))
       const key = JSON.stringify({ley: l.ley, estado: l.estado||''})
@@ -298,7 +298,7 @@ function renderSelectedBox() {
         <div class="selected-chip-ley">${FLAGS[l.pais]||''} ${l.ley}${estado}</div>
         <div class="selected-chip-meta">${l.total_articulos} § · ${tk} tok</div>
       </div>
-      <button onclick="removeLaw(${i})" title="Odebrat">×</button>
+      <button onclick="removeLaw(${i})" title="{{SEL_REMOVE_TITLE}}">×</button>
     </div>`
   }).join('')
   document.getElementById('btn-analyze').disabled = false
@@ -314,7 +314,7 @@ function updateTokenEstimate() {
   fill.style.width = pct + '%'
   fill.className = 'token-fill ' + (indexTokens < 60000 ? 'green' : indexTokens < 130000 ? 'yellow' : 'red')
   document.getElementById('token-count').textContent =
-    `${indexTokens.toLocaleString()} / ${TOKEN_BUDGET.toLocaleString()} tokens (indexy)`
+    `${indexTokens.toLocaleString()} / ${TOKEN_BUDGET.toLocaleString()} {{SEL_TOKEN_UNIT}}`
   document.getElementById('token-warning').style.display = indexTokens > 150000 ? 'block' : 'none'
 }
 
@@ -326,7 +326,7 @@ async function analyze() {
   if (!pregunta || selectedLaws.length === 0) return
 
   const btn = document.getElementById('btn-analyze')
-  btn.disabled = true; btn.textContent = 'Analyzuji…'
+  btn.disabled = true; btn.textContent = '{{SEL_BTN_ANALYZE_LOADING}}'
 
   const respEl = document.getElementById('response')
   respEl.innerHTML = '<div class="response-text" id="response-text"></div>'
@@ -375,7 +375,7 @@ async function analyze() {
               el.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--text-muted);margin-bottom:12px;padding:8px 12px;background:var(--gold-dim);border-radius:8px'
               respEl.insertBefore(el, respEl.firstChild); return el
             })()
-            toolEl.textContent = '⟳ ' + (data.text || 'Čtu články…')
+            toolEl.textContent = '⟳ {{SEL_TOOL_VERB}} ' + (data.text || '…')
           } else if (data.type === 'error') {
             throw new Error(data.text || 'Error')
           }
@@ -385,7 +385,7 @@ async function analyze() {
   } catch(e) {
     respEl.innerHTML = `<div class="response-empty"><div class="response-empty-icon">⚠</div><div class="response-empty-text">${e.message}</div></div>`
   } finally {
-    btn.disabled = false; btn.textContent = 'Analyzovat →'
+    btn.disabled = false; btn.textContent = '{{SEL_BTN_ANALYZE}}'
   }
 }
 
