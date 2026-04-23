@@ -337,7 +337,7 @@ async function analyze() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        leyes: selectedLaws.map(l => ({ ley: l.ley, pais: l.pais })),
+        leyes: selectedLaws.map(l => ({ ley: l.ley, pais: l.pais, estado: l.estado || null })),
         pregunta
       })
     })
@@ -368,6 +368,16 @@ async function analyze() {
           if (data.type === 'delta') {
             fullText += data.text
             textEl.innerHTML = highlightRefs(fullText)
+          } else if (data.type === 'tool') {
+            // Progress indicator: show "Čtu články… Občanský zákoník: §§2128,2140–2145"
+            const toolEl = document.getElementById('tool-indicator') || (() => {
+              const el = document.createElement('div'); el.id = 'tool-indicator'
+              el.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--text-muted);margin-bottom:12px;padding:8px 12px;background:var(--gold-dim);border-radius:8px'
+              respEl.insertBefore(el, respEl.firstChild); return el
+            })()
+            toolEl.textContent = '⟳ ' + (data.text || 'Čtu články…')
+          } else if (data.type === 'error') {
+            throw new Error(data.text || 'Error')
           }
         } catch(_) {}
       }
