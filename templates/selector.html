@@ -102,6 +102,15 @@
   .response-empty-text{font-family:'Fraunces',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase}
   .response-text{font-family:'Fraunces',serif;font-size:14px;line-height:1.9;color:var(--text-primary)}
   .response-text strong{color:var(--text-primary);font-weight:600}
+  .response-text em{font-style:italic;color:var(--text-secondary)}
+  .response-text h1,.response-text h2{font-family:'Fraunces',serif;font-size:18px;font-weight:500;letter-spacing:-.01em;color:var(--gold);margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--rule);font-variation-settings:"opsz" 60}
+  .response-text h3{font-family:'Fraunces',serif;font-size:14.5px;font-weight:600;color:var(--text-primary);margin:20px 0 6px}
+  .response-text h4{font-family:'Fraunces',serif;font-size:13.5px;font-weight:500;color:var(--text-secondary);margin:16px 0 4px}
+  .response-text ul,.response-text ol{margin:8px 0 14px 0;padding-left:22px}
+  .response-text li{margin:5px 0;line-height:1.7}
+  .response-text li>strong:first-child{color:var(--gold)}
+  .response-text blockquote{border-left:2px solid var(--gold-border);padding:2px 0 2px 14px;margin:12px 0;color:var(--text-secondary);font-style:italic}
+  .response-text code{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--gold-dim);padding:1px 6px;border-radius:4px;color:var(--gold)}
   /* Highlight § references in gold */
   .art-ref{color:var(--gold);font-weight:600}
 
@@ -389,12 +398,58 @@ async function analyze() {
   }
 }
 
-// Highlight § references
-function highlightRefs(text) {
-  return text
-    .replace(/\n/g, '<br>')
-    .replace(/§\s*(\d+[a-z]*)/g, '<span class="art-ref">§ $1</span>')
-    .replace(/Art\.\s*(\d+)/g, '<span class="art-ref">Art. $1</span>')
+// Lightweight Markdown → HTML renderer + § / Art. highlighting.
+// Runs on every streaming delta, so unterminated syntax at the tail is OK:
+// it just re-renders cleanly once the closing tokens arrive.
+function highlightRefs(raw) {
+  // 1. Escape HTML so Claude's raw output can't inject tags.
+  let s = String(raw || '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+  // 2. Inline code: `foo`
+  s = s.replace(/`([^`\n]+?)`/g, '<code>$1</code>')
+
+  // 3. Bold: **foo** (before italic so the ** don't get eaten as * *)
+  s = s.replace(/\*\*([^\*\n]+?)\*\*/g, '<strong>$1</strong>')
+
+  // 4. Italic: *foo* (avoid matching inside asterisks bordering spaces)
+  s = s.replace(/(^|[\s(])\*([^\*\n]+?)\*(?=[\s.,;:!?)]|$)/g, '$1<em>$2</em>')
+
+  // 5. Block-level: headers and lists — process line-by-line
+  const lines = s.split('\n')
+  const out = []
+  let inUl = false
+  const flushList = () => { if (inUl) { out.push('</ul>'); inUl = false } }
+  for (const line of lines) {
+    const h4 = line.match(/^####\s+(.+)$/)
+    const h3 = line.match(/^###\s+(.+)$/)
+    const h2 = line.match(/^##\s+(.+)$/)
+    const h1 = line.match(/^#\s+(.+)$/)
+    const li = line.match(/^[-*]\s+(.+)$/)
+    const bq = line.match(/^>\s+(.+)$/)
+    if (h4) { flushList(); out.push(`<h4>${h4[1]}</h4>`) }
+    else if (h3) { flushList(); out.push(`<h3>${h3[1]}</h3>`) }
+    else if (h2) { flushList(); out.push(`<h2>${h2[1]}</h2>`) }
+    else if (h1) { flushList(); out.push(`<h2>${h1[1]}</h2>`) } // H1 rendered like H2
+    else if (li) {
+      if (!inUl) { out.push('<ul>'); inUl = true }
+      out.push(`<li>${li[1]}</li>`)
+    } else if (bq) { flushList(); out.push(`<blockquote>${bq[1]}</blockquote>`) }
+    else { flushList(); out.push(line) }
+  }
+  flushList()
+  s = out.join('\n')
+
+  // 6. Collapse newlines adjacent to block tags, turn remaining \n into <br>
+  s = s.replace(/\n?(<\/?(h[1-4]|ul|ol|li|blockquote)[^>]*>)\n?/g, '$1')
+  s = s.replace(/\n/g, '<br>')
+
+  // 7. § and Art. / art. / Artículo / ARTÍCULO refs — highlight in gold
+  s = s.replace(/§\s*(\d+[a-zA-Z]*)/g, '<span class="art-ref">§ $1</span>')
+  s = s.replace(/\b(Art(?:ículo|ÍCULO|\.)?)\s*(\d+[a-zA-Z\-]*)/g,
+    (_m, pfx, num) => `<span class="art-ref">${pfx} ${num}</span>`)
+
+  return s
 }
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
