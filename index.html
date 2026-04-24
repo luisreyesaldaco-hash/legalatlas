@@ -536,28 +536,40 @@ footer {
   }
 
   (function geoInit(){
+    var qs = new URLSearchParams(location.search);
+    // Escape hatch for power users / manual global landing: ?global=1
+    if (qs.get('global') === '1') {
+      localStorage.setItem('la-locale','global');
+      return;
+    }
+
     var locale = localStorage.getItem('la-locale');
-    // User already chose a country → redirect immediately
+
+    // User explicitly opted into a country before → honor it
     if (locale === 'CZ') { window.location.replace('/cz/'); return; }
     if (locale === 'MX') { window.location.replace('/mx/'); return; }
 
-    // User chose global before → show sticky ribbon (not modal)
-    if (locale === 'global') {
+    // User explicitly opted for global (via EN link or ?global=1) → stay,
+    // show a dismissable sticky only if their geo still says CZ/MX
+    if (locale === 'global' || locale === 'en') {
       fetch('/api/geo').then(function(r){return r.json()}).then(function(d){
         if (d.country === 'CZ' || d.country === 'MX') showSticky(d.country);
       }).catch(function(){});
       return;
     }
 
-    // First visit → detect geo and show full-screen modal
+    // First visit with no locale set → force-redirect by geolocation.
+    // The user can still override later via the "🌐 EN" nav link on
+    // country pages (which sets la-locale='en' and navigates back to /).
     fetch('/api/geo').then(function(r){return r.json()}).then(function(d){
-      detectedCountry = d.country;
-      if (d.country === 'CZ' && !sessionStorage.getItem('cz-modal-shown')) {
-        document.getElementById('cz-overlay').style.display = 'flex';
+      if (d.country === 'CZ') {
+        localStorage.setItem('la-locale','CZ');
+        window.location.replace('/cz/');
+      } else if (d.country === 'MX') {
+        localStorage.setItem('la-locale','MX');
+        window.location.replace('/mx/');
       }
-      if (d.country === 'MX' && !sessionStorage.getItem('mx-modal-shown')) {
-        document.getElementById('mx-overlay').style.display = 'flex';
-      }
+      // Other countries (FR, DE, ES, CH, MC, etc.) stay on the global landing.
     }).catch(function(){});
   })();
   </script>
