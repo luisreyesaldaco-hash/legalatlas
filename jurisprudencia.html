@@ -513,7 +513,7 @@
     }
     ;(() => {
       const _jParams = new URLSearchParams(location.search)
-      const _jLang   = _jParams.get('lang') || ''
+      const _jLang   = _jParams.get('lang') || localStorage.getItem('atlas_lang') || ''
       const _jPais   = _jParams.get('pais') || ''
       const _langMap = { cs: 'CZ', sk: 'SK', fr: 'FR' }
       _paisActual = _jPais || _langMap[_jLang] || 'CZ'
