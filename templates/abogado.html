@@ -915,6 +915,56 @@
       overflow-x: auto;
     }
     .msg-apolo .mermaid svg { max-width: 100%; height: auto; }
+    .mermaid-wrapper { position: relative; display: block; }
+    .mermaid-expand-btn {
+      position: absolute; top: 8px; right: 8px;
+      width: 28px; height: 28px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      border-radius: 6px; cursor: pointer;
+      font-size: 13px; color: var(--text-secondary);
+      opacity: 0; transition: opacity 0.15s;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2;
+    }
+    .mermaid-wrapper:hover .mermaid-expand-btn { opacity: 1; }
+    #mermaid-fs-overlay {
+      position: fixed; inset: 0; z-index: 10000;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mermaid-fs-backdrop {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.82);
+    }
+    .mermaid-fs-modal {
+      position: relative; z-index: 1;
+      background: var(--bg); border-radius: 14px;
+      border: 1px solid var(--border);
+      width: 92vw; height: 88vh;
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .mermaid-fs-controls {
+      display: flex; gap: 8px; padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-card); justify-content: flex-end;
+      flex-shrink: 0;
+    }
+    .mermaid-fs-btn {
+      width: 32px; height: 32px;
+      border: 1px solid var(--border); background: var(--bg-raised);
+      border-radius: 8px; cursor: pointer; font-size: 15px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-primary); transition: background 0.15s;
+    }
+    .mermaid-fs-btn:hover { background: var(--gold-dim); }
+    .mermaid-fs-canvas {
+      flex: 1; overflow: auto;
+      display: flex; align-items: flex-start; justify-content: center;
+      cursor: grab; padding: 24px;
+    }
+    .mermaid-fs-canvas:active { cursor: grabbing; }
+    .mermaid-fs-svg-wrap {
+      transition: transform 0.1s ease; transform-origin: top center;
+    }
     .msg-usuario {
       background: rgba(184,137,61,0.1);
       color: var(--text);
@@ -2649,20 +2699,25 @@
     // El LLM los emite como código Mermaid plano — Mermaid los reemplaza por un <svg>.
     async function renderMermaidEnNodo(nodo) {
       if (!nodo || !window.mermaid) return;
-      // IMPORTANTE: no usar data-processed como marcador propio — Mermaid lo usa
-      // internamente para saltar elementos ya procesados. Usamos data-lstate.
       const bloques = nodo.querySelectorAll('.mermaid:not([data-lstate])');
       if (!bloques.length) return;
       for (const b of bloques) {
-        // Reformatear: normaliza line breaks + envuelve labels en "quotes" para
-        // tolerar paréntesis, ?, §, etc. Aplica siempre (tanto si vino envuelto
-        // por el LLM como si lo envolvió el wrapper defensivo).
         const src = reformatearMermaid(b.textContent.trim());
         b.textContent = src;
         b.dataset.lstate = 'pending';
         try {
           await window.mermaid.run({ nodes: [b] });
           b.dataset.lstate = 'ok';
+          const wrap = document.createElement('div');
+          wrap.className = 'mermaid-wrapper';
+          b.parentNode.insertBefore(wrap, b);
+          wrap.appendChild(b);
+          const expBtn = document.createElement('button');
+          expBtn.className = 'mermaid-expand-btn';
+          expBtn.title = 'Pantalla completa';
+          expBtn.textContent = '⛶';
+          expBtn.onclick = () => abrirMermaidFullscreen(b);
+          wrap.appendChild(expBtn);
         } catch (err) {
           console.warn('[mermaid] falló:', err?.message || err);
           console.warn('[mermaid] source:', src);
@@ -2675,6 +2730,48 @@
           b.innerHTML = '<div style="color:var(--gold);font-family:\'Fraunces\',serif;font-size:10px;margin-bottom:6px;opacity:0.7;">⚠ Diagrama no renderizable — ' + (err?.message || '').slice(0, 80) + '</div>' + src;
         }
       }
+    }
+
+    function abrirMermaidFullscreen(mermaidDiv) {
+      const svg = mermaidDiv.querySelector('svg');
+      if (!svg) return;
+      document.getElementById('mermaid-fs-overlay')?.remove();
+      let scale = 1;
+      const overlay = document.createElement('div');
+      overlay.id = 'mermaid-fs-overlay';
+      overlay.innerHTML = `
+        <div class="mermaid-fs-backdrop"></div>
+        <div class="mermaid-fs-modal">
+          <div class="mermaid-fs-controls">
+            <button class="mermaid-fs-btn" id="mfs-zoomin"  title="Zoom +"      >+</button>
+            <button class="mermaid-fs-btn" id="mfs-zoomout" title="Zoom −"      >−</button>
+            <button class="mermaid-fs-btn" id="mfs-reset"   title="Restablecer" >⟳</button>
+            <button class="mermaid-fs-btn" id="mfs-close"   title="Cerrar"      >✕</button>
+          </div>
+          <div class="mermaid-fs-canvas" id="mfs-canvas">
+            <div class="mermaid-fs-svg-wrap" id="mfs-wrap"></div>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+      const svgClone = svg.cloneNode(true);
+      svgClone.removeAttribute('width');
+      svgClone.removeAttribute('height');
+      svgClone.style.cssText = 'width:auto;height:auto;max-width:none;max-height:none;';
+      const wrap = document.getElementById('mfs-wrap');
+      wrap.appendChild(svgClone);
+      const applyZoom = () => { wrap.style.transform = `scale(${scale})`; };
+      document.getElementById('mfs-zoomin') .onclick = () => { scale = Math.min(scale + 0.2, 6); applyZoom(); };
+      document.getElementById('mfs-zoomout').onclick = () => { scale = Math.max(scale - 0.2, 0.2); applyZoom(); };
+      document.getElementById('mfs-reset')  .onclick = () => { scale = 1; applyZoom(); };
+      document.getElementById('mfs-close')  .onclick = () => overlay.remove();
+      overlay.querySelector('.mermaid-fs-backdrop').onclick = () => overlay.remove();
+      document.getElementById('mfs-canvas').addEventListener('wheel', e => {
+        e.preventDefault();
+        scale = Math.max(0.2, Math.min(6, scale + (e.deltaY < 0 ? 0.1 : -0.1)));
+        applyZoom();
+      }, { passive: false });
+      const onKey = e => { if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', onKey); } };
+      document.addEventListener('keydown', onKey);
     }
 
     function mostrarSaludo() {
