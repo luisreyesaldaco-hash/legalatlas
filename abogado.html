@@ -1745,7 +1745,6 @@
     // ═══════════════════════════════════════════════════════════
     document.addEventListener('DOMContentLoaded', () => {
       cargarPaises();
-      renderBookmarks();
       mostrarSaludo();
       autoResizeTextarea();
 
@@ -2569,7 +2568,9 @@
     }
 
     function mostrarSaludo() {
-      agregarMensaje('apolo', window.t ? window.t('abogado.saludo', null, 'Hola. Soy <strong>APOLO</strong>, tu asistente jurídico Pro. Selecciona un artículo del navegador para comenzar el análisis.') : 'Hola. Soy <strong>APOLO</strong>, tu asistente jurídico Pro. Selecciona un artículo del navegador para comenzar el análisis.');
+      const pintar = () => agregarMensaje('apolo', window.t ? window.t('abogado.saludo', null, 'Hola. Soy <strong>APOLO</strong>, tu asistente jurídico Pro. Selecciona un artículo del navegador para comenzar el análisis.') : 'Hola. Soy <strong>APOLO</strong>, tu asistente jurídico Pro. Selecciona un artículo del navegador para comenzar el análisis.');
+      if (window._i18nLoaded) pintar();
+      else document.addEventListener('i18n:ready', pintar, { once: true });
     }
 
     // ═══════════════════════════════════════════════════════════
