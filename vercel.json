@@ -27,6 +27,16 @@
       "source": "/mx/abogado.html",
       "destination": "/abogado.html?lang=es&pais=MX",
       "permanent": true
+    },
+    {
+      "source": "/cz/jurisprudencia.html",
+      "destination": "/jurisprudencia.html?lang=cs",
+      "permanent": true
+    },
+    {
+      "source": "/mx/jurisprudencia.html",
+      "destination": "/jurisprudencia.html?lang=es&pais=MX",
+      "permanent": true
     }
   ]
 }
