@@ -2733,8 +2733,6 @@
     }
 
     function abrirMermaidFullscreen(mermaidDiv) {
-      const svg = mermaidDiv.querySelector('svg');
-      if (!svg) return;
       document.getElementById('mermaid-fs-overlay')?.remove();
       let scale = 1;
       const overlay = document.createElement('div');
@@ -2753,12 +2751,14 @@
           </div>
         </div>`;
       document.body.appendChild(overlay);
-      const svgClone = svg.cloneNode(true);
-      svgClone.removeAttribute('width');
-      svgClone.removeAttribute('height');
-      svgClone.style.cssText = 'width:auto;height:auto;max-width:none;max-height:none;';
       const wrap = document.getElementById('mfs-wrap');
-      wrap.appendChild(svgClone);
+      wrap.innerHTML = mermaidDiv.innerHTML;
+      const svgEl = wrap.querySelector('svg');
+      if (svgEl) {
+        svgEl.removeAttribute('width');
+        svgEl.removeAttribute('height');
+        svgEl.style.cssText = 'display:block;width:100%;height:auto;max-width:none;';
+      }
       const applyZoom = () => { wrap.style.transform = `scale(${scale})`; };
       document.getElementById('mfs-zoomin') .onclick = () => { scale = Math.min(scale + 0.2, 6); applyZoom(); };
       document.getElementById('mfs-zoomout').onclick = () => { scale = Math.max(scale - 0.2, 0.2); applyZoom(); };
