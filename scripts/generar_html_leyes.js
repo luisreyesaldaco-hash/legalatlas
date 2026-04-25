@@ -38,9 +38,47 @@ function esc(str) {
     .replace(/"/g, '&quot;')
 }
 
-// Resalta referencias internas § XX como links y convierte \n en <br>
-function formatTexto(texto) {
-  return esc(texto)
+// Convierte el texto crudo del artículo en párrafos estructurados tipo zakonyprolidy:
+//  1. Quita el prefijo del número de artículo si aparece al inicio
+//     ("§ 1", "Artículo 1032.-", "Art. 5", etc.) — ya se muestra en .ley-art-num
+//  2. Parte en subcláusulas "(1)", "(2)", "(3a)" → <p class="ley-subsec">
+//  3. Si no hay subcláusulas → un <p class="ley-parrafo"> plano
+//  4. Preserva \n como <br> dentro de cada párrafo
+//  5. Linkea cross-refs "§ NN" (ya no el primero, porque se strippeó)
+function formatTexto(texto, numeroArticulo) {
+  let t = String(texto || '').trim()
+  if (!t) return ''
+
+  // 1. Strip prefijo del número de artículo
+  const numRaw = String(numeroArticulo || '').trim()
+  if (numRaw) {
+    const numEsc = numRaw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    t = t.replace(new RegExp('^' + numEsc + '\\s*'), '')
+  }
+
+  // 2. Split en marcadores de subcláusula "(N)" o "(Na)" precedidos por espacio o inicio
+  const segmentos = t.split(/\s+(?=\(\d+[a-z]?\)\s)/g)
+
+  // 3. Construir párrafos
+  const out = []
+  for (const seg of segmentos) {
+    if (!seg.trim()) continue
+    const m = seg.match(/^\((\d+[a-z]?)\)\s+([\s\S]*)$/)
+    if (m) {
+      out.push(
+        `<p class="ley-subsec"><span class="ley-subsec-num">(${esc(m[1])})</span> ${formatInline(m[2])}</p>`
+      )
+    } else {
+      out.push(`<p class="ley-parrafo">${formatInline(seg)}</p>`)
+    }
+  }
+
+  return out.join('\n  ')
+}
+
+// Inline: escape HTML + \n → <br> + cross-refs
+function formatInline(str) {
+  return esc(str)
     .replace(/\n/g, '<br>')
     .replace(/§\s*(\d+[a-z]*)/g, '<a href="#par-$1" class="ley-ref">§ $1</a>')
 }
@@ -116,7 +154,7 @@ async function generarHTMLLey(pais, ley, estado = '') {
     } else {
       html += `<div class="ley-articulo" id="${anchor}" ${dataAttrs}>\n`
       html += `  <span class="ley-art-num">${esc(art.numero_articulo)}</span>\n`
-      html += `  <div class="ley-art-texto">${formatTexto(art.texto_original)}</div>\n`
+      html += `  <div class="ley-art-texto">${formatTexto(art.texto_original, art.numero_articulo)}</div>\n`
       html += `</div>\n`
     }
   }

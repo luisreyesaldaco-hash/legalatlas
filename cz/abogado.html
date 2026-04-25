@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tesseum — Apolo Pro</title>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400;1,9..144,500&display=swap" rel="stylesheet">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <style>
     :root {
       --bg-deep:        #F4EFE4;
@@ -507,46 +507,72 @@
     }
     .ley-libro h2 {
       font-family: 'Fraunces', serif;
-      font-size: 11px;
-      letter-spacing: 0.12em;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--gold);
-      border-bottom: 1px solid rgba(143,106,42,0.2);
-      padding-bottom: 8px;
-      margin: 48px 0 20px;
+      border-bottom: 1px solid rgba(143,106,42,0.25);
+      padding-bottom: 10px;
+      margin: 56px 0 24px;
     }
     .ley-titulo h3 {
       font-family: 'Fraunces', serif;
-      font-size: 10px;
-      letter-spacing: 0.1em;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: rgba(143,106,42,0.55);
-      margin: 28px 0 12px;
+      color: var(--gold);
+      opacity: 0.85;
+      margin: 36px 0 16px;
     }
     .ley-capitulo h4 {
       font-family: 'Fraunces', serif;
-      font-size: 11px;
-      font-style: italic;
-      color: var(--text-muted);
-      margin: 18px 0 10px;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 24px 0 12px;
     }
     .ley-articulo {
-      margin-bottom: 22px;
+      margin-bottom: 28px;
       scroll-margin-top: 80px;
       padding: 2px 0;
     }
     .ley-art-num {
       font-family: 'Fraunces', serif;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
       letter-spacing: 0.06em;
       color: var(--gold);
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
     }
     .ley-art-texto {
+      font-family: 'Fraunces', serif;
+      font-size: 14.5px;
+      line-height: 1.75;
       color: var(--text-primary);
+      text-align: justify;
+      hyphens: auto;
+      -webkit-hyphens: auto;
     }
+    .ley-art-texto .ley-parrafo,
+    .ley-art-texto .ley-subsec {
+      margin: 0 0 10px 0;
+    }
+    .ley-art-texto .ley-subsec {
+      padding-left: 2.4em;
+      text-indent: -2.4em;
+    }
+    .ley-art-texto .ley-subsec-num {
+      display: inline-block;
+      min-width: 1.9em;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+    .ley-art-texto .ley-parrafo:last-child,
+    .ley-art-texto .ley-subsec:last-child { margin-bottom: 0; }
     .ley-art-zruseno {
       font-family: 'Fraunces', serif;
       font-size: 10px;
@@ -880,6 +906,16 @@
       max-width: 92%;
     }
     .msg-apolo .msg-sender { color: var(--gold); }
+    .msg-apolo .mermaid {
+      margin: 12px 0;
+      padding: 12px;
+      background: rgba(245,237,216,0.04);
+      border: 1px solid rgba(184,137,61,0.15);
+      border-radius: 8px;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .msg-apolo .mermaid svg { max-width: 100%; height: auto; }
     .msg-usuario {
       background: rgba(184,137,61,0.1);
       color: var(--text);
@@ -1085,63 +1121,6 @@
       background: #0d0d0f;
       color: rgba(245,237,216,0.88);
     }
-
-    /* Bookmarks */
-    .bookmarks-section {
-      padding: 10px 14px 4px;
-      border-bottom: 1px solid var(--border);
-    }
-    .bookmarks-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-family: 'Fraunces', serif;
-      font-size: 8px;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 8px;
-      opacity: 0.7;
-    }
-    .bookmarks-list {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .bookmark-chip {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 10px;
-      background: var(--gold-dim);
-      border: 1px solid rgba(184,137,61,0.2);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .bookmark-chip:hover { background: rgba(184,137,61,0.22); border-color: var(--gold); }
-    .bookmark-chip-label {
-      font-family: 'Fraunces', serif;
-      font-size: 8.5px;
-      letter-spacing: 0.08em;
-      color: var(--text-soft);
-      flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .bookmark-chip-del {
-      font-size: 10px;
-      color: var(--text-muted);
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0 2px;
-      transition: color 0.15s;
-      flex-shrink: 0;
-    }
-    .bookmark-chip-del:hover { color: var(--gold); }
 
     /* Bookmark toggle button */
     .btn-bookmark {
@@ -1368,7 +1347,6 @@
     :root:not([data-theme="dark"]) .art-link        { color: var(--text-secondary); }
     :root:not([data-theme="dark"]) .search-result-item { color: var(--text-secondary); }
     :root:not([data-theme="dark"]) .search-result-sub  { color: var(--text-muted); }
-    :root:not([data-theme="dark"]) .bookmark-chip-label { color: var(--text-secondary); }
 
     /* Chat derecho */
     :root:not([data-theme="dark"]) .ctx-segment     { border-color: var(--border); }
@@ -1497,12 +1475,6 @@
     <!-- ── LEFT: NAV ── -->
     <aside class="col-nav">
 
-      <!-- Mis Leyes (bookmarks) -->
-      <div class="bookmarks-section" id="bookmarks-section" style="display:none">
-        <div class="bookmarks-header" >☆ Moje zákony</div>
-        <div class="bookmarks-list" id="bookmarks-list"></div>
-      </div>
-
       <div class="nav-controls">
         <div>
           <div class="nav-label" >Země</div>
@@ -1526,10 +1498,10 @@
           <div class="nav-label" >Hledat článek</div>
           <div style="display:flex;gap:6px;align-items:center">
             <div class="search-row" style="flex:1">
-              <input type="text" id="inp-buscar" class="search-input" placeholder="Ej. 2273…" placeholder="Např. 2273…">
+              <input type="text" id="inp-buscar" class="search-input" placeholder="Např. 2273…">
               <button class="btn-search" onclick="buscarArticulo()">Ir</button>
             </div>
-            <button class="btn-bookmark" id="btn-bookmark" onclick="toggleBookmark()" title="Guardar en Mis Leyes" title="Uložit do Moje zákony" style="display:none">☆</button>
+            <button class="btn-bookmark" id="btn-bookmark" onclick="toggleBookmark()" title="Uložit do Moje zákony" style="display:none">☆</button>
           </div>
         </div>
       </div>
@@ -1616,7 +1588,6 @@
         <div class="chat-input-row">
           <textarea
             id="chat-input"
-            placeholder="Pregunta sobre este artículo…"
             placeholder="Zeptat se na tento článek…"
             rows="1"
             onkeydown="chatKeydown(event)"
@@ -1700,6 +1671,26 @@
         scroll.style.display    = 'none'
         leyFluidaCargada = true
 
+        // Limpiar número duplicado al inicio del texto (caso CZ: "§ 1" aparece en
+        // .ley-art-num y otra vez como primer <a> dentro de .ley-art-texto).
+        // Solo remueve si el anchor matchea exacto al número — no toca cross-refs.
+        container.querySelectorAll('.ley-articulo').forEach(art => {
+          const numEl   = art.querySelector('.ley-art-num');
+          const textoEl = art.querySelector('.ley-art-texto');
+          if (!numEl || !textoEl) return;
+          const numStr  = numEl.textContent.trim();
+          const first   = textoEl.firstElementChild;
+          if (first && first.tagName === 'A' && first.classList.contains('ley-ref')
+              && first.textContent.trim() === numStr) {
+            // Eliminar el <a> duplicado + un posible espacio/whitespace text node siguiente
+            const nextText = first.nextSibling;
+            first.remove();
+            if (nextText && nextText.nodeType === Node.TEXT_NODE) {
+              nextText.textContent = nextText.textContent.replace(/^\s+/, '');
+            }
+          }
+        });
+
         // Click en artículo → set contexto chat
         container.querySelectorAll('.ley-articulo').forEach(el => {
           el.style.cursor = 'pointer'
@@ -1717,7 +1708,7 @@
               ley
             }
             const ctx = document.getElementById('chat-context')
-            ctx.textContent = `Artículo activo: ${num}`
+            ctx.textContent = t('abogado.art.activo', { num }, `Artículo activo: ${num}`)
             ctx.classList.add('activo')
           })
         })
@@ -1773,7 +1764,6 @@
     // ═══════════════════════════════════════════════════════════
     document.addEventListener('DOMContentLoaded', () => {
       cargarPaises();
-      renderBookmarks();
       mostrarSaludo();
       autoResizeTextarea();
 
@@ -1858,30 +1848,8 @@
       try {
         const res  = await fetch(`/api/abogado?action=leyes&pais=${enc(paisActivo)}`);
         const json = await res.json();
-        const leyes = json.leyes || [];
-
-        selLey.innerHTML = `<option value="">${t('abogado.sel.ley', null, '— Selecciona ley —')}</option>`;
-
-        const federales = leyes.filter(l => l.tipo === 'federal');
-        const estatales = leyes.filter(l => l.tipo === 'estatal');
-
-        function agregarGrupo(label, lista) {
-          if (!lista.length) return;
-          const grp = document.createElement('optgroup');
-          grp.label = label;
-          lista.forEach(l => {
-            const opt = document.createElement('option');
-            opt.value = l.ley;
-            opt.textContent = l.ley;
-            opt.dataset.tipo = l.tipo;
-            grp.appendChild(opt);
-          });
-          selLey.appendChild(grp);
-        }
-
-        agregarGrupo(t('abogado.leyes.federales', null, 'Leyes Federales'), federales);
-        agregarGrupo(t('abogado.leyes.estatales', null, 'Leyes Estatales'), estatales);
-
+        leyesCacheadas = json.leyes || [];
+        renderSelLey();
         selLey.disabled = false;
       } catch (err) {
         selLey.innerHTML = '<option value="">Error al cargar</option>';
@@ -1891,8 +1859,53 @@
       selLey.onchange = onLeyChange;
     }
 
+    // Cache de leyes del país actual (evita refetch al renderizar).
+    let leyesCacheadas = [];
+
+    // Render lista plana: ★ favoritas primero, luego resto. Sin optgroups.
+    // Dedup: leyes favoriteadas sin estado se omiten del bloque general.
+    function renderSelLey() {
+      const selLey = document.getElementById('sel-ley');
+      if (!selLey) return;
+      const valorPrevio = selLey.value;
+
+      selLey.innerHTML = `<option value="">${t('abogado.sel.ley', null, '— Selecciona ley —')}</option>`;
+
+      const favoritos        = getBookmarks().filter(b => b.pais === paisActivo);
+      const leyesFavSinEst   = new Set(favoritos.filter(b => !b.estado).map(b => b.ley));
+
+      favoritos.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = '__fav__:' + b.id;
+        opt.textContent = '★ ' + (b.estado ? `${b.estado} · ${b.ley}` : b.ley);
+        selLey.appendChild(opt);
+      });
+
+      const resto = leyesCacheadas.filter(l => !leyesFavSinEst.has(l.ley));
+
+      if (favoritos.length && resto.length) {
+        const sep = document.createElement('option');
+        sep.disabled = true;
+        sep.textContent = '──────────';
+        selLey.appendChild(sep);
+      }
+
+      resto.forEach(l => {
+        const opt = document.createElement('option');
+        opt.value = l.ley;
+        opt.textContent = l.ley;
+        opt.dataset.tipo = l.tipo;
+        selLey.appendChild(opt);
+      });
+
+      // Preservar selección previa si todavía existe una option con ese value
+      if (valorPrevio && selLey.querySelector(`option[value="${CSS.escape(valorPrevio)}"]`)) {
+        selLey.value = valorPrevio;
+      }
+    }
+
     async function onLeyChange() {
-      leyActiva    = document.getElementById('sel-ley').value;
+      const rawValue = document.getElementById('sel-ley').value;
       estadoActivo = '';
       articuloActivo    = null;
       capituloArticulos = [];
@@ -1903,14 +1916,32 @@
       selEstado.innerHTML = '<option value="">Todos los estados…</option>';
       limpiarArbol();
       ocultarResultadosBusqueda();
+
+      if (!rawValue) {
+        leyActiva = '';
+        actualizarBookmarkBtn();
+        return;
+      }
+
+      // Selección desde "★ Favoritas" — decodificar bookmark
+      let bookmarkPreselect = null;
+      if (rawValue.startsWith('__fav__:')) {
+        const id = rawValue.slice('__fav__:'.length);
+        bookmarkPreselect = getBookmarks().find(b => b.id === id);
+        if (!bookmarkPreselect) { leyActiva = ''; actualizarBookmarkBtn(); return; }
+        leyActiva = bookmarkPreselect.ley;
+      } else {
+        leyActiva = rawValue;
+      }
+
       actualizarBookmarkBtn();
 
-      if (!leyActiva) return;
-
-      // Detectar tipo desde el option seleccionado (data-tipo)
+      // Detectar tipo: de bookmark (tiene estado → estatal) o del option (data-tipo)
       const selLeyEl    = document.getElementById('sel-ley');
       const optSelected = selLeyEl.options[selLeyEl.selectedIndex];
-      const tipoLey     = optSelected?.dataset?.tipo || 'federal';
+      const tipoLey     = bookmarkPreselect
+        ? (bookmarkPreselect.estado ? 'estatal' : 'federal')
+        : (optSelected?.dataset?.tipo || 'federal');
 
       if (tipoLey === 'estatal') {
         try {
@@ -1926,6 +1957,11 @@
             });
             grupoEst.style.display = 'block';
             selEstado.onchange = onEstadoChange;
+            if (bookmarkPreselect?.estado) {
+              selEstado.value = bookmarkPreselect.estado;
+              estadoActivo    = bookmarkPreselect.estado;
+              actualizarBookmarkBtn();
+            }
           }
         } catch (err) {
           console.warn('[onLeyChange] estados_por_ley falló:', err);
@@ -2262,7 +2298,7 @@
         if (leyFluidaCargada) {
           resaltarArticulo(art.numero_articulo)
           const ctx = document.getElementById('chat-context')
-          ctx.textContent = `Artículo activo: ${art.numero_articulo}`
+          ctx.textContent = t('abogado.art.activo', { num: art.numero_articulo }, `Artículo activo: ${art.numero_articulo}`)
           ctx.classList.add('activo')
           historialChat = []
           document.getElementById('chat-mensajes').innerHTML = ''
@@ -2289,12 +2325,12 @@
         mostrarVistaArticulo();
 
         const ctx = document.getElementById('chat-context');
-        ctx.textContent = `Artículo activo: ${art.numero_articulo}`;
+        ctx.textContent = t('abogado.art.activo', { num: art.numero_articulo }, `Artículo activo: ${art.numero_articulo}`);
         ctx.classList.add('activo');
 
         historialChat = [];
         document.getElementById('chat-mensajes').innerHTML = '';
-        agregarMensaje('apolo', `He cargado el <strong>${art.numero_articulo}</strong>. Puedes preguntarme sobre su contenido, implicaciones o cómo aplicarlo en casos concretos.`);
+        agregarMensaje('apolo', t('abogado.art.cargado', { art: art.numero_articulo }, `He cargado el <strong>${art.numero_articulo}</strong>. Puedes preguntarme sobre su contenido, implicaciones o cómo aplicarlo en casos concretos.`));
 
       } catch (err) {
         console.error('[loadArticulo]', err);
@@ -2433,15 +2469,19 @@
 
     function activarModoProceso() {
       if (!leyActiva) {
-        alert('Primero selecciona una ley en el panel izquierdo.');
+        alert(t('abogado.alert.selecciona_ley', null, 'Primero selecciona una ley en el panel izquierdo.'));
         return;
       }
+      const input = document.getElementById('chat-input');
+      // Captura el placeholder original una sola vez (antes de cualquier override)
+      if (!input.dataset.phOriginal) input.dataset.phOriginal = input.placeholder;
+
       modoProcesoActivo = !modoProcesoActivo;
       const btn = document.getElementById('btn-proceso-abogado');
       btn.classList.toggle('activo', modoProcesoActivo);
-      document.getElementById('chat-input').placeholder = modoProcesoActivo
-        ? '⟳ Modo proceso: ¿Cómo se tramita...?'
-        : 'Pregunta sobre este artículo…';
+      input.placeholder = modoProcesoActivo
+        ? t('abogado.chat.proceso', null, '⟳ Modo proceso: ¿Cómo se tramita...?')
+        : input.dataset.phOriginal;
     }
 
     async function enviarChat() {
@@ -2481,7 +2521,18 @@
             const capInfo = data.capitulos_encontrados
               ?.map(c => `<span style="font-family:'Fraunces',serif;font-size:9px;color:var(--gold);background:var(--gold-dim);border-radius:20px;padding:2px 8px;margin-right:4px;">${c.capitulo}</span>`)
               .join('') || '';
-            const html = `<div style="margin-bottom:10px;">${capInfo}</div>${data.flujo.replace(/\n/g, '<br>')}`;
+            // 1) Wrap defensivo si el LLM emitió Mermaid sin <div class="mermaid">
+            // 2) Markdown básico (**bold**, *italic*, `code`) solo fuera de bloques Mermaid
+            // 3) Convertir \n → <br> solo fuera de bloques Mermaid (sus newlines son sintaxis)
+            const flujoRaw  = envolverMermaidSinWrapper(data.flujo);
+            const flujoHtml = flujoRaw
+              .split(/(<div class="mermaid">[\s\S]*?<\/div>)/g)
+              .map(chunk => {
+                if (chunk.startsWith('<div class="mermaid">')) return chunk;
+                return formatMarkdownBasico(chunk).replace(/\n/g, '<br>');
+              })
+              .join('');
+            const html = `<div style="margin-bottom:10px;">${capInfo}</div>${flujoHtml}`;
             agregarMensaje('apolo', html, null, []);
             historialChat.push({ role: 'assistant', content: data.flujo });
           } else {
@@ -2500,7 +2551,8 @@
           eliminarMensaje(typingId);
 
           if (json.respuesta) {
-            const html = json.respuesta.draftHtml || json.respuesta.resumen || 'Sin respuesta';
+            const rawHtml = json.respuesta.draftHtml || json.respuesta.resumen || 'Sin respuesta';
+            const html = envolverMermaidSinWrapper(rawHtml);
             agregarMensaje('apolo', html, null, json.respuesta.articulos || []);
             historialChat.push({ role: 'assistant', content: html });
           } else if (json.error) {
@@ -2534,6 +2586,8 @@
           inner += `<div class="art-tags-row">${articulos.map(a => `<span class="art-tag" onclick="resaltarArticulo('§ ${a}')" style="cursor:pointer">§ ${a}</span>`).join('')}</div>`;
         }
         div.innerHTML = inner;
+        // Render Mermaid diagrams inline si el LLM los emitió
+        renderMermaidEnNodo(div);
         // Auto-scroll al primer artículo citado si ley fluida está activa
         if (leyFluidaCargada && articulos && articulos.length > 0) {
           setTimeout(() => resaltarArticulo(`§ ${articulos[0]}`), 300)
@@ -2552,8 +2606,95 @@
       if (el) el.remove();
     }
 
+    // Si el LLM olvidó envolver el código Mermaid en <div class="mermaid">,
+    // lo detectamos por keyword y lo envolvemos nosotros. Defensivo.
+    function envolverMermaidSinWrapper(html) {
+      if (/<div[^>]*class="[^"]*\bmermaid\b[^"]*"/i.test(html)) return html;
+      const idx = html.search(/(?:flowchart\s+(?:TD|LR|TB|BT|RL)|sequenceDiagram|stateDiagram(?:-v2)?|timeline\b|pie\b|gantt\b|classDiagram|erDiagram|journey\b|mindmap\b)/i);
+      if (idx < 0) return html;
+      const before = html.slice(0, idx).replace(/\s+$/, '');
+      const remaining = html.slice(idx);
+      // Fin del bloque Mermaid: doble salto de línea (cambia a párrafo de prosa) o fin de string
+      const endMatch = remaining.search(/\n\s*\n/);
+      const mermaidText = endMatch > 0 ? remaining.slice(0, endMatch) : remaining;
+      const after       = endMatch > 0 ? remaining.slice(endMatch) : '';
+      let mermaidBlock = mermaidText.trim()
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<\/?(?:p|div|span)[^>]*>/gi, '\n');
+      mermaidBlock = reformatearMermaid(mermaidBlock);
+      return before + '\n\n<div class="mermaid">\n' + mermaidBlock + '\n</div>\n\n' + after.replace(/^\s+/, '');
+    }
+
+    // Gemini suele emitir el flowchart en una sola línea. Mermaid necesita
+    // cada edge en su propia línea. Heurísticas:
+    //  1. Separa el directive (flowchart TD) del primer nodo con \n.
+    //  2. Después de ], }, ) seguido de espacio y un token (palabra/letra), inserta \n.
+    function reformatearMermaid(src) {
+      const dirRe = /^((?:flowchart\s+(?:TD|LR|TB|BT|RL)|sequenceDiagram|stateDiagram(?:-v2)?|timeline|pie|gantt|classDiagram|erDiagram|journey|mindmap))\s+/i;
+      const m = src.match(dirRe);
+      if (!m) return src;
+      const directive = m[1];
+      let body = src.slice(m[0].length);
+      // Insertar newline después de cada bracket de cierre seguido de espacio + identificador
+      body = body.replace(/([\]\}\)])\s+(?=[A-Za-z_]\w*(?:\s|[\[\{\(\-]))/g, '$1\n  ');
+      // Envolver labels de nodos en "quotes" — acepta paréntesis, ?, :, etc. sin romper el parser
+      // Aplica a nodos [rect], {rhombus} y (rounded).
+      body = body.replace(/(\b[A-Za-z_]\w*)\[([^"\]\n]{1,200})\]/g,
+        (_, id, label) => id + '["' + label.trim().replace(/"/g, '#quot;') + '"]');
+      body = body.replace(/(\b[A-Za-z_]\w*)\{([^"}\n]{1,200})\}/g,
+        (_, id, label) => id + '{"' + label.trim().replace(/"/g, '#quot;') + '"}');
+      body = body.replace(/(\b[A-Za-z_]\w*)\(([^"\)\n]{1,200})\)/g,
+        (_, id, label) => id + '("' + label.trim().replace(/"/g, '#quot;') + '")');
+      return directive + '\n  ' + body.trim();
+    }
+
+    // Markdown básico → HTML. Cubre **bold**, *italic*, `code` y bullets `- ` / `* ` a inicio de línea.
+    // Se aplica SOLO a chunks fuera de <div class="mermaid"> para no corromper la sintaxis.
+    function formatMarkdownBasico(texto) {
+      return texto
+        .replace(/\*\*([^*\n][^*]*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/(^|[\s(])\*([^*\s][^*\n]*?)\*(?=[\s),.;:!?]|$)/g, '$1<em>$2</em>')
+        .replace(/`([^`\n]+)`/g, '<code>$1</code>');
+    }
+
+    // Renderiza bloques <div class="mermaid"> dentro de un nodo ya insertado en el DOM.
+    // El LLM los emite como código Mermaid plano — Mermaid los reemplaza por un <svg>.
+    async function renderMermaidEnNodo(nodo) {
+      if (!nodo || !window.mermaid) return;
+      // IMPORTANTE: no usar data-processed como marcador propio — Mermaid lo usa
+      // internamente para saltar elementos ya procesados. Usamos data-lstate.
+      const bloques = nodo.querySelectorAll('.mermaid:not([data-lstate])');
+      if (!bloques.length) return;
+      for (const b of bloques) {
+        // Reformatear: normaliza line breaks + envuelve labels en "quotes" para
+        // tolerar paréntesis, ?, §, etc. Aplica siempre (tanto si vino envuelto
+        // por el LLM como si lo envolvió el wrapper defensivo).
+        const src = reformatearMermaid(b.textContent.trim());
+        b.textContent = src;
+        b.dataset.lstate = 'pending';
+        try {
+          await window.mermaid.run({ nodes: [b] });
+          b.dataset.lstate = 'ok';
+        } catch (err) {
+          console.warn('[mermaid] falló:', err?.message || err);
+          console.warn('[mermaid] source:', src);
+          b.dataset.lstate = 'error';
+          b.style.opacity = '0.8';
+          b.style.fontSize = '11px';
+          b.style.fontFamily = 'monospace';
+          b.style.whiteSpace = 'pre-wrap';
+          b.style.textAlign = 'left';
+          b.innerHTML = '<div style="color:var(--gold);font-family:\'Fraunces\',serif;font-size:10px;margin-bottom:6px;opacity:0.7;">⚠ Diagrama no renderizable — ' + (err?.message || '').slice(0, 80) + '</div>' + src;
+        }
+      }
+    }
+
     function mostrarSaludo() {
-      agregarMensaje('apolo', window.t ? window.t('abogado.saludo', null, 'Hola. Soy <strong>APOLO</strong>, tu asistente jurídico Pro. Selecciona un artículo del navegador para comenzar el análisis.') : 'Hola. Soy <strong>APOLO</strong>, tu asistente jurídico Pro. Selecciona un artículo del navegador para comenzar el análisis.');
+      // Esperar a que i18n termine de cargar su JSON antes de pintar el saludo,
+      // si no window.t() devuelve el fallback (español) aunque el lang sea cs.
+      const pintar = () => agregarMensaje('apolo', window.t ? window.t('abogado.saludo', null, 'Hola. Soy <strong>APOLO</strong>, tu asistente jurídico Pro. Selecciona un artículo del navegador para comenzar el análisis.') : 'Hola. Soy <strong>APOLO</strong>, tu asistente jurídico Pro. Selecciona un artículo del navegador para comenzar el análisis.');
+      if (window._i18nLoaded) pintar();
+      else document.addEventListener('i18n:ready', pintar, { once: true });
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -2628,89 +2769,7 @@
       }
       saveBookmarks(lista);
       actualizarBookmarkBtn();
-      renderBookmarks();
-    }
-
-    function renderBookmarks() {
-      const lista   = getBookmarks();
-      const section = document.getElementById('bookmarks-section');
-      const container = document.getElementById('bookmarks-list');
-      if (lista.length === 0) { section.style.display = 'none'; return; }
-      section.style.display = 'block';
-      container.innerHTML = '';
-      lista.forEach(b => {
-        const chip = document.createElement('div');
-        chip.className = 'bookmark-chip';
-        chip.innerHTML = `
-          <span class="bookmark-chip-label">${escapeHtml(b.label)}</span>
-          <button class="bookmark-chip-del" title="Eliminar" onclick="eliminarBookmark('${escapeHtml(b.id)}');event.stopPropagation()">✕</button>`;
-        chip.addEventListener('click', () => aplicarBookmark(b));
-        container.appendChild(chip);
-      });
-    }
-
-    function eliminarBookmark(id) {
-      const lista = getBookmarks().filter(b => b.id !== id);
-      saveBookmarks(lista);
-      renderBookmarks();
-      actualizarBookmarkBtn();
-    }
-
-    async function aplicarBookmark(b) {
-      // Set selects without triggering full cascade manually
-      const selPais   = document.getElementById('sel-pais');
-      const selLey    = document.getElementById('sel-ley');
-      const selEstado = document.getElementById('sel-estado');
-
-      // Set pais
-      selPais.value = b.pais;
-      paisActivo    = b.pais;
-
-      // Load leyes for this pais
-      selLey.innerHTML = `<option value="">${t('abogado.cargando', null, 'Cargando…')}</option>`;
-      selLey.disabled  = true;
-      try {
-        const res  = await fetch(`/api/abogado?action=leyes&pais=${enc(b.pais)}`);
-        const json = await res.json();
-        selLey.innerHTML = `<option value="">${t('abogado.sel.ley', null, '— Selecciona ley —')}</option>`;
-        (json.leyes || []).forEach(l => {
-          const opt = document.createElement('option');
-          opt.value = l; opt.textContent = l;
-          selLey.appendChild(opt);
-        });
-        selLey.disabled = false;
-        selLey.value    = b.ley;
-        selLey.onchange = onLeyChange;
-      } catch (err) { console.error('[aplicarBookmark]', err); }
-
-      leyActiva = b.ley;
-
-      // Handle estado
-      const grupoEst = document.getElementById('grupo-estado');
-      if (b.estado) {
-        try {
-          const res  = await fetch(`/api/abogado?action=estados_por_ley&pais=${enc(b.pais)}&ley=${enc(b.ley)}`);
-          const json = await res.json();
-          selEstado.innerHTML = '<option value="">Todos los estados…</option>';
-          (json.estados || []).forEach(e => {
-            const opt = document.createElement('option');
-            opt.value = e; opt.textContent = e;
-            selEstado.appendChild(opt);
-          });
-          grupoEst.style.display = 'block';
-          selEstado.value  = b.estado;
-          selEstado.onchange = onEstadoChange;
-        } catch (err) { console.warn('[aplicarBookmark estados]', err); }
-        estadoActivo = b.estado;
-      } else {
-        grupoEst.style.display = 'none';
-        estadoActivo = '';
-      }
-
-      actualizarBookmarkBtn();
-      limpiarArbol();
-      ocultarResultadosBusqueda();
-      await cargarNivelesPrimarios();
+      renderSelLey();
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -2728,6 +2787,26 @@
   </script>
 
   <script src="/locales/i18n.js"></script>
+
+  <!-- Mermaid (diagramas inline en respuestas del chat) — startOnLoad false: renderizamos manualmente con mermaid.run() -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    const tema = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'base';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: tema,
+      securityLevel: 'loose',
+      fontFamily: 'Fraunces, serif',
+      themeVariables: {
+        primaryColor: '#f5edd8',
+        primaryTextColor: '#2a211a',
+        primaryBorderColor: '#b8893d',
+        lineColor: '#8f6a2a',
+        tertiaryColor: '#ebe0c8'
+      }
+    });
+    window.mermaid = mermaid;
+  </script>
 <script>
 function toggleTema() {
   var t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';

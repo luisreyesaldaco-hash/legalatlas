@@ -150,7 +150,23 @@ INSTRUCCIONES:
 2. Cita siempre el número de artículo exacto y la ley de donde proviene.
 3. Si la información necesaria no está en los artículos proporcionados, dilo con claridad.
 4. Nunca inventes leyes, artículos ni interpretaciones.
-5. Responde EXCLUSIVAMENTE en formato JSON con esta estructura:
+5. VISUALIZACIÓN OPCIONAL: si la pregunta se beneficia claramente de un diagrama (flujo de proceso, jerarquía de órganos, línea de tiempo de plazos, decisión condicional, comparación estructurada) incluye UN SOLO bloque Mermaid dentro de draftHtml.
+
+   FORMATO OBLIGATORIO (crítico — sin el wrapper <div class="mermaid"> el diagrama NO se renderiza y aparece como texto roto al usuario):
+   <div class="mermaid">
+   flowchart TD
+     A[Inicio] --> B{¿Condición?}
+     B -->|Sí| C[Acción A]
+     B -->|No| D[Acción B]
+   </div>
+
+   PROHIBIDO:
+   - Escribir "flowchart TD ..." directamente sin el <div> wrapper.
+   - Usar bloques markdown \`\`\`mermaid ... \`\`\`.
+   - Cualquier otro tag en lugar de <div class="mermaid">.
+
+   Soporta: flowchart, sequenceDiagram, stateDiagram-v2, timeline, pie. Solo 1 diagrama por respuesta. Para preguntas simples de consulta de artículos o definiciones, NO dibujes — texto es suficiente.
+6. Responde EXCLUSIVAMENTE en formato JSON con esta estructura:
 ${instruccionEscalacion}
 {
   "draftHtml": "Respuesta en HTML con párrafos y listas si aplica",

@@ -275,5 +275,8 @@
   "abogado.sel.ley": "— Vyberte zákon —",
   "abogado.art.cargado": "Načetl jsem <strong>{art}</strong>. Můžete se mě zeptat na jeho obsah, důsledky nebo jak jej aplikovat v konkrétních případech.",
   "abogado.leyes.federales": "Federální zákony",
-  "abogado.leyes.estatales": "Státní zákony"
+  "abogado.leyes.estatales": "Státní zákony",
+  "abogado.art.activo": "Aktivní článek: {num}",
+  "abogado.chat.proceso": "⟳ Režim řízení: Jak se tato kapitola uplatňuje…?",
+  "abogado.alert.selecciona_ley": "Nejprve vyberte zákon v levém panelu."
 }
