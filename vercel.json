@@ -17,6 +17,16 @@
       "has": [{ "type": "host", "value": "www.legalatlas.io" }],
       "destination": "https://www.tesseum.com/$1",
       "permanent": true
+    },
+    {
+      "source": "/cz/abogado.html",
+      "destination": "/abogado.html?lang=cs",
+      "permanent": true
+    },
+    {
+      "source": "/mx/abogado.html",
+      "destination": "/abogado.html?lang=es&pais=MX",
+      "permanent": true
     }
   ]
 }

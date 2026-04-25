@@ -906,6 +906,16 @@
       0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
       30%            { transform: translateY(-5px); opacity: 1; }
     }
+    .msg-apolo .mermaid {
+      margin: 12px 0;
+      padding: 12px;
+      background: rgba(245,237,216,0.04);
+      border: 1px solid rgba(184,137,61,0.15);
+      border-radius: 8px;
+      text-align: center;
+      overflow-x: auto;
+    }
+    .msg-apolo .mermaid svg { max-width: 100%; height: auto; }
 
     /* Chat input */
     .chat-input-area {
@@ -1789,10 +1799,14 @@
           opt.textContent = ENDONYMS[p] || p;
           sel.appendChild(opt);
         });
-        // Auto-select CZ when lang=cs, else no default
-        const _abLang = localStorage.getItem('atlas_lang') || new URLSearchParams(location.search).get('lang') || '';
-        if (_abLang === 'cs' && paises.includes('CZ')) {
-          sel.value = 'CZ';
+        // Auto-select country from ?pais= param, or derive from ?lang= for 1:1 languages
+        const _params  = new URLSearchParams(location.search);
+        const _abLang  = _params.get('lang') || localStorage.getItem('atlas_lang') || '';
+        const _abPais  = _params.get('pais') || '';
+        const _langMap = { cs: 'CZ', sk: 'SK', fr: 'FR' };
+        const _autoSelect = _abPais || _langMap[_abLang] || '';
+        if (_autoSelect && paises.includes(_autoSelect)) {
+          sel.value = _autoSelect;
           setTimeout(() => sel.dispatchEvent(new Event('change')), 0);
         }
       } catch (err) {
@@ -2448,15 +2462,17 @@
 
     function activarModoProceso() {
       if (!leyActiva) {
-        alert('Primero selecciona una ley en el panel izquierdo.');
+        alert(t('abogado.alert.selecciona_ley', null, 'Primero selecciona una ley en el panel izquierdo.'));
         return;
       }
+      const input = document.getElementById('chat-input');
+      if (!input.dataset.phOriginal) input.dataset.phOriginal = input.placeholder;
       modoProcesoActivo = !modoProcesoActivo;
       const btn = document.getElementById('btn-proceso-abogado');
       btn.classList.toggle('activo', modoProcesoActivo);
-      document.getElementById('chat-input').placeholder = modoProcesoActivo
-        ? '⟳ Modo proceso: ¿Cómo se tramita...?'
-        : 'Pregunta sobre este artículo…';
+      input.placeholder = modoProcesoActivo
+        ? t('abogado.chat.proceso', null, '⟳ Modo proceso: ¿Cómo se tramita...?')
+        : input.dataset.phOriginal;
     }
 
     async function enviarChat() {
@@ -2496,7 +2512,15 @@
             const capInfo = data.capitulos_encontrados
               ?.map(c => `<span style="font-family:'Fraunces',serif;font-size:9px;color:var(--gold);background:var(--gold-dim);border-radius:20px;padding:2px 8px;margin-right:4px;">${c.capitulo}</span>`)
               .join('') || '';
-            const html = `<div style="margin-bottom:10px;">${capInfo}</div>${data.flujo.replace(/\n/g, '<br>')}`;
+            const flujoRaw  = envolverMermaidSinWrapper(data.flujo);
+            const flujoHtml = flujoRaw
+              .split(/(<div class="mermaid">[\s\S]*?<\/div>)/g)
+              .map(chunk => {
+                if (chunk.startsWith('<div class="mermaid">')) return chunk;
+                return formatMarkdownBasico(chunk).replace(/\n/g, '<br>');
+              })
+              .join('');
+            const html = `<div style="margin-bottom:10px;">${capInfo}</div>${flujoHtml}`;
             agregarMensaje('apolo', html, null, []);
             historialChat.push({ role: 'assistant', content: data.flujo });
           } else {
@@ -2515,7 +2539,8 @@
           eliminarMensaje(typingId);
 
           if (json.respuesta) {
-            const html = json.respuesta.draftHtml || json.respuesta.resumen || 'Sin respuesta';
+            const rawHtml = json.respuesta.draftHtml || json.respuesta.resumen || 'Sin respuesta';
+            const html = envolverMermaidSinWrapper(rawHtml);
             agregarMensaje('apolo', html, null, json.respuesta.articulos || []);
             historialChat.push({ role: 'assistant', content: html });
           } else if (json.error) {
@@ -2549,6 +2574,7 @@
           inner += `<div class="art-tags-row">${articulos.map(a => `<span class="art-tag" onclick="resaltarArticulo('§ ${a}')" style="cursor:pointer">§ ${a}</span>`).join('')}</div>`;
         }
         div.innerHTML = inner;
+        renderMermaidEnNodo(div);
         // Auto-scroll al primer artículo citado si ley fluida está activa
         if (leyFluidaCargada && articulos && articulos.length > 0) {
           setTimeout(() => resaltarArticulo(`§ ${articulos[0]}`), 300)
@@ -2565,6 +2591,70 @@
     function eliminarMensaje(id) {
       const el = document.getElementById(id);
       if (el) el.remove();
+    }
+
+    function envolverMermaidSinWrapper(html) {
+      if (/<div[^>]*class="[^"]*\bmermaid\b[^"]*"/i.test(html)) return html;
+      const idx = html.search(/(?:flowchart\s+(?:TD|LR|TB|BT|RL)|sequenceDiagram|stateDiagram(?:-v2)?|timeline\b|pie\b|gantt\b|classDiagram|erDiagram|journey\b|mindmap\b)/i);
+      if (idx < 0) return html;
+      const before = html.slice(0, idx).replace(/\s+$/, '');
+      const remaining = html.slice(idx);
+      const endMatch = remaining.search(/\n\s*\n/);
+      const mermaidText = endMatch > 0 ? remaining.slice(0, endMatch) : remaining;
+      const after       = endMatch > 0 ? remaining.slice(endMatch) : '';
+      let mermaidBlock = mermaidText.trim()
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<\/?(?:p|div|span)[^>]*>/gi, '\n');
+      mermaidBlock = reformatearMermaid(mermaidBlock);
+      return before + '\n\n<div class="mermaid">\n' + mermaidBlock + '\n</div>\n\n' + after.replace(/^\s+/, '');
+    }
+
+    function reformatearMermaid(src) {
+      const dirRe = /^((?:flowchart\s+(?:TD|LR|TB|BT|RL)|sequenceDiagram|stateDiagram(?:-v2)?|timeline|pie|gantt|classDiagram|erDiagram|journey|mindmap))\s+/i;
+      const m = src.match(dirRe);
+      if (!m) return src;
+      const directive = m[1];
+      let body = src.slice(m[0].length);
+      body = body.replace(/([\]\}\)])\s+(?=[A-Za-z_]\w*(?:\s|[\[\{\(\-]))/g, '$1\n  ');
+      body = body.replace(/(\b[A-Za-z_]\w*)\[([^"\]\n]{1,200})\]/g,
+        (_, id, label) => id + '["' + label.trim().replace(/"/g, '#quot;') + '"]');
+      body = body.replace(/(\b[A-Za-z_]\w*)\{([^"}\n]{1,200})\}/g,
+        (_, id, label) => id + '{"' + label.trim().replace(/"/g, '#quot;') + '"}');
+      body = body.replace(/(\b[A-Za-z_]\w*)\(([^"\)\n]{1,200})\)/g,
+        (_, id, label) => id + '("' + label.trim().replace(/"/g, '#quot;') + '")');
+      return directive + '\n  ' + body.trim();
+    }
+
+    function formatMarkdownBasico(texto) {
+      return texto
+        .replace(/\*\*([^*\n][^*]*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/(^|[\s(])\*([^*\s][^*\n]*?)\*(?=[\s),.;:!?]|$)/g, '$1<em>$2</em>')
+        .replace(/`([^`\n]+)`/g, '<code>$1</code>');
+    }
+
+    async function renderMermaidEnNodo(nodo) {
+      if (!nodo || !window.mermaid) return;
+      const bloques = nodo.querySelectorAll('.mermaid:not([data-lstate])');
+      if (!bloques.length) return;
+      for (const b of bloques) {
+        const src = reformatearMermaid(b.textContent.trim());
+        b.textContent = src;
+        b.dataset.lstate = 'pending';
+        try {
+          await window.mermaid.run({ nodes: [b] });
+          b.dataset.lstate = 'ok';
+        } catch (err) {
+          console.warn('[mermaid] falló:', err?.message || err);
+          console.warn('[mermaid] source:', src);
+          b.dataset.lstate = 'error';
+          b.style.opacity = '0.8';
+          b.style.fontSize = '11px';
+          b.style.fontFamily = 'monospace';
+          b.style.whiteSpace = 'pre-wrap';
+          b.style.textAlign = 'left';
+          b.innerHTML = '<div style="color:var(--gold);font-family:\'Fraunces\',serif;font-size:10px;margin-bottom:6px;opacity:0.7;">⚠ Diagrama no renderizable — ' + (err?.message || '').slice(0, 80) + '</div>' + src;
+        }
+      }
     }
 
     function mostrarSaludo() {
@@ -2795,5 +2885,25 @@ async function verificarAcceso() {
 verificarAcceso()
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
+
+  <!-- Mermaid — startOnLoad false: renderizamos manualmente con mermaid.run() -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    const tema = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'base';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: tema,
+      securityLevel: 'loose',
+      fontFamily: 'Fraunces, serif',
+      themeVariables: {
+        primaryColor: '#f5edd8',
+        primaryTextColor: '#2a211a',
+        primaryBorderColor: '#b8893d',
+        lineColor: '#8f6a2a',
+        tertiaryColor: '#ebe0c8'
+      }
+    });
+    window.mermaid = mermaid;
+  </script>
 </body>
 </html>
