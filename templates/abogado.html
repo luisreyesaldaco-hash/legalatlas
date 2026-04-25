@@ -511,8 +511,8 @@
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--gold);
-      border-bottom: 1px solid rgba(143,106,42,0.25);
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border);
       padding-bottom: 10px;
       margin: 56px 0 24px;
     }
@@ -522,8 +522,7 @@
       font-weight: 600;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: var(--gold);
-      opacity: 0.85;
+      color: var(--text-secondary);
       margin: 36px 0 16px;
     }
     .ley-capitulo h4 {
@@ -1862,8 +1861,7 @@
     // Cache de leyes del país actual (evita refetch al renderizar).
     let leyesCacheadas = [];
 
-    // Render lista plana: ★ favoritas primero, luego resto. Sin optgroups.
-    // Dedup: leyes favoriteadas sin estado se omiten del bloque general.
+    // Render lista plana: ★ favoritas primero (misma entrada, no duplicado), luego resto.
     function renderSelLey() {
       const selLey = document.getElementById('sel-ley');
       if (!selLey) return;
@@ -1871,19 +1869,22 @@
 
       selLey.innerHTML = `<option value="">${t('abogado.sel.ley', null, '— Selecciona ley —')}</option>`;
 
-      const favoritos        = getBookmarks().filter(b => b.pais === paisActivo);
-      const leyesFavSinEst   = new Set(favoritos.filter(b => !b.estado).map(b => b.ley));
+      const leyesFav = new Set(
+        getBookmarks().filter(b => b.pais === paisActivo).map(b => b.ley)
+      );
 
-      favoritos.forEach(b => {
+      const favs  = leyesCacheadas.filter(l => leyesFav.has(l.ley));
+      const resto = leyesCacheadas.filter(l => !leyesFav.has(l.ley));
+
+      favs.forEach(l => {
         const opt = document.createElement('option');
-        opt.value = '__fav__:' + b.id;
-        opt.textContent = '★ ' + (b.estado ? `${b.estado} · ${b.ley}` : b.ley);
+        opt.value = l.ley;
+        opt.textContent = '★ ' + l.ley;
+        opt.dataset.tipo = l.tipo;
         selLey.appendChild(opt);
       });
 
-      const resto = leyesCacheadas.filter(l => !leyesFavSinEst.has(l.ley));
-
-      if (favoritos.length && resto.length) {
+      if (favs.length && resto.length) {
         const sep = document.createElement('option');
         sep.disabled = true;
         sep.textContent = '──────────';
@@ -1898,7 +1899,6 @@
         selLey.appendChild(opt);
       });
 
-      // Preservar selección previa si todavía existe una option con ese value
       if (valorPrevio && selLey.querySelector(`option[value="${CSS.escape(valorPrevio)}"]`)) {
         selLey.value = valorPrevio;
       }
@@ -1923,25 +1923,12 @@
         return;
       }
 
-      // Selección desde "★ Favoritas" — decodificar bookmark
-      let bookmarkPreselect = null;
-      if (rawValue.startsWith('__fav__:')) {
-        const id = rawValue.slice('__fav__:'.length);
-        bookmarkPreselect = getBookmarks().find(b => b.id === id);
-        if (!bookmarkPreselect) { leyActiva = ''; actualizarBookmarkBtn(); return; }
-        leyActiva = bookmarkPreselect.ley;
-      } else {
-        leyActiva = rawValue;
-      }
-
+      leyActiva = rawValue;
       actualizarBookmarkBtn();
 
-      // Detectar tipo: de bookmark (tiene estado → estatal) o del option (data-tipo)
       const selLeyEl    = document.getElementById('sel-ley');
       const optSelected = selLeyEl.options[selLeyEl.selectedIndex];
-      const tipoLey     = bookmarkPreselect
-        ? (bookmarkPreselect.estado ? 'estatal' : 'federal')
-        : (optSelected?.dataset?.tipo || 'federal');
+      const tipoLey     = optSelected?.dataset?.tipo || 'federal';
 
       if (tipoLey === 'estatal') {
         try {
@@ -1957,9 +1944,10 @@
             });
             grupoEst.style.display = 'block';
             selEstado.onchange = onEstadoChange;
-            if (bookmarkPreselect?.estado) {
-              selEstado.value = bookmarkPreselect.estado;
-              estadoActivo    = bookmarkPreselect.estado;
+            const bm = getBookmarks().find(b => b.pais === paisActivo && b.ley === leyActiva && b.estado);
+            if (bm) {
+              selEstado.value = bm.estado;
+              estadoActivo    = bm.estado;
               actualizarBookmarkBtn();
             }
           }
