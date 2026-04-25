@@ -1475,12 +1475,6 @@
     <!-- ── LEFT: NAV ── -->
     <aside class="col-nav">
 
-      <!-- Mis Leyes (bookmarks) -->
-      <div class="bookmarks-section" id="bookmarks-section" style="display:none">
-        <div class="bookmarks-header" data-i18n="abogado.mis_leyes">☆ Mis Leyes</div>
-        <div class="bookmarks-list" id="bookmarks-list"></div>
-      </div>
-
       <div class="nav-controls">
         <div>
           <div class="nav-label" data-i18n="abogado.pais">País</div>
@@ -1809,6 +1803,50 @@
       sel.addEventListener('change', onPaisChange);
     }
 
+    let leyesCacheadas = [];
+
+    function renderSelLey() {
+      const selLey = document.getElementById('sel-ley');
+      if (!selLey) return;
+      const valorPrevio = selLey.value;
+
+      selLey.innerHTML = `<option value="">${t('abogado.sel.ley', null, '— Selecciona ley —')}</option>`;
+
+      const leyesFav = new Set(
+        getBookmarks().filter(b => b.pais === paisActivo).map(b => b.ley)
+      );
+
+      const favs  = leyesCacheadas.filter(l => leyesFav.has(l.ley));
+      const resto = leyesCacheadas.filter(l => !leyesFav.has(l.ley));
+
+      favs.forEach(l => {
+        const opt = document.createElement('option');
+        opt.value = l.ley;
+        opt.textContent = '★ ' + l.ley;
+        opt.dataset.tipo = l.tipo;
+        selLey.appendChild(opt);
+      });
+
+      if (favs.length && resto.length) {
+        const sep = document.createElement('option');
+        sep.disabled = true;
+        sep.textContent = '──────────';
+        selLey.appendChild(sep);
+      }
+
+      resto.forEach(l => {
+        const opt = document.createElement('option');
+        opt.value = l.ley;
+        opt.textContent = l.ley;
+        opt.dataset.tipo = l.tipo;
+        selLey.appendChild(opt);
+      });
+
+      if (valorPrevio && selLey.querySelector(`option[value="${CSS.escape(valorPrevio)}"]`)) {
+        selLey.value = valorPrevio;
+      }
+    }
+
     async function onPaisChange() {
       paisActivo   = document.getElementById('sel-pais').value;
       estadoActivo = '';
@@ -1836,30 +1874,8 @@
       try {
         const res  = await fetch(`/api/abogado?action=leyes&pais=${enc(paisActivo)}`);
         const json = await res.json();
-        const leyes = json.leyes || [];
-
-        selLey.innerHTML = `<option value="">${t('abogado.sel.ley', null, '— Selecciona ley —')}</option>`;
-
-        const federales = leyes.filter(l => l.tipo === 'federal');
-        const estatales = leyes.filter(l => l.tipo === 'estatal');
-
-        function agregarGrupo(label, lista) {
-          if (!lista.length) return;
-          const grp = document.createElement('optgroup');
-          grp.label = label;
-          lista.forEach(l => {
-            const opt = document.createElement('option');
-            opt.value = l.ley;
-            opt.textContent = l.ley;
-            opt.dataset.tipo = l.tipo;
-            grp.appendChild(opt);
-          });
-          selLey.appendChild(grp);
-        }
-
-        agregarGrupo(t('abogado.leyes.federales', null, 'Leyes Federales'), federales);
-        agregarGrupo(t('abogado.leyes.estatales', null, 'Leyes Estatales'), estatales);
-
+        leyesCacheadas = json.leyes || [];
+        renderSelLey();
         selLey.disabled = false;
       } catch (err) {
         selLey.innerHTML = '<option value="">Error al cargar</option>';
@@ -1904,6 +1920,12 @@
             });
             grupoEst.style.display = 'block';
             selEstado.onchange = onEstadoChange;
+            const bm = getBookmarks().find(b => b.pais === paisActivo && b.ley === leyActiva && b.estado);
+            if (bm) {
+              selEstado.value = bm.estado;
+              estadoActivo    = bm.estado;
+              actualizarBookmarkBtn();
+            }
           }
         } catch (err) {
           console.warn('[onLeyChange] estados_por_ley falló:', err);
@@ -2622,7 +2644,7 @@
       }
       saveBookmarks(lista);
       actualizarBookmarkBtn();
-      renderBookmarks();
+      renderSelLey();
     }
 
     function renderBookmarks() {
