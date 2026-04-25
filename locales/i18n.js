@@ -104,19 +104,39 @@
     _t = await loadJSON(lang);
     apply(_t);
 
+    const _urlParams = new URLSearchParams(window.location.search);
+    const _urlLang   = _urlParams.get('lang');
+    const _urlPais   = _urlParams.get('pais') || '';
+
     // ── Home navigation per locale ────────────────────────────────
-    const locale  = localStorage.getItem('la-locale');
-    const urlLang = new URLSearchParams(window.location.search).get('lang');
+    const locale = localStorage.getItem('la-locale');
     const homePatterns = ['/', '/index.html', 'index.html'];
 
     let homeTarget = null;
-    if (locale === 'CZ' || urlLang === 'cs') homeTarget = '/cz/';
-    if (locale === 'MX' || urlLang === 'es') homeTarget = '/mx/';
+    if (locale === 'CZ' || _urlLang === 'cs') homeTarget = '/cz/';
+    if (locale === 'MX' || _urlLang === 'es') homeTarget = '/mx/';
 
     if (homeTarget) {
       document.querySelectorAll('a').forEach(a => {
         if (homePatterns.includes(a.getAttribute('href'))) {
           a.setAttribute('href', homeTarget);
+        }
+      });
+    }
+
+    // ── Preserve ?lang= in root-page nav links ────────────────────
+    const _navLang = _urlLang || localStorage.getItem('atlas_lang') || '';
+    if (_navLang) {
+      const _rootPages = [
+        'abogado.html', 'jurisprudencia.html', 'selector.html',
+        'magnus.html', 'atlas.html', 'cuenta.html', 'ciudadano.html'
+      ];
+      document.querySelectorAll('a[href]').forEach(a => {
+        const href = a.getAttribute('href');
+        if (_rootPages.includes(href)) {
+          let newHref = href + '?lang=' + _navLang;
+          if (_urlPais) newHref += '&pais=' + _urlPais;
+          a.setAttribute('href', newHref);
         }
       });
     }
