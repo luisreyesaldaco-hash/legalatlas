@@ -54,13 +54,13 @@ async function embedQuery(text, retries = 6) {
 
 async function rpcSearch(vector, pais, estado_mx, count = 8) {
   const r = await supabase.rpc('buscar_marco_universal', {
-    query_embedding: vector,
+    query_embedding: `[${vector.join(',')}]`,
     pais_filter:     pais,
     nivel_filter:    null,
     estado_filter:   estado_mx || null,
     match_count:     count
   })
-  if (r.error) { console.warn('[atlas] rpc error:', r.error.message); return [] }
+  if (r.error) { console.error('[atlas] rpc error:', r.error.message, r.error.code); return [] }
   return r.data || []
 }
 
@@ -174,6 +174,8 @@ Responde SOLO en JSON:
     const top20 = Array.from(mapa.values())
       .sort((a, b) => b.similarity - a.similarity)
       .slice(0, 20)
+
+    console.log(`[atlas] rag: queries=${allQueries.length} hits=[${searchResults.map(r=>r.length).join(',')}] mapa=${mapa.size} top20=${top20.length}`)
 
     if (top20.length === 0) {
       return res.json({ tesis: [], antitesis: [], neutral: [], queries: { tesis: tesisQueries, antitesis: antitesisQueries } })
