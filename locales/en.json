@@ -120,6 +120,7 @@
   "marco.motor.ley.label": "Activate process analysis",
   "marco.motor.ley.hint": "Select a law so Apolo can explain the applicable procedure step by step.",
   "marco.motor.ley.vacia": "No specific process — only analyzes WHAT the law says",
+  "marco.segunda.juris": "Second jurisdiction…",
 
   "footer.coords": "Tesseum · Normative analysis",
   "footer.copy": "Tesseum Engineering © 2026",

@@ -120,6 +120,7 @@
   "marco.motor.ley.label": "Activar análisis de proceso",
   "marco.motor.ley.hint": "Selecciona una ley para que Apolo explique el proceso aplicable paso a paso.",
   "marco.motor.ley.vacia": "Sin proceso específico — solo analiza QUÉ dice la ley",
+  "marco.segunda.juris": "Segunda jurisdicción…",
 
   "footer.coords": "Tesseum · Análisis normativo",
   "footer.copy": "Tesseum Engineering © 2026",

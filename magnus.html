@@ -147,15 +147,18 @@
     [data-theme="dark"] .marco-textarea { background: rgba(20,20,18,0.85); color: var(--text-primary); }
 
     /* ═══ COMO TOGGLE ═══ */
-    .como-toggle { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; }
-    .toggle-label { display: flex; align-items: center; gap: 14px; cursor: pointer; }
+    .como-toggle { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+    .toggle-label { display: flex; align-items: center; gap: 14px; cursor: pointer; flex: 1; }
     .toggle-switch { position: relative; width: 40px; height: 22px; background: var(--border-hover, #c4b89a); border-radius: 11px; flex-shrink: 0; transition: background 0.2s; }
     .toggle-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: transform 0.2s; }
     #activar-como:checked + .toggle-switch { background: var(--gold); }
     #activar-como:checked + .toggle-switch::after { transform: translateX(18px); }
     #activar-como { display: none; }
     .toggle-texto strong { display: block; font-size: 14px; color: var(--text-primary); font-family: 'Fraunces', serif; }
-    .toggle-texto small { font-size: 12px; color: var(--text-muted); margin-top: 2px; display: block; }
+    .info-btn { position: relative; background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 15px; line-height: 1; padding: 2px 4px; border-radius: 50%; transition: color 0.2s; flex-shrink: 0; }
+    .info-btn:hover { color: var(--gold); }
+    .info-popup { position: absolute; bottom: calc(100% + 8px); right: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; width: 240px; font-size: 12px; color: var(--text-secondary); box-shadow: var(--shadow-md); display: none; font-family: 'Fraunces', serif; line-height: 1.6; z-index: 200; text-align: left; }
+    .info-btn.open .info-popup { display: block; }
 
     /* ═══ PAIS ROW ═══ */
     .pais-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
@@ -444,9 +447,11 @@
         <span class="toggle-switch"></span>
         <span class="toggle-texto">
           <strong data-i18n="marco.toggle.titulo">¿Cómo se tramita el proceso?</strong>
-          <small data-i18n="marco.toggle.desc">Actívalo para ver plazos, etapas y procedimiento paso a paso</small>
         </span>
       </label>
+      <button class="info-btn" type="button" onclick="toggleInfoPopup(this)" data-i18n-popup="marco.toggle.desc">
+        ⓘ<span class="info-popup"></span>
+      </button>
     </div>
 
     <!-- Toggle JURISPRUDENCIA (solo visible con 1 país) -->
@@ -456,9 +461,11 @@
         <span class="toggle-switch"></span>
         <span class="toggle-texto">
           <strong data-i18n="juris.toggle.titulo">📚 ¿Buscar jurisprudencia relevante?</strong>
-          <small data-i18n="juris.toggle.desc">Sentencias y tesis judiciales que citen los artículos aplicables</small>
         </span>
       </label>
+      <button class="info-btn" type="button" onclick="toggleInfoPopup(this)" data-i18n-popup="juris.toggle.desc">
+        ⓘ<span class="info-popup"></span>
+      </button>
     </div>
 
     <!-- Selector de ley (solo cuando toggle ON) -->
@@ -751,7 +758,7 @@ function renderDropdowns(paises) {
   const secEl   = document.getElementById('pais-secundario');
   const optsHtml = paises.map(iso => `<option value="${iso}">${flagEmoji(iso)} ${nombrePais(iso)}</option>`).join('');
   primEl.innerHTML  = optsHtml;
-  secEl.innerHTML   = '<option value="">Segunda jurisdicción…</option>' + optsHtml;
+  secEl.innerHTML   = `<option value="">${window.t ? window.t('marco.segunda.juris', null, 'Segunda jurisdicción…') : 'Segunda jurisdicción…'}</option>` + optsHtml;
   const _mgLang = localStorage.getItem('atlas_lang') || new URLSearchParams(location.search).get('lang') || '';
   const _mgDefault = _mgLang === 'cs' ? 'CZ' : 'MX';
   if (paises.includes(_mgDefault)) primEl.value = _mgDefault;
@@ -816,7 +823,7 @@ function actualizarLeyesProceso(pais) {
   const select = document.getElementById('proceso-ley');
   const leyes = LEYES_PROCESO[pais] || [];
   select.innerHTML =
-    '<option value="">Sin proceso específico — solo analiza QUÉ dice la ley</option>' +
+    `<option value="">${window.t ? window.t('marco.motor.ley.vacia', null, 'Sin proceso específico — solo analiza QUÉ dice la ley') : 'Sin proceso específico — solo analiza QUÉ dice la ley'}</option>` +
     leyes.map(l => `<option value="${l.value}">${l.label}</option>`).join('');
 }
 
@@ -1160,6 +1167,21 @@ function copiarSintesis(elementId) {
   navigator.clipboard.writeText(texto)
     .then(() => alert(window.t ? window.t('magnus.copiado') : 'Análisis copiado al portapapeles ✓'))
 }
+
+// ⓘ Info popup
+function toggleInfoPopup(btn) {
+  const isOpen = btn.classList.contains('open')
+  document.querySelectorAll('.info-btn.open').forEach(b => b.classList.remove('open'))
+  if (!isOpen) {
+    const key = btn.dataset.i18nPopup
+    const popup = btn.querySelector('.info-popup')
+    if (popup && !popup.textContent) popup.textContent = window.t ? window.t(key, null, '') : ''
+    btn.classList.add('open')
+  }
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.info-btn')) document.querySelectorAll('.info-btn.open').forEach(b => b.classList.remove('open'))
+})
 
 // Inicializar
 cargarPaises();

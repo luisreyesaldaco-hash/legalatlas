@@ -139,6 +139,7 @@
   "marco.motor.ley.label": "Aktivovat analýzu řízení",
   "marco.motor.ley.hint": "Vyberte zákon, aby Apolo vysvětlil příslušný postup krok za krokem.",
   "marco.motor.ley.vacia": "Bez konkrétního řízení — analyzuje pouze CO říká zákon",
+  "marco.segunda.juris": "Druhá jurisdikce…",
 
   "footer.coords": "Tesseum · Legal Engine",
   "footer.copy": "Tesseum Engineering © 2026",

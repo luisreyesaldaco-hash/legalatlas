@@ -116,6 +116,7 @@
   "marco.motor.ley.label": "Activer l'analyse de procédure",
   "marco.motor.ley.hint": "Sélectionnez une loi pour qu'Apolo explique la procédure applicable étape par étape.",
   "marco.motor.ley.vacia": "Sans procédure spécifique — analyse uniquement CE QUE dit la loi",
+  "marco.segunda.juris": "Deuxième juridiction…",
 
   "footer.coords": "Tesseum · Analyse normative",
   "footer.copy": "Tesseum Engineering © 2026",
