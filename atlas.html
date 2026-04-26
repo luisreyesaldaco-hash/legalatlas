@@ -365,9 +365,42 @@ const LEY_ABREVS = {
   'Zivilgesetzbuch': 'ZGB', 'Obligationenrecht': 'OR',
 }
 
-function abreviarLey(ley) {
-  if (LEY_ABREVS[ley]) return LEY_ABREVS[ley]
-  return ley.split(/\s+/).filter(w => w.length >= 2).map(w => w[0].toUpperCase()).join('').slice(0, 5)
+const STOP_WORDS = new Set(['de','la','el','del','los','las','y','e','a','en','con','por','al','lo','un','una','su','sobre','que','o','para','sin','entre','ante'])
+
+function normalizeLeyName(s) {
+  if (!s.includes('�')) return s
+  return s
+    .replace(/�blicas/g,'úblicas').replace(/�blico/g,'úblico')
+    .replace(/�rganos/g,'Órganos').replace(/�reas/g,'Áreas')
+    .replace(/�rea\b/g,'érea').replace(/�rcito/g,'ército')
+    .replace(/�sticas/g,'ísticas').replace(/�stica/g,'ística')
+    .replace(/�stico/g,'ístico').replace(/�stamo/g,'éstamo')
+    .replace(/�ctimas/g,'íctimas').replace(/�ctima\b/g,'íctima')
+    .replace(/�mulos/g,'ímulos').replace(/�culos/g,'ículos')
+    .replace(/�culo/g,'ículo').replace(/�timos/g,'ítimos')
+    .replace(/�veres/g,'áveres').replace(/�gicos/g,'ógicos')
+    .replace(/�gico/g,'ógico').replace(/�gicas/g,'ógicas')
+    .replace(/�gica/g,'ógica').replace(/�digo/g,'ódigo')
+    .replace(/�dito/g,'édito').replace(/�dica/g,'édica')
+    .replace(/�dico/g,'édico').replace(/�xico/g,'éxico')
+    .replace(/�lica/g,'álica').replace(/�noma/g,'ónoma')
+    .replace(/Ni�as/g,'Niñas').replace(/Ni�os/g,'Niños')
+    .replace(/�as\b/g,'ías').replace(/�a\b/g,'ía')
+    .replace(/�n\b/g,'ón').replace(/�/g,'ó')
+}
+
+function abreviarLey(ley, usedSet) {
+  const name = normalizeLeyName(ley)
+  if (LEY_ABREVS[name]) return LEY_ABREVS[name]
+  const words = name.split(/[\s,.()+]+/).filter(w => w.length >= 3 && !STOP_WORDS.has(w.toLowerCase()))
+  let abbrev = (words.length ? words.slice(0,5).map(w => w[0].toUpperCase()).join('') : name.slice(0,5).toUpperCase()).slice(0,5)
+  if (usedSet) {
+    let candidate = abbrev, i = 2
+    while (usedSet.has(candidate)) candidate = abbrev + i++
+    usedSet.add(candidate)
+    return candidate
+  }
+  return abbrev
 }
 
 // ═══════════════════════════════════════════════
@@ -445,7 +478,7 @@ function clearGraph() {
   if (graphRoot) graphRoot.selectAll('*').remove()
 }
 
-function buildGraph(data) {
+function buildGraph(data, abrevMap) {
   clearGraph()
   const wrap = document.getElementById('canvas-wrap')
   const W = wrap.clientWidth, H = wrap.clientHeight
@@ -460,7 +493,8 @@ function buildGraph(data) {
       const leyId = 'ley:' + group.ley
       const arts  = group.articulos || []
       const r     = Math.min(8 + Math.sqrt(arts.length) * 1.6, 17)
-      nodes.push({ id: leyId, type: 'ley', cls, label: abreviarLey(group.ley), fullName: group.ley, r, group, score: group.score_promedio || 0 })
+      const label = abrevMap ? abrevMap.get(group.ley) : abreviarLey(group.ley)
+      nodes.push({ id: leyId, type: 'ley', cls, label, fullName: normalizeLeyName(group.ley), r, group, score: group.score_promedio || 0 })
       links.push({ source: '__caso__', target: leyId, cls: 'caso-ley', color: 'rgba(196,154,60,0.28)' })
       arts.forEach(art => {
         const artId = 'art:' + art.id
@@ -733,7 +767,14 @@ function renderResultados(data) {
     return
   }
 
-  buildGraph(data)
+  // Pre-compute unique abbreviations across all groups
+  const abrevUsed = new Set(Object.values(LEY_ABREVS))
+  const abrevMap  = new Map()
+  ;[...tesis, ...antitesis, ...neutral].forEach(g => {
+    if (!abrevMap.has(g.ley)) abrevMap.set(g.ley, abreviarLey(g.ley, abrevUsed))
+  })
+
+  buildGraph(data, abrevMap)
 
   const container = document.getElementById('panel-results')
   container.innerHTML = ''
@@ -743,15 +784,16 @@ function renderResultados(data) {
     const sec = document.createElement('div')
     sec.innerHTML = `<div class="ley-section-label ${type}">${label} · ${groups.length}</div>`
     groups.forEach(group => {
-      const leyId = 'ley:' + group.ley
-      const item  = document.createElement('div')
+      const leyId   = 'ley:' + group.ley
+      const nombre  = normalizeLeyName(group.ley)
+      const item    = document.createElement('div')
       item.className       = 'ley-item ' + type
       item.dataset.leyId   = leyId
       item.dataset.leyName = group.ley
       item.innerHTML = `
         <div class="ley-item-row1">
-          <span class="ley-abrev">${abreviarLey(group.ley)}</span>
-          <span class="ley-nombre">${group.ley}</span>
+          <span class="ley-abrev">${abrevMap.get(group.ley)}</span>
+          <span class="ley-nombre">${nombre}</span>
         </div>
         <div class="ley-item-meta">
           <span class="ley-arts-badge">${group.total_articulos} §</span>
