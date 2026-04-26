@@ -922,7 +922,7 @@ async function analizar() {
 
         if (evt.type === 'como_chunk') {
           comoFlujo += evt.text
-          document.getElementById('proceso-flujo').textContent = comoFlujo
+          document.getElementById('proceso-flujo').innerHTML = parsearTexto(comoFlujo)
         }
 
         // ── Magnus multi-country events ──
@@ -1064,10 +1064,30 @@ function toggleSeccion(header) {
 }
 
 function parsearTexto(texto) {
-  return texto
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-    .replace(/\n/g, '<br>')
+  if (!texto) return ''
+  let s = String(texto)
+  s = s.replace(/\*\*([^\*\n]+?)\*\*/g, '<strong>$1</strong>')
+  s = s.replace(/(?<!\*)\*([^\*\n]+?)\*(?!\*)/g, '<em>$1</em>')
+  const lines = s.split('\n')
+  const out = []
+  let inUl = false
+  const flushList = () => { if (inUl) { out.push('</ul>'); inUl = false } }
+  for (const line of lines) {
+    const h3 = line.match(/^###\s+(.+)/)
+    const h2 = line.match(/^##\s+(.+)/)
+    const h1 = line.match(/^#\s+(.+)/)
+    const li = line.match(/^[-*]\s+(.+)/)
+    if      (h3) { flushList(); out.push(`<h3>${h3[1]}</h3>`) }
+    else if (h2) { flushList(); out.push(`<h2>${h2[1]}</h2>`) }
+    else if (h1) { flushList(); out.push(`<h2>${h1[1]}</h2>`) }
+    else if (li) { if (!inUl) { out.push('<ul>'); inUl = true } out.push(`<li>${li[1]}</li>`) }
+    else         { flushList(); out.push(line) }
+  }
+  flushList()
+  s = out.join('\n')
+  s = s.replace(/\n?(<\/?(h[23]|ul|li)[^>]*>)\n?/g, '$1')
+  s = s.replace(/\n/g, '<br>')
+  return s
 }
 
 function renderArtCard(art) {
@@ -1111,7 +1131,7 @@ function renderJurisCards(articulos) {
   const contenedor = document.getElementById('juris-cards')
   contenedor.innerHTML = ''
   if (!articulos?.length) {
-    contenedor.innerHTML = `<p class="sin-resultados">${window.t('juris.sin_resultados','No se encontró jurisprudencia relevante para este caso.')}</p>`
+    contenedor.innerHTML = `<p class="sin-resultados">${window.t ? window.t('juris.sin_resultados', null, 'No se encontró jurisprudencia relevante para este caso.') : 'No se encontró jurisprudencia relevante para este caso.'}</p>`
     return
   }
   articulos.forEach(j => {
