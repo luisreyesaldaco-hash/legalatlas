@@ -293,6 +293,7 @@
     <div style="position:absolute;bottom:16px;right:16px;z-index:10;display:flex;flex-direction:column;gap:6px;">
       <button id="zoom-in-btn"  style="background:rgba(200,168,75,0.15);border:1px solid rgba(200,168,75,0.3);color:#c8a84b;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;font-family:monospace;">+</button>
       <button id="zoom-out-btn" style="background:rgba(200,168,75,0.15);border:1px solid rgba(200,168,75,0.3);color:#c8a84b;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;font-family:monospace;">−</button>
+      <button id="btn-mode" onclick="toggleAtlasMode()" title="Cambiar visual" style="background:rgba(200,168,75,0.15);border:1px solid rgba(200,168,75,0.3);color:#c8a84b;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:13px;font-family:serif;">◻</button>
     </div>
     <div class="canvas-empty" id="canvas-empty">
       <div class="canvas-empty-glyph">⚡</div>
@@ -312,6 +313,13 @@
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 
 <script>
+// ═══════════════════════════════════════════════
+// MODE STATE
+// ═══════════════════════════════════════════════
+let atlasMode = localStorage.getItem('atlas-mode') || 'space' // 'space' | 'geo'
+let currentData = null
+let currentAbrevMap = null
+
 // ═══════════════════════════════════════════════
 // PAÍSES
 // ═══════════════════════════════════════════════
@@ -406,17 +414,53 @@ function abreviarLey(ley, usedSet) {
 // ═══════════════════════════════════════════════
 // D3 FORCE GRAPH — Obsidian-style
 // ═══════════════════════════════════════════════
-const NODE_COLOR = {
-  caso:      '#C49A3C',
-  tesis:     '#4A80F0',
-  antitesis: '#E24B4A',
-  neutral:   '#888880',
+const COLORS = {
+  space: {
+    caso:      { fill: '#C49A3C', stroke: '#C49A3C', filter: 'url(#glow-gold)', label: '#D4A55C' },
+    tesis:     { fill: '#4A80F0', stroke: '#4A80F0', filter: 'url(#glow-blue)', label: '#A8CCFF' },
+    antitesis: { fill: '#E24B4A', stroke: '#E24B4A', filter: 'url(#glow-red)',  label: '#FFB0B0' },
+    neutral:   { fill: '#888880', stroke: '#888880', filter: '',               label: '#C8C8C0' },
+    bg:          '#050403',
+    labelStroke: '#050403',
+    links: {
+      casoLey:   'rgba(196,154,60,0.28)',
+      tesis:     'rgba(74,128,240,0.18)',
+      antitesis: 'rgba(226,75,74,0.18)',
+      neutral:   'rgba(136,136,128,0.18)',
+    },
+  },
+  geo: {
+    caso:      { fill: '#FEF3C7', stroke: '#92400E', filter: '', label: '#1E293B' },
+    tesis:     { fill: '#EFF6FF', stroke: '#2563EB', filter: '', label: '#1E293B' },
+    antitesis: { fill: '#FEF2F2', stroke: '#DC2626', filter: '', label: '#1E293B' },
+    neutral:   { fill: '#F8FAFC', stroke: '#94A3B8', filter: '', label: '#1E293B' },
+    art:       { fill: '#F1F5F9', stroke: '#CBD5E1', filter: '', label: '' },
+    bg:          '#FAFAF8',
+    labelStroke: '#FAFAF8',
+    links: {
+      casoLey:   'rgba(100,116,139,0.35)',
+      tesis:     'rgba(37,99,235,0.22)',
+      antitesis: 'rgba(220,38,38,0.22)',
+      neutral:   'rgba(148,163,184,0.22)',
+    },
+  },
 }
-const LABEL_COLOR = {
-  caso:      '#D4A55C',
-  tesis:     '#A8CCFF',
-  antitesis: '#FFB0B0',
-  neutral:   '#C8C8C0',
+
+function applyAtlasMode() {
+  const svg = d3.select('#atlas-svg')
+  const bg  = COLORS[atlasMode].bg
+  svg.select('.atlas-bg').attr('fill', bg)
+  svg.selectAll('.star').style('display', atlasMode === 'space' ? '' : 'none')
+  document.getElementById('canvas-wrap').style.background = bg
+  const btn = document.getElementById('btn-mode')
+  if (btn) btn.textContent = atlasMode === 'space' ? '◻' : '🌌'
+}
+
+function toggleAtlasMode() {
+  atlasMode = atlasMode === 'space' ? 'geo' : 'space'
+  localStorage.setItem('atlas-mode', atlasMode)
+  applyAtlasMode()
+  if (currentData) buildGraph(currentData, currentAbrevMap)
 }
 
 let simulation = null
@@ -430,10 +474,11 @@ function initSVG() {
   const svg = d3.select(svgEl).attr('width', W).attr('height', H)
 
   // Background + stars
-  svg.append('rect').attr('width', '100%').attr('height', '100%').attr('fill', '#050403')
+  svg.append('rect').attr('class', 'atlas-bg').attr('width', '100%').attr('height', '100%').attr('fill', '#050403')
   const stars = svg.append('g').attr('pointer-events', 'none')
   for (let i = 0; i < 220; i++) {
     stars.append('circle')
+      .attr('class', 'star')
       .attr('cx', Math.random() * W).attr('cy', Math.random() * H)
       .attr('r', Math.random() * 1.1 + 0.2)
       .attr('fill', `rgba(240,236,228,${(0.1 + Math.random() * 0.35).toFixed(2)})`)
@@ -471,6 +516,8 @@ function initSVG() {
     svg.attr('width', W2).attr('height', H2)
     if (simulation) simulation.force('center', d3.forceCenter(W2/2, H2/2)).alpha(0.15).restart()
   })
+
+  applyAtlasMode()
 }
 
 function clearGraph() {
@@ -495,13 +542,11 @@ function buildGraph(data, abrevMap) {
       const r     = Math.min(8 + Math.sqrt(arts.length) * 1.6, 17)
       const label = abrevMap ? abrevMap.get(group.ley) : abreviarLey(group.ley)
       nodes.push({ id: leyId, type: 'ley', cls, label, fullName: normalizeLeyName(group.ley), r, group, score: group.score_promedio || 0 })
-      links.push({ source: '__caso__', target: leyId, cls: 'caso-ley', color: 'rgba(196,154,60,0.28)' })
+      links.push({ source: '__caso__', target: leyId, cls: 'caso-ley' })
       arts.forEach(art => {
         const artId = 'art:' + art.id
         nodes.push({ id: artId, type: 'art', cls: art.clasificacion || cls, label: art.numero_articulo || '', r: 4, art, parentLey: leyId })
-        const alpha = '0.18'
-        const artColor = cls === 'tesis' ? `rgba(74,128,240,${alpha})` : cls === 'antitesis' ? `rgba(226,75,74,${alpha})` : `rgba(136,136,128,${alpha})`
-        links.push({ source: leyId, target: artId, cls: 'ley-art', color: artColor })
+        links.push({ source: leyId, target: artId, cls: 'ley-art', artCls: cls })
       })
     })
   }
@@ -525,7 +570,10 @@ function buildGraph(data, abrevMap) {
   // ── Render links ──
   const linkSel = graphRoot.append('g').attr('class', 'links')
     .selectAll('line').data(links).enter().append('line')
-    .attr('stroke', d => d.color)
+    .attr('stroke', d => {
+      const lc = COLORS[atlasMode].links
+      return d.cls === 'caso-ley' ? lc.casoLey : (lc[d.artCls] || lc.neutral)
+    })
     .attr('stroke-width', d => d.cls === 'caso-ley' ? 1.4 : 0.8)
 
   // ── Render nodes ──
@@ -541,18 +589,25 @@ function buildGraph(data, abrevMap) {
     .style('cursor', d => d.type === 'ley' ? 'pointer' : 'default')
 
   // Circles
+  const nodeKey = d => {
+    if (d.type === 'caso') return 'caso'
+    if (d.type === 'art' && atlasMode === 'geo') return 'art'
+    return d.cls || 'neutral'
+  }
   nodeSel.append('circle')
     .attr('r', d => d.r)
-    .attr('fill', d => NODE_COLOR[d.type === 'caso' ? 'caso' : d.cls] || NODE_COLOR.neutral)
-    .attr('fill-opacity', d => d.type === 'art' ? 0.5 : d.type === 'ley' ? 0.88 : 0.95)
-    .attr('stroke', d => NODE_COLOR[d.type === 'caso' ? 'caso' : d.cls] || NODE_COLOR.neutral)
-    .attr('stroke-width', d => d.type === 'ley' ? 1.5 : 0.5)
-    .attr('stroke-opacity', 0.6)
-    .attr('filter', d => {
-      if (d.type === 'caso') return 'url(#glow-gold)'
-      if (d.type === 'ley')  return d.cls === 'tesis' ? 'url(#glow-blue)' : d.cls === 'antitesis' ? 'url(#glow-red)' : 'none'
-      return 'none'
+    .attr('fill', d => (COLORS[atlasMode][nodeKey(d)] || COLORS[atlasMode].neutral).fill)
+    .attr('fill-opacity', d => {
+      if (atlasMode === 'geo') return d.type === 'art' ? 0.9 : 1
+      return d.type === 'art' ? 0.5 : d.type === 'ley' ? 0.88 : 0.95
     })
+    .attr('stroke', d => (COLORS[atlasMode][nodeKey(d)] || COLORS[atlasMode].neutral).stroke)
+    .attr('stroke-width', d => {
+      if (atlasMode === 'geo') return d.type === 'caso' ? 2 : d.type === 'ley' ? 1.5 : 1
+      return d.type === 'ley' ? 1.5 : 0.5
+    })
+    .attr('stroke-opacity', d => atlasMode === 'geo' ? 1 : 0.6)
+    .attr('filter', d => (COLORS[atlasMode][nodeKey(d)] || COLORS[atlasMode].neutral).filter)
 
   // Labels on caso + ley nodes
   nodeSel.filter(d => d.type !== 'art')
@@ -563,9 +618,12 @@ function buildGraph(data, abrevMap) {
     .attr('font-size', d => d.type === 'caso' ? '10px' : '9px')
     .attr('font-weight', '700')
     .attr('letter-spacing', '0.08em')
-    .attr('fill', d => LABEL_COLOR[d.type === 'caso' ? 'caso' : d.cls] || LABEL_COLOR.neutral)
+    .attr('fill', d => {
+      const key = d.type === 'caso' ? 'caso' : (d.cls || 'neutral')
+      return (COLORS[atlasMode][key] || COLORS[atlasMode].neutral).label
+    })
     .attr('paint-order', 'stroke')
-    .attr('stroke', '#050403')
+    .attr('stroke', () => COLORS[atlasMode].labelStroke)
     .attr('stroke-width', '3px')
     .style('pointer-events', 'none')
     .text(d => d.label)
@@ -648,7 +706,10 @@ function highlightNode(leyId) {
 function resetHighlight() {
   if (!graphRoot) return
   graphRoot.selectAll('.gnode circle')
-    .attr('fill-opacity', d => d.type === 'art' ? 0.5 : d.type === 'ley' ? 0.88 : 0.95)
+    .attr('fill-opacity', d => {
+      if (atlasMode === 'geo') return d.type === 'art' ? 0.9 : 1
+      return d.type === 'art' ? 0.5 : d.type === 'ley' ? 0.88 : 0.95
+    })
   graphRoot.selectAll('.links line')
     .attr('stroke-opacity', 1)
   document.querySelectorAll('.ley-item').forEach(el => el.classList.remove('active'))
@@ -773,6 +834,9 @@ function renderResultados(data) {
   ;[...tesis, ...antitesis, ...neutral].forEach(g => {
     if (!abrevMap.has(g.ley)) abrevMap.set(g.ley, abreviarLey(g.ley, abrevUsed))
   })
+
+  currentData = data
+  currentAbrevMap = abrevMap
 
   buildGraph(data, abrevMap)
 
