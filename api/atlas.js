@@ -113,8 +113,9 @@ Responde SOLO en JSON:
         contents: DIALECTIC_PROMPT,
         config: {
           responseMimeType: 'application/json',
+          thinkingConfig: { thinkingBudget: 0 },
           temperature: 0.2,
-          maxOutputTokens: 2000
+          maxOutputTokens: 4096
         }
       })
       rawExpansion = geminiResp.text.trim()
