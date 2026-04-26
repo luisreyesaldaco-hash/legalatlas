@@ -473,7 +473,7 @@
         id="caso-input"
         class="marco-textarea"
         data-i18n-placeholder="magnus.placeholder"
-        placeholder="Describe el caso con detalle. Ejemplo: Mi cliente es un arquitecto mexicano con residencia temporal en CZ, firmó un contrato de obra con empresa checa, no le pagaron, quiere demandar pero planea irse a México. ¿Qué leyes aplican?"
+        placeholder="Describe el caso o la pregunta jurídica. Incluye los hechos relevantes: partes, qué ocurrió, jurisdicción y qué necesitas saber."
       ></textarea>
     </div>
 
@@ -1166,7 +1166,7 @@ cargarPaises();
 
 if (window.innerWidth <= 680) {
   var ta = document.getElementById('caso-input');
-  if (ta) ta.placeholder = window.t ? window.t('magnus.placeholder.mobile') : 'Describe tu caso con detalle…';
+  if (ta) ta.placeholder = window.t ? window.t('magnus.placeholder.mobile') : 'Describe el caso o la pregunta jurídica…';
 }
 </script>
 
