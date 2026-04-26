@@ -278,5 +278,29 @@
   "abogado.leyes.estatales": "Státní zákony",
   "abogado.art.activo": "Aktivní článek: {num}",
   "abogado.chat.proceso": "⟳ Režim řízení: Jak se tato kapitola uplatňuje…?",
-  "abogado.alert.selecciona_ley": "Nejprve vyberte zákon v levém panelu."
+  "abogado.alert.selecciona_ley": "Nejprve vyberte zákon v levém panelu.",
+
+  "selector.leyes": "Vybrané zákony",
+  "selector.jurisdictions": "Přidejte zákony z libovolných jurisdikcí",
+  "selector.empty": "Zatím nic.<br>Vyberte zemi a zákon dole ↓",
+  "selector.add": "Přidat zákon",
+  "selector.pais": "— Země —",
+  "selector.sel.pais": "— Nejprve zvolte zemi —",
+  "selector.tokens": "Rozsah výběru",
+  "selector.question": "Vaše otázka",
+  "selector.warning": "⚠ Velmi rozsáhlý výběr — analýza bude trvat déle.",
+  "selector.placeholder": "Jaká jsou práva zaměstnance při výpovědi? Jaké jsou lhůty?",
+  "selector.analyze": "Analyzovat →",
+  "selector.response": "Odpověď · Selector",
+  "selector.empty.response": "Vyberte zákon a položte otázku",
+  "selector.bundles": "Moje sady",
+  "selector.bundle.name": "Název sady…",
+  "selector.bundle.ok": "OK",
+  "selector.bundle.guardar": "★ Uložit výběr",
+
+  "selector.guide.title": "Vyberte zákon vlevo",
+  "selector.guide.sub": "Přidejte jeden nebo více zákonů z panelu vlevo, pak položte svou otázku.",
+  "selector.step1": "Vyberte zákony vlevo",
+  "selector.step2": "Položte svou otázku",
+  "selector.step3": "Spusťte analýzu →"
 }

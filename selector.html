@@ -75,12 +75,51 @@
   .btn-add{font-family:'Fraunces',serif;font-size:10px;letter-spacing:.15em;text-transform:uppercase;background:var(--gold);color:#fff;padding:11px 16px;border:none;border-radius:10px;cursor:pointer;font-weight:600;transition:background .2s}
   .btn-add:hover:not(:disabled){background:var(--gold-light)}
   .btn-add:disabled{opacity:.4;cursor:not-allowed}
+  .btn-save-bundle{display:none;font-family:'Fraunces',serif;font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:none;border:1px dashed var(--gold-border);color:var(--gold);padding:8px;border-radius:10px;cursor:pointer;width:100%;transition:all .2s}
+  .btn-save-bundle:hover{background:var(--gold-dim);border-color:var(--gold)}
+
+  /* Bundles */
+  .bundles-section{border-bottom:1px solid var(--border);background:var(--bg-elevated)}
+  .bundles-header{padding:10px 20px 6px;display:flex;align-items:center;justify-content:space-between}
+  .bundles-label{font-family:'Fraunces',serif;font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);opacity:.8}
+  .bundles-list{display:flex;flex-direction:column;gap:3px;padding:0 20px 10px;max-height:160px;overflow-y:auto}
+  .bundle-chip{display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:8px;background:var(--bg-input);border:1px solid var(--border);cursor:pointer;transition:all .2s}
+  .bundle-chip:hover{border-color:var(--gold-border);background:var(--gold-dim)}
+  .bundle-chip-info{flex:1;min-width:0}
+  .bundle-chip-nombre{font-family:'Fraunces',serif;font-size:10.5px;font-weight:500;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bundle-chip-meta{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text-muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bundle-chip-del{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:14px;padding:0 2px;flex-shrink:0;line-height:1}
+  .bundle-chip-del:hover{color:var(--gold)}
+  /* Bundles dropdown mode (>3) */
+  .bundle-select-row{display:flex;align-items:center;gap:6px;padding:0 20px 10px}
+  .bundle-select{flex:1;font-family:'Fraunces',serif;font-size:11px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg-input);color:var(--text-primary);outline:none;cursor:pointer;transition:border-color .2s}
+  .bundle-select:focus{border-color:var(--gold)}
+  .btn-bundle-del{background:none;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;font-size:13px;padding:6px 9px;border-radius:8px;flex-shrink:0;transition:all .2s}
+  .btn-bundle-del:hover{color:var(--gold);border-color:var(--gold-border)}
+  .bundle-save-row{display:none;align-items:center;gap:6px;padding:8px 20px;background:var(--bg-elevated);border-bottom:1px solid var(--border)}
+  .bundle-save-row.visible{display:flex}
+  .bundle-name-input{flex:1;font-family:'Fraunces',serif;font-size:11px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg-input);color:var(--text-primary);outline:none}
+  .bundle-name-input:focus{border-color:var(--gold)}
+  .btn-bundle-confirm{font-family:'Fraunces',serif;font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:var(--gold);color:#fff;padding:7px 12px;border:none;border-radius:8px;cursor:pointer;font-weight:600;white-space:nowrap;flex-shrink:0}
+  .btn-bundle-confirm:hover{background:var(--gold-light)}
+
+  /* Col headers — step indicators */
+  .col-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+  .col-step-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);opacity:.4;letter-spacing:0}
 
   /* Col 2 — Question */
   .col-question{display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--bg-deep)}
+  /* Guide: shown when no laws selected */
+  .col-question-guide{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:32px 28px;text-align:center}
+  .guide-arrow{font-size:32px;color:var(--gold);opacity:.25;line-height:1}
+  .guide-title{font-family:'Fraunces',serif;font-size:16px;font-weight:500;color:var(--text-secondary);letter-spacing:-.01em}
+  .guide-sub{font-family:'Fraunces',serif;font-size:12px;color:var(--text-muted);font-style:italic;line-height:1.75;max-width:200px}
+  /* Content: shown when laws are selected */
+  .col-question-content{flex:1;display:none;flex-direction:column;overflow:hidden}
+  .col-question-content.active{display:flex}
   .token-bar-wrap{padding:16px 20px;border-bottom:1px solid var(--border)}
   .token-label{font-family:'Fraunces',serif;font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;display:flex;justify-content:space-between}
-  .token-bar{height:6px;border-radius:3px;background:var(--border);overflow:hidden}
+  .token-bar{height:4px;border-radius:3px;background:var(--border);overflow:hidden}
   .token-fill{height:100%;border-radius:3px;transition:width .4s,background .4s}
   .token-fill.green{background:#22C55E} .token-fill.yellow{background:#EAB308} .token-fill.red{background:#EF4444}
   .question-area{flex:1;display:flex;flex-direction:column;padding:20px}
@@ -96,11 +135,14 @@
 
   /* Col 3 — Response */
   .col-response{display:flex;flex-direction:column;background:var(--bg-card);overflow:hidden}
-  .response-header{padding:16px 20px;border-bottom:1px solid var(--border);font-family:'Fraunces',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+  .response-header{padding:16px 20px;border-bottom:1px solid var(--border);font-family:'Fraunces',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;justify-content:space-between}
   .response-scroll{flex:1;overflow-y:auto;padding:24px 20px}
-  .response-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;color:var(--text-muted);text-align:center}
-  .response-empty-icon{font-size:40px;opacity:.3}
-  .response-empty-text{font-family:'Fraunces',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+  .response-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;color:var(--text-muted);text-align:center;padding:32px}
+  .response-empty-icon{font-size:56px;opacity:.15}
+  .response-empty-text{font-family:'Fraunces',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.6}
+  .response-empty-steps{display:flex;flex-direction:column;gap:10px;margin-top:8px;border-top:1px solid var(--border);padding-top:20px;width:100%;max-width:200px}
+  .response-empty-step{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:11.5px;color:var(--text-muted);text-align:left}
+  .response-empty-step-num{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--gold);opacity:.6;width:16px;flex-shrink:0}
   .response-text{font-family:'Fraunces',serif;font-size:14px;line-height:1.9;color:var(--text-primary)}
   .response-text strong{color:var(--text-primary);font-weight:600}
   .response-text em{font-style:italic;color:var(--text-secondary)}
@@ -194,9 +236,28 @@
     <!-- COL 1: Drop-box (top) + add controls (bottom) -->
     <aside class="col-select">
       <div class="col-header">
-        <div class="col-title" data-i18n="selector.leyes">Vybrané zákony</div>
+        <div class="col-header-row">
+          <div class="col-title" data-i18n="selector.leyes">Vybrané zákony</div>
+          <span class="col-step-num">①</span>
+        </div>
         <div class="col-sub" data-i18n="selector.jurisdictions">Přidejte zákony z libovolných jurisdikcí</div>
       </div>
+      <!-- Bundles saved -->
+      <div class="bundles-section" id="bundles-section" style="display:none">
+        <div class="bundles-header">
+          <span class="bundles-label" data-i18n="selector.bundles">Mis Bundles</span>
+        </div>
+        <div class="bundles-list" id="bundles-list"></div>
+      </div>
+      <!-- Save row (inline, appears on click) -->
+      <div class="bundle-save-row" id="bundle-save-row">
+        <input class="bundle-name-input" id="bundle-name-input"
+               placeholder="Nombre del bundle…"
+               data-i18n-placeholder="selector.bundle.name"
+               onkeydown="if(event.key==='Enter')confirmarGuardarBundle();if(event.key==='Escape')cancelarGuardarBundle()">
+        <button class="btn-bundle-confirm" onclick="confirmarGuardarBundle()" data-i18n="selector.bundle.ok">OK</button>
+      </div>
+
       <div class="selected-box" id="selected-box">
         <div class="selected-empty" id="selected-empty" data-i18n-html="selector.empty">Zatím nic.<br>Vyberte zemi a zákon dole ↓</div>
       </div>
@@ -208,36 +269,49 @@
         <select class="add-select" id="add-ley" disabled>
           <option value="" data-i18n="selector.sel.pais">— Nejprve zvolte zemi —</option>
         </select>
-        <button class="btn-add" id="btn-add" onclick="addSelectedLaw()" disabled data-i18n="selector.btn.add">+ Přidat</button>
+        <button class="btn-add" id="btn-add" onclick="addSelectedLaw()" disabled data-i18n="selector.btn.add" style="display:none">+ Přidat</button>
+        <button class="btn-save-bundle" id="btn-save-bundle" onclick="iniciarGuardarBundle()" data-i18n="selector.bundle.guardar">★ Guardar selección</button>
       </div>
     </aside>
 
     <!-- COL 2: Token counter + Question -->
     <div class="col-question">
-      <div class="token-bar-wrap">
-        <div class="token-label">
-          <span data-i18n="selector.tokens">Odhadované tokeny</span>
-          <span id="token-count">0 / 200 000</span>
+      <div class="col-question-guide" id="col-question-guide">
+        <div class="guide-arrow">←</div>
+        <div class="guide-title" data-i18n="selector.guide.title">Vyberte zákon vlevo</div>
+        <div class="guide-sub" data-i18n="selector.guide.sub">Přidejte jeden nebo více zákonů z panelu vlevo, pak položte svou otázku.</div>
+      </div>
+      <div class="col-question-content" id="col-question-content">
+        <div class="token-bar-wrap">
+          <div class="token-label">
+            <span data-i18n="selector.tokens">Odhadované tokeny</span>
+            <span id="token-count">0 / 200 000</span>
+          </div>
+          <div class="token-bar"><div class="token-fill green" id="token-fill" style="width:0%"></div></div>
         </div>
-        <div class="token-bar"><div class="token-fill green" id="token-fill" style="width:0%"></div></div>
-      </div>
-      <div class="question-area">
-        <div class="question-label" data-i18n="selector.question">Vaše otázka</div>
-        <div class="token-warning" id="token-warning" data-i18n="selector.warning">⚠ Překročeno 150 000 tokenů. Analýza může být pomalejší. Pokračovat?</div>
-        <textarea class="question-input" id="question" placeholder="Jaká jsou práva zaměstnance při výpovědi? Jaké jsou lhůty?" data-i18n-placeholder="selector.placeholder"></textarea>
-      </div>
-      <div class="question-actions">
-        <button class="btn-analyze" id="btn-analyze" onclick="analyze()" disabled data-i18n="selector.analyze">Analyzovat →</button>
+        <div class="question-area">
+          <div class="question-label" data-i18n="selector.question">Vaše otázka</div>
+          <div class="token-warning" id="token-warning" data-i18n="selector.warning">⚠ Překročeno 150 000 tokenů. Analýza může být pomalejší. Pokračovat?</div>
+          <textarea class="question-input" id="question" placeholder="Jaká jsou práva zaměstnance při výpovědi? Jaké jsou lhůty?" data-i18n-placeholder="selector.placeholder"></textarea>
+        </div>
+        <div class="question-actions">
+          <button class="btn-analyze" id="btn-analyze" onclick="analyze()" disabled data-i18n="selector.analyze">Analyzovat →</button>
+        </div>
       </div>
     </div>
 
     <!-- COL 3: Response -->
     <div class="col-response">
-      <div class="response-header" data-i18n="selector.response">Odpověď · Selector</div>
+      <div class="response-header"><span data-i18n="selector.response">Odpověď · Selector</span><span class="col-step-num">③</span></div>
       <div class="response-scroll" id="response">
         <div class="response-empty">
           <div class="response-empty-icon">⚖</div>
           <div class="response-empty-text" data-i18n="selector.empty.response">Vyberte zákon a položte otázku</div>
+          <div class="response-empty-steps">
+            <div class="response-empty-step"><span class="response-empty-step-num">①</span><span data-i18n="selector.step1">Vyberte zákony vlevo</span></div>
+            <div class="response-empty-step"><span class="response-empty-step-num">②</span><span data-i18n="selector.step2">Položte svou otázku</span></div>
+            <div class="response-empty-step"><span class="response-empty-step-num">③</span><span data-i18n="selector.step3">Spusťte analýzu →</span></div>
+          </div>
         </div>
       </div>
     </div>
@@ -286,6 +360,16 @@ function populatePaisDropdown() {
   })
   sel.addEventListener('change', onPaisChange)
   document.getElementById('add-ley').addEventListener('change', onLeyChange)
+  renderBundles()
+
+  // Auto-select country from ?pais= or derive from ?lang=
+  const params = new URLSearchParams(location.search)
+  const langMap = { cs: 'CZ', sk: 'SK', fr: 'FR', de: 'DE', es: 'ES' }
+  const autoSelect = params.get('pais') || langMap[params.get('lang') || localStorage.getItem('atlas_lang') || ''] || ''
+  if (autoSelect && paises.includes(autoSelect)) {
+    sel.value = autoSelect
+    onPaisChange({ target: { value: autoSelect } })
+  }
 }
 
 function onPaisChange(e) {
@@ -313,7 +397,7 @@ function onPaisChange(e) {
 }
 
 function onLeyChange(e) {
-  document.getElementById('btn-add').disabled = !e.target.value
+  if (e.target.value) addSelectedLaw()
 }
 
 // ═══════════════════════════════════════════
@@ -346,19 +430,28 @@ function removeLaw(i) {
 function renderSelectedBox() {
   const container = document.getElementById('selected-box')
   const empty = document.getElementById('selected-empty')
+  const btnSave = document.getElementById('btn-save-bundle')
+  const guide = document.getElementById('col-question-guide')
+  const content = document.getElementById('col-question-content')
   if (selectedLaws.length === 0) {
     container.innerHTML = ''
     container.appendChild(empty)
     document.getElementById('btn-analyze').disabled = true
+    if (btnSave) btnSave.style.display = 'none'
+    cancelarGuardarBundle()
+    if (guide) guide.style.display = ''
+    if (content) content.classList.remove('active')
     return
   }
+  if (guide) guide.style.display = 'none'
+  if (content) content.classList.add('active')
+  if (btnSave) btnSave.style.display = 'block'
   container.innerHTML = selectedLaws.map((l, i) => {
-    const tk = (l.tokens_indice || 0).toLocaleString()
     const estado = l.estado && l.estado !== 'Nacional' ? ` · ${l.estado}` : ''
     return `<div class="selected-chip">
       <div class="selected-chip-body">
         <div class="selected-chip-ley">${FLAGS[l.pais]||''} ${l.ley}${estado}</div>
-        <div class="selected-chip-meta">${l.total_articulos} § · ${tk} tok</div>
+        <div class="selected-chip-meta">${l.total_articulos} §</div>
       </div>
       <button onclick="removeLaw(${i})" title="Odebrat">×</button>
     </div>`
@@ -374,9 +467,16 @@ function updateTokenEstimate() {
   const pct = Math.min(100, (indexTokens / TOKEN_BUDGET) * 100)
   const fill = document.getElementById('token-fill')
   fill.style.width = pct + '%'
-  fill.className = 'token-fill ' + (indexTokens < 60000 ? 'green' : indexTokens < 130000 ? 'yellow' : 'red')
-  document.getElementById('token-count').textContent =
-    `${indexTokens.toLocaleString()} / ${TOKEN_BUDGET.toLocaleString()} tokeny (indexy)`
+  const speed = indexTokens < 60000 ? 'green' : indexTokens < 130000 ? 'yellow' : 'red'
+  fill.className = 'token-fill ' + speed
+  const totalArticulos = selectedLaws.reduce((sum, l) => sum + (l.total_articulos || 0), 0)
+  const countEl = document.getElementById('token-count')
+  if (selectedLaws.length === 0) {
+    countEl.textContent = '—'
+  } else {
+    const icon = speed === 'green' ? '✓' : speed === 'yellow' ? '△' : '⚠'
+    countEl.textContent = `${totalArticulos.toLocaleString()} § · ${icon}`
+  }
   document.getElementById('token-warning').style.display = indexTokens > 150000 ? 'block' : 'none'
 }
 
@@ -449,6 +549,122 @@ async function analyze() {
   } finally {
     btn.disabled = false; btn.textContent = 'Analyzovat →'
   }
+}
+
+// ═══════════════════════════════════════════
+// BUNDLES — sets de leyes guardados
+// ═══════════════════════════════════════════
+const BUNDLES_KEY = 'tesseum_bundles_v1'
+
+function getBundles() {
+  try { return JSON.parse(localStorage.getItem(BUNDLES_KEY) || '[]') } catch { return [] }
+}
+function _saveBundles(list) { localStorage.setItem(BUNDLES_KEY, JSON.stringify(list)) }
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+
+function renderBundles() {
+  const bundles = getBundles()
+  const section = document.getElementById('bundles-section')
+  const list    = document.getElementById('bundles-list')
+  if (!section) return
+  if (bundles.length === 0) { section.style.display = 'none'; return }
+  section.style.display = 'block'
+
+  if (bundles.length <= 3) {
+    // Chip mode
+    list.innerHTML = bundles.map((b, i) => {
+      const preview = b.leyes.map(l => `${FLAGS[l.pais]||''}${l.ley}`).join(' · ')
+      const n = b.leyes.length
+      return `<div class="bundle-chip" onclick="cargarBundle(${i})">
+        <div class="bundle-chip-info">
+          <div class="bundle-chip-nombre">${escapeHtml(b.nombre)}</div>
+          <div class="bundle-chip-meta">${n} ${n===1?'ley':'leyes'} · ${escapeHtml(preview)}</div>
+        </div>
+        <button class="bundle-chip-del" onclick="eliminarBundle(${i});event.stopPropagation()" title="Eliminar">×</button>
+      </div>`
+    }).join('')
+  } else {
+    // Dropdown mode
+    const opts = bundles.map((b, i) => {
+      const n = b.leyes.length
+      return `<option value="${i}">${escapeHtml(b.nombre)} (${n} ${n===1?'ley':'leyes'})</option>`
+    }).join('')
+    list.innerHTML = `<div class="bundle-select-row">
+      <select class="bundle-select" id="bundle-select" onchange="cargarBundle(parseInt(this.value))">
+        <option value="" disabled selected>— Cargar bundle —</option>
+        ${opts}
+      </select>
+      <button class="btn-bundle-del" onclick="eliminarBundleSeleccionado()" title="Eliminar seleccionado">×</button>
+    </div>`
+  }
+}
+
+function iniciarGuardarBundle() {
+  if (selectedLaws.length === 0) return
+  const row   = document.getElementById('bundle-save-row')
+  const input = document.getElementById('bundle-name-input')
+  row.classList.add('visible')
+  const autoNombre = selectedLaws.length === 1
+    ? `${FLAGS[selectedLaws[0].pais]||''} ${selectedLaws[0].ley}`
+    : selectedLaws.map(l => l.ley).join(' + ')
+  input.value = autoNombre
+  input.focus()
+  input.select()
+}
+
+function confirmarGuardarBundle() {
+  const nombre = document.getElementById('bundle-name-input').value.trim()
+  if (!nombre || selectedLaws.length === 0) return
+  const bundles = getBundles()
+  bundles.unshift({
+    id: Date.now().toString(),
+    nombre,
+    leyes: selectedLaws.map(l => ({
+      pais: l.pais, ley: l.ley, estado: l.estado||'',
+      tokens_indice: l.tokens_indice||0, total_articulos: l.total_articulos||0
+    }))
+  })
+  _saveBundles(bundles)
+  cancelarGuardarBundle()
+  renderBundles()
+}
+
+function cancelarGuardarBundle() {
+  const row = document.getElementById('bundle-save-row')
+  if (row) row.classList.remove('visible')
+}
+
+function cargarBundle(i) {
+  const bundle = getBundles()[i]
+  if (!bundle) return
+  bundle.leyes.forEach(bl => {
+    const exists = selectedLaws.some(s => s.pais===bl.pais && s.ley===bl.ley && (s.estado||'')===(bl.estado||''))
+    if (!exists) {
+      const full = (lawsByPais[bl.pais]||[]).find(l => l.ley===bl.ley && (l.estado||'')===(bl.estado||''))
+      if (full) selectedLaws.push(full)
+      else selectedLaws.push(bl) // fallback: use stored data
+    }
+  })
+  renderSelectedBox()
+  updateTokenEstimate()
+  const currentPais = document.getElementById('add-pais').value
+  if (currentPais) onPaisChange({ target: { value: currentPais } })
+}
+
+function eliminarBundle(i) {
+  const bundles = getBundles()
+  bundles.splice(i, 1)
+  _saveBundles(bundles)
+  renderBundles()
+}
+
+function eliminarBundleSeleccionado() {
+  const sel = document.getElementById('bundle-select')
+  if (!sel || sel.value === '') return
+  eliminarBundle(parseInt(sel.value))
 }
 
 // Lightweight Markdown → HTML renderer + § / Art. highlighting.

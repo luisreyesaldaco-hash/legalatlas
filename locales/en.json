@@ -257,5 +257,29 @@
 
   "overlay.desc.magnus": "Magnus requires an account. Comparative multi-jurisdictional analysis. Free access until May 7.",
 
-  "atlas.placeholder": "Describe the case. Ex: My employer terminated my contract without notice and did not pay my last 3 weeks of salary."
+  "atlas.placeholder": "Describe the case. Ex: My employer terminated my contract without notice and did not pay my last 3 weeks of salary.",
+
+  "selector.leyes": "Selected laws",
+  "selector.jurisdictions": "Add laws from any jurisdiction",
+  "selector.empty": "Nothing yet.<br>Select a country and a law ↓",
+  "selector.add": "Add law",
+  "selector.pais": "— Country —",
+  "selector.sel.pais": "— Select a country first —",
+  "selector.tokens": "Analysis scope",
+  "selector.question": "Your question",
+  "selector.warning": "⚠ Very large selection — analysis will take longer.",
+  "selector.placeholder": "What are the employee's rights upon dismissal? What are the deadlines?",
+  "selector.analyze": "Analyze →",
+  "selector.response": "Response · Selector",
+  "selector.empty.response": "Select a law and ask a question",
+  "selector.bundles": "My Bundles",
+  "selector.bundle.name": "Bundle name…",
+  "selector.bundle.ok": "OK",
+  "selector.bundle.guardar": "★ Save selection",
+
+  "selector.guide.title": "Select a law",
+  "selector.guide.sub": "Add one or more laws from the left panel, then write your question.",
+  "selector.step1": "Select laws on the left",
+  "selector.step2": "Write your question",
+  "selector.step3": "Run analysis →"
 }

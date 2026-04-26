@@ -258,5 +258,29 @@
 
   "overlay.desc.magnus": "Magnus nécessite un compte. Analyse comparative multi-juridictionnelle. Accès gratuit jusqu'au 7 mai.",
 
-  "atlas.placeholder": "Décrivez l'affaire. Ex : Mon employeur a résilié mon contrat sans préavis et ne m'a pas payé mes 3 dernières semaines de salaire."
+  "atlas.placeholder": "Décrivez l'affaire. Ex : Mon employeur a résilié mon contrat sans préavis et ne m'a pas payé mes 3 dernières semaines de salaire.",
+
+  "selector.leyes": "Lois sélectionnées",
+  "selector.jurisdictions": "Ajoutez des lois de n'importe quelle juridiction",
+  "selector.empty": "Rien encore.<br>Sélectionnez un pays et une loi ↓",
+  "selector.add": "Ajouter une loi",
+  "selector.pais": "— Pays —",
+  "selector.sel.pais": "— Choisissez d'abord un pays —",
+  "selector.tokens": "Étendue de l'analyse",
+  "selector.question": "Votre question",
+  "selector.warning": "⚠ Sélection très vaste — l'analyse prendra plus de temps.",
+  "selector.placeholder": "Quels sont les droits du salarié en cas de licenciement ? Quels sont les délais ?",
+  "selector.analyze": "Analyser →",
+  "selector.response": "Réponse · Selector",
+  "selector.empty.response": "Sélectionnez une loi et posez une question",
+  "selector.bundles": "Mes Bundles",
+  "selector.bundle.name": "Nom du bundle…",
+  "selector.bundle.ok": "OK",
+  "selector.bundle.guardar": "★ Enregistrer la sélection",
+
+  "selector.guide.title": "Sélectionnez une loi",
+  "selector.guide.sub": "Ajoutez une ou plusieurs lois depuis le panneau gauche, puis posez votre question.",
+  "selector.step1": "Sélectionner les lois",
+  "selector.step2": "Posez votre question",
+  "selector.step3": "Lancer l'analyse →"
 }

@@ -257,5 +257,29 @@
 
   "overlay.desc.magnus": "Magnus requiere una cuenta. Análisis multi-jurisdiccional comparado. Acceso gratuito hasta el 7 de mayo.",
 
-  "atlas.placeholder": "Describe el caso. Ej: Mi empleador terminó mi contrato sin previo aviso y no me pagó las últimas 3 semanas de salario."
+  "atlas.placeholder": "Describe el caso. Ej: Mi empleador terminó mi contrato sin previo aviso y no me pagó las últimas 3 semanas de salario.",
+
+  "selector.leyes": "Leyes seleccionadas",
+  "selector.jurisdictions": "Agrega leyes de cualquier jurisdicción",
+  "selector.empty": "Nada aún.<br>Selecciona un país y una ley ↓",
+  "selector.add": "Agregar ley",
+  "selector.pais": "— País —",
+  "selector.sel.pais": "— Primero elige un país —",
+  "selector.tokens": "Alcance del análisis",
+  "selector.question": "Tu pregunta",
+  "selector.warning": "⚠ Selección muy amplia — el análisis tardará más.",
+  "selector.placeholder": "¿Cuáles son los derechos del trabajador al ser despedido? ¿Cuáles son los plazos?",
+  "selector.analyze": "Analizar →",
+  "selector.response": "Respuesta · Selector",
+  "selector.empty.response": "Selecciona una ley y haz una pregunta",
+  "selector.bundles": "Mis Bundles",
+  "selector.bundle.name": "Nombre del bundle…",
+  "selector.bundle.ok": "OK",
+  "selector.bundle.guardar": "★ Guardar selección",
+
+  "selector.guide.title": "Selecciona una ley",
+  "selector.guide.sub": "Agrega una o más leyes desde el panel izquierdo, luego formula tu pregunta.",
+  "selector.step1": "Elige las leyes",
+  "selector.step2": "Formula tu pregunta",
+  "selector.step3": "Inicia el análisis →"
 }
