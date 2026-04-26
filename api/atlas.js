@@ -1,12 +1,10 @@
 // api/atlas.js
-// Dialéctica hegeliana: Gemini expande tesis/antítesis → RAG paralelo → Claude clasifica
+// Dialéctica hegeliana: Gemini expande tesis/antítesis → RAG paralelo → Gemini clasifica
 import { createClient } from '@supabase/supabase-js'
 import { GoogleGenAI } from '@google/genai'
-import Anthropic from '@anthropic-ai/sdk'
 
 const supabase  = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
 const ai        = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY })
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 export const config = { api: { bodyParser: true } }
 
@@ -123,16 +121,7 @@ Responde SOLO en JSON:
       rawExpansion = geminiResp.text.trim()
       console.log('[atlas] expansión vía Gemini')
     } catch (geminiErr) {
-      console.warn('[atlas] Gemini falló, usando Claude fallback:', geminiErr.message)
-      const claudeFallback = await anthropic.messages.create({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 600,
-        messages: [{ role: 'user', content: DIALECTIC_PROMPT + '\n\nIMPORTANT: respond only with valid JSON, no markdown.' }]
-      })
-      rawExpansion = claudeFallback.content[0].text.trim()
-      // Strip possible markdown code fences
-      rawExpansion = rawExpansion.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
-      console.log('[atlas] expansión vía Claude fallback')
+      throw new Error('Expansión dialéctica falló: ' + geminiErr.message)
     }
 
     let tesisQueries, antitesisQueries
@@ -182,7 +171,7 @@ Responde SOLO en JSON:
     }
 
     // ══════════════════════════════════════════
-    // FASE 3 — Clasificador Gemini (Claude fallback)
+    // FASE 3 — Clasificador Gemini (fallback: _tipo_rag)
     // ══════════════════════════════════════════
     const articulosTexto = top20
       .map(a => `ID:${a.id} | ${a.numero_articulo} — ${a.ley}${a.estado ? ` (${a.estado})` : ''}:\n${(a.texto_original || '').slice(0, 300)}`)
@@ -201,33 +190,21 @@ ${articulosTexto}
 Responde SOLO en JSON array (sin markdown):
 [{"id":"...","clasificacion":"tesis|antitesis|neutral","razon":"en 10 palabras máximo"}]`
 
-    let rawClasificacion
+    let clasificaciones = []
     try {
       const geminiClas = await generateWithRetry({
         model: 'gemini-2.0-flash',
         contents: CLASSIFIER_PROMPT,
         config: { responseMimeType: 'application/json', thinkingConfig: { thinkingBudget: 0 }, temperature: 0.1, maxOutputTokens: 2000 }
       })
-      rawClasificacion = geminiClas.text.trim()
-      console.log('[atlas] clasificación vía Gemini')
-    } catch (geminiClasErr) {
-      console.warn('[atlas] Gemini clasificador falló, usando Claude fallback:', geminiClasErr.message)
-      const claudeClas = await anthropic.messages.create({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 2000,
-        messages: [{ role: 'user', content: CLASSIFIER_PROMPT + '\n\nIMPORTANT: respond only with valid JSON array, no markdown.' }]
-      })
-      rawClasificacion = claudeClas.content[0].text.trim()
-      rawClasificacion = rawClasificacion.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
-      console.log('[atlas] clasificación vía Claude fallback')
-    }
-
-    let clasificaciones = []
-    try {
-      const jsonStr = rawClasificacion.startsWith('[') ? rawClasificacion : rawClasificacion.slice(rawClasificacion.indexOf('['))
+      const raw = geminiClas.text.trim()
+      const jsonStr = raw.startsWith('[') ? raw : raw.slice(raw.indexOf('['))
       clasificaciones = JSON.parse(jsonStr)
+      console.log('[atlas] clasificación vía Gemini')
     } catch (err) {
-      console.error('[atlas] parse clasificación error:', err.message)
+      // Fallback: use the RAG query type (tesis/antitesis queries that found each article)
+      console.warn('[atlas] clasificador falló, usando _tipo_rag como fallback:', err.message)
+      clasificaciones = top20.map(a => ({ id: String(a.id), clasificacion: a._tipo_rag || 'neutral', razon: 'RAG signal' }))
     }
 
     const clasMap = new Map(clasificaciones.map(c => [String(c.id), c]))
