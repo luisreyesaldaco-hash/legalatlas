@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <script>
@@ -57,32 +57,19 @@
 
     /* ═══ TOPBAR ═══ */
     .topbar { height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; gap: 16px; background: var(--bg-card); border-bottom: 1px solid var(--border); box-shadow: var(--shadow-sm); position: relative; z-index: 100; }
-    /* Tesseum logo mark */
     .topbar-logo, .sidebar-logo { display: inline-flex !important; align-items: center; gap: 10px; font-weight: 500 !important; letter-spacing: .25em !important; }
     .topbar-logo .logo-mark, .sidebar-logo .logo-mark { width: 22px; height: 22px; flex-shrink: 0; }
-    .topbar-logo {
-      font-family: 'Fraunces', serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.3em; color: var(--text-primary); text-decoration: none; }
+    .topbar-logo { font-family: 'Fraunces', serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.3em; color: var(--text-primary); text-decoration: none; }
     .topbar-logo span { color: var(--gold); font-weight: 400; }
     .topbar-nav { display: flex; gap: 28px; }
-    .topbar-link {
-    font-family: 'Fraunces', serif;
-    font-size: 11.5px;
-    font-weight: 600;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-    .topbar-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px; background: var(--gold); transition: width 0.3s ease; }
+    .topbar-link { font-family: 'Fraunces', serif; font-size: 11.5px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
     .topbar-link:hover { color: var(--gold); }
-    .topbar-link:hover::after, .topbar-link.active::after { width: 100%; }
     .topbar-link.active { color: var(--gold); }
     .topbar-link-pro { display: flex; align-items: center; gap: 5px; }
     .pro-badge { font-size: 8px; letter-spacing: 0.08em; background: var(--gold-dim); border: 1px solid var(--gold-border); color: var(--gold); padding: 2px 5px; border-radius: 4px; }
-    .topbar-right { display: flex; align-items: center; gap: 12px; }
-    .tema-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 16px; transition: color 0.2s; padding: 4px; }
-    .tema-btn:hover { color: var(--gold); }
+    .topbar-right { display: flex; align-items: center; gap: 4px; }
+    .tema-btn { background: none; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 15px; color: var(--text-muted); padding: 3px 10px; line-height: 1.4; transition: all 0.2s; margin-left: 8px; }
+    .tema-btn:hover { color: var(--gold); border-color: var(--gold-border); }
 
     /* Lang switcher */
     .lang-switcher { position: relative; }
@@ -95,35 +82,20 @@
     .lang-option:hover { background: var(--bg-elevated); }
 
     /* Hamburger */
-    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; flex-direction: column; gap: 4px; }
-    .hamburger span { display: block; width: 20px; height: 2px; background: var(--text-muted); border-radius: 2px; }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; flex-direction: column; gap: 5px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-secondary); border-radius: 2px; }
 
     /* Sidebar */
-    .sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100vh; background: var(--bg-card); border-left: 1px solid var(--border); box-shadow: var(--shadow-md); z-index: 300; transition: right 0.3s ease; display: flex; flex-direction: column; padding: 20px; gap: 8px; }
+    .sidebar { position: fixed; top: 0; right: -280px; width: 260px; height: 100vh; background: var(--bg-card); border-left: 1px solid var(--border); box-shadow: -8px 0 32px rgba(10,10,9,0.15); z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
     .sidebar.open { right: 0; }
-    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 299; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(10,10,9,0.45); z-index: 199; }
     .sidebar-overlay.open { display: block; }
-    .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .sidebar-logo { font-family: 'Fraunces', serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.3em; color: var(--text-primary); text-decoration: none; }
-    .sidebar-logo span { color: var(--gold); font-weight: 400; }
-    .sidebar-close { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text-muted); }
-    .sidebar-nav { display: flex; flex-direction: column; gap: 4px; }
-    .sidebar-link {
-    font-family: 'Fraunces', serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    text-decoration: none;
-    padding: 13px 24px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: all 0.2s;
-    border-left: 2px solid transparent;
-  }
-    .sidebar-link:hover, .sidebar-link.active { color: var(--gold); background: var(--gold-dim); }
+    .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    .sidebar-close { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 18px; padding: 4px; line-height: 1; }
+    .sidebar-close:hover { color: var(--text-primary); }
+    .sidebar-nav { flex: 1; display: flex; flex-direction: column; padding: 16px 0; overflow-y: auto; }
+    .sidebar-link { font-family: 'Fraunces', serif; font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-secondary); text-decoration: none; padding: 12px 24px; border-left: 3px solid transparent; transition: all 0.2s; }
+    .sidebar-link:hover, .sidebar-link.active { color: var(--gold); background: rgba(143,106,42,0.06); border-left-color: var(--gold); }
 
     @media (max-width: 680px) {
       .topbar-nav { display: none; }
@@ -200,14 +172,7 @@
 
     /* ═══ CANVAS AREA ═══ */
     .atlas-canvas-wrap { flex: 1; position: relative; overflow: hidden; background: #050403; }
-    #atlas-canvas { width: 100%; height: 100%; display: block; }
-
-    /* ═══ LABELS OVERLAY ═══ */
-    #labels-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
-    .planet-label { position: absolute; transform: translate(-50%, -50%); font-family: 'Fraunces', serif; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-shadow: 0 0 8px rgba(0,0,0,0.9), 0 1px 3px rgba(0,0,0,0.95); pointer-events: none; white-space: nowrap; }
-    .planet-label.tesis    { color: #A8CCFF; }
-    .planet-label.antitesis { color: #FFB0B0; }
-    .planet-label.neutral  { color: #C8C8C0; }
+    #atlas-svg { width: 100%; height: 100%; display: block; }
 
     /* ═══ TOOLTIP ═══ */
     .planet-tooltip { display: none; position: fixed; background: var(--bg-card); border: 1px solid var(--gold-border); border-radius: 8px; padding: 10px 14px; pointer-events: none; z-index: 200; max-width: 260px; box-shadow: var(--shadow-md); }
@@ -233,13 +198,13 @@
 <header class="topbar">
   <a href="index.html" class="topbar-logo" id="logo-link"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-nav-atl1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-nav-atl1)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESSEUM</a>
   <nav class="topbar-nav">
-      <a href="abogado.html" class="topbar-link " data-i18n="nav.abogado">Biblioteca</a>
-      <a href="jurisprudencia.html" class="topbar-link " data-i18n="nav.juris">Judikatura</a>
-      <a href="selector.html" class="topbar-link topbar-link-pro " data-i18n="nav.selector">Selector</a>
-      <a href="magnus.html" class="topbar-link topbar-link-pro " data-i18n="nav.marco">Magnus</a>
-      <a href="atlas.html" class="topbar-link topbar-link-pro active" data-i18n="nav.atlas">Atlas</a>
-      <a href="cuenta.html" class="topbar-link " data-i18n="nav.cuenta">Mi Cuenta</a>
-    </nav>
+    <a href="abogado.html" class="topbar-link" data-i18n="nav.abogado">Biblioteca</a>
+    <a href="jurisprudencia.html" class="topbar-link" data-i18n="nav.juris">Judikatura</a>
+    <a href="selector.html" class="topbar-link topbar-link-pro" data-i18n="nav.selector">Selector</a>
+    <a href="magnus.html" class="topbar-link topbar-link-pro" data-i18n="nav.marco">Magnus</a>
+    <a href="atlas.html" class="topbar-link topbar-link-pro active" data-i18n="nav.atlas">Atlas</a>
+    <a href="cuenta.html" class="topbar-link" data-i18n="nav.cuenta">Mi Cuenta</a>
+  </nav>
   <div class="topbar-right">
     <div class="lang-switcher" id="lang-switcher">
       <button class="lang-globe-btn" onclick="toggleLangDropdown()" title="Language / Idioma">
@@ -261,16 +226,16 @@
 <aside class="sidebar" id="la-sidebar">
   <div class="sidebar-header">
     <a href="index.html" class="sidebar-logo" id="sidebar-logo-link"><svg class="logo-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg-nav-atl2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A55C"/><stop offset="100%" stop-color="#8F6A2A"/></linearGradient></defs><g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"><path d="M 15 15 L 85 15 L 85 85 L 30 85 L 30 30 L 70 30 L 70 70 L 45 70 L 45 45 L 60 45"/></g><path d="M 60 45 L 60 60 L 50 60 L 50 55" fill="none" stroke="url(#tg-nav-atl2)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>TESSEUM</a>
-    <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+    <button class="sidebar-close" onclick="closeSidebar()" aria-label="Cerrar">✕</button>
   </div>
   <nav class="sidebar-nav">
-      <a href="abogado.html" class="sidebar-link " data-i18n="nav.abogado">Biblioteca</a>
-      <a href="jurisprudencia.html" class="sidebar-link " data-i18n="nav.juris">Judikatura</a>
-      <a href="selector.html" class="sidebar-link " data-i18n="nav.selector">Selector</a>
-      <a href="magnus.html" class="sidebar-link " data-i18n="nav.marco">Magnus</a>
-      <a href="atlas.html" class="sidebar-link active" data-i18n="nav.atlas">Atlas</a>
-      <a href="cuenta.html" class="sidebar-link " data-i18n="nav.cuenta">Mi Cuenta</a>
-    </nav>
+    <a href="abogado.html" class="sidebar-link" data-i18n="nav.abogado">Biblioteca</a>
+    <a href="jurisprudencia.html" class="sidebar-link" data-i18n="nav.juris">Judikatura</a>
+    <a href="selector.html" class="sidebar-link" data-i18n="nav.selector">Selector</a>
+    <a href="magnus.html" class="sidebar-link" data-i18n="nav.marco">Magnus</a>
+    <a href="atlas.html" class="sidebar-link active" data-i18n="nav.atlas">Atlas</a>
+    <a href="cuenta.html" class="sidebar-link" data-i18n="nav.cuenta">Mi Cuenta</a>
+  </nav>
 </aside>
 
 <div class="atlas-layout">
@@ -294,7 +259,7 @@
         id="caso-input"
         class="atlas-textarea"
         data-i18n-placeholder="atlas.placeholder"
-        placeholder="Describe el caso. Ej: Mi empleador terminó mi contrato sin previo aviso y no me pagó las últimas 3 semanas de salario."
+        placeholder="Describe el caso o la pregunta jurídica. Incluye los hechos relevantes: partes, qué ocurrió y qué necesitas saber."
       ></textarea>
       <button id="btn-atlas" class="atlas-btn" onclick="analizarAtlas()" data-i18n="atlas.btn.analizar">
         ATLAS ⚡ — ANALIZAR
@@ -317,17 +282,16 @@
 
   </aside>
 
-  <!-- ═══ CANVAS ═══ -->
+  <!-- ═══ GRAPH CANVAS ═══ -->
   <div class="atlas-canvas-wrap" id="canvas-wrap">
-    <canvas id="atlas-canvas"></canvas>
-    <div id="labels-overlay"></div>
+    <svg id="atlas-svg"></svg>
     <div style="position:absolute;bottom:16px;right:16px;z-index:10;display:flex;flex-direction:column;gap:6px;">
-      <button id="zoom-in-btn" style="background:rgba(200,168,75,0.15);border:1px solid rgba(200,168,75,0.3);color:#c8a84b;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;font-family:monospace;">+</button>
+      <button id="zoom-in-btn"  style="background:rgba(200,168,75,0.15);border:1px solid rgba(200,168,75,0.3);color:#c8a84b;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;font-family:monospace;">+</button>
       <button id="zoom-out-btn" style="background:rgba(200,168,75,0.15);border:1px solid rgba(200,168,75,0.3);color:#c8a84b;border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:18px;font-family:monospace;">−</button>
     </div>
     <div class="canvas-empty" id="canvas-empty">
       <div class="canvas-empty-glyph">⚡</div>
-      <div class="canvas-empty-text">Sistema Solar Jurídico</div>
+      <div class="canvas-empty-text" data-i18n="atlas.canvas.empty">Sistema Normativo</div>
     </div>
   </div>
 
@@ -340,7 +304,7 @@
   <div class="tooltip-tipo"       id="tt-tipo"></div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 
 <script>
 // ═══════════════════════════════════════════════
@@ -361,7 +325,7 @@ const paisSelect   = document.getElementById('pais-select')
 const estadoSelect = document.getElementById('estado-select')
 
 paisSelect.innerHTML = PAISES.map(p => `<option value="${p.value}">${p.label}</option>`).join('')
-paisSelect.value = 'CZ'
+paisSelect.value = (localStorage.getItem('atlas_lang') === 'cs') ? 'CZ' : 'MX'
 
 paisSelect.addEventListener('change', () => {
   const pais = PAISES.find(p => p.value === paisSelect.value)
@@ -375,311 +339,281 @@ paisSelect.addEventListener('change', () => {
 })
 
 // ═══════════════════════════════════════════════
-// THREE.JS SETUP
-// ═══════════════════════════════════════════════
-const canvas   = document.getElementById('atlas-canvas')
-const wrap     = document.getElementById('canvas-wrap')
-
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
-const scene  = new THREE.Scene()
-scene.background = new THREE.Color(0x050403)
-scene.fog = new THREE.FogExp2(0x050403, 0.0014)
-
-const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 2000)
-camera.position.set(0, 110, 280)
-camera.lookAt(0, 0, 0)
-
-function resizeRenderer() {
-  const w = wrap.clientWidth, h = wrap.clientHeight
-  renderer.setSize(w, h, false)
-  camera.aspect = w / h
-  camera.updateProjectionMatrix()
-}
-resizeRenderer()
-window.addEventListener('resize', resizeRenderer)
-
-// Zoom buttons
-document.getElementById('zoom-in-btn').addEventListener('click', () => {
-  camera.position.z = Math.max(camera.position.z - 30, 60)
-})
-document.getElementById('zoom-out-btn').addEventListener('click', () => {
-  camera.position.z = Math.min(camera.position.z + 30, 600)
-})
-
-// Lights
-scene.add(new THREE.AmbientLight(0xffffff, 0.15))
-const sunLight = new THREE.PointLight(0xC49A3C, 5, 700)
-scene.add(sunLight)
-const rimLight = new THREE.DirectionalLight(0xfaf0e0, 0.5)
-rimLight.position.set(-1, 1, -1)
-scene.add(rimLight)
-
-// Stars
-;(function() {
-  const pos = new Float32Array(3000 * 3)
-  for (let i = 0; i < pos.length; i++) pos[i] = (Math.random() - 0.5) * 2000
-  const g = new THREE.BufferGeometry()
-  g.setAttribute('position', new THREE.BufferAttribute(pos, 3))
-  scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0xF0ECE4, size: 0.7, opacity: 0.55, transparent: true })))
-})()
-
-// Center sphere (the "case" sun)
-const centerMesh = new THREE.Mesh(
-  new THREE.SphereGeometry(16, 40, 40),
-  new THREE.MeshPhongMaterial({ color: 0xC49A3C, emissive: 0x8B6820, emissiveIntensity: 0.8, shininess: 80 })
-)
-scene.add(centerMesh)
-scene.add(new THREE.Mesh(
-  new THREE.SphereGeometry(22, 32, 32),
-  new THREE.MeshBasicMaterial({ color: 0xC49A3C, transparent: true, opacity: 0.05, side: THREE.BackSide })
-))
-
-// ═══════════════════════════════════════════════
 // LAW ABBREVIATIONS
 // ═══════════════════════════════════════════════
 const LEY_ABREVS = {
-  // Czech
-  'Zákoník práce': 'ZP',
-  'Listina základních práv a svobod': 'LZPS',
-  'Ústava České republiky': 'Ústava',
-  'Občanský zákoník': 'OZ',
-  'Zákon o obchodních korporacích': 'ZOK',
-  'Trestní zákoník': 'TZ',
-  'Trestní řád': 'TŘ',
-  'Občanský soudní řád': 'OSŘ',
-  'Insolvenční zákon': 'IZ',
-  'Exekuční řád': 'EŘ',
-  'Správní řád': 'SŘ',
-  'Zákon o mezinárodním právu soukromém': 'ZMPS',
-  // Mexican
+  'Zákoník práce': 'ZP', 'Listina základních práv a svobod': 'LZPS',
+  'Ústava České republiky': 'Ústava', 'Občanský zákoník': 'OZ',
+  'Zákon o obchodních korporacích': 'ZOK', 'Trestní zákoník': 'TZ',
+  'Trestní řád': 'TŘ', 'Občanský soudní řád': 'OSŘ',
+  'Insolvenční zákon': 'IZ', 'Exekuční řád': 'EŘ',
+  'Správní řád': 'SŘ', 'Zákon o mezinárodním právu soukromém': 'ZMPS',
   'Constitución Política de los Estados Unidos Mexicanos': 'CPEUM',
-  'Ley Federal del Trabajo': 'LFT',
-  'Código Civil': 'CC',
-  'Código de Comercio': 'CdC',
-  'Codigo Penal Federal': 'CPF',
-  'Ley de Amparo': 'LA',
-  'Ley General de Titulos y Operaciones de Credito': 'LGTOC',
-  // German
-  'Bürgerliches Gesetzbuch': 'BGB',
-  'Zivilprozessordnung': 'ZPO',
-  'Strafprozessordnung': 'StPO',
-  'Handelsgesetzbuch': 'HGB',
-  // Spanish
-  'Código Penal': 'CP',
-  'Ley de Enjuiciamiento Civil': 'LEC',
-  // French
-  'Code Civil': 'CC',
-  'Code du travail': 'CT',
-  'Code de commerce': 'Ccom',
-  'Code de procédure civile': 'CPC',
-  // Swiss
-  'Zivilgesetzbuch': 'ZGB',
-  'Obligationenrecht': 'OR',
+  'Ley Federal del Trabajo': 'LFT', 'Código Civil': 'CC',
+  'Código de Comercio': 'CdC', 'Codigo Penal Federal': 'CPF',
+  'Ley de Amparo': 'LA', 'Ley General de Titulos y Operaciones de Credito': 'LGTOC',
+  'Bürgerliches Gesetzbuch': 'BGB', 'Zivilprozessordnung': 'ZPO',
+  'Strafprozessordnung': 'StPO', 'Handelsgesetzbuch': 'HGB',
+  'Código Penal': 'CP', 'Ley de Enjuiciamiento Civil': 'LEC',
+  'Code Civil': 'CC', 'Code du travail': 'CT',
+  'Code de commerce': 'Ccom', 'Code de procédure civile': 'CPC',
+  'Zivilgesetzbuch': 'ZGB', 'Obligationenrecht': 'OR',
 }
 
 function abreviarLey(ley) {
   if (LEY_ABREVS[ley]) return LEY_ABREVS[ley]
-  // Auto: first letter of each word with 2+ chars
-  const words = ley.split(/\s+/).filter(w => w.length >= 2)
-  return words.map(w => w[0].toUpperCase()).join('').slice(0, 5)
+  return ley.split(/\s+/).filter(w => w.length >= 2).map(w => w[0].toUpperCase()).join('').slice(0, 5)
 }
 
 // ═══════════════════════════════════════════════
-// PLANET (LAW GROUP) MANAGEMENT
+// D3 FORCE GRAPH — Obsidian-style
 // ═══════════════════════════════════════════════
-const planets = []
-let highlightedLey = null
-
-const COLORS = {
-  tesis:     { sphere: 0x378ADD, emissive: 0x1A3A6B, orbit: 0x2244AA },
-  antitesis: { sphere: 0xE24B4A, emissive: 0x8B1A1A, orbit: 0xAA2222 },
-  neutral:   { sphere: 0x888880, emissive: 0x444440, orbit: 0x555550 },
+const NODE_COLOR = {
+  caso:      '#C49A3C',
+  tesis:     '#4A80F0',
+  antitesis: '#E24B4A',
+  neutral:   '#888880',
+}
+const LABEL_COLOR = {
+  caso:      '#D4A55C',
+  tesis:     '#A8CCFF',
+  antitesis: '#FFB0B0',
+  neutral:   '#C8C8C0',
 }
 
-// nivel_jerarquico → base radius; bonus from total_articulos
-const SIZE_BY_NIVEL = { 1: 18, 2: 12, 3: 7 }
+let simulation = null
+let graphRoot  = null
+let zoomBehavior = null
 
-function addPlanet(group, type) {
-  const baseR = SIZE_BY_NIVEL[group.nivel_jerarquico] || 8
-  const r     = Math.min(baseR + Math.min((group.total_articulos || 1) * 0.5, 6), 28)
+function initSVG() {
+  const svgEl = document.getElementById('atlas-svg')
+  const wrap  = document.getElementById('canvas-wrap')
+  const W = wrap.clientWidth, H = wrap.clientHeight
+  const svg = d3.select(svgEl).attr('width', W).attr('height', H)
 
-  // score_promedio → distance: high score = closer (80), low score = farther (220)
-  const score = Math.min(Math.max(group.score_promedio || 0.5, 0), 1)
-  const dist  = 80 + (1 - score) * 140
-
-  const col = COLORS[type] || COLORS.neutral
-
-  const geo  = new THREE.SphereGeometry(r, 32, 32)
-  const mat  = new THREE.MeshPhongMaterial({
-    color: col.sphere, emissive: col.emissive, emissiveIntensity: 0.3, shininess: 60
-  })
-  const mesh = new THREE.Mesh(geo, mat)
-
-  const initAngle = Math.random() * Math.PI * 2
-  const yOff      = Math.sin(initAngle * 1.7) * 18
-
-  mesh.position.set(Math.cos(initAngle) * dist, yOff, Math.sin(initAngle) * dist)
-  scene.add(mesh)
-
-  // Orbit ring
-  const orbitPts = []
-  for (let i = 0; i <= 80; i++) {
-    const a = (i / 80) * Math.PI * 2
-    orbitPts.push(new THREE.Vector3(Math.cos(a) * dist, yOff, Math.sin(a) * dist))
+  // Background + stars
+  svg.append('rect').attr('width', '100%').attr('height', '100%').attr('fill', '#050403')
+  const stars = svg.append('g').attr('pointer-events', 'none')
+  for (let i = 0; i < 220; i++) {
+    stars.append('circle')
+      .attr('cx', Math.random() * W).attr('cy', Math.random() * H)
+      .attr('r', Math.random() * 1.1 + 0.2)
+      .attr('fill', `rgba(240,236,228,${(0.1 + Math.random() * 0.35).toFixed(2)})`)
   }
-  scene.add(new THREE.Line(
-    new THREE.BufferGeometry().setFromPoints(orbitPts),
-    new THREE.LineBasicMaterial({ color: col.orbit, transparent: true, opacity: 0.22 })
-  ))
 
-  // Center → planet line
-  const linePts = [new THREE.Vector3(0, 0, 0), mesh.position.clone()]
-  const lineMat = new THREE.LineBasicMaterial({ color: col.orbit, transparent: true, opacity: 0.09 })
-  const line    = new THREE.Line(new THREE.BufferGeometry().setFromPoints(linePts), lineMat)
-  scene.add(line)
-
-  // Tesis: CW (negative angular vel), antitesis: CCW (positive, faster)
-  const baseSpeed = type === 'tesis' ? -0.00022 : type === 'antitesis' ? 0.00038 : -0.00015
-  const speed     = baseSpeed * (0.8 + Math.random() * 0.4)
-
-  // HTML label positioned via 3D→2D projection
-  const label = document.createElement('div')
-  label.className  = 'planet-label ' + type
-  label.textContent = abreviarLey(group.ley)
-  document.getElementById('labels-overlay').appendChild(label)
-
-  planets.push({ mesh, line, group, type, dist, initAngle, yOff, speed, lineMat, label, r })
-  return mesh
-}
-
-function clearPlanets() {
-  planets.forEach(p => {
-    scene.remove(p.mesh)
-    scene.remove(p.line)
-    if (p.label?.parentNode) p.label.parentNode.removeChild(p.label)
-  })
-  planets.length = 0
-}
-
-// ═══════════════════════════════════════════════
-// ANIMATION LOOP
-// ═══════════════════════════════════════════════
-const clock = new THREE.Clock()
-
-function animate() {
-  requestAnimationFrame(animate)
-  const t  = clock.getElapsedTime()
-  const cw = canvas.clientWidth
-  const ch = canvas.clientHeight
-
-  // Pulse center sun
-  const s = 1 + Math.sin(t * 1.8) * 0.07
-  centerMesh.scale.set(s, s, s)
-  centerMesh.rotation.y = t * 0.25
-
-  planets.forEach(p => {
-    const angle = p.initAngle + t * p.speed * 60
-    p.mesh.position.x = Math.cos(angle) * p.dist
-    p.mesh.position.z = Math.sin(angle) * p.dist
-    p.mesh.position.y = p.yOff
-    p.mesh.rotation.y = t * 0.4
-
-    // Update center-line endpoint
-    const pos = p.mesh.position
-    const lp  = p.line.geometry.attributes.position.array
-    lp[3] = pos.x; lp[4] = pos.y; lp[5] = pos.z
-    p.line.geometry.attributes.position.needsUpdate = true
-
-    // Project planet center to screen → position label
-    if (p.label) {
-      const v  = p.mesh.position.clone().project(camera)
-      const lx = (v.x *  0.5 + 0.5) * cw
-      const ly = (v.y * -0.5 + 0.5) * ch
-      p.label.style.left    = lx + 'px'
-      p.label.style.top     = (ly - p.r * 1.1) + 'px'
-      p.label.style.display = v.z < 1 ? 'block' : 'none'
-    }
+  // Glow filters
+  const defs = svg.append('defs')
+  ;[['gold','196,154,60',4],['blue','74,128,240',5],['red','226,75,74',5]].forEach(([name, rgb, blur]) => {
+    const f = defs.append('filter').attr('id', `glow-${name}`)
+      .attr('x','-70%').attr('y','-70%').attr('width','240%').attr('height','240%')
+    f.append('feGaussianBlur').attr('stdDeviation', blur).attr('result','blur')
+    const m = f.append('feMerge')
+    m.append('feMergeNode').attr('in','blur')
+    m.append('feMergeNode').attr('in','SourceGraphic')
   })
 
-  renderer.render(scene, camera)
+  // Main group — target for zoom/pan
+  graphRoot = svg.append('g').attr('class', 'graph-root')
+
+  // Zoom/pan
+  zoomBehavior = d3.zoom().scaleExtent([0.1, 5])
+    .on('zoom', e => graphRoot.attr('transform', e.transform))
+  svg.call(zoomBehavior)
+  svg.on('dblclick.zoom', null) // disable double-click zoom
+
+  // Zoom buttons
+  document.getElementById('zoom-in-btn').onclick  = () => d3.select(svgEl).transition().duration(300).call(zoomBehavior.scaleBy, 1.5)
+  document.getElementById('zoom-out-btn').onclick = () => d3.select(svgEl).transition().duration(300).call(zoomBehavior.scaleBy, 0.67)
+
+  // Click on background → reset highlight
+  svg.on('click', e => { if (e.target === svgEl || e.target.tagName === 'rect') resetHighlight() })
+
+  window.addEventListener('resize', () => {
+    const W2 = wrap.clientWidth, H2 = wrap.clientHeight
+    svg.attr('width', W2).attr('height', H2)
+    if (simulation) simulation.force('center', d3.forceCenter(W2/2, H2/2)).alpha(0.15).restart()
+  })
 }
-animate()
 
-// ═══════════════════════════════════════════════
-// RAYCASTER (hover + click)
-// ═══════════════════════════════════════════════
-const raycaster = new THREE.Raycaster()
-const mouse     = new THREE.Vector2()
-const tooltip   = document.getElementById('planet-tooltip')
+function clearGraph() {
+  if (simulation) { simulation.stop(); simulation = null }
+  if (graphRoot) graphRoot.selectAll('*').remove()
+}
 
-canvas.addEventListener('mousemove', e => {
-  const rect = canvas.getBoundingClientRect()
-  mouse.x =  ((e.clientX - rect.left) / rect.width)  * 2 - 1
-  mouse.y = -((e.clientY - rect.top)  / rect.height) * 2 + 1
+function buildGraph(data) {
+  clearGraph()
+  const wrap = document.getElementById('canvas-wrap')
+  const W = wrap.clientWidth, H = wrap.clientHeight
+  const { tesis = [], antitesis = [], neutral = [] } = data
 
-  raycaster.setFromCamera(mouse, camera)
-  const hits = raycaster.intersectObjects(planets.map(p => p.mesh))
+  // ── Build node + link arrays ──
+  const nodes = [{ id: '__caso__', type: 'caso', r: 18, label: 'CASO' }]
+  const links = []
 
-  if (hits.length > 0) {
-    const planet = planets.find(p => p.mesh === hits[0].object)
-    if (planet) { showTooltip(e, planet); canvas.style.cursor = 'pointer' }
-  } else {
-    tooltip.classList.remove('visible')
-    canvas.style.cursor = 'default'
+  function addGroups(groups, cls) {
+    groups.forEach(group => {
+      const leyId = 'ley:' + group.ley
+      const arts  = group.articulos || []
+      const r     = Math.min(8 + Math.sqrt(arts.length) * 1.6, 17)
+      nodes.push({ id: leyId, type: 'ley', cls, label: abreviarLey(group.ley), fullName: group.ley, r, group, score: group.score_promedio || 0 })
+      links.push({ source: '__caso__', target: leyId, cls: 'caso-ley', color: 'rgba(196,154,60,0.28)' })
+      arts.forEach(art => {
+        const artId = 'art:' + art.id
+        nodes.push({ id: artId, type: 'art', cls: art.clasificacion || cls, label: art.numero_articulo || '', r: 4, art, parentLey: leyId })
+        const alpha = '0.18'
+        const artColor = cls === 'tesis' ? `rgba(74,128,240,${alpha})` : cls === 'antitesis' ? `rgba(226,75,74,${alpha})` : `rgba(136,136,128,${alpha})`
+        links.push({ source: leyId, target: artId, cls: 'ley-art', color: artColor })
+      })
+    })
   }
-})
+  addGroups(tesis, 'tesis')
+  addGroups(antitesis, 'antitesis')
+  addGroups(neutral, 'neutral')
 
-canvas.addEventListener('click', e => {
-  const rect = canvas.getBoundingClientRect()
-  mouse.x =  ((e.clientX - rect.left) / rect.width)  * 2 - 1
-  mouse.y = -((e.clientY - rect.top)  / rect.height) * 2 + 1
-  raycaster.setFromCamera(mouse, camera)
-  const hits = raycaster.intersectObjects(planets.map(p => p.mesh))
-  if (hits.length > 0) {
-    const planet = planets.find(p => p.mesh === hits[0].object)
-    if (planet) {
-      highlightPlanet(planet.group.ley)
-      mostrarDetalle(planet.group, planet.type)
-    }
-  }
-})
+  // Scatter nodes near center before simulation starts
+  nodes.forEach(d => { d.x = W/2 + (Math.random()-0.5)*180; d.y = H/2 + (Math.random()-0.5)*180 })
 
-function showTooltip(e, planet) {
-  const g     = planet.group
-  const color = { tesis: '#7AABFF', antitesis: '#FF8080', neutral: '#BBBBAA' }[planet.type] || '#BBBBAA'
+  // ── Force simulation ──
+  simulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d => d.id)
+      .distance(d => d.cls === 'caso-ley' ? 150 : 42)
+      .strength(d => d.cls === 'caso-ley' ? 0.3 : 0.9))
+    .force('charge', d3.forceManyBody()
+      .strength(d => d.type === 'caso' ? -800 : d.type === 'ley' ? -260 : -60))
+    .force('center', d3.forceCenter(W/2, H/2).strength(0.05))
+    .force('collide', d3.forceCollide(d => d.r + 6).strength(0.8))
 
-  document.getElementById('tt-ley-nombre').textContent = g.ley
-  document.getElementById('tt-ley-nombre').style.color = color
-  document.getElementById('tt-stats').textContent      = `${g.total_articulos} artículos · ${Math.round(g.score_promedio * 100)}% relevante`
-  document.getElementById('tt-tipo').textContent       = planet.type.toUpperCase()
-  document.getElementById('tt-tipo').style.color       = color
+  // ── Render links ──
+  const linkSel = graphRoot.append('g').attr('class', 'links')
+    .selectAll('line').data(links).enter().append('line')
+    .attr('stroke', d => d.color)
+    .attr('stroke-width', d => d.cls === 'caso-ley' ? 1.4 : 0.8)
 
-  const tx = Math.min(e.clientX + 14, window.innerWidth  - 280)
-  const ty = Math.min(e.clientY + 14, window.innerHeight - 100)
-  tooltip.style.left = tx + 'px'
-  tooltip.style.top  = ty + 'px'
-  tooltip.classList.add('visible')
+  // ── Render nodes ──
+  const drag = d3.drag()
+    .on('start', (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y })
+    .on('drag',  (e, d) => { d.fx = e.x; d.fy = e.y })
+    .on('end',   (e, d) => { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null })
+
+  const nodeSel = graphRoot.append('g').attr('class', 'nodes')
+    .selectAll('g').data(nodes).enter().append('g')
+    .attr('class', d => `gnode gnode-${d.type}`)
+    .call(drag)
+    .style('cursor', d => d.type === 'ley' ? 'pointer' : 'default')
+
+  // Circles
+  nodeSel.append('circle')
+    .attr('r', d => d.r)
+    .attr('fill', d => NODE_COLOR[d.type === 'caso' ? 'caso' : d.cls] || NODE_COLOR.neutral)
+    .attr('fill-opacity', d => d.type === 'art' ? 0.5 : d.type === 'ley' ? 0.88 : 0.95)
+    .attr('stroke', d => NODE_COLOR[d.type === 'caso' ? 'caso' : d.cls] || NODE_COLOR.neutral)
+    .attr('stroke-width', d => d.type === 'ley' ? 1.5 : 0.5)
+    .attr('stroke-opacity', 0.6)
+    .attr('filter', d => {
+      if (d.type === 'caso') return 'url(#glow-gold)'
+      if (d.type === 'ley')  return d.cls === 'tesis' ? 'url(#glow-blue)' : d.cls === 'antitesis' ? 'url(#glow-red)' : 'none'
+      return 'none'
+    })
+
+  // Labels on caso + ley nodes
+  nodeSel.filter(d => d.type !== 'art')
+    .append('text')
+    .attr('dy', d => -(d.r + 5))
+    .attr('text-anchor', 'middle')
+    .attr('font-family', 'Fraunces, serif')
+    .attr('font-size', d => d.type === 'caso' ? '10px' : '9px')
+    .attr('font-weight', '700')
+    .attr('letter-spacing', '0.08em')
+    .attr('fill', d => LABEL_COLOR[d.type === 'caso' ? 'caso' : d.cls] || LABEL_COLOR.neutral)
+    .attr('paint-order', 'stroke')
+    .attr('stroke', '#050403')
+    .attr('stroke-width', '3px')
+    .style('pointer-events', 'none')
+    .text(d => d.label)
+
+  // ── Tooltip ──
+  const tooltip = document.getElementById('planet-tooltip')
+
+  nodeSel.filter(d => d.type === 'ley')
+    .on('mouseover', (e, d) => {
+      const col = NODE_COLOR[d.cls] || NODE_COLOR.neutral
+      document.getElementById('tt-ley-nombre').textContent = d.fullName
+      document.getElementById('tt-ley-nombre').style.color = col
+      document.getElementById('tt-stats').textContent = `${d.group.total_articulos} § · ${Math.round(d.score * 100)}% relevante`
+      document.getElementById('tt-tipo').textContent = d.cls.toUpperCase()
+      document.getElementById('tt-tipo').style.color = col
+      tooltip.classList.add('visible')
+    })
+    .on('mousemove', e => {
+      tooltip.style.left = Math.min(e.clientX + 14, window.innerWidth  - 280) + 'px'
+      tooltip.style.top  = Math.min(e.clientY + 14, window.innerHeight - 100) + 'px'
+    })
+    .on('mouseout', () => tooltip.classList.remove('visible'))
+    .on('click', (e, d) => { e.stopPropagation(); highlightNode(d.id); mostrarDetalle(d.group, d.cls) })
+
+  nodeSel.filter(d => d.type === 'art')
+    .on('mouseover', (e, d) => {
+      const col = NODE_COLOR[d.cls] || NODE_COLOR.neutral
+      const preview = (d.art?.texto_original || '').slice(0, 100)
+      document.getElementById('tt-ley-nombre').textContent = d.art?.numero_articulo || d.label
+      document.getElementById('tt-ley-nombre').style.color = col
+      document.getElementById('tt-stats').textContent = preview + (preview.length === 100 ? '…' : '')
+      document.getElementById('tt-tipo').textContent = d.cls.toUpperCase()
+      document.getElementById('tt-tipo').style.color = col
+      tooltip.classList.add('visible')
+    })
+    .on('mousemove', e => {
+      tooltip.style.left = Math.min(e.clientX + 14, window.innerWidth  - 280) + 'px'
+      tooltip.style.top  = Math.min(e.clientY + 14, window.innerHeight - 100) + 'px'
+    })
+    .on('mouseout', () => tooltip.classList.remove('visible'))
+
+  // ── Tick ──
+  simulation.on('tick', () => {
+    linkSel
+      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x).attr('y2', d => d.target.y)
+    nodeSel.attr('transform', d => `translate(${d.x ?? 0},${d.y ?? 0})`)
+  })
 }
 
-function highlightPlanet(leyName) {
-  highlightedLey = leyName
-  planets.forEach(p => {
-    const isTarget = p.group.ley === leyName
-    const col = COLORS[p.type] || COLORS.neutral
-    p.mesh.material.emissiveIntensity = isTarget ? 1.5 : 0.3
-    p.mesh.material.emissive.setHex(isTarget
-      ? (p.type === 'tesis' ? 0x1A55FF : p.type === 'antitesis' ? 0xFF1A1A : 0x888888)
-      : col.emissive)
-    p.mesh.scale.setScalar(isTarget ? 1.35 : 1)
-    p.lineMat.opacity = isTarget ? 0.5 : 0.09
-    if (p.label) p.label.style.opacity = isTarget ? '1' : '0.5'
-  })
+function highlightNode(leyId) {
+  if (!graphRoot) return
+
+  // Collect article IDs that belong to this law
+  const artIds = new Set()
+  graphRoot.selectAll('.gnode-art').each(d => { if (d.parentLey === leyId) artIds.add(d.id) })
+
+  // Dim everything, then highlight the selected cluster
+  graphRoot.selectAll('.gnode circle')
+    .attr('fill-opacity', d => {
+      if (d.id === '__caso__' || d.id === leyId) return d.type === 'ley' ? 0.95 : 0.95
+      if (artIds.has(d.id)) return 0.65
+      return 0.1
+    })
+
+  graphRoot.selectAll('.links line')
+    .attr('stroke-opacity', d => {
+      const s = d.source.id || d.source
+      const t = d.target.id || d.target
+      if (s === '__caso__' && t === leyId) return 0.9
+      if (s === leyId) return 0.7
+      return 0.04
+    })
 
   document.querySelectorAll('.ley-item').forEach(el => {
-    el.classList.toggle('active', el.dataset.leyName === leyName)
+    el.classList.toggle('active', el.dataset.leyId === leyId)
   })
+}
+
+function resetHighlight() {
+  if (!graphRoot) return
+  graphRoot.selectAll('.gnode circle')
+    .attr('fill-opacity', d => d.type === 'art' ? 0.5 : d.type === 'ley' ? 0.88 : 0.95)
+  graphRoot.selectAll('.links line')
+    .attr('stroke-opacity', 1)
+  document.querySelectorAll('.ley-item').forEach(el => el.classList.remove('active'))
+  cerrarDetalle()
 }
 
 // ═══════════════════════════════════════════════
@@ -687,20 +621,18 @@ function highlightPlanet(leyName) {
 // ═══════════════════════════════════════════════
 function mostrarDetalle(group, type) {
   const color = { tesis: '#4A80F0', antitesis: '#E05050', neutral: 'var(--gold)' }[type] || 'var(--gold)'
-
   document.getElementById('detail-ley-titulo').textContent = group.ley.toUpperCase()
   document.getElementById('detail-ley-titulo').style.color = color
-  document.getElementById('detail-ley-sub').textContent    =
-    `${group.total_articulos} artículos encontrados · ${Math.round(group.score_promedio * 100)}% relevancia promedio`
+  document.getElementById('detail-ley-sub').textContent =
+    `${group.total_articulos} § · ${Math.round(group.score_promedio * 100)}% relevancia`
 
   const list = document.getElementById('detail-arts-list')
   list.innerHTML = ''
-
   ;(group.articulos || []).forEach(art => {
-    const div = document.createElement('div')
+    const div    = document.createElement('div')
     div.className = 'ley-detail-art'
-    const txtId   = 'atxt-' + art.id
-    const texto   = art.texto_original || ''
+    const txtId  = 'atxt-' + art.id
+    const texto  = art.texto_original || ''
     const preview = texto.slice(0, 200)
     const hayMas  = texto.length > 200
     div.innerHTML = `
@@ -714,7 +646,6 @@ function mostrarDetalle(group, type) {
     `
     list.appendChild(div)
   })
-
   document.getElementById('ley-detail').classList.add('open')
 }
 
@@ -736,16 +667,15 @@ async function analizarAtlas() {
   const pais   = paisSelect.value
   const estado = estadoSelect.style.display !== 'none' ? estadoSelect.value : null
 
-  if (caso.length < 20) { alert('Describe tu caso con más detalle (mínimo 20 caracteres).'); return }
+  if (caso.length < 20) { alert('Describe tu caso con más detalle.'); return }
   if (!pais)            { alert('Selecciona un país.'); return }
 
-  document.getElementById('btn-atlas').disabled    = true
-  document.getElementById('panel-loading').style.display = 'block'
-  document.getElementById('panel-results').innerHTML     = ''
-  document.getElementById('canvas-empty').style.display  = 'none'
+  document.getElementById('btn-atlas').disabled           = true
+  document.getElementById('panel-loading').style.display  = 'block'
+  document.getElementById('panel-results').innerHTML      = ''
+  document.getElementById('canvas-empty').style.display   = 'none'
   cerrarDetalle()
-  clearPlanets()
-  tooltip.classList.remove('visible')
+  clearGraph()
 
   try {
     const res = await fetch('/api/atlas', {
@@ -764,7 +694,7 @@ async function analizarAtlas() {
     alert('Error al analizar: ' + err.message)
     document.getElementById('canvas-empty').style.display = 'flex'
   } finally {
-    document.getElementById('btn-atlas').disabled    = false
+    document.getElementById('btn-atlas').disabled          = false
     document.getElementById('panel-loading').style.display = 'none'
   }
 }
@@ -779,37 +709,32 @@ function renderResultados(data) {
     return
   }
 
-  // Add law-group planets to scene
-  tesis.forEach(g     => addPlanet(g, 'tesis'))
-  antitesis.forEach(g => addPlanet(g, 'antitesis'))
-  neutral.forEach(g   => addPlanet(g, 'neutral'))
+  buildGraph(data)
 
-  // Render law list in panel
   const container = document.getElementById('panel-results')
   container.innerHTML = ''
 
   function renderSection(label, groups, type) {
     if (!groups.length) return
     const sec = document.createElement('div')
-    sec.innerHTML = `<div class="ley-section-label ${type}">${label} · ${groups.length} leyes</div>`
+    sec.innerHTML = `<div class="ley-section-label ${type}">${label} · ${groups.length}</div>`
     groups.forEach(group => {
-      const item = document.createElement('div')
-      item.className        = 'ley-item ' + type
-      item.dataset.leyName  = group.ley
+      const leyId = 'ley:' + group.ley
+      const item  = document.createElement('div')
+      item.className       = 'ley-item ' + type
+      item.dataset.leyId   = leyId
+      item.dataset.leyName = group.ley
       item.innerHTML = `
         <div class="ley-item-row1">
           <span class="ley-abrev">${abreviarLey(group.ley)}</span>
           <span class="ley-nombre">${group.ley}</span>
         </div>
         <div class="ley-item-meta">
-          <span class="ley-arts-badge">${group.total_articulos} art.</span>
+          <span class="ley-arts-badge">${group.total_articulos} §</span>
           <span class="ley-score-badge">${Math.round(group.score_promedio * 100)}% relevante</span>
         </div>
       `
-      item.addEventListener('click', () => {
-        highlightPlanet(group.ley)
-        mostrarDetalle(group, type)
-      })
+      item.addEventListener('click', () => { highlightNode(leyId); mostrarDetalle(group, type) })
       sec.appendChild(item)
     })
     container.appendChild(sec)
@@ -835,11 +760,14 @@ function toggleTema() {
   if (btn) btn.textContent = t === 'dark' ? '◑' : '●'
 })()
 
-function openSidebar()  { document.getElementById('la-sidebar').classList.add('open'); document.getElementById('sidebar-overlay').classList.add('open'); document.body.style.overflow = 'hidden' }
-function closeSidebar() { document.getElementById('la-sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('open'); document.body.style.overflow = '' }
-function toggleLangDropdown()  { document.getElementById('lang-dropdown').classList.toggle('open') }
-function closeLangDropdown()   { document.getElementById('lang-dropdown').classList.remove('open') }
+function openSidebar()       { document.getElementById('la-sidebar').classList.add('open'); document.getElementById('sidebar-overlay').classList.add('open'); document.body.style.overflow = 'hidden' }
+function closeSidebar()      { document.getElementById('la-sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.remove('open'); document.body.style.overflow = '' }
+function toggleLangDropdown() { document.getElementById('lang-dropdown').classList.toggle('open') }
+function closeLangDropdown()  { document.getElementById('lang-dropdown').classList.remove('open') }
 document.addEventListener('click', e => { if (!e.target.closest('#lang-switcher')) closeLangDropdown() })
+
+// Init graph canvas
+initSVG()
 </script>
 
 <script defer src="/_vercel/insights/script.js"></script>
