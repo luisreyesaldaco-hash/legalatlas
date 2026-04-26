@@ -116,22 +116,22 @@
   .page-subtitle { font-size: 15px; color: var(--text-muted); line-height: 1.6; margin-bottom: 36px; max-width: 600px; }
 
   /* ── Country switcher ── */
-  .country-toggle {
-    display: inline-flex;
-    gap: 8px;
-    margin-bottom: 16px;
+  .country-select-wrap {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
   }
-  .country-btn {
-    font-family: 'Fraunces', serif; font-size: 11px; letter-spacing: 0.08em;
-    padding: 8px 16px; border-radius: 10px;
+  .country-label {
+    font-family: 'Fraunces', serif; font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-muted); white-space: nowrap;
+  }
+  .country-select {
+    font-family: 'Fraunces', serif; font-size: 12px; letter-spacing: 0.04em;
+    padding: 7px 12px; border-radius: 8px;
     border: 1px solid var(--border); background: var(--bg-card);
-    color: var(--text-muted); cursor: pointer; transition: all .2s;
+    color: var(--text-primary); cursor: pointer; transition: border-color 0.2s;
+    appearance: none; -webkit-appearance: none;
   }
-  .country-btn:hover { color: var(--text-primary); border-color: var(--gold-border); }
-  .country-btn.active {
-    background: var(--gold-dim); border-color: var(--gold); color: var(--gold);
-    box-shadow: var(--shadow-sm);
-  }
+  .country-select:focus { border-color: var(--gold); outline: none; }
+  .country-select:hover { border-color: var(--gold-border); }
 
   /* ── Mode toggle ── */
   .mode-toggle {
@@ -394,10 +394,13 @@
     <p class="page-subtitle">Prohledejte rozhodnutí Ústavního soudu a Nejvyššího soudu. Klasickým filtrem nebo popisem situace.</p>
 
     <!-- Country switcher -->
-    <div class="country-toggle">
-      <button class="country-btn" data-pais="CZ" onclick="setPais('CZ')">🇨🇿 Česko</button>
-      <button class="country-btn" data-pais="ES" onclick="setPais('ES')">🇪🇸 España</button>
-      <button class="country-btn" data-pais="MX" onclick="setPais('MX')">🇲🇽 México</button>
+    <div class="country-select-wrap">
+      <label class="country-label" for="sel-pais-juris" data-i18n="abogado.pais">País</label>
+      <select id="sel-pais-juris" class="country-select" onchange="setPais(this.value)">
+        <option value="CZ">🇨🇿 Česko</option>
+        <option value="ES">🇪🇸 España</option>
+        <option value="MX">🇲🇽 México</option>
+      </select>
     </div>
 
     <!-- Mode toggle -->
@@ -503,9 +506,8 @@
     // ── Country switcher ─────────────────────────────────────────────────────
     function setPais(pais) {
       _paisActual = pais
-      document.querySelectorAll('.country-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.pais === pais)
-      })
+      const sel = document.getElementById('sel-pais-juris')
+      if (sel) sel.value = pais
       limpiarClassic()
       const semInput = document.getElementById('sem-input')
       if (semInput) semInput.value = ''
@@ -518,9 +520,8 @@
       const _langMap = { cs: 'CZ', sk: 'SK', fr: 'FR' }
       _paisActual = _jPais || _langMap[_jLang] || 'CZ'
       if (!['CZ','ES','MX'].includes(_paisActual)) _paisActual = 'CZ'
-      document.querySelectorAll('.country-btn').forEach(b => {
-        if (b.dataset.pais === _paisActual) b.classList.add('active')
-      })
+      const sel = document.getElementById('sel-pais-juris')
+      if (sel) sel.value = _paisActual
     })()
 
     // ── Poblar selects de año ────────────────────────────────────────────────

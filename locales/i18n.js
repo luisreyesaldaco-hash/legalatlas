@@ -109,12 +109,13 @@
     const _urlPais   = _urlParams.get('pais') || '';
 
     // ── Home navigation per locale ────────────────────────────────
-    const locale = localStorage.getItem('la-locale');
+    const locale    = localStorage.getItem('la-locale');
+    const _atlasLang = localStorage.getItem('atlas_lang') || '';
     const homePatterns = ['/', '/index.html', 'index.html'];
 
     let homeTarget = null;
-    if (locale === 'CZ' || _urlLang === 'cs') homeTarget = '/cz/';
-    if (locale === 'MX' || _urlLang === 'es') homeTarget = '/mx/';
+    if (locale === 'CZ' || _urlLang === 'cs' || _atlasLang === 'cs') homeTarget = '/cz/';
+    if (locale === 'MX' || _urlPais === 'MX') homeTarget = '/mx/';
 
     if (homeTarget) {
       document.querySelectorAll('a').forEach(a => {

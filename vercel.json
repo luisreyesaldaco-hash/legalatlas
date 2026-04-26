@@ -37,6 +37,16 @@
       "source": "/mx/jurisprudencia.html",
       "destination": "/jurisprudencia.html?lang=es&pais=MX",
       "permanent": true
+    },
+    {
+      "source": "/cz/selector.html",
+      "destination": "/selector.html?lang=cs",
+      "permanent": true
+    },
+    {
+      "source": "/mx/selector.html",
+      "destination": "/selector.html?lang=es&pais=MX",
+      "permanent": true
     }
   ]
 }
