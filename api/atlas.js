@@ -58,7 +58,7 @@ async function rpcSearch(vector, pais, estado_mx, count = 8) {
     estado_filter:   estado_mx || null,
     match_count:     count
   })
-  if (r.error) { console.error('[atlas] rpc error:', r.error.message, r.error.code); return [] }
+  if (r.error) throw new Error(`RPC buscar_marco_universal: ${r.error.message} [${r.error.code}]`)
   return r.data || []
 }
 
