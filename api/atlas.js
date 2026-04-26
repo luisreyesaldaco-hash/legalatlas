@@ -182,18 +182,13 @@ Responde SOLO en JSON:
     }
 
     // ══════════════════════════════════════════
-    // FASE 3 — Clasificador Claude (Haiku)
+    // FASE 3 — Clasificador Gemini (Claude fallback)
     // ══════════════════════════════════════════
     const articulosTexto = top20
       .map(a => `ID:${a.id} | ${a.numero_articulo} — ${a.ley}${a.estado ? ` (${a.estado})` : ''}:\n${(a.texto_original || '').slice(0, 300)}`)
       .join('\n\n---\n\n')
 
-    const claudeResp = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 2000,
-      messages: [{
-        role: 'user',
-        content: `Caso: "${caso}"
+    const CLASSIFIER_PROMPT = `Caso: "${caso}"
 
 Clasifica cada artículo como:
 - "tesis": apoya la posición del cliente
@@ -205,16 +200,34 @@ ${articulosTexto}
 
 Responde SOLO en JSON array (sin markdown):
 [{"id":"...","clasificacion":"tesis|antitesis|neutral","razon":"en 10 palabras máximo"}]`
-      }]
-    })
+
+    let rawClasificacion
+    try {
+      const geminiClas = await generateWithRetry({
+        model: 'gemini-2.0-flash',
+        contents: CLASSIFIER_PROMPT,
+        config: { responseMimeType: 'application/json', thinkingConfig: { thinkingBudget: 0 }, temperature: 0.1, maxOutputTokens: 2000 }
+      })
+      rawClasificacion = geminiClas.text.trim()
+      console.log('[atlas] clasificación vía Gemini')
+    } catch (geminiClasErr) {
+      console.warn('[atlas] Gemini clasificador falló, usando Claude fallback:', geminiClasErr.message)
+      const claudeClas = await anthropic.messages.create({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: CLASSIFIER_PROMPT + '\n\nIMPORTANT: respond only with valid JSON array, no markdown.' }]
+      })
+      rawClasificacion = claudeClas.content[0].text.trim()
+      rawClasificacion = rawClasificacion.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '')
+      console.log('[atlas] clasificación vía Claude fallback')
+    }
 
     let clasificaciones = []
     try {
-      const raw = claudeResp.content[0].text.trim()
-      const jsonStr = raw.startsWith('[') ? raw : raw.slice(raw.indexOf('['))
+      const jsonStr = rawClasificacion.startsWith('[') ? rawClasificacion : rawClasificacion.slice(rawClasificacion.indexOf('['))
       clasificaciones = JSON.parse(jsonStr)
     } catch (err) {
-      console.error('[atlas] parse claude error:', err.message)
+      console.error('[atlas] parse clasificación error:', err.message)
     }
 
     const clasMap = new Map(clasificaciones.map(c => [String(c.id), c]))
