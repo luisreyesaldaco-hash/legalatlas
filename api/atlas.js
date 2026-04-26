@@ -109,7 +109,7 @@ Responde SOLO en JSON:
     let rawExpansion
     try {
       const geminiResp = await generateWithRetry({
-        model: 'gemini-1.5-flash',
+        model: 'gemini-2.5-flash',
         contents: DIALECTIC_PROMPT,
         config: {
           responseMimeType: 'application/json',
@@ -194,9 +194,9 @@ Responde SOLO en JSON array (sin markdown):
     let clasificaciones = []
     try {
       const geminiClas = await generateWithRetry({
-        model: 'gemini-1.5-flash',
+        model: 'gemini-2.5-flash',
         contents: CLASSIFIER_PROMPT,
-        config: { responseMimeType: 'application/json', thinkingConfig: { thinkingBudget: 0 }, temperature: 0.1, maxOutputTokens: 2000 }
+        config: { responseMimeType: 'application/json', temperature: 0.1, maxOutputTokens: 2000 }
       })
       const raw = geminiClas.text.trim()
       const jsonStr = raw.startsWith('[') ? raw : raw.slice(raw.indexOf('['))
