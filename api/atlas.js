@@ -114,7 +114,7 @@ Responde SOLO en JSON:
         config: {
           responseMimeType: 'application/json',
           temperature: 0.2,
-          maxOutputTokens: 800
+          maxOutputTokens: 2000
         }
       })
       rawExpansion = geminiResp.text.trim()
