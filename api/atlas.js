@@ -109,17 +109,15 @@ Responde SOLO en JSON:
     let rawExpansion
     try {
       const geminiResp = await generateWithRetry({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-2.0-flash',
         contents: DIALECTIC_PROMPT,
         config: {
           responseMimeType: 'application/json',
-          thinkingConfig: { thinkingBudget: 0 },
           temperature: 0.2,
           maxOutputTokens: 800
         }
       })
       rawExpansion = geminiResp.text.trim()
-      console.log('[atlas] expansión vía Gemini')
     } catch (geminiErr) {
       throw new Error('Expansión dialéctica falló: ' + geminiErr.message)
     }
@@ -133,8 +131,11 @@ Responde SOLO en JSON:
       throw new Error('Expansión dialéctica inválida: ' + err.message)
     }
 
-    console.log('[atlas] tesis queries:', tesisQueries)
-    console.log('[atlas] antitesis queries:', antitesisQueries)
+    if (tesisQueries.length === 0 && antitesisQueries.length === 0) {
+      throw new Error('Gemini no generó queries de búsqueda')
+    }
+
+    console.log(`[atlas] queries: t=${tesisQueries.length} a=${antitesisQueries.length} pais=${pais}`)
 
     // ══════════════════════════════════════════
     // FASE 2 — RAG paralelo (embeddings + búsqueda)

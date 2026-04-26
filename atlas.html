@@ -121,6 +121,8 @@
     .atlas-btn { width: 100%; padding: 11px; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%); color: #fff; border: none; border-radius: 8px; font-family: 'Fraunces', serif; font-size: 11px; letter-spacing: 0.2em; cursor: pointer; transition: opacity 0.2s; }
     .atlas-btn:hover { opacity: 0.88; }
     .atlas-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .atlas-btn-abort { width: 100%; padding: 11px; background: transparent; color: var(--text-muted); border: 1px solid var(--border); border-radius: 8px; font-family: 'Fraunces', serif; font-size: 11px; letter-spacing: 0.15em; cursor: pointer; transition: all 0.2s; margin-top: 6px; }
+    .atlas-btn-abort:hover { border-color: #c0392b; color: #c0392b; }
 
     .panel-loading { display: none; padding: 16px 20px; font-family: 'Fraunces', serif; font-size: 9px; letter-spacing: 0.15em; color: var(--gold); text-align: center; flex-shrink: 0; }
     .panel-loading-dot { animation: blink 1.2s ease infinite; }
@@ -263,6 +265,9 @@
       ></textarea>
       <button id="btn-atlas" class="atlas-btn" onclick="analizarAtlas()" data-i18n="atlas.btn.analizar">
         ATLAS ⚡ — ANALIZAR
+      </button>
+      <button id="btn-abort" class="atlas-btn-abort" onclick="abortarAtlas()" style="display:none" data-i18n="atlas.btn.abortar">
+        ✕ CANCELAR
       </button>
     </div>
 
@@ -662,6 +667,18 @@ function toggleArtTexto(id, btn) {
 // ═══════════════════════════════════════════════
 // ANALYSIS
 // ═══════════════════════════════════════════════
+let atlasAbortController = null
+
+function setAnalizando(on) {
+  document.getElementById('btn-atlas').style.display  = on ? 'none' : ''
+  document.getElementById('btn-abort').style.display  = on ? ''     : 'none'
+  document.getElementById('panel-loading').style.display = on ? 'block' : 'none'
+}
+
+function abortarAtlas() {
+  if (atlasAbortController) atlasAbortController.abort()
+}
+
 async function analizarAtlas() {
   const caso   = document.getElementById('caso-input').value.trim()
   const pais   = paisSelect.value
@@ -670,10 +687,12 @@ async function analizarAtlas() {
   if (caso.length < 20) { alert('Describe tu caso con más detalle.'); return }
   if (!pais)            { alert('Selecciona un país.'); return }
 
-  document.getElementById('btn-atlas').disabled           = true
-  document.getElementById('panel-loading').style.display  = 'block'
-  document.getElementById('panel-results').innerHTML      = ''
-  document.getElementById('canvas-empty').style.display   = 'none'
+  atlasAbortController = new AbortController()
+  const timeoutId = setTimeout(() => atlasAbortController.abort(), 120000)
+
+  setAnalizando(true)
+  document.getElementById('panel-results').innerHTML = ''
+  document.getElementById('canvas-empty').style.display = 'none'
   cerrarDetalle()
   clearGraph()
 
@@ -682,7 +701,7 @@ async function analizarAtlas() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ caso, pais, estado_mx: estado }),
-      signal: AbortSignal.timeout(120000)
+      signal: atlasAbortController.signal
     })
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))
@@ -690,12 +709,17 @@ async function analizarAtlas() {
     }
     renderResultados(await res.json())
   } catch (err) {
-    console.error('[atlas]', err)
-    alert('Error al analizar: ' + err.message)
-    document.getElementById('canvas-empty').style.display = 'flex'
+    if (err.name === 'AbortError') {
+      document.getElementById('canvas-empty').style.display = 'flex'
+    } else {
+      console.error('[atlas]', err)
+      alert('Error al analizar: ' + err.message)
+      document.getElementById('canvas-empty').style.display = 'flex'
+    }
   } finally {
-    document.getElementById('btn-atlas').disabled          = false
-    document.getElementById('panel-loading').style.display = 'none'
+    clearTimeout(timeoutId)
+    atlasAbortController = null
+    setAnalizando(false)
   }
 }
 
